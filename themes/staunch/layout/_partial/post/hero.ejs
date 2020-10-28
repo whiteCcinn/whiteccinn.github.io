@@ -1,0 +1,45 @@
+<div class="hero">
+    <% if(is_home()) { %>
+        <div class="hero-home">
+            <div class="hero-home-content">
+                <img class="hero-home-avatar" src="<%= theme.avatar %>">
+                <div class="hero-home-about">
+                    <span class="about-author"><%= config.author %></span>
+                    <span class="about-description"><%= config.description %></span>
+                    <div class="about-intro">
+                        <div class="about-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span><%= theme.address %></span>
+                        </div>
+                        <div class="about-job">
+                            <i class="fas fa-briefcase"></i>
+                            <span><%= theme.job %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="<% if(is_post()) { %>hero-article<% } else { %>hero-page<% } %> container">
+            <% if(is_archive()) { %>
+                <i class="fas fa-bookmark"></i>
+                <h1 class="page-title"><%= __('page.archives') %></h1>
+            <% } else if(is_category()) { %>
+                <i class="fas fa-folder-open"></i>
+                <h1 class="page-title"><%= __('page.category') %><%= page.category %></h1>
+            <% } else if(is_tag()) { %>
+                <i class="fas fa-tag"></i>
+                <h1 class="page-title"><%= __('page.tag') %><%= page.tag %></h1>
+            <% } else if(is_post()) { %>
+                <div class="article-title">
+                    <i class="fas fa-bookmark"></i>
+                    <h1 class="page-title" itemprop="name"><%= page.title %></h1>
+                </div>
+                <%- partial('meta', { post: page }) %>
+            <% }else if(is_page()) { %>
+                <i class="fas fa-bookmark"></i>
+                <h1 class="page-title" itemprop="name"><%= page.title %></h1>
+            <% } %>
+        </div>
+    <% } %>
+</div>

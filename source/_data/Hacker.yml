@@ -1,0 +1,36 @@
+menu:
+  主页: /
+  文章: /archives/
+  标签: /tags/
+  分类: /categories/
+  关于我: /about/
+
+# gitment
+gitment: false
+gitment_owner:
+gitment_repo:
+gitment_client_id:
+gitment_client_secret:
+
+# gitalk
+gitalk: false
+gitalk_owner:
+gitalk_admin: []
+gitalk_repo:
+gitalk_client_id:
+gitalk_client_secret:
+
+# valine comment
+valine: false
+leancloud_id:
+leancloud_key:
+
+# disqus comment
+disqus: false
+disqus_shortname:
+
+# google analytics
+googleTrackId:
+
+# whether to show read more button when showing article in excerpt in main page
+read_more: false

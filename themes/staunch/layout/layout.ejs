@@ -1,0 +1,20 @@
+<%- partial('_partial/head') %>
+<body>
+    <div id="wrap">
+        <%- partial('_partial/header') %>
+        <%- partial('_plugin/search') %>
+        <div class="container">
+            <div class="content">
+                <%- body %>
+                <%- partial('_partial/sidebar', {post: page, index: true}) %>
+            </div>
+            <%- partial('_partial/post/toc', {post: page, index: true}) %>
+            <div class="top">
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <%- partial('_partial/footer') %>
+            <%- js('js/staunch') %>
+        </div>
+    </div>
+</body>
+</html>

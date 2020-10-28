@@ -1,0 +1,12 @@
+[submodule "themes/Fan"]
+	path = themes/Fan
+	url = https://github.com/fan-lv/Fan.git
+[submodule "themes/Hacker"]
+	path = themes/Hacker
+	url = https://github.com/CodeDaraW/Hacker.git
+[submodule "themes/jane"]
+	path = themes/jane
+	url = https://github.com/hejianxian/hexo-theme-jane.git
+[submodule "themes/indigo"]
+	path = themes/indigo
+	url = https://github.com/yscoder/hexo-theme-indigo.git

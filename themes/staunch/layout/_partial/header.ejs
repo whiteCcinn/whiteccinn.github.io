@@ -1,0 +1,28 @@
+<header class="header">
+    <nav class="header-nav container">
+        <div class="header-hamburger">
+            <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+            </svg> 
+        </div>
+        <ul id="nav-menu" class="nav-menu">
+            <% for(var i in theme.menu) { %>
+                <% if(i == 'Categories') { %>
+                    <%- list_categories({
+                        depth: 2,
+                        class: 'nav-menu',
+                        show_count: false,
+                    }) %>
+                <% } else { %>
+                    <li class="nav-menu-list-item" >
+                        <a class="nav-menu-list-link" href="<%- url_for(theme.menu[i]) %>"><%= __('index.' + i.toLowerCase()) %></a>
+                    </li>
+                <% }} %>
+        </ul>
+        <div id="search-icon" class="header-search-btn">
+            <i class="fas fa-search search-open"></i>
+        </div>
+    </nav>
+</header>
+<%- partial('_partial/post/hero') %>

@@ -1,0 +1,94 @@
+<aside class="sidebar">
+    <!-- Sidebar-Social -->
+    <% if(theme.social) { %>
+        <section class="section-social sidebar-section">
+            <div class="social-content">
+                <% for (var i in theme.social) {%>
+                    <a href="<%- url_for(theme.social[i].url) %>" class="social-btn" target="_blank">
+                        <i class="<%= theme.social[i].icon %> btn-icon"></i>
+                    </a>
+                <% } %>
+            </div>
+        </section>
+    <% } %>
+
+    <!-- Sidebar-Notice -->
+    <% if(theme.notice) { %>
+        <section class="section-notice sidebar-section">
+            <h3 class="section-title"><i class="far fa-sticky-note"></i><%= __('sidebar.notice') %></h3>
+            <div class="notice-content">
+                <ul>
+                    <%- theme.notice %>
+                </ul>
+            </div>
+        </section>
+    <% } %>
+    <!-- Sidebar-Categorys -->
+    <div class="section-category sidebar-section">
+        <h3 class="section-title"><i class="far fa-folder-open"></i><%= __('sidebar.categories') %></h3>
+        <%- list_categories() %>
+    </div>
+    <!-- Sidebar-Tags -->
+    <div class="section-tags sidebar-section">
+        <h3 class="section-title"><i class="fas fa-tags"></i><%= __('sidebar.tags') %></h3>
+        <div class="tags-list">
+            <%- list_tags({
+                style: 0,
+                separator:""
+            }) %>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <!-- Sidebar-Links -->
+    <% if(theme.links) { %>
+    <div class="section-links sidebar-section">
+        <h3 class="section-title"><i class="fas fa-link"></i><%= __('sidebar.links') %></h3>
+        <% for (var i in theme.links) {%>
+            <div class="link">
+                <% if(theme.links[i].avatar) { %>
+                    <img src="<%= theme.links[i].avatar %>">
+                <% } %>
+                <a href="<%- url_for(theme.links[i].url) %>" target="_blank"><%= [i] %></a>
+            </div>
+        <% } %>
+    </div>
+    <% } %>
+
+    <!-- Sidebar-Count -->
+    <% if(theme.count.enable) { %>
+        <section class="section-count sidebar-section">
+            <h3 class="section-title"><i class="fas fa-chart-area"></i><%= __('sidebar.count') %></h3>
+            <ul class="count-visit">
+                <% if(theme.count.site_pv) { %>
+                <li>
+                    <img src="/img/sidebar/visit.png">
+                    <span id="busuanzi_value_site_pv"></span>
+                    <span class="note"><%= __('sidebar.visit') %></span>
+                </li>
+                <% } %>
+                <% if(theme.count.site_uv) { %>
+                <li>
+                    <img src="/img/sidebar/visitor.png">
+                    <span id="busuanzi_value_site_uv"></span>
+                    <span class="note"><%= __('sidebar.visitor') %></span>
+                </li>
+                <% } %>
+                <% if(theme.count.post_sum) { %>
+                <li>
+                    <img src="/img/sidebar/article.png">
+                    <span><%- site.posts.length %></span>
+                    <span class="note"><%= __('sidebar.article') %></span>
+                </li>
+                <% } %>
+                <% if(theme.count.word_sum) { %>
+                <li>
+                    <img src="/img/sidebar/wordcount.png">
+                    <span><%= totalcount(site) %></span>
+                    <span class="note"><%= __('sidebar.wordcount') %></span>
+                </li>
+                <% } %>
+            </ul>
+        </section>
+    <% } %>
+</aside>

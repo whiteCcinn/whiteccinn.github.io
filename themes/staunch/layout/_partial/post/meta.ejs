@@ -1,0 +1,20 @@
+<div class="article-meta">
+    <% if(is_post()) { %>
+        <span class="article-author"><%= __('page.meta') %></span>
+        <time class="article-date"><%= post.date.format(__('MMMM D YYYY')) %></time>
+        <span class="article-count">
+            <%= __('page.count') %><%= min2read(post.content) %><%= __('page.count_U') %>
+            <i class="far fa-eye"></i>
+            <span id="busuanzi_value_page_pv"></span>
+        </span>
+    <% } else { %>
+        <time class="date"><%= post.date.format(__('MMMM D'))%></time>
+        <div class="category">
+            <%- list_categories(post.categories, {
+                style: 'none',
+                show_count: false,
+                separator: ' > '
+            }) %>
+        </div>
+    <% } %>
+</div>

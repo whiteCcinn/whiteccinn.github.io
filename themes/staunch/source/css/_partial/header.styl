@@ -1,0 +1,116 @@
+.header
+    position: fixed
+    top: 0
+    right: 0
+    left: 0
+    z-index: 800
+    max-height: 50px
+    height: 100%
+    transition: .5s ease
+    background-color: color-white
+
+.header-toggle
+    transition: .5s ease
+    box-shadow: 0 1px 3px rgba(26,26,26,.1)
+
+.header-nav
+    display: flex
+    align-items: center
+    justify-content: space-between
+    height: 100%
+
+.header-hamburger
+    display: block
+
+.header-search-btn
+    color: color-text
+
+.header-search-btn,
+.header-hamburger
+    padding: 0 15px
+    cursor: pointer
+
+/* Menu */
+.nav-menu
+    position: absolute
+    top: 50px
+    display: none
+    padding: 0 15px
+    max-width: 690px
+    width: 100%
+    background-color: color-white
+    box-shadow: 0 2px 5px rgba(26,26,26,0.5)
+
+.nav-menu-list-child .nav-menu-list-link
+    padding: 10px 0 10px 30px
+    border: 0
+
+.nav-menu-list-link
+    display: block
+    padding: 15px 0
+    width: 100%
+    border-top: 1px solid color-border
+
+.nav-menu-list-link
+    font-size: font-size-code
+    color: color-text
+    &:hover
+        color: color-theme
+
+.nav-menu-list-link
+    &:hover
+        &:after
+            color: color-theme
+
+.nav-menu-list-link[href='/']
+    color: color-theme
+
+.top-level-menu > a:after
+    content: "\f107" !important
+    position: absolute
+    right: 35px
+    font-size: 14px
+    font-family: "Font Awesome 5 Free"
+    font-weight: 900
+    color: #414141
+
+@media screen and (min-width: 812px)
+    .header-hamburger
+        display: none
+
+    .nav-menu
+        position: relative
+        top: 0
+        display: flex
+        box-shadow: none
+
+    .nav-menu-list
+        display: flex
+
+    .nav-menu-list-link
+        padding: 14px 0
+        margin: 0 15px
+        border: 0
+
+    .nav-menu-list-child
+        display: none
+        position: absolute
+        top: 40px
+        box-shadow: 0 1px 3px rgba(26,26,26,.1)
+        .nav-menu-list-item
+            padding: 10px 15px 10px 0
+            background-color: color-white
+
+    .nav-menu-list-child .nav-menu-list-link
+        padding: 0
+
+    .top-level-menu
+        &:hover
+            .nav-menu-list-child
+                display: block
+
+    .top-level-menu > a:after
+        position: relative
+        right: 0
+        margin-left: 6px
+        transition: .4s ease

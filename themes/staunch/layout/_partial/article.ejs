@@ -1,0 +1,45 @@
+<article id="<%= post.layout %>" class="page-article" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        <%- post.content %>
+    </div>
+    <% if(theme.reward.enable) { %>
+        <%- partial('post/reward') %>
+    <% } %>
+    <% if(post.tags) { %>
+        <%- partial('_partial/post/tags', {post: post, index: true}) %>
+    <% } %>
+    <%- partial('post/actions') %>
+    <% if(theme.valine.on) { %>
+        <div id="comment" class="vcomment v"></div>
+        <script>
+            new Valine({
+                el: '#comment' ,
+                notify: <%= theme.valine.notify %>,
+                verify: <%= theme.valine.verify %>,
+                app_id: '<%= theme.valine.appId %>',
+                app_key: '<%= theme.valine.appKey %>',
+                placeholder: '<%= theme.valine.placeholder %>',
+                pageSize: '<%= theme.valine.pageSize %>',
+                avatar: '<%= theme.valine.avatar %>',
+                avatar_cdn: '<%= theme.valine.avatar_cdn %>'
+            });
+        </script>
+    <% } else if(theme.disqus) { %>
+    <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            var disqus_shortname = '<%= theme.disqus %>';
+            
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </section>
+    <% } %>
+
+    <%- js('libs/justifiedGallery/jquery.justifiedGallery.min') %>
+    <%- js('libs/fancybox/jquery.fancybox.min') %>
+</article>

@@ -1,0 +1,37 @@
+<div class="share">
+    <div class="share-alone">
+        <% if(theme.share.qq === true) { %>
+            <a class="share-btn" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=<%= url %>&sharesource=qzone&title=<%= config.title %> | <%= page.title %>&summary=<%= config.description %>" target="_blank">
+                <i class="fab fa-qq"></i>
+            </a>
+        <% } %>
+        <% if(theme.share.weibo === true) { %>
+            <a class="share-btn" href="http://service.weibo.com/share/share.php?appkey=&title=<%= config.title %> | <%= page.title %>&url=<%- url %>&searchPic=false&style=simple" target="_blank">
+                <i class="fab fa-weibo"></i>
+            </a>
+        <% } %>
+        <% if(theme.share.facebook === true) { %>
+            <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=<%= url %>" target="_blank">
+                <i class="fab fa-facebook"></i>
+            </a>
+        <% } %>
+        <% if(theme.share.twitter === true) { %>
+            <a class="share-btn" href="https://twitter.com/intent/tweet?text=<%= config.title %><%= page.title %>&url=<%- url %>&via=<%= config.author %>" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+        <% } %>
+        <% if(theme.share.googleplus === true) { %>
+            <a class="share-btn" href="https://plus.google.com/share?url=<%- url %>" target="_blank">
+                <i class="fab fa-google-plus-g"></i>
+            </a>
+        <% } %>
+        <% if(theme.share.telegram === true) { %>
+            <a class="share-btn" href="https://telegram.me/share/url?url=<%- url %>&text=<%= config.title %> | <%= page.title %>" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+        <% } %>
+    </div>
+    <a class="share-all-btn share-btn">
+        <i class="fas fa-share-alt"></i>
+    </a>
+</div>

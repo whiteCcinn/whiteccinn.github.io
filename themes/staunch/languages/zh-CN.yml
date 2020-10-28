@@ -1,0 +1,33 @@
+index:
+    home: 'Home'
+    archives: 'Archives'
+    more: '👉 READ ARTICLE'
+
+page:
+    archives: 'Archives / 归档'
+    category: 'Category / 分类: '
+    tag: 'Tag / 标签: '
+    meta: 'BY STAUNCHKAI ON'
+    count: '阅读本文大约需要: '
+    count_U: '分钟'
+    reward: '捐赠'
+    prev: '上一篇'
+    next: '下一篇'
+
+sidebar:
+    notice: '告示 '
+    toc: '目录'
+    categories: '分类'
+    tags: '标签'
+    links: '链接'
+    article: '文章数'
+    visit: '总访问量'
+    visitor: '总访客数'
+    wordcount: '总字数'
+    catalogue: '目录'
+    count: '统计'
+
+search:
+    title: 'Begin to '
+    title_strong: 'explore'
+    hint: '搜索文章'

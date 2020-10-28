@@ -1,0 +1,96 @@
+/* Home-hero */
+.hero-home
+    display: flex
+    position: relative
+    justify-content: center
+    align-items: center
+    border-bottom: 4px solid color-shadow
+    background: color-white
+
+.hero-home-content
+    display: flex
+    align-items: center
+    padding: 60px 0
+
+.hero-home-avatar
+    position: relative
+    width: 250px
+    height: 250px
+    border-radius: 50%
+    border: 1px solid #555
+
+.hero-home-about
+    display: none
+
+.about-author
+    font-size: 1.5em
+    font-weight: 600
+    line-height: line-height
+
+.about-intro
+    display: table
+    margin-top: 8px
+    width: 100%
+    line-height: line-height
+
+.about-address,
+.about-job
+    float: left
+    width: 50%
+
+.hero-page
+    display: flex
+    align-items: center
+    padding: 80px 20px 60px
+    background-color: color-white
+    font-size: 24px
+    i
+        color: #8B0000
+    .page-title
+        margin-left: 15px
+        font-weight: 600
+    .fa-tag
+        font-size: 24px
+
+.hero-article
+    padding: 80px 20px 60px
+    background-color: color-white
+    font-size: 24px
+    .article-title
+        display: flex
+        line-height: 1.87
+        i
+            color: #8B0000
+            line-height: 1.87
+        .page-title
+            margin-left: 15px
+            font-weight: 600
+            align-items: center
+    
+
+@media screen and (min-width: 812px)
+    .hero-home-content
+        margin: 200px 0 150px
+        padding: 0
+
+    .hero-home-about
+        display: flex
+        flex-direction: column
+        margin-left: 160px
+        max-width: 350px
+
+    .hero-page
+        padding: 120px 70px 100px
+        box-shadow: 10px 10px 2px color-shadow
+        font-size: 28px
+        .page-title
+            margin-left: 25px
+
+    .hero-article
+        padding: 120px 70px 100px
+        box-shadow: 10px 10px 2px color-shadow
+        font-size: 28px
+        .article-title .page-title
+            margin-left: 25px
+        .article-date
+            margin-left: 6px

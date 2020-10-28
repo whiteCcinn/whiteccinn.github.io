@@ -1,0 +1,44 @@
+.excerpt
+    padding: 15px 0 0
+    border-bottom: 1px solid color-border
+    .excerpt-text
+        margin: 0 0 15px 
+        font-size: 14px
+        img
+            display: none
+    .excerpt-image
+        display: flex
+        align-items: center
+        margin: 0
+        height: 180px
+        overflow: hidden
+        img
+            width: 100%
+.excerpt-footer
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-top: 15px
+    .article-tags
+        display: none
+    .excerpt-readMore
+        position: relative
+        font-size: 14px
+        color: color-theme
+        transition: .4s ease
+        &:after
+            content: ""
+            position: absolute
+            top: -19px
+            right: 0
+            height: 3px
+            width: 100%
+            background-color: color-theme
+        &:hover
+            letter-spacing: 3px
+
+@media screen and (min-width: 768px)
+    .excerpt-footer
+        .article-tags
+            display: flex !important
+            

@@ -1,0 +1,31 @@
+.aricle-actions
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin: 15px 0
+    .action-nav
+        display: flex
+        .nav-btn
+            display: flex
+            align-items: center
+            justify-content: center
+            margin-right: 15px
+            width: 100px
+            height: 36px
+            font-size: 14px
+            border: 1px solid color-border
+            border-radius: 3px
+            i, span
+                margin: 0 8px
+                color: color-grey
+        .nav-btn:hover
+            border-color: color-theme
+            i, span
+                color: color-theme
+
+@media screen and (max-width: 600px)
+    .aricle-actions .action-nav .nav-btn
+        width: 36px
+        height: 36px
+        span
+            display: none

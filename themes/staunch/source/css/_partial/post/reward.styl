@@ -1,0 +1,37 @@
+.reward
+    margin: 40px 0
+    text-align: center
+    .reward-btn
+        padding: 10px 45px
+        border: 3px solid color-text
+        color: color-text
+        letter-spacing: 3px
+        background: 0
+        cursor: pointer
+        transition: color .4s ease
+        &:hover
+            border-color: color-theme
+            color: color-white
+            background: color-theme
+            box-shadow: 0 2px 5px rgba(26,26,26,0.1)
+
+    .reward-content
+        display: none
+        margin: 20px 0
+        border-top: 1px solid color-border
+        border-bottom: 1px solid color-border
+        .reward-images
+            display: flex
+            justify-content: center
+            width: 100%
+            a:hover
+                border: 0
+            img
+                margin: 0 20px
+                width: 150px
+                height: 150px
+
+@media screen and (max-width: 600px)
+    .reward-content
+        img
+            margin: 0 !important

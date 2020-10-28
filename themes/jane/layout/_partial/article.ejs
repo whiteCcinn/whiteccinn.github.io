@@ -1,0 +1,52 @@
+<article id="<%= post.layout %>-<%= post.slug %>" class="article article-type-<%= post.layout %>" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    <% if (post.link || post.title){ %>
+      <header class="article-header">
+        <%- partial('post/title', {class_name: 'article-title'}) %>
+      </header>
+    <% } %>
+    <div class="article-meta">
+      <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
+      <%- partial('post/category') %>
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      <% if (post.excerpt && index){ %>
+        <%- post.excerpt %>
+        <% if (theme.excerpt_link){ %>
+          <p class="article-more-link">
+            <a href="<%- url_for(post.path) %>#more"><%= theme.excerpt_link %></a>
+          </p>
+        <% } %>
+      <% } else { %>
+        <%- post.content %>
+      <% } %>
+
+      <% if (page.path === "tags/index.html"){ %>
+        <%- list_tags() %>
+      <% } %>
+        
+    </div>
+  </div>
+  <% if (!index){ %>
+    <%- partial('post/nav') %>
+  <% } %>
+</article>
+
+<% if (!index && post.comments && config.disqus_shortname && page.path !== "tags/index.html"){ %>
+<section id="comments">
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src='https://imsun.github.io/gitment/dist/gitment.browser.js'></script>
+  <script>
+    var gitment = new Gitment({
+      owner: 'your github account',
+      repo: 'your repo',
+      oauth: {
+        client_id: 'your client_id',
+        client_secret: 'your client_secret',
+      },
+    })
+    gitment.render('comments')
+  </script>
+</section>
+<% } %>

@@ -1,0 +1,5 @@
+<div class="article-tags">
+    <% post.tags.forEach(function(tag) { %>
+        <a href="<%= config.root %>tags/<%= tag.name.replace(/\s+/g, '') %>/" class="color<%= tag.name.length % 5 + 1 %>"><%- tag.name %></a>
+    <% }) %>
+</div>

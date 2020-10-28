@@ -1,0 +1,84 @@
+@import "nib"
+@import "_variables"
+
+global-reset()
+
+input, button
+    margin: 0
+    padding: 0
+    outline: 0
+    &::-moz-focus-inner
+        padding: 0
+        border: 0
+
+html, body, container
+    height: 100%
+
+::selection
+    color: color-white
+    background: color-theme
+
+body
+    margin: 0
+    padding: 0
+    border: 0
+    font: font-size font-sans
+    color: color-text
+    background: color-bg
+    -webkit-text-size-adjust: 100%
+
+*, :after, :before
+    box-sizing: border-box
+
+a
+    text-decoration: none
+
+.container
+    margin: 0 auto
+    max-width: 690px
+
+.content
+    position: relative
+    display: flex
+    justify-content: space-between
+    margin-top: 50px
+    background-color: color-white
+
+@media screen and (min-width: 812px)
+    .container
+        max-width: 1100px
+
+    .content
+        box-shadow: 10px 10px 2px color-shadow
+
+.top
+    position: fixed
+    right: 60px
+    bottom: 60px
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 56px
+    height: 56px
+    border-radius: 50%
+    background-color: color-theme
+    box-shadow: 0 0 6px 0 rgba(0,0,0,0.12), 0 6px 6px 0 rgba(0,0,0,0.24)
+    cursor: pointer
+    z-index: 10005
+    i
+        color: color-white
+
+@media screen and (max-width: 700px)
+    .top
+        width: 40px
+        height: 40px
+        right: 15px
+        bottom: 15px
+        
+
+@import "_partial/header"
+@import "_plugin/search"
+@import "_partial/archive"
+@import "_partial/sidebar"
+@import "_partial/footer"
+@import "_partial/article"

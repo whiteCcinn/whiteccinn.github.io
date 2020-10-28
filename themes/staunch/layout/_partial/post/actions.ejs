@@ -1,0 +1,17 @@
+<div class="aricle-actions">
+    <nav class="action-nav">
+        <% if (post.prev) { %>
+            <a href="<%- url_for(post.prev.path) %>" class="nav-btn" title="<%= post.prev.title %>">
+                <i class="fas fa-angle-left"></i>
+                <span><%= __('page.prev') %></span>
+            </a>
+        <% } %>
+        <% if (post.next) { %>
+            <a href="<%- url_for(post.next.path) %>" class="nav-btn">
+                <span><%= __('page.next') %></span>
+                <i class="fas fa-angle-right"></i>
+            </a>
+        <% } %>
+    </nav>
+    <%- partial('share') %>
+</div>

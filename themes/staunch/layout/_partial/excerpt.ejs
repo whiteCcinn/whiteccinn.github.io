@@ -1,0 +1,28 @@
+<% if(is_home() || is_category() || is_tag()) { %>
+    <div class="excerpt">
+        <div class="excerpt-text">
+            <% if (post.description || post.excerpt) { %>
+                <% if(post.description) { %>
+                    <%- post.description %>
+                <% } else { %>
+                    <%- post.excerpt %>
+                <% } %>
+            <% } else if(theme.excerpt_length) { %>
+                <p><%- post.excerpt ? post.excerpt : truncate(strip_html(post.content), {
+                        length: theme.excerpt_length
+                    }) %></p>
+            <% } %>
+        </div>
+        <% if(post.thumbnail) { %>
+            <div class="excerpt-image">
+                <img src="<%- post.thumbnail %>">
+            </div>
+        <% } %>
+    </div>
+    <div class="excerpt-footer">
+        <% if(post.tags) { %>
+            <%- partial('_partial/post/tags', {post: post, index: true}) %>
+        <% } %>
+        <a class="excerpt-readMore" href="<%- url_for(post.path) %>"><%= __('index.more') %></a>
+    </div>
+<% } %>

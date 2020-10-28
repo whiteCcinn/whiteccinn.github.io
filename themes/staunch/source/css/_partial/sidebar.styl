@@ -1,0 +1,131 @@
+.sidebar
+    display: none
+    padding: 50px 20px 10px
+    width: 270px
+    min-width: 270px
+    height: fit-content
+    background-color: color-sidebar
+
+    .sidebar-section
+        margin-bottom: 20px
+
+    .section-title
+        font-weight: 600
+        letter-spacing: 2px
+        line-height: 38px
+        border-bottom: 1px solid color-border
+        i
+            width: 24px
+            text-align: center
+
+    .section-social   
+        padding: 0 15px 20px
+
+    .social-content
+        display: flex
+        justify-content: space-between
+        i
+            font-size: 22px
+            color: color-text
+            transition: color .4s ease
+            &:hover
+                color: color-theme
+
+    .notice-content
+        padding-top: 10px
+        ul li
+            margin: 8px 0
+            font-size: 14px
+            a
+                color: color-theme
+                &:hover
+                    text-decoration: underline
+
+    .section-category .category-list
+        padding-top: 10px
+        .category-list-item
+            a
+                font-size: 14px
+                line-height: 1.87
+                color: color-text
+                &:hover
+                    color: color-theme
+                    text-decoration: underline
+
+            .category-list-child
+                padding-left: 20px
+
+            .category-list-count
+                font-size: 12px
+                color: color-grey
+                &:before
+                    content: " ("
+                &:after
+                    content: ")"
+
+    .section-tags
+        .fa-tags
+            font-size: 14px
+
+        .tags-list
+            padding: 10px 0 0 6px
+            width: 100%
+            .tag-link
+                margin: 0 4px 4px 0
+                padding: 2px 8px
+                width: 48%
+                float: left
+                font-size: 12px
+                color: color-text
+                border: 1px solid color-border
+                border-radius: 2px
+                &:hover
+                    color: color-white
+                    background-color: color-theme
+                    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16)
+                .tag-count
+                    &:before
+                        content: " ("
+                    &:after
+                        content: ")"
+
+    .link
+        display: flex
+        align-items: center
+        padding-top: 10px
+        img
+            display: inline-block
+            width: 30px
+            height: 30px
+            border-radius: 50%
+        a
+            margin-left: 15px
+            font-size: 14px
+            color: color-text
+
+    .count-visit
+        list-style: none
+        padding-top: 10px
+        li
+            display: flex
+            align-items: center
+            padding: 8px 0
+            &:hover
+                .note
+                    display: block
+
+            img
+                width: 30px
+                height: 30px
+                border-radius: 50%
+            span
+                margin-left: 15px
+                font-size: 14px
+        .note
+            display: none
+
+@media screen and (min-width: 812px)
+    .sidebar
+        display: block
+
+@import "post/tags"

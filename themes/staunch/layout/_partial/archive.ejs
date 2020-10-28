@@ -1,0 +1,39 @@
+<% var years = {}; site.posts.sort('date').reverse().forEach(function(post) {
+    var year = post.date.year()
+    if(years[year] === undefined) {
+        years[year] = [];
+    }
+    years[year].push(post);
+}); %>
+<section class="<% if(is_archive()) { %>archive<% } else { %>articles<% } %>">
+    <% if(is_archive()) { %>
+        <% Object.keys(years).reverse().forEach(function(year) { %>
+            <div class="archive-grid-year">
+                <span><%= year %></span>
+            </div>
+            <% years[year].map(function(post){  %>
+                <article class="article">
+                    <h1 class="article-title">
+                        <a href="<%- url_for(post.path) %>" class="article-title"><%= post.title %></a>
+                    </h1>
+                    <%- partial('post/meta', {post: post}) %>
+                </article>
+            <% }) %>
+        <% }) %>
+    <% } else if(is_home() || is_category() || is_tag()) { %>
+        <% page.posts.each(function(post) { %>
+            <article class="article">
+                <h1 class="article-title">
+                    <a href="<%- url_for(post.path) %>" class="article-title"><%= post.title %></a>
+                </h1>
+                <%- partial('post/meta', {post: post}) %>
+                <%- partial('excerpt', {post: post}) %>
+            </article>
+        <% }) %>
+    <% } %>
+    <% if ((page.total > 1) & (is_home())) { %>
+        <nav id="page-nav" class="page-nav">
+            <%- paginator({prev_text: "◀", next_text: "▶"}) %>
+        </nav>
+    <% } %>
+</section>

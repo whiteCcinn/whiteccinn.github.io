@@ -1,0 +1,57 @@
+.share
+    display: flex
+    position: relative
+    .share-alone
+        display: flex
+        justify-content: space-between
+        .share-btn
+            display: flex
+            justify-content: center
+            align-items: center
+            margin-left: 15px
+            height: 36px
+            width: 36px
+            border: 1px solid color-border
+            border-radius: 3px
+            i
+                color: color-grey
+        .share-btn:hover
+            border-color: color-theme
+            i
+                color: color-theme
+
+    .share-all-btn
+        display: none
+        justify-content: center
+        align-items: center
+        height: 36px
+        width: 36px
+        border: 1px solid color-border
+        border-radius: 3px
+        i
+            color: color-grey
+        &:hover
+            border-color: color-theme
+            i
+                color: color-theme
+
+@media screen and (max-width: 600px)
+    .share
+        .share-alone
+            position: absolute
+            right: -12px
+            bottom: 50px
+            display: none
+            padding: 20px 0 20px 15px
+            width: 65px
+            background-color: color-white
+            box-shadow: 0 2px 5px rgba(26,26,26,0.3)
+            .share-btn
+                display: block
+                margin: 10px 0 
+                width: 36px
+                height: auto
+                text-align: center
+
+    .share .share-all-btn
+        display: flex

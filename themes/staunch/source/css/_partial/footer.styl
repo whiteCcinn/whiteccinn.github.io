@@ -1,0 +1,25 @@
+.footer
+    position: relative
+    z-index: 800
+    padding: 40px 15px
+    background-color: color-sidebar
+    border-top: 1px solid #eaeaea
+
+.footer-content
+    display: block
+    font-size: 13px
+    a
+        color: color-theme
+        &:hover
+            text-decoration: underline
+    div
+        margin: 15px 0
+
+@media screen and (min-width: 812px)
+    .footer-content
+        display: flex
+        justify-content: space-between
+    
+    .footer
+        padding: 50px 100px
+        box-shadow: 10px 10px 2px color-shadow

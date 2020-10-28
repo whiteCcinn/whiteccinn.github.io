@@ -1,0 +1,7 @@
+<!-- Sidebar-Toc -->
+<% if (is_post() && post.toc) { %>
+    <section class="section-toc">
+        <i class="fas fa-list-ol"></i>
+        <%- toc(post.content) %>
+    </section>
+<% } %> 

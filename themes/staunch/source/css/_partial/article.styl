@@ -1,0 +1,214 @@
+.page-article
+    padding: 20px
+    width: 100%
+    overflow: hidden
+    line-height: 1.87
+    h1, h2, h3 ,h4, h5, h6
+        font-weight: 600
+    h1
+        margin: 8px 0
+        font-size: 1.875rem
+        line-height: 4.25rem
+        border-bottom: 1px solid #dedede
+    h2
+        margin: 6px 0
+        font-size: 1.5rem
+        line-height: 3.75rem
+        border-bottom: 1px solid #dedede
+    h3
+        font-size: 1.25rem
+        line-height: 3rem
+    h4
+        line-height: 2.75rem
+    h5
+        font-size: .875rem
+        line-height: 2.5rem
+    h6
+        font-size: .875rem
+        line-height: 2.375rem
+        color: color-grey
+    p
+        margin: .75rem 0
+    ul, ol
+        padding-left: 2em
+        list-style: decimal
+    ol li ul li
+        list-style: circle
+    ol li ol li
+        list-style: upper-roman
+    ul li
+        list-style: disc
+    ol li ol li ol li,
+    ol li ol li ol li ol li
+        list-style: lower-alpha
+    ul li ul li
+        list-style: circle
+    ul li ul li ul li,
+    ul li ul li ul li ul li
+        list-style: square
+    ol li ul li ul li
+        list-style: square
+    code
+        padding: 0 4px
+        border-radius: 2px
+        border: 1px solid #eee
+        font-size: 85%
+        line-height: 1
+        word-wrap: break-word
+        color: #c7254e
+        background-color: #f9f2f4
+    a
+        color: color-theme
+        &:hover
+            border-bottom: 1px solid color-theme
+    figure
+        margin: 20px 0
+        font-weight: 300
+        font-family: consolas, Menlo, "PingFang SC", "Microsoft YaHei", monospace,Helvetica
+        overflow: auto
+        figcaption
+            border-bottom: 1px solid color-border
+            span
+                margin-left: 20px
+                font-weight: 600
+        table
+            padding: 10px 0
+            margin: 0
+            width: 100%
+            font-size: font-size-code
+            .gutter
+                padding: 0 1em
+                width: 40px
+                border-right: 2px solid color-theme !important
+                .line
+                    float: right
+            .code
+                padding: 0 .5em
+            th,
+            td
+                border-top: 0 !important
+                border-right: 0 !important
+                border-bottom: 0 !important
+    table
+        display: block
+        margin-bottom: 16px
+        width: 100%
+        border-spacing: 0
+        border-collapse: collapse
+        overflow: auto
+        thead tr
+            th
+                padding: 6px 13px
+                border: 1px solid #dfe2e5
+                font-weight: 600
+                line-height: 1.6
+        tbody tr
+            td
+                padding: 6px 13px
+                border: 1px solid #dfe2e5
+                line-height: 1.6
+        tr:nth-child(2n)
+            background-color: #f6f8fa
+
+    strong
+        font-weight: 600
+
+    blockquote
+        margin: 1em 0
+        padding: .01em 1em
+        border-left: .25em solid color-theme
+        background-color: #F6F8FA
+        p
+            color: #6a737d
+
+    dl
+        padding: 0
+        dt
+            display: inline-block
+            padding: 0
+            margin-top: 8px
+            font-size: 1em
+            font-style: italic
+            font-weight: 600
+        dd
+            display: inline-block
+            margin-bottom: 8px
+            padding: 0 16px
+
+    hr
+        background: color-shadow
+        height: 1px
+        border: none
+    img
+        display: block
+        max-width: 100%
+        height: auto
+        margin: auto
+
+    .caption
+        display: block
+        text-align: center
+        font-size: 14px
+        color: color-grey
+
+    .justified-gallery
+        a:hover
+            border: 0
+    .article-tags
+        padding-bottom: 15px
+        border-bottom: 1px solid color-border
+        a
+            color: color-white
+            &:hover
+                border: 0
+    .vcomment
+        margin-top: 30px
+    
+.section-toc
+    position: fixed
+    top: 80px
+    left: 10px
+    .fa-list-ol
+        font-size: 24px
+        color: color-theme
+        cursor: pointer
+    .toc
+        display: none
+        margin-top: 8px
+        padding: 5px 10px
+        height: fit-content
+        max-height: 420px
+        width: fit-content
+        max-width: 250px
+        overflow-y: auto
+        border-radius: 3px
+        background-color: color-white
+        box-shadow: 0 2px 5px rgba(26,26,26,0.5)
+        .toc-link
+            font-size: 14px
+            color: color-grey2
+            &:hover
+                color: color-theme
+                border-bottom: 1px solid color-theme
+        .toc-child
+            padding-left: 20px
+        .toc-level-1
+            padding: 5px 0
+
+@media screen and (min-width: 812px)
+    .page-article
+        padding: 50px 70px
+
+@media screen and (max-width: 600px)
+    .page-article
+        .article-tags
+            display: block !important
+
+@media screen and (max-width: 1000px)
+    .section-toc
+        display: none
+
+@import "post/highlight"
+@import "post/reward"
+@import "post/actions"
+@import "post/share"

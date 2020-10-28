@@ -1,0 +1,32 @@
+.article-meta
+    display: flex
+    font-size: 14px
+    .date
+        font-weight: 300
+        color: color-grey
+    .category
+        margin-left: 15px
+        a
+            color: color-theme
+            &:hover
+                text-decoration: underline
+
+.hero-article .article-meta
+    padding: 4px 0
+    border-top: 1px solid color-border
+    border-bottom: 1px solid color-border
+    font-weight: 300
+    font-size: 16px
+    color: color-grey
+    .article-count
+        margin-left: 15px
+        i
+            margin-left: 15px
+
+@media screen and (max-width: 700px)
+    .hero-article .article-meta
+        .article-author,
+        .article-date
+            display: none
+        .article-count
+            margin-left: 0

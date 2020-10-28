@@ -1,0 +1,18 @@
+<div class="search">
+    <div class="search-mask"></div>
+    <div class="search-wrapper">
+        <span class="search-title"><%= __('search.title') %><strong><%= __('search.title_strong') %></strong></span>
+        <input type="text" id="local-search-input" class="search-input" name="q" results="0" placeholder="<%= __('search.hint') %>" autocomplete="off">
+        <i class="fas fa-times-circle search-close"></i>
+    </div>
+    <div id="local-search-result" class="search-result"></div>
+    <%- js('js/search') %>
+    <script type="text/javascript">      
+        var search_path = "<%= config.search.path %>";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "<%= config.root %>" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+</div>

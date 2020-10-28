@@ -1,0 +1,69 @@
+/* Home-Article */
+.articles
+    padding: 20px
+    width: 100%
+    .article
+        margin-bottom: 30px
+        .article-title
+            font-size: 10px 0
+            color: color-text
+            transition: color .3s ease
+            &:hover
+                color: color-theme
+    .page-nav
+        text-align: center
+        .page-number,
+        .extend
+            padding: 4px 10px
+            color: color-text
+            transition: color .4s ease
+            &:hover
+                color: color-white
+                background-color: color-theme
+        .current
+            color: color-white
+            background-color: color-theme
+
+/* Archives-Article */
+.archive
+    padding: 20px
+    width: 100%
+    .archive-grid-year
+        padding: 10px 0
+        margin-bottom: 15px
+        border-top: 1px solid color-border
+        border-bottom: 1px solid color-border
+        span
+            font-weight: 600
+            font-size: 22px
+            color: color-theme
+    .article
+        margin-bottom: 20px
+        .article-title a
+            color: color-text
+            transition: color .3s ease
+            &:hover
+                color: color-theme
+
+
+@media screen and (min-width: 812px)
+    .articles
+        padding: 50px 70px
+        .article
+            margin-bottom: 60px
+            .article-title
+                font-size: 24px
+
+    .archive
+        padding: 50px 70px
+        .archive-grid-year span
+            font-size: 26px
+        .article
+            margin-bottom: 30px
+            .article-title a
+                font-size: 20px
+                color: color-text
+
+@import "post/hero"
+@import "post/meta"
+@import "excerpt"

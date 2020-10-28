@@ -1,0 +1,128 @@
+# hexo-theme-staunch
+# https://github.com/staunchkai/hexo-theme-staunch
+
+# Primary colour | 主色调
+# default: #eb4334  | 默认值
+theme_color: ''
+
+# Favicon of your site | 网站icon
+favicon: /favicon.ico
+
+# Hero
+# avatar | 头像
+avatar: /img/avatar.png
+# address | 地址
+address: YunNan, China
+# job | 职业
+job: Student
+
+# Menus | 导航栏菜单
+menu:
+  Home: /
+  Archives: /archives/
+  # Delete this row if you don't want categories in your header nav bar
+  # 如果不想在导航栏显示分类，删除此行
+  Categories:
+
+# Social setting, use to display social information | 社交设置，用来展示社交信息
+# name:
+#   url: //staunchkai.com   Url, absolute or relative path | 链接，绝对或相对路径
+#   icon: fab fa-github     Select the content in the class | 填入 class 中的内容
+# for more icons, please see https://fontawesome.com/icons?d=gallery&m=free
+social:
+  github:
+    url: //staunchkai.com
+    icon: fab fa-github
+  envelope:
+    url: mailto:staunchkai@outlook.com
+    icon: fas fa-envelope
+  qq: 
+    url: //staunchkai.com
+    icon: fab fa-qq
+  twitter:
+    url: //staunchkai.com
+    icon: fab fa-twitter
+
+# Notice | 公告
+# If not used, don't fill in | 如果不使用，留空即可
+# 使用 Html 标签 <li>内容</li> 发布一条公告
+# Publish a notice using the Html tag <li> content </li>
+notice: 
+  <li>Staunch 主题正式发布！主题下载：<a href="https://github.com/staunchkai/hexo-theme-staunch" target="_blank">Staunch 主题</a></li>
+  <li>Staunch 正式文档发布，<a href="//staunchkai.com/docs.html">点击查看</a></li>
+
+# Links | 友链
+# name:                         Name | 名字
+#   url: //staunckai.com        Url, absolute or relative path | 链接，绝对或相对路径
+#   avatar: /img/avatar.png     avatar | 头像
+links:
+  StaunchKai: 
+    url: http://staunchkai.com
+    avatar: /img/avatar.png
+
+# Count | 统计
+# busuanzi | 不蒜子
+count:
+  enable: true # if not used, change this to 'false' | 如果不使用，将此项改为 'false'
+  site_pv: true # 总访问量
+  site_uv: true # 总访客数
+  # Execute before using article statistics 'npm i --save hexo-wordcount'
+  # 使用文章统计之前先执行 'npm i --save hexo-wordcount'
+  post_sum: true # 文章总数
+  word_sum: true # 总字数
+
+# Excerpt length | 摘录长度
+excerpt_length: 80
+
+# Reward | 文章赞赏
+reward:
+  enable: true # if not used, change this to 'false' | 如果不使用，将此项改为 ‘false’
+  title: "请我吃包辣条！"
+  alipay: # Picture url | 二维码地址
+  wxpay:  # Picture url | 二维码地址
+
+# Share | 分享
+# Currently only supported "qq, weibo, facebook, twitter, googleplus, telegram"
+# 目前仅支持 "qq, weibo, facebook, twitter, googleplus, telegram"
+share:
+  qq: true
+  weibo: true
+  facebook: true
+  twitter: true
+  googleplus: true
+  telegram: true
+
+# Comment | 评论
+# either-or | 两者只能选择一个
+
+# Valine
+# 详情查看 https://valine.js.org/quickstart.html
+valine: 
+    on: true # if not used, change this to 'false' | 如果不使用，将此项改为 'false'
+    appId: #appID
+    appKey: #appKey
+    notify: true
+    verify: false
+    placeholder: Please leave your footprints
+    avatar: ''
+    avatar_cdn: https://gravatar.loli.net/avatar/ # avatar CDN address, default gravatar.loli.net
+    pageSize: 10 # comments of one page
+    
+# Disqus
+disqus: false #disqus_shortname
+
+# Copyright Information | 版权信息
+copyright: Copyright © 2018 StaunchKai. All rights reserved
+
+# google analytics | google 分析
+google_analytics:
+
+# 百度分析，输入key值
+baidu_analytics:
+
+# ------------------------------
+# @theme: Staunch
+# @version: 1.0
+# @author: StaunchKai
+# @url: http://staunchkai.com
+# ------------------------------
