@@ -16,6 +16,8 @@ msource 的角色我大体分为了2种：
 - spout （数据推送组件)
 - db （数据存储组件）
 
+<!-- more -->
+
 ![ spout和db的关系 ](/images/数据库/spout_db_relation.png)
 
 在这个图中，我们可以看到，db可以独立出来应用，他不依赖于spout。spout默认的传输机制是我们golang中的channel模式，但是它可以选择使用db模式。
