@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash4
+#!/bin/bash
 
 dirname=$(cd "$(dirname "$0")";pwd)
 root=$(dirname $dirname)
