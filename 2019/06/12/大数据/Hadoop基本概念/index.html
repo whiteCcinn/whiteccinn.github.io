@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【大数据】- Hadoop 基本概念 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【大数据】- Hadoop 基本概念"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【大数据】- Hadoop 基本概念</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/12/大数据/Hadoop基本概念/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-12T01:56:40.000Z">
+          2019-06-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Hadoop 是一个由 Apache 基金会所开发的分布式系统基础架构，它可以使用户在不了解分布式底层细节的情況下开发分布式程序，充分利用集群的威力进行高速运算和存储。</p>
+<p>从其定义就可以发现，它解決了两大问题：大数据存储、大数据分析。也就是 Hadoop 的两大核心：HDFS 和 MapReduce。</p>
+<p>HDFS(Hadoop Distributed File System)是可扩展、容错、高性能的分布式文件系统，异步复制，一次写入多次读取，主要负责存储。</p>
+<p>MapReduce 为分布式计算框架，包含 map(映射)和 reduce(归约)过程，负责在 HDFS 上进行计算。</p>
+<p>但是由于目前我没有用到 MapReduce，并且 MapReduce 能效过于地下并且很占系统资料，所以一般数据分析都会用其他的来代替。</p>
+<p>所以这里介绍的 Hadoop，会重点讲解 HDFS 和其工作原理。</p>
+<a id="more"></a>
+
+<h2 id="Hadoop-存储-HDFS"><a href="#Hadoop-存储-HDFS" class="headerlink" title="Hadoop 存储 - HDFS"></a>Hadoop 存储 - HDFS</h2><p>Hadoop 的存储系统是 HDFS(Hadoop Distributed File System)分布式文件系统，对外部客户端而言，HDFS 就像一个传统的分级文件系统，可以进行创建、删除、移动或重命名文件或文件夹等操作，与 Linux 文件系统类似。</p>
+<p>但是，Hadoop HDFS 的架构是基于一组特定的节点构建的，名称节点（NameNode，仅一个)，它在 HDFS 内部提供<code>元数据服务</code>；第二名称节点(Secondary NameNode)，名称节点的帮助节点，主要是为了<code>整合元数据操作(注意不是名称节点的备份)</code>；数据节点(DataNode)，它为 HDFS 提供<code>存储块</code>。由于仅有一个 NameNode，因此这是 HDFS 的一个缺点(单点失败，在 Hadoop2.x 后有较大改善)。</p>
+<h3 id="NameNode"><a href="#NameNode" class="headerlink" title="NameNode"></a>NameNode</h3><p>它是一个通常在 HDFS 架构中单独机器上运行的组件，负责管理文件系统名称空间和控制外部客户机的访问。NameNode 决定是否将文件映射到 DataNode 上的复制块上。对于最常见的 3 个复制块，第一个复制块存储在同一机架的不同节点上，最后一个复制块存储在不同机架的某个节点上。</p>
+<h3 id="Secondary-NameNode"><a href="#Secondary-NameNode" class="headerlink" title="Secondary NameNode"></a>Secondary NameNode</h3><p>第二名称节点的作用在于为 HDFS 中的名称节点提供一个 Checkpoint，它只是名称节点的一个<code>助手节点</code>，这也是它在社区内被认为是 Checkpoint Node 的原因。</p>
+<h3 id="DatabNode"><a href="#DatabNode" class="headerlink" title="DatabNode"></a>DatabNode</h3><p>数据节点也是一个通常在 HDFS 架构中的单独机器上运行的组件。Hadoop 集群包含一个 NameNode 和大量 DataNode。数据节点通常以机架的形式组织，机架通过一个交换机将所有系统连接起来。</p>
+<p>数据节点响应来自 HDFS 客户机的<code>读写请求</code>。它们还响应来自 NameNode 的<code>创建</code>、<code>删除</code>和<code>复制块</code>的命令。名称节点依赖来自每个数据节点的定期<code>心跳（heartbeat）消息</code>。每条消息都包含一个<code>块报告</code>，名称节点可以根据这个报告验证块<code>映射和其他文件系统元数据</code>。如果数据节点不能发送心跳消息，名称节点将采取修复措施，<code>重新复制在该节点上丢失的块</code>。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

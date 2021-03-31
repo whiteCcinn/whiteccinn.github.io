@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Nginx】 - 变量 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Nginx】 - 变量"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Nginx】 - 变量</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/nginx-var/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T02:26:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>Nginx配置文件管理者整个nginx服务的运作，有一些逻辑我们可以通过nginx内置变量或者自定义变量来选择性配置。</p>
+<h2 id="内置常见变量参见下表："><a href="#内置常见变量参见下表：" class="headerlink" title="内置常见变量参见下表："></a>内置常见变量参见下表：</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$arg_name</td>
+<td>请求中的name参数</td>
+</tr>
+<tr>
+<td>$args</td>
+<td>请求中的参数</td>
+</tr>
+<tr>
+<td>$content_length</td>
+<td>HTTP请求里面的”Content-Length”</td>
+</tr>
+<tr>
+<td>$content_type</td>
+<td>HTTP请求里面的”Content-Type”</td>
+</tr>
+<tr>
+<td>$document_root</td>
+<td>配置里面设置的 <code>root</code> 赋值</td>
+</tr>
+<tr>
+<td>$host</td>
+<td>请求信息种的”HOST”,如果请求头不存在<code>Host</code>的话，那么久等于<code>server_name</code> 赋值</td>
+</tr>
+<tr>
+<td>$http_cookie</td>
+<td>cookie信息</td>
+</tr>
+<tr>
+<td>$http_referer</td>
+<td>引用地址，就是前一个链接地址</td>
+</tr>
+<tr>
+<td>$http_user_agent</td>
+<td>客户端代理信息</td>
+</tr>
+<tr>
+<td>$is_args</td>
+<td>如果请求行带有参数，返回“？”，否则返回空字符串</td>
+</tr>
+<tr>
+<td>$limit_rate</td>
+<td>当前连接速率的限制</td>
+</tr>
+<tr>
+<td>$pid</td>
+<td>nginx当前worker进程的PID</td>
+</tr>
+<tr>
+<td>$query_string</td>
+<td>与$args基本一致</td>
+</tr>
+<tr>
+<td>$remote_addr</td>
+<td>客户端IP地址</td>
+</tr>
+<tr>
+<td>$remote_port</td>
+<td>客户端端口号</td>
+</tr>
+<tr>
+<td>$scheme</td>
+<td>当前所用的协议，比如http或者https</td>
+</tr>
+<tr>
+<td>$request_method</td>
+<td>请求方法，比如“GET”，“POST”等</td>
+</tr>
+<tr>
+<td>$request_uri</td>
+<td>请求的URI，带参数，比如：<code>http://localhost:8080/uuu</code></td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+<h2 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h2><p>可以使用<code>set</code>关键字来设置，例如</p>
+<p>set $name caiwh</p>
+<p>在对应的结构体之内就用<code>$name</code>来代表caiwh了</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MM|DMM-中文全文搜索引擎 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="MM|DMM-中文全文搜索引擎"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>MM|DMM-中文全文搜索引擎</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/23/fulltext-mm-dmm/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-23T09:20:49.000Z">
+          2018-01-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>什么是中文分词</p>
+<p>众所周知，英文是以 词为单位的，词和词之间是靠空格隔开，而中文是以字为单位，句子中所有的字连起来才能描述一个意思。例如，英文句子 I am a student，用中文则为：“我是一个学生”。计算机可以很简单通过空格知道 student 是一个单词，但是不能很容易明白“学”、“生”两个字合起来 才表示一个词。把中文的汉字序列切分成有意义的词，就是中文分词，有些人也称为切词。我是一个学生，分词的结果是：我 是 一个 学生。</p>
+<h1 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h1><h2 id="最小匹配算法"><a href="#最小匹配算法" class="headerlink" title="最小匹配算法"></a>最小匹配算法</h2><a id="more"></a>
+
+<p>在所有的分词算法中，最早研究的是最小匹配算法(Minimum Matching)，该算法从待比较字符串左边开始比较，先取前两个字符组成的字段与词典中的词进行比较，如果词典中有该词，则分出此词，继续从第三个字 符开始取两个字符组成的字段进行比较，如果没有匹配到，则取前 3 个字符串组成的字段进行比较，依次类推，直到取的字符串的长度等于预先设定的阈值，如果还 没有匹配成功，则从待处理字串的第二个字符开始比较，如此循环。</p>
+<p>例如，“如果还没有匹配成功”，取出左边两个字 组成的字段与词典进行比较，分出“如果”；再从“还”开始，取“还没”，字典中没有此词，继续取“还没有”，依次取到字段“还没有匹配”(假设阈值为 5)，然后从“没”开始，取“没有”，如此循环直到字符串末尾为止。这种方法的优点是速度快，但是准确率却不是很高，比如待处理字符串为“中华人民共和 国”，此匹配算法分出的结果为：中华、人民、共和国，因此该方法基本上已经不被采用 。</p>
+<h2 id="最大匹配算法"><a href="#最大匹配算法" class="headerlink" title="最大匹配算法"></a>最大匹配算法</h2><p>基于字符串的最大匹配，这种方法现在仍比较常用。最大匹配(Maximum Matching)分为正向和逆向两种最大匹配，正向匹配的基本思想是：假设词典中最大词条所含的汉字个数为 n 个，取待处理字符串的前 n 个字作为匹配字 段，查找分词词典。若词典中含有该词，则匹配成功，分出该词，然后从被比较字符串的 n+1 处开始再取 n 个字组成的字段重新在词典中匹配；如果没有匹配成 功，则将这 n 个字组成的字段的最后一位剔除，用剩下的 n 一 1 个字组成的字段在词典中进行匹配，如此进行下去，直到切分成功为止。</p>
+<p>例 如，待处理字符串为“汉字多为表意文字”，取字符串“汉语多为表”(假设比较的步长为 5，本文步长 step 都取 5)与词典进行比较，没有与之对应的词，去 除“表”字，用字段“汉语多为”进行匹配，直至匹配到“汉语”为至，再取字符串“多为表意”，循环到切分出“文字”一词。目前，正向最大匹配方法作为一种 基本的方法已被肯定下来，但是由于错误比较大，一般不单独使用。如字符串“处理机器发生的故障”，在正向最大匹配方法中会出现歧义切分，该字符串被分为： 处理机、发生、故障，但是使用逆向匹配就能得到有效的切分。</p>
+<p>逆向最大匹配 RMM(Reverse Directional Maximum Matching Method)的分词原理和过程与正向最大匹配相似，区别在于前者从文章或者句子(字串)的末尾开始切分，若不成功则减去最前面的一个字。比如对于字符串 “处理机器发生的故障”，第一步，从字串的右边取长度以步长为单位的字段“发生的故障”在词典中进行匹配，匹配不成功，再取字段“生的故障”进行匹配，依 次匹配，直到分出“故障”一词，最终使用 RMM 方法切分的结果为：故障、发生、机器、处理。该方法要求配备逆序词典。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/全文搜索/">全文搜索</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【正则表达式】- 贪婪和非贪婪模式 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【正则表达式】- 贪婪和非贪婪模式"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【正则表达式】- 贪婪和非贪婪模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/regular-3/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T06:11:56.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="模式："><a href="#模式：" class="headerlink" title="模式："></a>模式：</h2><p>在使用修饰匹配次数的特殊符号时，有几种表示方法可以使同一个表达式能够匹配不同的次数，比如：”{m,n}”, “{m,}”, “?”, “*”, “+”，具体匹配的次数随被匹配的字符串而定。这种重复匹配不定次数的表达式在匹配过程中，总是尽可能多的匹配。比如，针对文本 “dxxxdxxxd”，举例如下：</p>
+<h2 id="贪婪模式："><a href="#贪婪模式：" class="headerlink" title="贪婪模式："></a>贪婪模式：</h2><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(d)(\w+)</td>
+<td>“\w+” 将匹配第一个 “d” 之后的所有字符 “xxxdxxxd”</td>
+</tr>
+<tr>
+<td>(d)(\w+)(d)</td>
+<td>“\w+” 将匹配第一个 “d” 和最后一个 “d” 之间的所有字符 “xxxdxxx”。</td>
+</tr>
+</tbody></table>
+<p>虽然 “\w+” 也能够匹配上最后一个 “d”，但是为了使整个表达式匹配成功，<br>“\w+” 可以 “让出” 它本来能够匹配的最后一个 “d”</p>
+<a id="more"></a>
+
+<p>由此可见，”\w+” 在匹配的时候，总是尽可能多的匹配符合它规则的字符。<br>虽然第二个举例中，它没有匹配最后一个 “d”，但那也是为了让整个表达式能够匹配成功。<br>同理，带 “*” 和 “{m,n}” 的表达式都是尽可能地多匹配，带 “?” 的表达式在可匹配可不匹配的时候，<br>也是尽可能的 “要匹配”。这 种匹配原则就叫作 “贪婪” 模式 。</p>
+<h2 id="非贪婪模式："><a href="#非贪婪模式：" class="headerlink" title="非贪婪模式："></a>非贪婪模式：</h2><p>在修饰匹配次数的特殊符号后再加上一个 “?” 号，则可以使匹配次数不定的表达式尽可能少的匹配，使可匹配可不匹配的表达式，尽可能的 “不匹配”。这种匹配原则叫作 “非贪婪” 模式，也叫作 “勉强” 模式。如果少匹配就会导致整个表达式匹配失败的时候，与贪婪模式类似，非贪婪模式会最小限度的再匹配一些，以使整个表达式匹配成功。举例如下，针对文本 “dxxxdxxxd” 举例：</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(d)(\w+?)</td>
+<td>“\w+?” 将尽可能少的匹配第一个 “d” 之后的字符，结果是：”\w+?” 只匹配了一个 “x”</td>
+</tr>
+<tr>
+<td>(d)(\w+?)(d)</td>
+<td>为了让整个表达式匹配成功，”\w+?” 不得不匹配 “xxx” 才可以让后边的 “d” 匹配，从而使整个表达式匹配成功。因此，结果是：”\w+?” 匹配 “xxx”</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/正则/">正则</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/正则/">正则</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

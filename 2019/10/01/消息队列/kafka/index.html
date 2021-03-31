@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【消息队列】- Kafka相关 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【消息队列】- Kafka相关"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【消息队列】- Kafka相关</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/10/01/消息队列/kafka/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-10-01T07:25:40.000Z">
+          2019-10-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前 kafka 客户端在 php 中比较出名的仅有 2 个，但是其各有利弊，在这里就不展开详细说明了。因此，我们实现了一个叫<code>kafka-swoole</code>的项目，项目由<code>swoole4.x</code>协程+多进程实现，实现在串行化协程的基础上实现并行操作。</p>
+<p>由于很多小伙伴对 kafka 并不是特别了解，所以在这里记录一下一些基础的 kafka 自带的命令使用方式</p>
+<a id="more"></a>
+
+<p>我的 kafka 集群是 4 个 broker，是用 docker 连接在一起的 kafka 集群。分别设置了 hostname</p>
+<ul>
+<li>mkafka1:9092</li>
+<li>mkafka2:9092</li>
+<li>mkafka3:9092</li>
+<li>mkafka4:9092</li>
+<li>mzookeeper:2181</li>
+</ul>
+<h3 id="kafka-topics-sh"><a href="#kafka-topics-sh" class="headerlink" title="kafka-topics.sh"></a>kafka-topics.sh</h3><p>这个脚本主要是用于 kafka 创建 topics 而使用。</p>
+<h4 id="创建-topic"><a href="#创建-topic" class="headerlink" title="创建 topic"></a>创建 topic</h4><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>–alter</td>
+<td>修改 topic 的分区数，副本指派以及 topic 的现有配置</td>
+</tr>
+<tr>
+<td>–config &lt;name=value&gt;</td>
+<td>创建 topic 的时候会用到默认配置，置顶具体的配置参数，具体查看 kafka 的配置项</td>
+</tr>
+<tr>
+<td>–create</td>
+<td>创建 topic</td>
+</tr>
+<tr>
+<td>–delete</td>
+<td>删除 topic</td>
+</tr>
+<tr>
+<td>–delete-config <name></td>
+<td>创建 topic 的时候移除某一个配置项</td>
+</tr>
+<tr>
+<td>–describe</td>
+<td>某一个 topic 的详情描述</td>
+</tr>
+<tr>
+<td>–list</td>
+<td>所有可用的 topic 列表</td>
+</tr>
+<tr>
+<td>–partitions <number></td>
+<td>指定 topic 数目</td>
+</tr>
+<tr>
+<td>–replica-assignment &lt;broker_id_for_part1_replica1,…&gt;</td>
+<td>创建或更改的主题的手动分区到代理的分配列表。</td>
+</tr>
+<tr>
+<td>–replication-factor <number></td>
+<td>topic 的副本因子</td>
+</tr>
+<tr>
+<td>–topic <topic></td>
+<td>需要创建的 topic 名字</td>
+</tr>
+<tr>
+<td>–unavailable-partitions</td>
+<td>–describe 主题的时候，则只显示其 leader 不可用的分区</td>
+</tr>
+<tr>
+<td>–zookeeper</td>
+<td>zookeeper 节点</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kafka-topics.sh --create --zookeeper mzookeeper:2181 --replication-factor 2 --partitions 4 --topic kafka-swoole</span><br><span class="line"></span><br><span class="line">## 标准输出</span><br><span class="line">Created topic &quot;kafka-swoole&quot;.</span><br></pre></td></tr></table></figure>
+
+<p>这样子执行命令，我们就可以创建一个副本因子为 2，并且分区数为 4 ，名字叫 kafka-swoole 的 topic</p>
+<h4 id="查看所有的-topic-列表"><a href="#查看所有的-topic-列表" class="headerlink" title="查看所有的 topic 列表"></a>查看所有的 topic 列表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kafka-topics.sh --list --zookeeper mzookeeper:2181</span><br><span class="line"></span><br><span class="line">## 标准输出</span><br><span class="line">__consumer_offsets</span><br><span class="line">caiwenhui</span><br><span class="line">caiwenhui2</span><br><span class="line">kafka-swoole</span><br><span class="line">test</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看-某个-topic-的详情"><a href="#查看-某个-topic-的详情" class="headerlink" title="查看 某个 topic 的详情"></a>查看 某个 topic 的详情</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kafka-topics.sh  --zookeeper mzookeeper:2181 --topic kafka-swoole --describe</span><br><span class="line"></span><br><span class="line">## 标准输出</span><br><span class="line">Topic:kafka-swoole	PartitionCount:4	ReplicationFactor:2	Configs:</span><br><span class="line">	Topic: kafka-swoole	Partition: 0	Leader: 1003	Replicas: 1003,1002	Isr: 1003,1002</span><br><span class="line">	Topic: kafka-swoole	Partition: 1	Leader: 1004	Replicas: 1004,1003	Isr: 1004,1003</span><br><span class="line">	Topic: kafka-swoole	Partition: 2	Leader: 1001	Replicas: 1001,1004	Isr: 1001,1004</span><br><span class="line">	Topic: kafka-swoole	Partition: 3	Leader: 1002	Replicas: 1002,1001	Isr: 1002,1001</span><br></pre></td></tr></table></figure>
+
+<h4 id="向某个-topic-写入消息"><a href="#向某个-topic-写入消息" class="headerlink" title="向某个 topic 写入消息"></a>向某个 topic 写入消息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-console-producer.sh --broker-list mkafka1:9092 --topic kafka-swoole</span><br></pre></td></tr></table></figure>
+
+<h4 id="从某个-topic-读取消息"><a href="#从某个-topic-读取消息" class="headerlink" title="从某个 topic 读取消息"></a>从某个 topic 读取消息</h4><h5 id="从最开始的-offset-读取"><a href="#从最开始的-offset-读取" class="headerlink" title="从最开始的 offset 读取"></a>从最开始的 offset 读取</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server mkafka1:9092 --topic kafka-swoole --from-beginning</span><br></pre></td></tr></table></figure>
+
+<h5 id="从最新的-offset-中读"><a href="#从最新的-offset-中读" class="headerlink" title="从最新的 offset 中读"></a>从最新的 offset 中读</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-console-consumer.sh --bootstrap-server mkafka1:9092 --topic kafka-swoole</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看某个-topic-的某个时刻的-offset"><a href="#查看某个-topic-的某个时刻的-offset" class="headerlink" title="查看某个 topic 的某个时刻的 offset"></a>查看某个 topic 的某个时刻的 offset</h4><h5 id="最早之前的消息的-offset"><a href="#最早之前的消息的-offset" class="headerlink" title="最早之前的消息的 offset"></a>最早之前的消息的 offset</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 192.168.11.148:9092 -time -2 --topic kafka-swoole</span><br><span class="line"></span><br><span class="line"># 标准输出</span><br><span class="line">kafka-swoole:2:0</span><br><span class="line">kafka-swoole:1:0</span><br><span class="line">kafka-swoole:3:0</span><br><span class="line">kafka-swoole:0:0</span><br></pre></td></tr></table></figure>
+
+<h5 id="最近的消息-offset"><a href="#最近的消息-offset" class="headerlink" title="最近的消息 offset"></a>最近的消息 offset</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 192.168.11.148:9092 -time -1 --topic kafka-swoole</span><br><span class="line"></span><br><span class="line"># 标准输出</span><br><span class="line">kafka-swoole:2:0</span><br><span class="line">kafka-swoole:1:0</span><br><span class="line">kafka-swoole:3:0</span><br><span class="line">kafka-swoole:0:6</span><br></pre></td></tr></table></figure>
+
+<h5 id="某一个时刻的-offset"><a href="#某一个时刻的-offset" class="headerlink" title="某一个时刻的 offset"></a>某一个时刻的 offset</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 192.168.11.148:9092 -time 1569943885 --topic kafka-swoole</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/消息队列/">消息队列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/消息队列，Kafka/">消息队列，Kafka</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

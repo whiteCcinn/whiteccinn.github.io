@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- devle | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- devle"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- devle</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/08/14/Golang/dlv在线调试/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-14T01:46:51.000Z">
+          2020-08-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们可能断点调试程序，所以我们需要debug工具，对于golang来说，delve比gdb对go程序更友好。所以，我们今天来看看devle怎么debug程序</p>
+<a id="more"></a>
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com&#x2F;go-delve&#x2F;delve&#x2F;cmd&#x2F;dlv</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>a）dlv debug</p>
+<p>使用dlv debug可以在main函数文件所在目录直接对main函数进行调试，也可以在根目录以指定包路径的方式对main函数进行调试。</p>
+<p>b）dlv test</p>
+<p>使用dlv test可以对test包进行调试。</p>
+<p>c）dlv attach</p>
+<p>使用dlv attach可以附加到一个已在运行的进程进行调试。</p>
+<p>d）dlv connect</p>
+<p>使用dlv connect可以连接到调试服务器进行调试。</p>
+<p>e）dlv trace</p>
+<p>使用dlv trace可以追踪程序。</p>
+<p>f）dlv exec</p>
+<p>使用dlv exec可以对编译好的二进制进行调试</p>
+<p>创建main.go文件，main函数先通过循初始化一个切片，然后输出切片的内容：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    nums := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">5</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">        nums[i] = i * i</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(nums)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>命令行进入包所在目录，然后输入<code>dlv debug</code>命令进入调试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ dlv debug</span><br><span class="line">Type &#39;help&#39; for list of commands.</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>输入<code>help</code>命令可以查看到Delve提供的调试命令列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">(dlv) help</span><br><span class="line">The following commands are available:</span><br><span class="line"></span><br><span class="line">Running the program:</span><br><span class="line">    call ------------------------ Resumes process, injecting a function call (EXPERIMENTAL!!!)</span><br><span class="line">    continue (alias: c) --------- Run until breakpoint or program termination.</span><br><span class="line">    next (alias: n) ------------- Step over to next source line.</span><br><span class="line">    rebuild --------------------- Rebuild the target executable and restarts it. It does not work if the executable was not built by delve.</span><br><span class="line">    restart (alias: r) ---------- Restart process.</span><br><span class="line">    step (alias: s) ------------- Single step through program.</span><br><span class="line">    step-instruction (alias: si)  Single step a single cpu instruction.</span><br><span class="line">    stepout (alias: so) --------- Step out of the current function.</span><br><span class="line"></span><br><span class="line">Manipulating breakpoints:</span><br><span class="line">    break (alias: b) ------- Sets a breakpoint.</span><br><span class="line">    breakpoints (alias: bp)  Print out info for active breakpoints.</span><br><span class="line">    clear ------------------ Deletes breakpoint.</span><br><span class="line">    clearall --------------- Deletes multiple breakpoints.</span><br><span class="line">    condition (alias: cond)  Set breakpoint condition.</span><br><span class="line">    on --------------------- Executes a command when a breakpoint is hit.</span><br><span class="line">    trace (alias: t) ------- Set tracepoint.</span><br><span class="line"></span><br><span class="line">Viewing program variables and memory:</span><br><span class="line">    args ----------------- Print function arguments.</span><br><span class="line">    display -------------- Print value of an expression every time the program stops.</span><br><span class="line">    examinemem (alias: x)  Examine memory:</span><br><span class="line">    locals --------------- Print local variables.</span><br><span class="line">    print (alias: p) ----- Evaluate an expression.</span><br><span class="line">    regs ----------------- Print contents of CPU registers.</span><br><span class="line">    set ------------------ Changes the value of a variable.</span><br><span class="line">    vars ----------------- Print package variables.</span><br><span class="line">    whatis --------------- Prints type of an expression.</span><br><span class="line"></span><br><span class="line">Listing and switching between threads and goroutines:</span><br><span class="line">    goroutine (alias: gr) -- Shows or changes current goroutine</span><br><span class="line">    goroutines (alias: grs)  List program goroutines.</span><br><span class="line">    thread (alias: tr) ----- Switch to the specified thread.</span><br><span class="line">    threads ---------------- Print out info for every traced thread.</span><br><span class="line"></span><br><span class="line">Viewing the call stack and selecting frames:</span><br><span class="line">    deferred --------- Executes command in the context of a deferred call.</span><br><span class="line">    down ------------- Move the current frame down.</span><br><span class="line">    frame ------------ Set the current frame, or execute command on a different frame.</span><br><span class="line">    stack (alias: bt)  Print stack trace.</span><br><span class="line">    up --------------- Move the current frame up.</span><br><span class="line"></span><br><span class="line">Other commands:</span><br><span class="line">    config --------------------- Changes configuration parameters.</span><br><span class="line">    disassemble (alias: disass)  Disassembler.</span><br><span class="line">    edit (alias: ed) ----------- Open where you are in $DELVE_EDITOR or $EDITOR</span><br><span class="line">    exit (alias: quit | q) ----- Exit the debugger.</span><br><span class="line">    funcs ---------------------- Print list of functions.</span><br><span class="line">    help (alias: h) ------------ Prints the help message.</span><br><span class="line">    libraries ------------------ List loaded dynamic libraries</span><br><span class="line">    list (alias: ls | l) ------- Show source code.</span><br><span class="line">    source --------------------- Executes a file containing a list of delve commands</span><br><span class="line">    sources -------------------- Print list of source files.</span><br><span class="line">    types ---------------------- Print list of types</span><br><span class="line"></span><br><span class="line">Type help followed by a command for full documentation.</span><br></pre></td></tr></table></figure>
+
+<p>每个Go程序的入口是main.main函数，我们可以用<code>break(b)</code>在此设置一个断点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(dlv) break main.main</span><br><span class="line">Breakpoint 1 set at 0x10ae9b8 for main.main() .&#x2F;main.go:7</span><br></pre></td></tr></table></figure>
+
+<p>然后通过<code>breakpoints(bp)</code>查看已经设置的所有断点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(dlv) breakpoints</span><br><span class="line">Breakpoint unrecovered-panic at 0x102a380 for runtime.startpanic()</span><br><span class="line">    &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;panic.go:588 (0)</span><br><span class="line">        print runtime.curg._panic.arg</span><br><span class="line">Breakpoint 1 at 0x10ae9b8 for main.main() .&#x2F;main.go:7 (0)</span><br></pre></td></tr></table></figure>
+
+<p>我们发现除了我们自己设置的<code>main.main</code>函数断点外，Delve内部已经为panic异常函数设置了一个断点。</p>
+<p>通过<code>vars</code>命令可以查看全部包级的变量。因为最终的目标程序可能含有大量的全局变量，我们可以通过一个正则参数选择想查看的全局变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(dlv) vars main</span><br><span class="line">main.initdone· &#x3D; 2</span><br><span class="line">runtime.main_init_done &#x3D; chan bool 0&#x2F;0</span><br><span class="line">runtime.mainStarted &#x3D; true</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以通过<code>continue(c)</code>命令让程序运行到下一个断点处：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(dlv) continue</span><br><span class="line">&gt; main.main() .&#x2F;main.go:7 (hits goroutine(1):1 total:1) (PC: 0x10ae9b8)</span><br><span class="line">     2:</span><br><span class="line">     3: import (</span><br><span class="line">     4:         &quot;fmt&quot;</span><br><span class="line">     5: )</span><br><span class="line">     6:</span><br><span class="line">&#x3D;&gt;   7: func main() &#123;</span><br><span class="line">     8:         nums :&#x3D; make([]int, 5)</span><br><span class="line">     9:         for i :&#x3D; 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">    10:                 nums[i] &#x3D; i * i</span><br><span class="line">    11:         &#125;</span><br><span class="line">    12:         fmt.Println(nums)</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>输入<code>next(n)</code>命令单步执行进入main函数内部：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(dlv) next</span><br><span class="line">&gt; main.main() .&#x2F;main.go:8 (PC: 0x10ae9cf)</span><br><span class="line">     3: import (</span><br><span class="line">     4:         &quot;fmt&quot;</span><br><span class="line">     5: )</span><br><span class="line">     6:</span><br><span class="line">     7: func main() &#123;</span><br><span class="line">&#x3D;&gt;   8:         nums :&#x3D; make([]int, 5)</span><br><span class="line">     9:         for i :&#x3D; 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">    10:                 nums[i] &#x3D; i * i</span><br><span class="line">    11:         &#125;</span><br><span class="line">    12:         fmt.Println(nums)</span><br><span class="line">    13: &#125;</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>进入函数之后可以通过<code>args</code>和<code>locals</code>命令查看函数的参数和局部变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(dlv) args</span><br><span class="line">(no args)</span><br><span class="line">(dlv) locals</span><br><span class="line">nums &#x3D; []int len: 842350763880, cap: 17491881, nil</span><br></pre></td></tr></table></figure>
+
+<p>因为main函数没有参数，因此args命令没有任何输出。而locals命令则输出了局部变量nums切片的值：此时切片还未完成初始化，切片的底层指针为nil，长度和容量都是一个随机数值。</p>
+<p>再次输入next命令单步执行后就可以查看到nums切片初始化之后的结果了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(dlv) next</span><br><span class="line">&gt; main.main() .&#x2F;main.go:9 (PC: 0x10aea12)</span><br><span class="line">     4:         &quot;fmt&quot;</span><br><span class="line">     5: )</span><br><span class="line">     6:</span><br><span class="line">     7: func main() &#123;</span><br><span class="line">     8:         nums :&#x3D; make([]int, 5)</span><br><span class="line">&#x3D;&gt;   9:         for i :&#x3D; 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">    10:                 nums[i] &#x3D; i * i</span><br><span class="line">    11:         &#125;</span><br><span class="line">    12:         fmt.Println(nums)</span><br><span class="line">    13: &#125;</span><br><span class="line">(dlv) locals</span><br><span class="line">nums &#x3D; []int len: 5, cap: 5, [...]</span><br><span class="line">i &#x3D; 17601536</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>此时因为调试器已经到了for语句行，因此局部变量出现了还未初始化的循环迭代变量i。</p>
+<p>下面我们通过组合使用<code>break(b)</code>和<code>condition(cond)</code>命令，在循环内部设置一个条件断点，当循环变量i等于3时断点生效：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(dlv) break main.go:10</span><br><span class="line">Breakpoint 2 set at 0x10aea33 for main.main() .&#x2F;main.go:10</span><br><span class="line">(dlv) condition 2 i&#x3D;&#x3D;3</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>然后通过continue执行到刚设置的条件断点，并且输出局部变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(dlv) continue</span><br><span class="line">&gt; main.main() .&#x2F;main.go:10 (hits goroutine(1):1 total:1) (PC: 0x10aea33)</span><br><span class="line">     5: )</span><br><span class="line">     6:</span><br><span class="line">     7: func main() &#123;</span><br><span class="line">     8:         nums :&#x3D; make([]int, 5)</span><br><span class="line">     9:         for i :&#x3D; 0; i &lt; len(nums); i++ &#123;</span><br><span class="line">&#x3D;&gt;  10:                 nums[i] &#x3D; i * i</span><br><span class="line">    11:         &#125;</span><br><span class="line">    12:         fmt.Println(nums)</span><br><span class="line">    13: &#125;</span><br><span class="line">(dlv) locals</span><br><span class="line">nums &#x3D; []int len: 5, cap: 5, [...]</span><br><span class="line">i &#x3D; 3</span><br><span class="line">(dlv) print nums</span><br><span class="line">[]int len: 5, cap: 5, [0,1,4,0,0]</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>我们发现当循环变量i等于3时，nums切片的前3个元素已经正确初始化。</p>
+<p>我们还可以通过stack查看当前执行函数的栈帧信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(dlv) stack</span><br><span class="line">0  0x00000000010aea33 in main.main</span><br><span class="line">   at .&#x2F;main.go:10</span><br><span class="line">1  0x000000000102bd60 in runtime.main</span><br><span class="line">   at &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;proc.go:198</span><br><span class="line">2  0x0000000001053bd1 in runtime.goexit</span><br><span class="line">   at &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;asm_amd64.s:2361</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>或者通过<code>goroutine</code>和<code>goroutines</code>命令查看当前Goroutine相关的信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">(dlv) goroutine</span><br><span class="line">Thread 101686 at .&#x2F;main.go:10</span><br><span class="line">Goroutine 1:</span><br><span class="line">  Runtime: .&#x2F;main.go:10 main.main (0x10aea33)</span><br><span class="line">  User: .&#x2F;main.go:10 main.main (0x10aea33)</span><br><span class="line">  Go: &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;asm_amd64.s:258 runtime.rt0_go (0x1051643)</span><br><span class="line">  Start: &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;proc.go:109 runtime.main (0x102bb90)</span><br><span class="line">(dlv) goroutines</span><br><span class="line">[4 goroutines]</span><br><span class="line">* Goroutine 1 - User: .&#x2F;main.go:10 main.main (0x10aea33) (thread 101686)</span><br><span class="line">  Goroutine 2 - User: &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;proc.go:292 \</span><br><span class="line">                runtime.gopark (0x102c189)</span><br><span class="line">  Goroutine 3 - User: &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;proc.go:292 \</span><br><span class="line">                runtime.gopark (0x102c189)</span><br><span class="line">  Goroutine 4 - User: &#x2F;usr&#x2F;local&#x2F;go&#x2F;src&#x2F;runtime&#x2F;proc.go:292 \</span><br><span class="line">                runtime.gopark (0x102c189)</span><br><span class="line">(dlv)</span><br></pre></td></tr></table></figure>
+
+<p>最后完成调试工作后输入quit命令退出调试器。至此我们已经掌握了Delve调试器器的简单用法。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

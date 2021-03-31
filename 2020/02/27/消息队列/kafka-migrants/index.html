@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【消息队列】- Kafka数据动态迁移 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【消息队列】- Kafka数据动态迁移"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【消息队列】- Kafka数据动态迁移</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/02/27/消息队列/kafka-migrants/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-02-27T09:25:40.000Z">
+          2020-02-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>kafka作为高效的消息队列，其数据的维护也是十分重要的。有时候，我们可能存在对broker进行数据迁移，或者增加或者减少broker。对于我们已经创建了对topic。其配置不会随便进行更新。isr中依然存在着已经移除了对broker，这个时候，我们就需要更新它们的信息，告诉kafka数据分布的情况。并且在最少isr的问题到来之前，提前减少事故的事发。</p>
+<a id="more"></a>
+
+<h3 id="1-创建topic"><a href="#1-创建topic" class="headerlink" title="1. 创建topic"></a>1. 创建topic</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-topics.sh --create --topic test-topic \</span><br><span class="line">--zookeeper mzookeeper \</span><br><span class="line">--replication-factor 2 --partitions 3</span><br><span class="line">Created topic "test-topic".</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-查看test-topic"><a href="#2-查看test-topic" class="headerlink" title="2.查看test-topic"></a>2.查看test-topic</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-topics.sh --describe --zookeeper mzookeeper --topic test-topic</span><br><span class="line">Topic:test-topic	PartitionCount:3	ReplicationFactor:2	Configs:</span><br><span class="line">	Topic: test-topic	Partition: 0	Leader: 1002	Replicas: 1002,1003	Isr: 1002,1003</span><br><span class="line">	Topic: test-topic	Partition: 1	Leader: 1003	Replicas: 1003,1004	Isr: 1003,1004</span><br><span class="line">	Topic: test-topic	Partition: 2	Leader: 1004	Replicas: 1004,1001	Isr: 1004,1001</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-产生一批数据"><a href="#3-产生一批数据" class="headerlink" title="3. 产生一批数据"></a>3. 产生一批数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-console-producer.sh --topic test-topic --broker-list mkafka1:9092</span><br><span class="line">111111</span><br><span class="line">22222</span><br><span class="line">33333</span><br><span class="line">44444</span><br><span class="line">555555</span><br><span class="line">66666</span><br><span class="line">1111</span><br><span class="line">2222</span><br><span class="line">3333</span><br><span class="line">4444</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-kafka-reassign-partitions重分区-假设需要减少节点broker-1004，本测试通过关闭对应kafka-broker节点模拟"><a href="#4-kafka-reassign-partitions重分区-假设需要减少节点broker-1004，本测试通过关闭对应kafka-broker节点模拟" class="headerlink" title="4. kafka-reassign-partitions重分区(假设需要减少节点broker 1004，本测试通过关闭对应kafka broker节点模拟)"></a>4. kafka-reassign-partitions重分区(假设需要减少节点broker 1004，本测试通过关闭对应kafka broker节点模拟)</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-topics.sh --describe --zookeeper mzookeeper --topic test-topic</span><br><span class="line">Topic:test-topic	PartitionCount:3	ReplicationFactor:2	Configs:</span><br><span class="line">	Topic: test-topic	Partition: 0	Leader: 1002	Replicas: 1002,1003	Isr: 1002,1003</span><br><span class="line">	Topic: test-topic	Partition: 1	Leader: 1003	Replicas: 1003,1004	Isr: 1003</span><br><span class="line">	Topic: test-topic	Partition: 2	Leader: 1001	Replicas: 1004,1001	Isr: 1001</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们看到partition=2的Leader由1004变为了1001，并且isr中的1004已经不见了。</p>
+<h3 id="5-新建文件topic-to-move-json-，比加入如下内容"><a href="#5-新建文件topic-to-move-json-，比加入如下内容" class="headerlink" title="5. 新建文件topic-to-move.json ，比加入如下内容"></a>5. 新建文件topic-to-move.json ，比加入如下内容</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">cat&gt;</span><span class="bash">topic-to-move.json&lt;&lt;EOF</span></span><br><span class="line">&#123;"topics": [&#123;"topic":"test-topic"&#125;], "version": 1&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-使用–generate生成迁移计划，broker-list根据自己环境设置，我的环境由于broker-10004挂掉了，只剩下1001和1002和1003"><a href="#6-使用–generate生成迁移计划，broker-list根据自己环境设置，我的环境由于broker-10004挂掉了，只剩下1001和1002和1003" class="headerlink" title="6. 使用–generate生成迁移计划，broker-list根据自己环境设置，我的环境由于broker 10004挂掉了，只剩下1001和1002和1003"></a>6. 使用–generate生成迁移计划，broker-list根据自己环境设置，我的环境由于broker 10004挂掉了，只剩下1001和1002和1003</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-reassign-partitions.sh --zookeeper mzookeeper --topics-to-move-json-file topic-to-move.json --broker-list "1001,1002,1003" --generate</span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;"version":1,"partitions":[&#123;"topic":"test-topic","partition":0,"replicas":[1002,1003]&#125;,&#123;"topic":"test-topic","partition":2,"replicas":[1004,1001]&#125;,&#123;"topic":"test-topic","partition":1,"replicas":[1003,1004]&#125;]&#125;</span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line"></span><br><span class="line">&#123;"version":1,"partitions":[&#123;"topic":"test-topic","partition":0,"replicas":[1003,1001]&#125;,&#123;"topic":"test-topic","partition":2,"replicas":[1002,1003]&#125;,&#123;"topic":"test-topic","partition":1,"replicas":[1001,1002]&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们把最下面分配好的建议的分区副本分布配置拿出来，写入一个新的文件中<br>(生产上一般会保留当前分区副本分布，仅更改下线的分区，这样数据移动更少)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; kafka-reassign-execute.json &lt;&lt;EOF</span><br><span class="line">&#123;"version":1,"partitions":[&#123;"topic":"test-topic","partition":0,"replicas":[1003,1001]&#125;,&#123;"topic":"test-topic","partition":2,"replicas":[1002,1003]&#125;,&#123;"topic":"test-topic","partition":1,"replicas":[1001,1002]&#125;]&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-使用–execute执行迁移计划-有数据移动，broker-1004上的数据会移到broker-1001和1002和1003上，如果数据量大，执行的时间会比较久，耐心等待即可"><a href="#7-使用–execute执行迁移计划-有数据移动，broker-1004上的数据会移到broker-1001和1002和1003上，如果数据量大，执行的时间会比较久，耐心等待即可" class="headerlink" title="7. 使用–execute执行迁移计划  (有数据移动，broker 1004上的数据会移到broker 1001和1002和1003上，如果数据量大，执行的时间会比较久，耐心等待即可)"></a>7. 使用–execute执行迁移计划  (有数据移动，broker 1004上的数据会移到broker 1001和1002和1003上，如果数据量大，执行的时间会比较久，耐心等待即可)</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-reassign-partitions.sh --zookeeper mzookeeper \</span><br><span class="line">--reassignment-json-file kafka-reassign-execute.json \</span><br><span class="line">--execute</span><br><span class="line">Current partition replica assignment</span><br><span class="line"></span><br><span class="line">&#123;"version":1,"partitions":[&#123;"topic":"test-topic","partition":0,"replicas":[1002,1003]&#125;,&#123;"topic":"test-topic","partition":2,"replicas":[1004,1001]&#125;,&#123;"topic":"test-topic","partition":1,"replicas":[1003,1004]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">Save this to use as the --reassignment-json-file option during rollback</span><br><span class="line">Successfully started reassignment of partitions &#123;"version":1,"partitions":[&#123;"topic":"test-topic","partition":0,"replicas":[1003,1001]&#125;,&#123;"topic":"test-topic","partition":2,"replicas":[1002,1003]&#125;,&#123;"topic":"test-topic","partition":1,"replicas":[1001,1002]&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里还是列出了原始的配置和最新的配置，并且有一句提示：如果需要回滚的话，请使用第一份配置，第二份配置已经成功开始重新分发。</p>
+<h3 id="8-使用-verify查看迁移进度"><a href="#8-使用-verify查看迁移进度" class="headerlink" title="8. 使用-verify查看迁移进度"></a>8. 使用-verify查看迁移进度</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-reassign-partitions.sh --zookeeper mzookeeper \</span><br><span class="line">--reassignment-json-file kafka-reassign-execute.json \</span><br><span class="line">--verify</span><br><span class="line">Status of partition reassignment:</span><br><span class="line">Reassignment of partition [test-topic,0] completed successfully</span><br><span class="line">Reassignment of partition [test-topic,2] completed successfully</span><br><span class="line">Reassignment of partition [test-topic,1] completed successfully</span><br></pre></td></tr></table></figure>
+
+<p>成功处理完毕了。</p>
+<h3 id="9-查看详情"><a href="#9-查看详情" class="headerlink" title="9. 查看详情"></a>9. 查看详情</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-topics.sh --describe --zookeeper mzookeeper --topic test-topic</span><br><span class="line">Topic:test-topic	PartitionCount:3	ReplicationFactor:2	Configs:</span><br><span class="line">	Topic: test-topic	Partition: 0	Leader: 1003	Replicas: 1003,1001	Isr: 1003,1001</span><br><span class="line">	Topic: test-topic	Partition: 1	Leader: 1001	Replicas: 1001,1002	Isr: 1001,1002</span><br><span class="line">	Topic: test-topic	Partition: 2	Leader: 1002	Replicas: 1002,1003	Isr: 1003,1002</span><br></pre></td></tr></table></figure>
+
+<p>可以看到1004的broker_id已经被彻底移除了。</p>
+<h3 id="9-通过消费者验证，可知，并未丢失数据。注意需要加–from-beginning。"><a href="#9-通过消费者验证，可知，并未丢失数据。注意需要加–from-beginning。" class="headerlink" title="9. 通过消费者验证，可知，并未丢失数据。注意需要加–from-beginning。"></a>9. 通过消费者验证，可知，并未丢失数据。注意需要加–from-beginning。</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bash-4.4# kafka-console-consumer.sh --topic test-topic --from-beginning --zookeeper mzookeeper</span><br><span class="line">111111</span><br><span class="line">44444</span><br><span class="line">1111</span><br><span class="line">4444</span><br><span class="line">33333</span><br><span class="line">66666</span><br><span class="line">3333</span><br><span class="line">22222</span><br><span class="line">555555</span><br><span class="line">2222</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/消息队列/">消息队列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/消息队列，Kafka/">消息队列，Kafka</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【PHP】- php7的新特性 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【PHP】- php7的新特性"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【PHP】- php7的新特性</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/php7/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T15:58:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>php7 出来的时候，多了哪些特性呢，在这里总结一下</p>
+<p>为什么 PHP7 比 PHP5 性能提升了？</p>
+<ul>
+<li><p>变量存储字节减小，减少内存占用，提升变量操作速度</p>
+</li>
+<li><p>改善数组结构，数组元素和 hash 映射表被分配在同一块内存里，降低了内存占用、提升了 cpu 缓存命中率<br>（以往的 zval 是一个 24 字节的结构体，现在的固定是 16 个字节）</p>
+</li>
+<li><p>改进了函数的调用机制，通过优化参数传递的环节，减少了一些指令，提高执行效率</p>
+</li>
+</ul>
+<h2 id="太空船操作符"><a href="#太空船操作符" class="headerlink" title="太空船操作符"></a>太空船操作符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x3D;&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左边大于右边的时候，返回 1</li>
+<li>右边大于左边的时候，返回-1</li>
+<li>两边相等的时候，返回 0</li>
+</ul>
+<a id="more"></a>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="number">1</span>;</span><br><span class="line">$b = <span class="number">2</span>;</span><br><span class="line">$result = $a &lt;=&gt; $b</span><br><span class="line"><span class="keyword">echo</span> $result;</span><br><span class="line"><span class="comment">// -1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="null-合并符"><a href="#null-合并符" class="headerlink" title="null 合并符"></a>null 合并符</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = $var[<span class="string">'var'</span>] ?? <span class="string">'null'</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>相当于 isset($var[‘var’])?$var:’null’</li>
+</ul>
+<h2 id="强制返回类型"><a href="#强制返回类型" class="headerlink" title="强制返回类型"></a>强制返回类型</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">myFunc</span><span class="params">()</span>: <span class="title">int</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当一个方法确认数据类型的时候，可以写上强制返回类型，这可以使得 php7 的解析代码逻辑更快。</p>
+<h2 id="define-定义数组"><a href="#define-定义数组" class="headerlink" title="define 定义数组"></a>define 定义数组</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'defineArray'</span>,[<span class="string">'a'</span> =&gt; <span class="number">1</span>, <span class="string">'b'</span> =&gt; <span class="number">2</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>这个的出现，可以使得你一开始就定义全局静态数组</p>
+<h2 id="匿名类"><a href="#匿名类" class="headerlink" title="匿名类"></a>匿名类</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="keyword">new</span> <span class="class"><span class="keyword">class</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     <span class="keyword">echo</span> <span class="string">'用后即焚'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">$b();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 减少引用（还需要回收周期执行：gc_collect_cycles()，手动强制执行gc回收周期）</span></span><br><span class="line"><span class="keyword">unset</span>($b);</span><br></pre></td></tr></table></figure>
+
+<p>和匿名函数差不多，都可以实现用后即焚，但是这个涉及到 gc 垃圾回收机制，里面有一个引用计数，当引用计数为 0 并且刚好到了 gc 回收周期的时候，该便将就将会销毁</p>
+<h2 id="use-集合化"><a href="#use-集合化" class="headerlink" title="use 集合化"></a>use 集合化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use some\namespace\A;</span><br><span class="line">use some\namespace\B;</span><br><span class="line">use some\namespace\C;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">use some\namespace\&#123;A,B,C&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="捕抓致命错误类"><a href="#捕抓致命错误类" class="headerlink" title="捕抓致命错误类"></a>捕抓致命错误类</h2><p>PHP 5 的 try … catch … finally 无法处理传统错误，如果需要，你通常会考虑用 set_error_handler() 来 Hack 一下。但是仍有很多错误类型是 set_error_handler() 捕捉不到的。PHP 7 引入 Throwable 接口，错误及异常都实现了 Throwable，无法直接实现 Throwable，但可以扩展 \Exception 和 \Error 类。可以用 Throwable 捕捉异常跟错误。\Exception 是所有 PHP 及用户异常的基类；\Error 是所有内部 PHP 错误的基类。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$name = <span class="string">"Tony"</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    $name = $name-&gt;method();</span><br><span class="line">&#125; <span class="keyword">catch</span> (\Error $e) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"出错消息 --- "</span>, $e-&gt;getMessage(), PHP_EOL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    $name = $name-&gt;method();</span><br><span class="line">&#125; <span class="keyword">catch</span> (\Throwable $e) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"出错消息 --- "</span>, $e-&gt;getMessage(), PHP_EOL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    intdiv(<span class="number">5</span>, <span class="number">0</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (\DivisionByZeroError $e) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"出错消息 --- "</span>, $e-&gt;getMessage(), PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后续陆续提供 7.1 才有的特性….</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

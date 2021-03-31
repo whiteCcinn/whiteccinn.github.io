@@ -1,0 +1,789 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 7 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/12/regular-3/"><span>【正则表达式】- 贪婪和非贪婪模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/regular-3/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T06:11:56.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="模式："><a href="#模式：" class="headerlink" title="模式："></a>模式：</h2><p>在使用修饰匹配次数的特殊符号时，有几种表示方法可以使同一个表达式能够匹配不同的次数，比如：”{m,n}”, “{m,}”, “?”, “*”, “+”，具体匹配的次数随被匹配的字符串而定。这种重复匹配不定次数的表达式在匹配过程中，总是尽可能多的匹配。比如，针对文本 “dxxxdxxxd”，举例如下：</p>
+<h2 id="贪婪模式："><a href="#贪婪模式：" class="headerlink" title="贪婪模式："></a>贪婪模式：</h2><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(d)(\w+)</td>
+<td>“\w+” 将匹配第一个 “d” 之后的所有字符 “xxxdxxxd”</td>
+</tr>
+<tr>
+<td>(d)(\w+)(d)</td>
+<td>“\w+” 将匹配第一个 “d” 和最后一个 “d” 之间的所有字符 “xxxdxxx”。</td>
+</tr>
+</tbody></table>
+<p>虽然 “\w+” 也能够匹配上最后一个 “d”，但是为了使整个表达式匹配成功，<br>“\w+” 可以 “让出” 它本来能够匹配的最后一个 “d”</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/正则/">正则</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/正则/">正则</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/12/regular-2/"><span>【正则表达式】 - 超简单练习题</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/regular-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T05:58:00.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="1-匹配一段文本中的每行的邮箱"><a href="#1-匹配一段文本中的每行的邮箱" class="headerlink" title="1. 匹配一段文本中的每行的邮箱"></a>1. 匹配一段文本中的每行的邮箱</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$str &#x3D; &#39;123@qq.comaaa@163.combbb@126.comasdfasfs33333@adfcom&#39;;</span><br><span class="line"></span><br><span class="line">preg_match_all(&quot;&#x2F;\w+@(?:qq|126|163)\.com&#x2F;&quot;, $str, $matches);</span><br><span class="line"></span><br><span class="line">var_dump($matches);</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/正则/">正则</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/正则/">正则</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/12/regular/"><span>【正则表达式】- 分组概念</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/regular/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T05:56:00.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>正则我们经常用，但是对于几个特殊的用途，可以记录一下。</p>
+<ul>
+<li><p><code>(exp)</code> 匹配 exp,并捕获文本到自动命名的组里</p>
+</li>
+<li><p><code>(?&lt;name&gt;exp)</code> 匹配 exp,并捕获文本到名称为 name 的组里，也可以写成(?’name’exp)</p>
+</li>
+<li><p><code>(?P&lt;name&gt;exp)</code> 和 <code>(?&lt;name&gt;exp)</code>一个意思</p>
+</li>
+<li><p><code>(?:exp)</code> 匹配 exp,不捕获匹配的文本</p>
+</li>
+<li><p><code>(?=exp)</code> 匹配 exp 前面的位置</p>
+</li>
+<li><p><code>(?&lt;=exp)</code> 匹配 exp 后面的位置</p>
+</li>
+<li><p><code>(?!exp)</code> 匹配后面跟的不是 exp 的位置</p>
+</li>
+<li><p><code>(?&lt;!exp)</code> 匹配前面不是 exp 的位置</p>
+</li>
+<li><p><code>(?#comment)</code> 这种类型的组不对正则表达式的处理产生任何影响，只是为了提供让人阅读注释</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/正则/">正则</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/正则/">正则</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/12/git-auto-deploy/"><span>【Git】- 利用git-hook实现自动化部署</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/git-auto-deploy/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T03:03:37.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>实现 git push 直接完成代码部署到服务器的目录<br>实现方式</p>
+<p>利用 git 的 hooks 中的<code>post-receiv</code>e 来实现代码提交完成之后的动作。将仓库指定一个<code>--work-tree</code>然后进行检出操作<code>checkout --force</code><br>目录结构</p>
+<p>我自己的项目结构是这样的，每一个仓库对应一个项目，例如 public/wx 项目对应 repo/wx.git 仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── public</span><br><span class="line">│   └── wx &#x2F;&#x2F; 这是我们的web代码部署目录</span><br><span class="line">│       ├── index.php</span><br><span class="line">│       ├── test2.php</span><br><span class="line">│       ├── test3.php</span><br><span class="line">│       └── test.php</span><br><span class="line">└── repo &#x2F;&#x2F; 这个是我们的仓库目录</span><br><span class="line">    └── wx.git &#x2F;&#x2F; 这个对应wx项目的仓库</span><br><span class="line">        ├── branches</span><br><span class="line">        ├── config</span><br><span class="line">        ├── description</span><br><span class="line">        ├── HEAD</span><br><span class="line">        ├── hooks &#x2F;&#x2F; post-receive钩子代码写在这里面</span><br><span class="line">        ├── index</span><br><span class="line">        ├── info</span><br><span class="line">        ├── objects</span><br><span class="line">        └── refs</span><br></pre></td></tr></table></figure>
+
+<p>再看下 hooks 文件目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── post-commit.sample</span><br><span class="line">├── post-receive</span><br><span class="line">├── post-receive.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">└── update.sample</span><br></pre></td></tr></table></figure>
+
+<p>我们将 post-receive.sample 复制一份 post-receive，并且编写代码如下</p>
+<h2 id="指定我的代码检出目录"><a href="#指定我的代码检出目录" class="headerlink" title="指定我的代码检出目录"></a>指定我的代码检出目录</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DIR=/www/public/wx</span><br><span class="line">git --work-tree=$&#123;DIR&#125; clean -fd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 直接强制检出</span></span><br><span class="line">git --work-tree=$&#123;DIR&#125; checkout --force</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何生成目录"><a href="#如何生成目录" class="headerlink" title="如何生成目录"></a>如何生成目录</h2><p>上面看到的 repo 目录中的 wx.git 实际上是一个裸仓库，我们用下面的命令来生成这样一个仓库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;www&#x2F;repo</span><br><span class="line">git init --bare wx.git</span><br></pre></td></tr></table></figure>
+
+<p>对于代码部署目录和仓库我们已经通过 post-receive 进行了关联了，因为我们一旦将代码 push 到仓库，那么会自动检出到 publish/wx 目录下。</p>
+<h2 id="远程部署"><a href="#远程部署" class="headerlink" title="远程部署"></a>远程部署</h2><p>在本地电脑上，我们添加远程仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git remote add origin root@xxx.xxx.xxx.xxx:&#x2F;www&#x2F;repo&#x2F;wx.git</span><br></pre></td></tr></table></figure>
+
+<p>这个时候我们添加了远程仓库，那么我们来测试下 push 操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">touch index.php</span><br><span class="line">git add .</span><br><span class="line">git commit -m &#39;test&#39;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>可能会提示一个–set-upstream，直接执行下就好了。执行完之后我们登陆服务器，会发现文件已经出现在 public/wx/index.php</p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ul>
+<li>如果我们没有配置 ssh 免密码登陆的话，我们需要在 push 代码的时候输入密码</li>
+<li>如果我们添加的远程仓库不是 <a href="mailto:root@xxx.xxx.xx.xx">root@xxx.xxx.xx.xx</a>，例如是 <a href="mailto:abc@xx.xx.xx.xx">abc@xx.xx.xx.xx</a>，那么我们要确保 abc 用户对 wx.git 目录下的文件有 777 权限。</li>
+</ul>
+<h3 id="新增仓库"><a href="#新增仓库" class="headerlink" title="新增仓库"></a>新增仓库</h3><ul>
+<li>需要登陆远程服务器进行初始化 repo_name.git 仓库</li>
+<li>需要手动创建 public/repo_name 文件夹，并且修改权限为 777</li>
+<li>需要重新编写 hooks/post-recieve 文件，修改里面的 DIR 路径为 public/repo_name</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Git/">Git</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Git/">Git</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/09/算法/leetcode/leecode-1/"><span>【LeeCode】- Add digital</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/09/算法/leetcode/leecode-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-09T10:13:43.000Z">
+          2018-03-09
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>给定一个非负整数 num，重复添加其所有数字，直到结果只有一个数字。</p>
+<p>例如：</p>
+<p>鉴于 num = 38，这个过程就像：3 + 8 = 11，1 + 1 = 2。由于 2 只有一位数字，请将其返回。</p>
+<p>后续工作：<br>你可以在 O（1）运行时没有任何循环/递归吗？</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">digital</span><span class="params">($num)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> ($num - <span class="number">1</span>) % <span class="number">9</span> +<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/LeeCode/">LeeCode</a>, <a href="/categories/LeeCode/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/LeeCode/">LeeCode</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/02/算法/algorithm-base-heap-sort/"><span>【基础算法】- 排序 - 堆排序</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/02/算法/algorithm-base-heap-sort/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-02T04:52:14.000Z">
+          2018-03-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>选择排序是一种不稳定的算法。基本思路是：他是将每次 2 个数据都比较完之后，记录一个最大值或者最小值，不急着交换，（这是和冒泡排序的差别，减少了交换的次数，所以效率会高），等一轮循环比较完毕之后，再把无序区最靠近有序区的那个数和当前记录的值交换，每次循环只交换一次。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/01/算法/algorithm-base-select-sort/"><span>【基础算法】- 排序 - 选择排序</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/01/算法/algorithm-base-select-sort/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-01T09:22:01.000Z">
+          2018-03-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>选择排序是一种不稳定的算法。基本思路是：他是将每次 2 个数据都比较完之后，记录一个最大值或者最小值，不急着交换，（这是和冒泡排序的差别，减少了交换的次数，所以效率会高），等一轮循环比较完毕之后，再把无序区最靠近有序区的那个数和当前记录的值交换，每次循环只交换一次。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/03/01/算法/algorithm-base-binary-sort/"><span>【基础算法】- 排序 - 二分插入排序</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/01/算法/algorithm-base-binary-sort/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-01T07:15:00.000Z">
+          2018-03-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>二分插入排序可以说是直接插入排序的升级版，对于数据量比较大的时候，二分插入排序可以有效的减少比较的次数，从而提高效率。</p>
+<p>这里借助了二分的思想，但是需要注意的是，这个只是二分思想，和二分搜索并非一致，如果需要用到二分查询的话，前提必须是有序数据，但是这里只是借助了这个思想，把最靠近有序区的一个通过二分查找需要插入的位置，并且一次性移动所有大于目标数的所有元素。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/28/php7/"><span>【PHP】- php7的新特性</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/php7/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T15:58:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>php7 出来的时候，多了哪些特性呢，在这里总结一下</p>
+<p>为什么 PHP7 比 PHP5 性能提升了？</p>
+<ul>
+<li><p>变量存储字节减小，减少内存占用，提升变量操作速度</p>
+</li>
+<li><p>改善数组结构，数组元素和 hash 映射表被分配在同一块内存里，降低了内存占用、提升了 cpu 缓存命中率<br>（以往的 zval 是一个 24 字节的结构体，现在的固定是 16 个字节）</p>
+</li>
+<li><p>改进了函数的调用机制，通过优化参数传递的环节，减少了一些指令，提高执行效率</p>
+</li>
+</ul>
+<h2 id="太空船操作符"><a href="#太空船操作符" class="headerlink" title="太空船操作符"></a>太空船操作符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x3D;&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左边大于右边的时候，返回 1</li>
+<li>右边大于左边的时候，返回-1</li>
+<li>两边相等的时候，返回 0</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/28/php-cgi-fastcgi/"><span>CGI - php-cgi - Fastcgi - php-fpm - nginx的关系</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/php-cgi-fastcgi/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T14:03:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="CGI："><a href="#CGI：" class="headerlink" title="CGI："></a>CGI：</h2><p>CGI 的英文是（COMMON GATEWAY INTERFACE）公共网关接口，它的作用就是帮助服务器与语言通信，这里就是 nginx 和 php 进行通信，因为 nginx 和 php 的语言不通，因此需要一个沟通转换的过程，而 CGI 就是这个沟通的协议。</p>
+<p>nginx 服务器在接受到浏览器传递过来的数据后，如果请求的是静态的页面或者图片等无需动态处理的则会直接根据请求的 url 找到其位置然后返回给浏览器，这里无需 php 参与，但是如果是一个动态的页面请求，这个时候 nginx 就必须与 php 通信，这个时候就会需要用到 cgi 协议，将请求数据转换成 php 能理解的信息，然后 php 根据这些信息返回的信息也要通过 cgi 协议转换成 nginx 可以理解的信息，最后 nginx 接到这些信息再返回给浏览器。</p>
+<h2 id="fast-cgi："><a href="#fast-cgi：" class="headerlink" title="fast-cgi："></a>fast-cgi：</h2><p>传统的 cgi 协议在每次连接请求时，会开启一个进程进行处理，处理完毕会关闭该进程，因此下次连接，又要再次开启一个进程进行处理，因此有多少个连接就有多少个 cgi 进程，这也就是为什么传统的 cgi 会显得缓慢的原因，因此过多的进程会消耗资源和内存。</p>
+<p>而 fast-cgi 则是一个进程可以处理多个请求，和上面的 cgi 协议完全不一样，cgi 是一个进程只能处理一个请求，这样就会导致大量的 cgi 程序，因此会给服务器带来负担。</p>
+<h2 id="php-cgi："><a href="#php-cgi：" class="headerlink" title="php-cgi："></a>php-cgi：</h2><p>php-cgi 是 php 提供给 web serve 也就是 http 前端服务器的 cgi 协议接口程序，当每次接到 http 前端服务器的请求都会开启一个 php-cgi 进程进行处理，而且开启的 php-cgi 的过程中会先要重载配置，数据结构以及初始化运行环境，如果更新了 php 配置，那么就需要重启 php-cgi 才能生效，例如 phpstudy 就是这种情况。</p>
+<h2 id="php-fpm"><a href="#php-fpm" class="headerlink" title="php-fpm:"></a>php-fpm:</h2><p>php-fpm 是 php 提供给 web serve 也就是 http 前端服务器的 fastcgi 协议接口程序，它不会像 php-cgi 一样每次连接都会重新开启一个进程，处理完请求又关闭这个进程，而是允许一个进程对多个连接进行处理，而不会立即关闭这个进程，而是会接着处理下一个连接。它可以说是 php-cgi 的一个管理程序，是对 php-cgi 的改进。</p>
+<p>php-fpm 会开启多个 php-cgi 程序，并且 php-fpm 常驻内存，每次 web serve 服务器发送连接过来的时候，php-fpm 将连接信息分配给下面其中的一个子程序 php-cgi 进行处理，处理完毕这个 php-cgi 并不会关闭，而是继续等待下一个连接，这也是 fast-cgi 加速的原理，但是由于 php-fpm 是多进程的，而一个 php-cgi 基本消耗 7-25M 内存，因此如果连接过多就会导致内存消耗过大，引发一些问题，例如 nginx 里的 502 错误。</p>
+<p>同时 php-fpm 还附带一些其他的功能：</p>
+<p>例如平滑过渡配置更改，普通的 php-cgi 在每次更改配置后，需要重新启动才能初始化新的配置，而 php-fpm 是不需要，php-fpm 分将新的连接发送给新的子程序 php-cgi，这个时候加载的是新的配置，而原先正在运行的 php-cgi 还是使用的原先的配置，等到这个连接后下一次连接的时候会使用新的配置初始化，这就是平滑过渡。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>, <a href="/categories/PHP/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/6/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/8/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ip_to_long | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="ip_to_long"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>ip_to_long</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/15/ip-to-long/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-15T06:20:00.000Z">
+          2017-03-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>字符串 ip 转长整形原理和实现</p>
+<p>php 内置方法：ip2long</p>
+<p>但是这个方法存在 bug，就是 010.0.3.198 的时候，计算的长整形并非正确的长整形。并且掌握实现原理，其实并不困难。</p>
+<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p><code>IPv4</code> 地址我们知道的是这样子的形式： <code>192.168.2.10</code></p>
+<p>这种形式我们称之为 <code>点分十进制</code>，当然还有我们的<code>冒分十六进制</code>，但是这个是适用于 <code>IPv6</code> 的</p>
+<p>回到主题，<strong>点分十进制</strong>的写法其实是一个 4 个字节，32 位的整型组成的。</p>
+<p>例如 : <code>10.0.3.198</code></p>
+<p>二进制形式 ：<code>00001010.00000000.00000011.11000001</code></p>
+<p>说到这里，大家可能都知道了，为什么是 32 位了吧。那么二进制的 32 位转成十进制的时候，就是我们的长整形了。</p>
+<p>转换结果为 ：<code>167773121</code></p>
+<a id="more"></a>
+
+<p>那么怎么转换呢？？？</p>
+<h3 id="ip-转成长整形"><a href="#ip-转成长整形" class="headerlink" title="ip 转成长整形"></a>ip 转成长整形</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ip转成长整形</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">ipToLong</span><span class="params">(string $ip)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">list</span>($position1, $position2, $position3, $position4) = explode(<span class="string">'.'</span>, $ip);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> ($position1 &lt;&lt; <span class="number">24</span>) | ($position2 &lt;&lt; <span class="number">16</span>) | ($position3 &lt;&lt; <span class="number">8</span>) | ($position4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可能看到这里，你会疑惑，为什么这里面会设计位运算和逻辑运行呢。</p>
+<p>如果还不理解为什么涉及了位运算的话，那说明上面的 32 位的 10 进制的概念还不理解。</p>
+<p>第一段如果要按满 32 位的话，那么他还需要填补 24 位，就是 24 个 0 在右边。<br>第二段如果要按满 32 位的话，那么他还需要填补 24 位，分别是左边 8 位，右边 16 位。就是左边 8 个 0，右边 16 个 0。<br>第三段如果要按满 32 位的话，那么他还需要填补 24 位，分别是左边 16 位，右边 8 位。就是左边 16 个 0，右边 8 个 0。<br>第四段如果要按满 32 位的话，那么他还需要填补 24 位，就是 24 个 0 在左边。</p>
+<p>那么为什么是逻辑运算呢，其实这里的话逻辑运行可以提高二进制的计算速度，在这里大家更倾向于逻辑运行的加法法则。<br>所以这里你用+号的话，括号里面的值会由 2 进制先转换程 10 进制，再进行相加，多了一步繁琐的步骤，所以大家更倾向于逻辑或的运算。</p>
+<h3 id="长整形转-ip"><a href="#长整形转-ip" class="headerlink" title="长整形转 ip"></a>长整形转 ip</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 整型转ip,三种方式，都可以，我喜欢没注释的那种</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">LongToIp</span><span class="params">(int $long)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//  return long2ip($long);</span></span><br><span class="line"></span><br><span class="line">  $ret = [];</span><br><span class="line">  <span class="keyword">for</span> ($i = <span class="number">3</span>; $i &gt;= <span class="number">0</span>; $i--)</span><br><span class="line">  &#123;</span><br><span class="line">    $ret[] = ($long &gt;&gt; $i * <span class="number">8</span>) &amp; <span class="number">0xff</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  $ret[] = (($long &amp; 0xffffffff) &gt;&gt; 24);</span></span><br><span class="line"><span class="comment">//  $ret[] = (($long &amp; 0xffffff) &gt;&gt; 16);</span></span><br><span class="line"><span class="comment">//  $ret[] = (($long &amp; 0xffff) &gt;&gt; 8);</span></span><br><span class="line"><span class="comment">//  $ret[] = (($long &amp; 0xff) &gt;&gt; 0);</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> join(<span class="string">'.'</span>, $ret);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>讲到这里,转换的原理就是这样子的了，但是深入的理解，可能还要涉及到网络 ip 的知识，就是 256 进制在 ip 中的运作。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>, <a href="/categories/协议/网络/">网络</a>, <a href="/categories/协议/网络/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/网络/">网络</a><a href="/tags/IP/">IP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Nginx】- 负载均衡 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Nginx】- 负载均衡"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Nginx】- 负载均衡</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/nginx-load-balan/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T03:22:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在现在互联网爆发的时代，稳定性成为每个项目的首选，再次条件下，我们就要实现高可用的概念，实现高可用的最常用的一种手段就是负载均衡，分摊各个服务器的请求压力。</p>
+<h2 id="1-轮训（默认）"><a href="#1-轮训（默认）" class="headerlink" title="1.轮训（默认）"></a>1.轮训（默认）</h2><p>按照请求时间的循序，把请求逐一分配到对应的服务器。如果其中一台服务器 down 了，nginx 会自动剔除 down 掉的服务器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14;</span><br><span class="line">    server 192.168.0.15;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-权重-weight"><a href="#2-权重-weight" class="headerlink" title="2.权重(weight)"></a>2.权重(weight)</h2><p>其实就是轮训的升级版，给特定的服务器一个指定的权重，nginx 会根据权重分配请求访问。一般用于服务器性能不一致的情况下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14 weight&#x3D;3;</span><br><span class="line">    server 192.168.0.15 weight&#x3D;7;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>权重越高，访问的概率越大，分别是 30%,70%。</p>
+<h2 id="3-IP-哈希化（ip-hash）"><a href="#3-IP-哈希化（ip-hash）" class="headerlink" title="3. IP 哈希化（ip_hash）"></a>3. IP 哈希化（ip_hash）</h2><p>通过 ip 哈希化，可以让同一 ip 的请求分配到同一台机器上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server 192.168.0.14:88;</span><br><span class="line">    server 192.168.0.15:80;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个做法的好处是可以保证在负载均衡的情况下，用户的 session 信息都保存在一台机器上，不会因为负载均衡导致用户 session 信息丢失。</p>
+<h2 id="4-fair（fair-模块，需要为-nginx-安装扩展）"><a href="#4-fair（fair-模块，需要为-nginx-安装扩展）" class="headerlink" title="4. fair（fair 模块，需要为 nginx 安装扩展）"></a>4. fair（fair 模块，需要为 nginx 安装扩展）</h2><p>按后端服务器的响应时间来分配请求，响应时间短的优先分配。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server server1;</span><br><span class="line">    server server2;</span><br><span class="line">    fair;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式有点类似于 epoll 方式。</p>
+<h2 id="特别说明"><a href="#特别说明" class="headerlink" title="特别说明"></a>特别说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server 127.0.0.1:9090 down; (down 表示单前的server暂时不参与负载)</span><br><span class="line"></span><br><span class="line">server 127.0.0.1:8080 weight&#x3D;2; (weight 默认为1.weight越大，负载的权重就越大)</span><br><span class="line"></span><br><span class="line">server 127.0.0.1:6060;</span><br><span class="line"></span><br><span class="line">server 127.0.0.1:7070 backup; (其它所有的非backup机器down或者忙的时候，请求backup机器)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

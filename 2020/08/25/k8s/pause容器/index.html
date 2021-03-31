@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【kubernetes】pause容器 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【kubernetes】pause容器"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【kubernetes】pause容器</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/08/25/k8s/pause容器/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-25T14:53:30.000Z">
+          2020-08-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>k8s中有 <code>init容器</code>的概念，其中一个就是<code>pause容器</code>，<code>pause容器</code>是一个十分重要的概念，贯穿整个<code>Pod</code>的通信。</p>
+<a id="more"></a>
+
+<h1 id="Pause容器"><a href="#Pause容器" class="headerlink" title="Pause容器"></a>Pause容器</h1><p>Pause容器，又叫Infra容器，本文将探究该容器的作用与原理。</p>
+<p>我们知道在kubelet的配置中有这样一个参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest</span><br></pre></td></tr></table></figure>
+
+<p>上面是openshift中的配置参数，kubernetes中默认的配置参数是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KUBELET_POD_INFRA_CONTAINER=--pod-infra-container-image=gcr.io/google_containers/pause-amd64:3.0</span><br></pre></td></tr></table></figure>
+
+<p>Pause容器，是可以自己来定义，官方使用的<code>gcr.io/google_containers/pause-amd64:3.0</code>容器的代码见<a href="https://github.com/kubernetes/kubernetes/tree/master/build/pause" target="_blank" rel="noopener">Github</a>，使用C语言编写。</p>
+<h2 id="Pause容器特点"><a href="#Pause容器特点" class="headerlink" title="Pause容器特点"></a>Pause容器特点</h2><ul>
+<li>镜像非常小，目前在700KB左右</li>
+<li>永远处于Pause(暂停)状态</li>
+</ul>
+<h2 id="Pause容器背景"><a href="#Pause容器背景" class="headerlink" title="Pause容器背景"></a>Pause容器背景</h2><p>像 Pod 这样一个东西，本身是一个逻辑概念。那在机器上，它究竟是怎么实现的呢？这就是我们要解释的一个问题。</p>
+<p>既然说 Pod 要解决这个问题，核心就在于如何让一个 Pod 里的多个容器之间最高效的共享某些资源和数据。</p>
+<p>因为容器之间原本是被 Linux Namespace 和 cgroups 隔开的，所以现在实际要解决的是怎么去打破这个隔离，然后共享某些事情和某些信息。这就是 Pod 的设计要解决的核心问题所在。</p>
+<p>所以说具体的解法分为两个部分：网络和存储。</p>
+<p>Pause容器就是为解决Pod中的网络问题而生的。</p>
+<h2 id="Pause容器实现"><a href="#Pause容器实现" class="headerlink" title="Pause容器实现"></a>Pause容器实现</h2><p>Pod 里的多个容器怎么去共享网络？下面是个例子：</p>
+<p>比如说现在有一个 Pod，其中包含了一个容器 A 和一个容器 B，它们两个就要共享 Network Namespace。在 Kubernetes 里的解法是这样的：它会在每个 Pod 里，额外起一个 Infra container 小容器来共享整个 Pod 的 Network Namespace。</p>
+<p>Infra container 是一个非常小的镜像，大概 700KB 左右，是一个C语言写的、永远处于“暂停”状态的容器。由于有了这样一个 Infra container 之后，其他所有容器都会通过 Join Namespace 的方式加入到 Infra container 的 Network Namespace 中。</p>
+<p>所以说一个 Pod 里面的所有容器，它们看到的网络视图是完全一样的。即：它们看到的网络设备、IP地址、Mac地址等等，跟网络相关的信息，其实全是一份，这一份都来自于 Pod 第一次创建的这个 Infra container。这就是 Pod 解决网络共享的一个解法。</p>
+<p>在 Pod 里面，一定有一个 IP 地址，是这个 Pod 的 Network Namespace 对应的地址，也是这个 Infra container 的 IP 地址。所以大家看到的都是一份，而其他所有网络资源，都是一个 Pod 一份，并且被 Pod 中的所有容器共享。这就是 Pod 的网络实现方式。</p>
+<p>由于需要有一个相当于说中间的容器存在，所以整个 Pod 里面，必然是 Infra container 第一个启动。并且整个 Pod 的生命周期是等同于 Infra container 的生命周期的，与容器 A 和 B 是无关的。这也是为什么在 Kubernetes 里面，它是允许去单独更新 Pod 里的某一个镜像的，即：做这个操作，整个 Pod 不会重建，也不会重启，这是非常重要的一个设计。</p>
+<h2 id="Pause容器的作用"><a href="#Pause容器的作用" class="headerlink" title="Pause容器的作用"></a>Pause容器的作用</h2><p>我们检查node节点的时候会发现每个node上都运行了很多的pause容器，例如如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE                                                                                                                    COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">2c7d50f1a7be        docker.io/jimmysong/heapster-grafana-amd64@sha256:d663759b3de86cf62e64a43b021f133c383e8f7b0dc2bdd78115bc95db371c9a       <span class="string">"/run.sh"</span>                3 hours ago         Up 3 hours                              k8s_grafana_monitoring-influxdb-grafana-v4-5697c6b59-76zqs_kube-system_5788a3c5-29c0-11e8-9e88-525400005732_0</span><br><span class="line">5df93dea877a        docker.io/jimmysong/heapster-influxdb-amd64@sha256:a217008b68cb49e8f038c4eeb6029261f02adca81d8eae8c5c01d030361274b8      <span class="string">"influxd --config ..."</span>   3 hours ago         Up 3 hours                              k8s_influxdb_monitoring-influxdb-grafana-v4-5697c6b59-76zqs_kube-system_5788a3c5-29c0-11e8-9e88-525400005732_0</span><br><span class="line">9cec6c0ef583        jimmysong/pause-amd64:3.0                                                                                                <span class="string">"/pause"</span>                 3 hours ago         Up 3 hours                              k8s_POD_monitoring-influxdb-grafana-v4-5697c6b59-76zqs_kube-system_5788a3c5-29c0-11e8-9e88-525400005732_0</span><br><span class="line">54d06e30a4c7        docker.io/jimmysong/kubernetes-dashboard-amd64@sha256:668710d034c4209f8fa9a342db6d8be72b6cb5f1f3f696cee2379b8512330be4   <span class="string">"/dashboard --inse..."</span>   3 hours ago         Up 3 hours                              k8s_kubernetes-dashboard_kubernetes-dashboard-65486f5fdf-lshl7_kube-system_27c414a1-29c0-11e8-9e88-525400005732_0</span><br><span class="line">5a5ef33b0d58        jimmysong/pause-amd64:3.0                                                                                                <span class="string">"/pause"</span>                 3 hours ago         Up 3 hours                              k8s_POD_kubernetes-dashboard-65486f5fdf-lshl7_kube-system_27c414a1-29c0-11e8-9e88-525400005732_0</span><br></pre></td></tr></table></figure>
+
+<p>kubernetes中的pause容器主要为每个业务容器提供以下功能：</p>
+<ul>
+<li>在pod中担任Linux命名空间共享的基础；</li>
+<li>启用pid命名空间，开启init进程。</li>
+</ul>
+<p>在<a href="https://www.ianlewis.org/en/almighty-pause-container" target="_blank" rel="noopener">The Almighty Pause Container</a>这篇文章中做出了详细的说明，pause容器的作用可以从这个例子中看出，首先见下图：</p>
+<p><img src="/images/k8s/pause-container.png" alt="Pause容器"></p>
+<p>我们首先在节点上运行一个pause容器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name pause -p 8880:80 jimmysong/pause-amd64:3.0</span><br></pre></td></tr></table></figure>
+
+<p>然后再运行一个nginx容器，nginx将为<code>localhost:2368</code>创建一个代理。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF &gt;&gt; nginx.conf</span><br><span class="line">error_log stderr;</span><br><span class="line">events &#123; worker_connections  1024; &#125;</span><br><span class="line">http &#123;</span><br><span class="line">    access_log /dev/stdout combined;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80 default_server;</span><br><span class="line">        server_name example.com www.example.com;</span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:2368;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">$ docker run -d --name nginx -v `<span class="built_in">pwd</span>`/nginx.conf:/etc/nginx/nginx.conf --net=container:pause --ipc=container:pause --pid=container:pause nginx</span><br></pre></td></tr></table></figure>
+
+<p>突然间发现报错：</p>
+<p><code>docker: Error response from daemon: can&#39;t join IPC of container 90208aca191fd04e86276bf29a1b1ff742f3d04c0c8c01f6cc61c3283909725b: non-shareable IPC (hint: use IpcMode:shareable for the donor container).</code></p>
+<p>因为当前docker容器默认的<code>&quot;default-ipc-mode&quot;: &quot;host&quot;</code>，我们需要切换到<code>&quot;default-ipc-mode&quot;: &quot;shareable&quot;</code>, linux环境下写入到<code>/etc/docker/daemon.json</code>，<code>docker-for-mac</code> 写在配置中。然后重启即可。</p>
+<p>然后再为<a href="https://github.com/TryGhost/Ghost" target="_blank" rel="noopener">ghost</a>创建一个应用容器，这是一款博客软件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name ghost --net=container:pause --ipc=container:pause --pid=container:pause ghost</span><br></pre></td></tr></table></figure>
+
+<p>现在访问<a href="http://localhost:8880/" target="_blank" rel="noopener">http://localhost:8880/</a>就可以看到ghost博客的界面了。</p>
+<p><strong>解析</strong></p>
+<p>pause容器将内部的80端口映射到宿主机的8880端口，pause容器在宿主机上设置好了网络namespace后，nginx容器加入到该网络namespace中，我们看到nginx容器启动的时候指定了<code>--net=container:pause</code>，ghost容器同样加入到了该网络namespace中，这样三个容器就共享了网络，互相之间就可以使用<code>localhost</code>直接通信，<code>--ipc=contianer:pause --pid=container:pause</code>就是三个容器处于同一个namespace中，init进程为<code>pause</code>，这时我们进入到ghost容器中查看进程情况。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps aux</span></span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line">root         1  0.0  0.0   1024     4 ?        Ss   13:49   0:00 /pause</span><br><span class="line">root         5  0.0  0.1  32432  5736 ?        Ss   13:51   0:00 nginx: master p</span><br><span class="line">systemd+     9  0.0  0.0  32980  3304 ?        S    13:51   0:00 nginx: worker p</span><br><span class="line">node        10  0.3  2.0 1254200 83788 ?       Ssl  13:53   0:03 node current/<span class="keyword">in</span></span><br><span class="line">root        79  0.1  0.0   4336   812 pts/0    Ss   14:09   0:00 sh</span><br><span class="line">root        87  0.0  0.0  17500  2080 pts/0    R+   14:10   0:00 ps aux</span><br></pre></td></tr></table></figure>
+
+<p>在ghost容器中同时可以看到pause和nginx容器的进程，并且pause容器的PID是1。而在kubernetes中容器的PID=1的进程即为容器本身的业务进程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  k8s docker ps</span><br><span class="line">CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                  NAMES</span><br><span class="line">56b408835478        nginx                  &quot;&#x2F;docker-entrypoint.…&quot;   About an hour ago   Up About an hour                           nginx</span><br><span class="line">b4b5ecc6ddf4        ghost                  &quot;docker-entrypoint.s…&quot;   2 hours ago         Up 2 hours                                 ghost</span><br><span class="line">2be4a03fea85        k8s.gcr.io&#x2F;pause:3.2   &quot;&#x2F;pause&quot;                 3 hours ago         Up 3 hours          0.0.0.0:8880-&gt;80&#x2F;tcp   pause</span><br></pre></td></tr></table></figure>
+
+
+<p>当关闭<code>pause进程的时候，所有的容器都会停止</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop pause</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.ianlewis.org/en/almighty-pause-container" target="_blank" rel="noopener">The Almighty Pause Container</a></li>
+<li><a href="https://o-my-chenjian.com/2017/10/17/The-Pause-Container-Of-Kubernetes/" target="_blank" rel="noopener">Kubernetes之Pause容器</a></li>
+<li><a href="https://edu.aliyun.com/lesson_1651_16895?spm=5176.10731542.0.0.41a620be3s3dmu#_16895" target="_blank" rel="noopener">CNCF&amp;Aliyun云原生课程</a></li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

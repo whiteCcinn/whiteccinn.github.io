@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>docker安装php7+nginx事例 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="docker安装php7+nginx事例"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>docker安装php7+nginx事例</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/11/02/docker-php-nginx/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-11-02T01:34:00.000Z">
+          2017-11-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>docker 是由 go 语言开发的的一个虚拟机容器，通过层的概念，把 fs(filesysytem)连接起来，形成一个可以独立的系统。其中涉及到了宿主机的概念，在这里，由于我所用的环境基本都是 centos7，所以这篇文章讲诉的就是 centos7 中使用 docker 安装 php7+nginx 的事例。后续我会发布一些镜像以及 dockerFile 提供大家学习参考。</p>
+<blockquote>
+<p>需要注意的是：docker 运动的服务都需要以前台的模式运行</p>
+</blockquote>
+<h1 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker</span><br></pre></td></tr></table></figure>
+
+<p>由于我们学习如何使用 docker，所以这里就选择了的直接采用 yum 安装了。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="创建-docker-容器操作用户"><a href="#创建-docker-容器操作用户" class="headerlink" title="创建 docker 容器操作用户"></a>创建 docker 容器操作用户</h2><p>由于 docker 容器基于宿主机，所以我们可以在宿主机中创建好对容器操作的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; -g -u 参数分别指的的是gid，和uid</span><br><span class="line">groupadd -g 2017 docker-group</span><br><span class="line">adduser -g 2017 -u 2017 docker-user</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h2 id="创建几个和-docker-容器服务配置有关的目录"><a href="#创建几个和-docker-容器服务配置有关的目录" class="headerlink" title="创建几个和 docker 容器服务配置有关的目录"></a>创建几个和 docker 容器服务配置有关的目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 用于docker内nginx服务访问项目目录</span><br><span class="line">mkdir -p &#x2F;docker-www</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 用于修改nginx配置</span><br><span class="line">mkdir -p &#x2F;docker-config&#x2F;nginx_config</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 用于修改php配置</span><br><span class="line">mkdir -p &#x2F;docker-config&#x2F;php_config</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 用于修改php-fpm配置</span><br><span class="line">mkdir -p &#x2F;docker-config&#x2F;php-fpm_config</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建一个-php-入口文件来检测-docker-中的-nginx-服务是否正常"><a href="#创建一个-php-入口文件来检测-docker-中的-nginx-服务是否正常" class="headerlink" title="创建一个 php 入口文件来检测 docker 中的 nginx 服务是否正常"></a>创建一个 php 入口文件来检测 docker 中的 nginx 服务是否正常</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch &#x2F;docker-www&#x2F;index.php</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * index.php</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>    Caiwh &lt;471113744<span class="doctag">@qq</span>.com&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span>   2017年10月31日</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@copyright</span> Copyright caiwh's code</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'This is Docker Index.php'</span>;</span><br><span class="line"><span class="keyword">echo</span> PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'Hello-World'</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="从-hub-docker-中拉取-php-镜像"><a href="#从-hub-docker-中拉取-php-镜像" class="headerlink" title="从 hub.docker 中拉取 php 镜像"></a>从 hub.docker 中拉取 php 镜像</h2><p>hub.docker 地址：<a href="https://hub.docker.com/_/php/" target="_blank" rel="noopener">https://hub.docker.com/_/php/</a></p>
+<p>由于我们这里需要配合 nginx 使用，所以我们可以指选择 fpm 系列的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 这里我选择7.1.11-fpm版本，想要了解这个镜像的基系统的话，可以去查看dockerFile，官方提供的几乎全部都是基于debian系统的。</span><br><span class="line"></span><br><span class="line">docker pull php:7.1.11-fpm</span><br></pre></td></tr></table></figure>
+
+<p>从 php 官方中拉取对应版本的 php.ini</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -o &#x2F;docker-config&#x2F;php_config&#x2F;php.ini https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;php&#x2F;php-src&#x2F;php-7.1.11&#x2F;php.ini-production</span><br></pre></td></tr></table></figure>
+
+<p>新建一个 php-fpm 的 zz-docker.conf 用于重写监听端口 9008</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;docker-config&#x2F;php-fpm_config&#x2F;zz-docker.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加以下内容，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">daemonize &#x3D; no</span><br><span class="line"></span><br><span class="line">[www]</span><br><span class="line">listen &#x3D; [::]:9008</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行-docker-中的-php-服务"><a href="#运行-docker-中的-php-服务" class="headerlink" title="运行 docker 中的 php 服务"></a>运行 docker 中的 php 服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 这里需要注意的是，由于centos7系统主机下有selinux的存在，导致用户操作权限严格受到限制，所以这里我们需要加上--privileged&#x3D;true这一项，如果是其他宿主机的话，可能不存在这个问题。不加也可以。</span><br><span class="line">docker run --name php -v &#x2F;docker-www:&#x2F;home&#x2F;wwwroot -v &#x2F;docker-config&#x2F;php_config&#x2F;php.ini:&#x2F;usr&#x2F;local&#x2F;etc&#x2F;php&#x2F;php.ini -v &#x2F;docker-config&#x2F;php-fpm_config&#x2F;zz-docker.conf:&#x2F;usr&#x2F;local&#x2F;etc&#x2F;php-fpm.d&#x2F;zz-docker.conf --privileged&#x3D;true -p 9008:9000 -d php:7.1.11-fpm</span><br></pre></td></tr></table></figure>
+
+<p>修改 docker 内部的用户权限。（这一步貌似没什么意义）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 设置成刚才我们的用户组</span><br><span class="line">docker exec -it php sed -i &quot;s&#x2F;33&#x2F;2017&#x2F;g&quot; &#x2F;etc&#x2F;passwd</span><br><span class="line">docker exec -it php sed -i &quot;s&#x2F;33&#x2F;2017&#x2F;g&quot; &#x2F;etc&#x2F;group</span><br></pre></td></tr></table></figure>
+
+<h2 id="从-hub-docker-中拉取-nginx-镜像"><a href="#从-hub-docker-中拉取-nginx-镜像" class="headerlink" title="从 hub.docker 中拉取 nginx 镜像"></a>从 hub.docker 中拉取 nginx 镜像</h2><p>这里我们就不做版本的选择了，我们直接拉去，默认的 tag 会是 latest，最新版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure>
+
+<p>然后我们在<code>/docker-config/nginx_config/</code>里面新增一个 nginx 的项目配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">     listen       80;</span><br><span class="line">     server_name  localhost.com;</span><br><span class="line">     root         /home/wwwroot;</span><br><span class="line"></span><br><span class="line">     index index.html index.htm index.php;</span><br><span class="line"></span><br><span class="line">     error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">     error_page   500 502 503 504  /50x.html;</span><br><span class="line"></span><br><span class="line">     # 至于php:9008为什么是9008端口呢，是为了可能为本机也有php服务，为了不和宿主机的php服务冲突。</span><br><span class="line"><span class="meta">	 #</span><span class="bash"> 至于这个php:9008这个是哪里来的php呢，等下启动nginx服务的时候，我们会用--link选项把nginx容器和php容器连接起来，用到的别名就叫php，这个php会解析称为php容器的ip地址。</span></span><br><span class="line">     location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   php:9008;</span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;</span><br><span class="line">        include        fastcgi_params;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行-docker-中的-nginx-服务"><a href="#运行-docker-中的-nginx-服务" class="headerlink" title="运行 docker 中的 nginx 服务"></a>运行 docker 中的 nginx 服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx -v &#x2F;docker-www:&#x2F;home&#x2F;wwwroot -v &#x2F;docker-config&#x2F;nginx_config:&#x2F;etc&#x2F;nginx&#x2F;conf.d --privileged&#x3D;true --link&#x3D;php:php -p 80:80 -d nginx</span><br></pre></td></tr></table></figure>
+
+<p>修改 docker 内部的用户权限。（同上）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 设置成刚才我们的用户组</span><br><span class="line">docker exec -it nginx sed -i &quot;s&#x2F;104:107&#x2F;docker-user:2017&#x2F;g&quot; &#x2F;etc&#x2F;passwd</span><br><span class="line">docker exec -it nginx sed -i &quot;s&#x2F;107&#x2F;2017&#x2F;g&quot; &#x2F;etc&#x2F;group</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Docker/">Docker</a><a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

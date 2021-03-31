@@ -1,0 +1,826 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 10 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/01/23/redis-geohash/"><span>基于geohash算法-搜索附近的人</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/23/redis-geohash/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-23T03:45:00.000Z">
+          2018-01-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前空间索引的实现有 R 树和其变种 GIST 树、四叉树、网格索引等。 网格索引不再多提，使用普通的 hash 表存储地点和风格之间的映射来实现。今天要介绍的 GeoHash 算法实现的空间索引，虽然是以 B 树实现，但我认为它也借用网格索引的一部分思想。</p>
+<p><a href="https://github.com/whiteCcinn/geohash" target="_blank" rel="noopener">php-geohash</a></p>
+<h2 id="GeoHash"><a href="#GeoHash" class="headerlink" title="GeoHash"></a>GeoHash</h2><ol>
+<li>从横向上将整个方形纸分为左右两份，左侧部分为标记为 <code>0</code>， 右侧部分标记为 <code>1</code>；</li>
+<li>再将红点所在的部分划分为左右两块，再对红点位置做同样的标识，最后得出红点在横向上的标识为 <code>10</code>;</li>
+<li>在纵向上对方形纸做同样的划分，左侧标识为<code>0</code>，右侧标识为 <code>1</code>，得出红点位置在纵向上的标识为 <code>01</code>;</li>
+<li>将横向标识和纵向标识合并，规则为 纵向在奇数位，横向在偶数位 (也可纵横相反，但要在整个系统内保持一致)，得出红点在方形纸上的标识为 <code>1001</code>;</li>
+</ol>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/Redis/">Redis</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/11/02/docker-php-nginx/"><span>docker安装php7+nginx事例</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/11/02/docker-php-nginx/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-11-02T01:34:00.000Z">
+          2017-11-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>docker 是由 go 语言开发的的一个虚拟机容器，通过层的概念，把 fs(filesysytem)连接起来，形成一个可以独立的系统。其中涉及到了宿主机的概念，在这里，由于我所用的环境基本都是 centos7，所以这篇文章讲诉的就是 centos7 中使用 docker 安装 php7+nginx 的事例。后续我会发布一些镜像以及 dockerFile 提供大家学习参考。</p>
+<blockquote>
+<p>需要注意的是：docker 运动的服务都需要以前台的模式运行</p>
+</blockquote>
+<h1 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker</span><br></pre></td></tr></table></figure>
+
+<p>由于我们学习如何使用 docker，所以这里就选择了的直接采用 yum 安装了。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="创建-docker-容器操作用户"><a href="#创建-docker-容器操作用户" class="headerlink" title="创建 docker 容器操作用户"></a>创建 docker 容器操作用户</h2><p>由于 docker 容器基于宿主机，所以我们可以在宿主机中创建好对容器操作的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; -g -u 参数分别指的的是gid，和uid</span><br><span class="line">groupadd -g 2017 docker-group</span><br><span class="line">adduser -g 2017 -u 2017 docker-user</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Docker/">Docker</a><a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/09/08/linux-make-swoole2/"><span>Centos7安装swoole2.x协程系列</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/09/08/linux-make-swoole2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-09-08T02:47:00.000Z">
+          2017-09-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>对于一个合格的 php 后端开发者而言，<code>swoole</code> 的知名度，估计是大家都知道的，swoole 分为 2 个系列，一个是<code>1.9.x</code>系列，一个是<code>2.x</code>系列，两个系列的区别在于<code>1.9</code>系列是原 swoole 成员研发的主分支，<code>2.x</code>系列是由腾讯成员研发的副分支。<code>1.9.x</code>系列底层原生不支持<code>协程</code>的概念，跟着 php 原生态走，但是<code>2.x</code>底层采用的是<code>协程</code>的概念进行研发，基本上需要用到网络 io 的地方在特定的情况下都会去触发<code>协程</code>，记住当前的<code>VM stack</code>的信息，然后通过<code>Eventloop</code>事件去处理别的请求，形成一个相对于原生态的阻塞的执行过程来说，这种非阻塞的处理方式，把 1+2 = 3 的 IO 时间变成了 max(1,2) =2。从而在高并发的请求下，可以更好的承载更多的请求。</p>
+<p>之前我有过一篇文章说的就是安装 v2.0.5 的。但是现在重新装一次，说明一下。</p>
+<h2 id="下载-git"><a href="#下载-git" class="headerlink" title="下载 git"></a>下载 git</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b v.2.0.9 https:&#x2F;&#x2F;github.com&#x2F;swoole&#x2F;swoole-src.git</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/Swoole/">Swoole</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/08/22/linux-make-tcpdump/"><span>linux-make-tcpdump</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/22/linux-make-tcpdump/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-22T10:06:24.000Z">
+          2017-08-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>TCPDUMP 可以帮写我们抓包，相当于 window 下的<code>wireshark</code>，为了我们更好的深入分析，我们把 tcpdump 也安装了。</p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><ul>
+<li><a href="http://www.tcpdump.org/#latest-releases" target="_blank" rel="noopener">tcpdump-国内镜像</a></li>
+</ul>
+<p>找到最新版,安装 tcpdump 需要把 libpcap 也安装了.</p>
+<h2 id="安装-libpcap"><a href="#安装-libpcap" class="headerlink" title="安装 libpcap"></a>安装 libpcap</h2><p>下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;src &amp;&amp; sudo mkdir libpcap &amp;&amp; sudo wget http:&#x2F;&#x2F;www.tcpdump.org&#x2F;release&#x2F;libpcap-1.8.1.tar.gz &amp;&amp; sudo tar -zxvf &amp;&amp; sudo tar -zxvf libpcap-1.8.1.tar.gz &amp;&amp; cd libpcap-1.8.1</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>, <a href="/categories/协议/网络/">网络</a>, <a href="/categories/协议/网络/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/08/16/linux-make-php/"><span>Centos7下自行编译PHP</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-make-php/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T04:02:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>为了满足我的一篇博文，我单独抽出来写一篇 PHP 的编译篇</p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><p>最好不要去 github 上下载，因为你不知道哪一个是稳定版，我们最好去官网寻找最新的稳定版下载</p>
+<ul>
+<li><a href="http://php.net/downloads.php" target="_blank" rel="noopener">官网下载</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;src&#x2F;</span><br><span class="line"></span><br><span class="line">sudo mkdir php</span><br><span class="line"></span><br><span class="line">cd php</span><br><span class="line"></span><br><span class="line">wget xxxxx.php -O php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">tar -zxvf php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">cd php-xx</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/编译安装/">编译安装</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/08/16/linux-systemctl/"><span>Systemctl服务管理软件</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-systemctl/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T03:21:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>由于特殊原因!!刚才写的文章没保存下来!!!接下来简写.!!!</p>
+<p>Centos7 和 Centos7 之前的版本有几点比较重要的不同,一个是 firewall-cmd 代替了 iptables，然后就是 systemctl 代替了 service。这里，现在我就写一下如何使用 systemctl 管理服务。</p>
+<hr>
+<h1 id="服务的基本命令"><a href="#服务的基本命令" class="headerlink" title="服务的基本命令"></a>服务的基本命令</h1><ul>
+<li><p>systemctl status xx （服务状态）</p>
+</li>
+<li><p>systemctl start xx （服务启动）</p>
+</li>
+<li><p>systemctl stop xx （停止服务）</p>
+</li>
+<li><p>systemctl restart xx（重启服务）</p>
+</li>
+<li><p>systemctl enable xx （服务随开机启动）</p>
+</li>
+<li><p>systemctl disable xx （服务取消随启动）</p>
+</li>
+<li><p>systemctl cat xx （查看服务的配置信息）</p>
+</li>
+<li><p>systemctl daemon-reload (每次修改了一个 service 配置或者新增了一个配置，都需要执行这个命令，让 systemctl 服务重启，然后重新加载服务配置文件)</p>
+</li>
+<li><p>systemctl list-dependencies [target name]（查看依赖树状图，十分的直观好用）</p>
+</li>
+</ul>
+<hr>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Centos7/">Centos7</a><a href="/tags/Systemctl/">Systemctl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/27/ascii-code-2/"><span>字符编码深度剖析</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/ascii-code-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T14:44:00.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在这里，我们对如下4种编码进行对比</p>
+<ul>
+<li>unicode编码</li>
+<li>utf8编码</li>
+<li>ascii编码</li>
+<li>asni编码</li>
+</ul>
+<h3 id="ASCII编码和ASNI编码的区别"><a href="#ASCII编码和ASNI编码的区别" class="headerlink" title="ASCII编码和ASNI编码的区别"></a>ASCII编码和ASNI编码的区别</h3><p>字符内码(charcter code)指的是用来代表字符的内码.读者在输入和存储文档时都要使用内码,内码分为 单字节内码 – Single-Byte character sets (SBCS),可以支持<strong>255</strong>（ <code>8bits = (2^8)-1 = 255</code>）个字符编码. 双字节内码 – Double-Byte character sets)(DBCS),可以支持<strong>65000</strong>个字符编码（最多支持<code>16 bits = (2^16)-1 = 65535</code>）. 前者即为ASCII编码，后者对应ANSI. 至于简体中文编码GB2312，实际上它是ANSI的一个代码页</p>
+<h3 id="UNICODE编码"><a href="#UNICODE编码" class="headerlink" title="UNICODE编码"></a>UNICODE编码</h3><p>unicode 是一种编码表格，例如，给一个汉字规定一个代码。类似 GB2312-1980, GB18030等，只不过字集不同。 一个unicode码可能转成长度为一个BYTE,或两个，三个，四个BYTE（<code>最多6个byte</code>）的UTF8码，取决于unicode码的值。英文unicode码因为值小于<strong>0x80</strong>（<code>单字节字符</code>）,只要用一个BYTE的UTF8传送，<code>比送unicode两个bytes快</code>。</p>
+<p>如上，ANSI有很多代码页，使用不同代码页的内码无法在其他代码也正常显示，这就是为什么日文版／繁体中文版游戏无法在简体中文平台直接显示的原因．</p>
+<p>Unicode也是一种字符编码方法，不过它是由国际组织设计，可以容纳<strong>全世界所有语言文字的编码方案</strong>．它是一种<code>２字节编码</code>，能够提供６５５３５个字符， 这个数字是<strong>不够表示所有的字符</strong>的（汉语就有５５０００多字符），所以，通过一个代理对的机制来实现附加的９１７，４７６个字符表示，以达到所有字符都具有<code>唯一编码</code>．</p>
+<h3 id="Unicode和BigEndianUnicode"><a href="#Unicode和BigEndianUnicode" class="headerlink" title="Unicode和BigEndianUnicode"></a>Unicode和BigEndianUnicode</h3><p>这两者只是存储顺序不同，如＂A＂的unicode编码为65 00 其BigEndianUnicode编码为00 65</p>
+<p>其实就是类比于我之前说过的大小端的介绍</p>
+<h3 id="UTF8编码"><a href="#UTF8编码" class="headerlink" title="UTF8编码"></a>UTF8编码</h3><p>UTF8全称：Unicode Transformation Format – 8 bit（unicode转化格式为8位的流数据）</p>
+<p>Unicode是一个字符集，而UTF-8是Unicode的其中一种，Unicode是定长的都为双字节，而UTF-8是可变的，对于汉字来说Unicode占有的字节比UTF-8占用的字节少1个字节。Unicode为双字节，而UTF-8中汉字占三个字节。</p>
+<p>是Unicode传送格式。即把Unicode文件转换成BYTE的传送流。</p>
+<p>其中UTF-16和Unicode编码大致一样, UTF-8就是以8位为单元对Unicode进行编码。</p>
+<p>UTF-8编码字符理论上可以最多到6个字节长,然而<code>16位BMP（Basic Multilingual Plane）字符</code>最多只用到3字节长。从Unicode到UTF-8的编码方式如下：</p>
+<table>
+<thead>
+<tr>
+<th>Unicode编码(16进制)</th>
+<th>UTF-8 字节流(二进制)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0000 - 007F</td>
+<td>0xxxxxxx</td>
+</tr>
+<tr>
+<td>0080 - 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0800 - FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>100000 - 1FFFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>200000 - 3FFFFFF</td>
+<td>111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>4000000 - 7FFFFFFF</td>
+<td>1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+</tbody></table>
+<p>例如“我”字的Unicode编码是4f6b。4f6b在0800-FFFF之间，所以肯定要用3字节模板了：1110xxxx 10xxxxxx 10xxxxxx。将4f6b写成二进制是：100 111101 101011， 用这个比特流依次代替模板中的x，得到：11100100 10111101 10101011，即E4 9C AB。</p>
+<h3 id="用PHP实现unicode编码和utf8编码的转变"><a href="#用PHP实现unicode编码和utf8编码的转变" class="headerlink" title="用PHP实现unicode编码和utf8编码的转变"></a>用PHP实现unicode编码和utf8编码的转变</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * UTF-8编码字符理论上可以最多到6个字节长,然而16位BMP（Basic Multilingual Plane）字符最多只用到3字节长。下面看一下UTF-8编码表：</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * U-00000000 - U-0000007F: 0xxxxxxx</span></span><br><span class="line"><span class="comment"> * U-00000080 - U-000007FF: 110xxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00000800 - U-0000FFFF: 1110xxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00010000 - U-001FFFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00200000 - U-03FFFFFF: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-04000000 - U-7FFFFFFF: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 单字符汉字转换unicode(16进制)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $utf8_str</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">utf8_transform_unicode</span><span class="params">($utf8_str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  $unicode = (ord($utf8_str&#123;<span class="number">0</span>&#125;) &amp; <span class="number">0xF</span>) &lt;&lt; <span class="number">12</span>;</span><br><span class="line">  $unicode |= (ord($utf8_str&#123;<span class="number">1</span>&#125;) &amp; <span class="number">0x3F</span>) &lt;&lt; <span class="number">6</span>;</span><br><span class="line">  $unicode |= (ord($utf8_str&#123;<span class="number">2</span>&#125;) &amp; <span class="number">0x3F</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> dechex($unicode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * unicode编码转汉字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $unicode</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unicode_transform_utf8</span><span class="params">($unicode)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 十六进制转十进制</span></span><br><span class="line">  $unicode  = (int)hexdec($unicode);</span><br><span class="line">  $ord_1    = decbin(<span class="number">0xe0</span> | ($unicode &gt;&gt; <span class="number">12</span>));</span><br><span class="line">  $ord_2    = decbin(<span class="number">0x80</span> | (($unicode &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x3f</span>));</span><br><span class="line">  $ord_3    = decbin(<span class="number">0x80</span> | ($unicode &amp; <span class="number">0x3f</span>));</span><br><span class="line">  $utf8_str = chr(bindec($ord_1)) . chr(bindec($ord_2)) . chr(bindec($ord_3));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $utf8_str;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$str = <span class="string">'我'</span>;</span><br><span class="line"><span class="keyword">echo</span> utf8_transform_unicode($str);</span><br><span class="line"></span><br><span class="line">$unicode = <span class="string">'6211'</span>;</span><br><span class="line"><span class="keyword">echo</span> unicode_transform_utf8($unicode);</span><br></pre></td></tr></table></figure>
+
+<p>后续，我会出一个用php直接实现编码转换和汉字字符串截取的PHP扩展，都会用到这次的知识，后续见。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/ascii/">ascii</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/27/ccp/"><span>PHP 实现 Promise+协程调用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/ccp/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T14:13:00.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <ul>
+<li>PHP 实现 Promise+协程调用</li>
+</ul>
+<p>github 地址：<a href="https://github.com/whiteCcinn/ccp" target="_blank" rel="noopener">ccp</a></p>
+<blockquote>
+<p>觉得好记的给个 Start 喔。</p>
+</blockquote>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>在 PHP 当中，我们或多或少会使用到异步编程的思想，但是异步编程难免给我们带来回调地狱的感觉，并且代码可读性十分之差，在 ES6 规范里面，或者更早就可以推出了一个做 Promise 的东西，利用 Promise，你可以用同步的做法来实现异步的操作，代码可读性上大大提高，不仅如此，由于异步编程和异步 IO 的混合使用，导致代码的准确性难以提高，不可否认的是，Promise 的推出，大大的提高了你们编写异步代码的可靠性，虽然这也是会损耗一些十分微小的性能，但是任何取舍都是相对的。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Promise/">Promise</a><a href="/tags/ES6/">ES6</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/13/id-sender/"><span>64位分布式自增发号器</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/13/id-sender/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-13T09:30:00.000Z">
+          2017-07-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="IdCenterSender-—PHP-源码实现-64-位分布式自增发号器"><a href="#IdCenterSender-—PHP-源码实现-64-位分布式自增发号器" class="headerlink" title="IdCenterSender —PHP 源码实现-64 位分布式自增发号器"></a>IdCenterSender —PHP 源码实现-64 位分布式自增发号器</h2><p>PHP 实现 64 位分布式 ID 发号器, github 上也有 C 语言版本上的连接可以进去跳转</p>
+<p><a href="https://github.com/whiteCcinn/IdCenterSender" target="_blank" rel="noopener">github 地址 : IdCenterSender</a></p>
+<blockquote>
+<p>觉得好记的给个 Start 喔。</p>
+</blockquote>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>参考 Snowflake 算法,根据自身设计情况扩展了其中的细节</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C/">C</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/ID发号器/">ID发号器</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/11/rabbit-mq/"><span>RabbitMQの关键知识整理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/11/rabbit-mq/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-11T03:45:00.000Z">
+          2017-07-11
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>RabbitMQ 作为一个转发服务器，里面涉及了一些实体的东西，如下：</p>
+<ul>
+<li>生产者 (Producter)</li>
+<li>消息 (Message)</li>
+<li>交换机 (Exchange)</li>
+<li>队列 (Queue)</li>
+<li>消费者 (Consumer)</li>
+</ul>
+<p>在这些实体的东西的基础上，RabbitMQ 重点的是 <code>交换机</code>,<code>队列</code></p>
+<h3 id="交换机与队列"><a href="#交换机与队列" class="headerlink" title="交换机与队列"></a>交换机与队列</h3><p>说完实体的东西之后，在 <code>交换机</code> 和 <code>队列</code> 之间有许多的规则（玩法），我们增加了如下内容：</p>
+<ul>
+<li><p>队列名 (Queue_name)</p>
+</li>
+<li><p>交换机类型 (Exchange_type)</p>
+</li>
+<li><p>路由键 (Routing_key)</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/MQ/">MQ</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/MQ/">MQ</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/9/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/11/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

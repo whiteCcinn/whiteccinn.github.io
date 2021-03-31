@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>64位分布式自增发号器 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="64位分布式自增发号器"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>64位分布式自增发号器</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/13/id-sender/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-13T09:30:00.000Z">
+          2017-07-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="IdCenterSender-—PHP-源码实现-64-位分布式自增发号器"><a href="#IdCenterSender-—PHP-源码实现-64-位分布式自增发号器" class="headerlink" title="IdCenterSender —PHP 源码实现-64 位分布式自增发号器"></a>IdCenterSender —PHP 源码实现-64 位分布式自增发号器</h2><p>PHP 实现 64 位分布式 ID 发号器, github 上也有 C 语言版本上的连接可以进去跳转</p>
+<p><a href="https://github.com/whiteCcinn/IdCenterSender" target="_blank" rel="noopener">github 地址 : IdCenterSender</a></p>
+<blockquote>
+<p>觉得好记的给个 Start 喔。</p>
+</blockquote>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>参考 Snowflake 算法,根据自身设计情况扩展了其中的细节</p>
+<a id="more"></a>
+
+<blockquote>
+<p>64bits 分成了 4 个部分。</p>
+</blockquote>
+<blockquote>
+<p>最高位舍弃<br>毫秒级的时间戳,有 41 个 bit.能够使用 139 年，当然这些是可以扩展的,可以通知指定起始时间来延长这个日期长度。也就是说服务启动开始之后就可以持续使用 139 年<br>自定义分布式机器节点 id,占位 12 个 bit,能够支持 8191 个节点。部署的时候可以配置好服务器 id,也就是代码里面的 node_id 变量，每一台机器都需要用不同的 node_id 来标志，就像 mysql 的 server_id 一样<br>进程（毫秒）自增序号。占位 10bit,一毫秒能产生 2047 个 id。</p>
+</blockquote>
+<h2 id="总结特点："><a href="#总结特点：" class="headerlink" title="总结特点："></a>总结特点：</h2><ul>
+<li>类 snowflake 算法</li>
+<li>ID 发号器有效期可以延续从发布开始的 139 年</li>
+<li>分布式支持 8191 台机器</li>
+<li>单进程调用的情况下，并发每秒支持 200 万个 ID 生成</li>
+</ul>
+<h2 id="唯一性保证"><a href="#唯一性保证" class="headerlink" title="唯一性保证"></a>唯一性保证</h2><blockquote>
+<p>同一毫秒内自增变量保证并发的唯一性(采用文件锁的方式对 cache 文件进行锁定)。</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include_once</span> <span class="string">'../cckeyid/IdCenterSender.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> \cckeyid\IdCenterSender::getInstance()-&gt;ck_get_new_id(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> PHP_EOL;</span><br><span class="line"></span><br><span class="line">print_r(\cckeyid\IdCenterSender::getInstance(<span class="keyword">true</span>)-&gt;ck_get_new_id(<span class="number">4</span>));</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C/">C</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/ID发号器/">ID发号器</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

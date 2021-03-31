@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Linux命令】- 文本处理 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Linux命令】- 文本处理"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Linux命令】- 文本处理</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/27/linux-shell-text/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-27T09:29:00.000Z">
+          2018-02-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="find-文件查找"><a href="#find-文件查找" class="headerlink" title="find 文件查找"></a>find 文件查找</h2><p>find 默认是会把所有目录和文件都一起输出，除非加了<code>type -f</code>，此时就只会输出文件，<code>type -d</code>，此时就只会输出目录</p>
+<p>查找 txt 和 pdf 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">find ./ \( -name "*.php" -o -name "*.p" \)</span><br><span class="line">find ./ \( -name "*.php" -or -name "*.p" \)</span><br><span class="line">// 同时包含命名</span><br><span class="line">find ./ \( -name "*.php" -and -name "*.p" \)</span><br></pre></td></tr></table></figure>
+
+<p>正则方式查找.txt 和.pdf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -regex ".*\(php\|p\)"</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>iregex：忽略大小写的正则</li>
+</ul>
+<p>否定参数，查找所有非 txt 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -name "*.txtx"</span><br></pre></td></tr></table></figure>
+
+<p>指定搜索深度,打印出当前目录的文件（深度为 1，默认为 1）:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -maxdepth 1 -type f</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<hr>
+<h2 id="定制搜索"><a href="#定制搜索" class="headerlink" title="定制搜索"></a>定制搜索</h2><ul>
+<li>按类型搜索</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type d -print  //只列出所有目录</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-type f 文件 / l 符号链接 / d 目录</li>
+</ul>
+<p>find 支持的文件检索类型可以区分普通文件和符号链接、目录等，但是二进制文件和文本文件无法直接通过 find 的类型区分出来；</p>
+<ul>
+<li>按大小搜索：<br>w 字 k M G<br>寻找大于 2k 的文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -size +2k</span><br></pre></td></tr></table></figure>
+
+<p>按权限查找</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -perm 644 -print //找具有可执行权限的所有文件</span><br></pre></td></tr></table></figure>
+
+<p>按用户查找</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -user weber -print// 找用户weber所拥有的文件</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行动作（强大的 exec）<br>将当前目录下的所有权变更为 weber::</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -user root -exec chown weber &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<p>注：{}是一个特殊的字符串，对于每一个匹配的文件，{}会被替换成相应的文件名；</p>
+<p>将找到的文件全都 copy 到另一个目录::</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -mtime +10 -name "*.txt" -exec cp &#123;&#125; OLD \;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="grep-文本搜索"><a href="#grep-文本搜索" class="headerlink" title="grep 文本搜索"></a>grep 文本搜索</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep match_patten file // 默认访问匹配行</span><br></pre></td></tr></table></figure>
+
+<p>常用参数</p>
+<ul>
+<li>-o 只输出匹配的文本行 <strong>VS</strong> -v 只输出没有匹配的文本行</li>
+<li>-c 统计文件中包含文本的次数<br>grep -c “text” filename</li>
+<li>-n 打印匹配的行号</li>
+<li>-i 搜索时忽略大小写</li>
+<li>-l 只打印文件名</li>
+<li>-A 打印搜索到目标的前几行</li>
+<li>-B 打印搜索到目标的后几行</li>
+<li>-C 打印搜索到目标的前后几行</li>
+</ul>
+<p>在多级目录中对文本递归搜索(程序员搜代码的最爱）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 在多级目录下搜索文本内容包含class的，并且打印行数，并且显示前后3行</span><br><span class="line">grep "class" . -R -n -C 3</span><br></pre></td></tr></table></figure>
+
+<p>综合应用：将日志中的所有带 where 条件的 sql 查找查找出来</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat *sql.log | tr [a-z] [A-Z] | grep "FROM" | grep "WHERE" &gt; temp.log</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="xargs-命令行参数转换"><a href="#xargs-命令行参数转换" class="headerlink" title="xargs 命令行参数转换"></a>xargs 命令行参数转换</h2><p>单行输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file.txt | xargs</span><br></pre></td></tr></table></figure>
+
+<p>单行之后再以 n 个元素为一行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat file.txt | -n 2</span><br></pre></td></tr></table></figure>
+
+<p>xargs 参数说明</p>
+<ul>
+<li>-d 定义定界符 （默认为空格 多行的定界符为 \n）</li>
+<li>-n 指定输出为多行</li>
+<li>-I {} 指定替换字符串，这个字符串在 xargs 扩展时会被替换掉,用于待执行的命令需要多个参数时</li>
+<li>-0：指定\0 为输入定界符</li>
+</ul>
+<hr>
+<h2 id="sort-排序"><a href="#sort-排序" class="headerlink" title="sort 排序"></a>sort 排序</h2><ul>
+<li>-n 按数字进行排序 VS -d 按字典序进行排序</li>
+<li>-r 逆序排序</li>
+<li>-k N 指定按第 N 列排序</li>
+<li>-R 随机排列</li>
+<li>-f 忽略大小写</li>
+<li>-b 忽略前置无用</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 升序排列</span><br><span class="line">sort a.p</span><br><span class="line"></span><br><span class="line">// 随机排列</span><br><span class="line">sort -R a.p</span><br></pre></td></tr></table></figure>
+
+<h2 id="uniq-重复行操作"><a href="#uniq-重复行操作" class="headerlink" title="uniq 重复行操作"></a>uniq 重复行操作</h2><ul>
+<li>-d 只显示重复行</li>
+<li>-u 只显示不重复的行</li>
+<li>-c 覆盖重复，但是显示每行记录的重复数，默认为：1</li>
+<li>-i 忽略大小写</li>
+</ul>
+<p>可指定每行中需要比较的重复内容：-s 开始位置 -w 比较字符数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sort unsort.txt | uniq</span><br></pre></td></tr></table></figure>
+
+<h2 id="tr-sed-简化版"><a href="#tr-sed-简化版" class="headerlink" title="tr sed 简化版"></a>tr sed 简化版</h2><p>注意[set1]和[set2]是单字符一对一替换</p>
+<p>PS：关键是默认是单字符操作，除非加了-s</p>
+<ul>
+<li>-d 删除某些字符</li>
+<li>-s 删除某个字符串</li>
+<li>-c 获取文本中指定的字符</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo 12345 | tr '0-9' '9876543210' //加解密转换，替换对应字符</span><br><span class="line"></span><br><span class="line">cat text| tr '\t' ' '  //制表符转空格</span><br></pre></td></tr></table></figure>
+
+<p>tr 中可用各种字符类：</p>
+<pre><code>* alnum：字母和数字
+* alpha：字母
+* digit：数字
+* space：空白字符
+* lower：小写
+* upper：大写
+* cntrl：控制（非可打印）字符
+* print：可打印字符</code></pre><p>使用方法：<code>tr [:class:] [:class:]</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 小写替换成大写</span><br><span class="line">tr '[:lower:]' '[:upper:]'</span><br></pre></td></tr></table></figure>
+
+<h2 id="sed-文本替换利器"><a href="#sed-文本替换利器" class="headerlink" title="sed 文本替换利器"></a>sed 文本替换利器</h2><p>格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed [options] &#39;[command]&lt;content&gt;[command2]&#39; file</span><br></pre></td></tr></table></figure>
+
+<p>options：</p>
+<ul>
+<li>-i：替换原本的内容</li>
+</ul>
+<p>command：</p>
+<ul>
+<li>s：替换文本:<ul>
+<li>s/{text}/{replatce_text}/[command2]</li>
+</ul>
+</li>
+</ul>
+<p>command2：</p>
+<ul>
+<li><p>g：全局匹配</p>
+</li>
+<li><p>Ng：N = \d：从第 N 列开始逐行匹配</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo sksksksksksk | sed 's/sk/SK/2g'</span><br><span class="line">skSKSKSKSKSK</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>d：删除操作</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">删除空白行：</span><br><span class="line"></span><br><span class="line">sed '/^$/d' file</span><br><span class="line"></span><br><span class="line">删除文件的第2行：</span><br><span class="line"></span><br><span class="line">sed '2d' file</span><br><span class="line"></span><br><span class="line">删除文件的第2行到末尾所有行：</span><br><span class="line"></span><br><span class="line">sed '2,$d' file</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,756 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 4 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/12/大数据/Glow源码剖析/"><span>【大数据】- Glow 源码剖析</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/12/大数据/Glow源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-11T16:07:40.000Z">
+          2019-08-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>犹豫公司的流式计算，并没有用类似于 Hadoop 的 mapreduce 机制或者 storm 或者 flink，是我们自研基于 erlang 的单节点服务，其优点就是：部署和迁移都十分简单，并且犹豫 erlang 的天然的良好的利用了多核 CPU 的优势，可以实现效率较高的大数据流式计算。但是由于其单机性，导致对单台机器的要求过于苛刻，并且不能进行扩展机器提高计算能力是其致命的缺点，所以目前我规划利用 golang，写一个支持分布式并行计算的服务，在此之前，了解了各大流式计算的基本思想，并且结合 golang 语言的特性，找到了一个叫<code>glow</code>的服务，想要写好一个分布式流式计算的服务，我们先来看看 <code>glow</code> 有什么好的借鉴的思想和思路。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>, <a href="/categories/大数据/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/大数据，流式计算/">大数据，流式计算</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/07/网络协议/TCP-tcpdump/"><span>【网络协议】TCP - tcpdump用法</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/07/网络协议/TCP-tcpdump/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-07T07:57:13.000Z">
+          2019-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们在服务器上编程或者调试的时候，都不可能是各种抓包客户端，所以我们需要学会运用 tcpdump 来对网络的数据进行抓包。<br>用简单的话来定义 tcpdump，就是：dump the traffic on a network，根据使用者的定义对网络上的数据包进行截获的包分析工具。 tcpdump 可以将网络中传送的数据包的“头”完全截获下来提供分析。它支持针对网络层、协议、主机、网络或端口的过滤，并提供 and、or、not 等逻辑语句来帮助你去掉无用的信息。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/07/网络协议/TCP-重传机制/"><span>【网络协议】TCP - 重传机制</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/07/网络协议/TCP-重传机制/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-07T03:33:40.000Z">
+          2019-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>TCP 要保证所有的数据包都可以到达，所以，必需要有重传机制。</p>
+<p>其中涉及 ACK 包比较关键，因为在窗口的这篇文章中，已经说过了，ACK 机制起始就是类似于一种反馈机制。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-窗口/"><span>【网络协议】TCP 窗口</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/06/网络协议/TCP-窗口/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-06T09:43:43.000Z">
+          2019-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近写了一篇关于 TCP 协议的文章，所以一些更加细节的内容，更偏向 TCP 独立协议的，拿出来独立记录。</p>
+<p>为了获得最优的连接速率，使用 TCP 窗口来控制流速率（flow control），滑动窗口就是一种主要的机制。这个窗口允许源端在给定连接传送数据分段而不用等待目标端返回 ACK，一句话描述：窗口的大小决定在不需要对端响应（acknowledgement）情况下传送数据的数量。​ 官方定义：“The amount of octets that can be transmitted without receiving an acknowledgement from the other side”。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-IP/"><span>【网络协议】TCP/IP协议</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/06/网络协议/TCP-IP/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-06T02:43:43.000Z">
+          2019-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近看了 Redis5 的源码，所以对网络编程又进一步加深了了解，在这里，由于没有很系统的整理过 TCP/IP 协议相关的内容，所以写下这篇文章，以此来记录我最近学习到的内容，内容会分为以下几个方面。</p>
+<ul>
+<li>TCP/IP 协议，三次握手，四次挥手，协议细节</li>
+<li>协议相关的细节，优化调整内核参数</li>
+<li>模拟异常连接，优化调整内核参数</li>
+<li>利用 C 语言，基于 epoll 写一个支持高并发的 TCP 聊天服务器</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/10/源码剖析/redis5源码剖析/"><span>【源码剖析】Redis主流程</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/10/源码剖析/redis5源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-10T02:43:43.000Z">
+          2019-07-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从 main 函数开始，沿着代码执行路径，实际上我们可以一直追下去。但为了让本文不至于太过冗长，我们还是限定一下范围。本文的目标就定为：引领读者从 main 函数开始，一步步追踪下去，最终到达任一 Redis 命令的执行入口。</p>
+<p>后续，再剖析各个命令的内部实现</p>
+<blockquote>
+<p>本文基于 redis5.0 分支</p>
+</blockquote>
+<p>为了表述清楚，本文按照如下思路进行：</p>
+<ul>
+<li>先概括地介绍整个代码初始化流程（从 main 函数开始）和事件循环的结构；</li>
+<li>再概括地介绍对于 Redis 命令请求的处理流程；</li>
+<li>重点介绍事件机制；</li>
+<li>对于前面介绍的各个代码处理流程，给出详细的代码调用关系，方便随时查阅；</li>
+</ul>
+<p>根据这样几部分的划分，如果你只想粗读大致的处理流程，那么只需要阅读前两个部分就可以了。而后两部分则会深入到某些值得关注的细节。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Redis/">Redis</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Redis，源码剖析/">Redis，源码剖析</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/09/数据结构/二叉树/"><span>【数据结构】二叉树</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/09/数据结构/二叉树/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-09T07:20:00.000Z">
+          2019-07-09
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>数据结构中有很多树的结构，其中包括二叉树、二叉搜索树、2-3 树、红黑树等等。本文中对数据结构中常见的几种树的概念和用途进行了汇总，不求严格精准，但求简单易懂。</p>
+<p>二叉树是数据结构中一种重要的数据结构，也是树表家族最为基础的结构。</p>
+<p>二叉树的定义：二叉树的每个结点至多只有二棵子树(不存在度大于 2 的结点)，二叉树的子树有左右之分，次序不能颠倒。二叉树的第 i 层至多有 2^(i-1) 个结点；深度为 k 的二叉树至多有 (2^k)-1 个结点；对任何一棵二叉树 T，如果其终端结点数为 n0，度为 2 的结点数为 n2，则 n0=n2+1。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/数据结构/">数据结构</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/08/C语言/Makefile/"><span>【C语言】- Makefile</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/08/C语言/Makefile/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-08T02:11:09.000Z">
+          2019-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>什么是 makefile？或许很多 Winodws 的程序员都不知道这个东西，因为那些 Windows 的 IDE 都为你做了这个工作，但我觉得要作一个好的和 professional 的程序员，makefile 还是要懂。这就好像现在有这么多的 HTML 的编辑器，但如果你想成为一个专业人士，你还是要了解 HTML 的标识的含义。特别在 Unix 下的软件编译，你就不能不自己写 makefile 了，<code>会不会写 makefile，从一个侧面说明了一个人是否具备完成大型工程的能力</code>。因为，makefile 关系到了整个工程的编译规则。一个工程中的源文件不计数，其按类型、功能、模块分别放在若干个目录中，makefile 定义了一系列的规则来指定，哪些文件需要先编译，哪些文件需要后编译，哪些文件需要重新编译，甚至于进行更复杂的功能操作，因为 makefile 就像一个 Shell 脚本一样，其中也可以执行操作系统的命令。<code>makefile 带来的好处就是——“自动化编译”</code>，一旦写好，只需要一个 make 命令，整个工程完全自动编译，极大的提高了软件开发的效率。make 是一个命令工具，是一个解释 makefile 中指令的命令工具，一般来说，大多数的 IDE 都有这个命令，比如：Delphi 的 make，Visual C++的 nmake，Linux 下 GNU 的 make。可见，makefile 都成为了一种在工程方面的编译方法。</p>
+<blockquote>
+<p>其实在我眼中，感觉 makefile 文件其实就是等于一个 shell 文件，用于处理“自动化”的内容，只不过它是由 C 语言程序本身解析的。</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/C语言/">C语言</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C语言/">C语言</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/06/算法/leetcode/最长公共前缀/"><span>【LeeCode】- 最长公公前缀</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/06/算法/leetcode/最长公共前缀/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-06T02:11:09.000Z">
+          2019-07-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>编写一个函数来查找字符串数组中的最长公共前缀。</p>
+<p>如果不存在公共前缀，返回空字符串  “”。</p>
+<p>示例 1:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;]</span><br><span class="line">输出: &quot;fl&quot;</span><br></pre></td></tr></table></figure>
+
+<p>示例 2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;dog&quot;,&quot;racecar&quot;,&quot;car&quot;]</span><br><span class="line">输出: &quot;&quot;</span><br><span class="line">解释: 输入不存在公共前缀。</span><br><span class="line">说明:</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>所有输入只包含小写字母  a-z 。</p>
+</blockquote>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><h3 id="解法一：水平扫描法"><a href="#解法一：水平扫描法" class="headerlink" title="解法一：水平扫描法"></a>解法一：水平扫描法</h3><p>首先，我们将描述一种查询一组字符串的最长公共前缀 <code>LCP(S1...Sn)</code>，我们得到结论是：</p>
+<p><code>LCP(S1...Sn)=LCP(LCP(LCP(S1,S2),S3),...Sn)</code></p>
+<p>从公式可以看出，两两比较的字符串的公共字符串就是我们的运算过程。</p>
+<p><img src="/images/%E7%AE%97%E6%B3%95/%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%89%8D%E7%BC%80%E6%B0%B4%E5%B9%B3%E6%89%AB%E6%8F%8F%E6%B3%95.png" alt="水平扫描法"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">longestCommonPrefix</span><span class="params">(<span class="keyword">char</span> **strs, <span class="keyword">int</span> strSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i, j;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (strSize == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> *str = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>) * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">strcpy</span>(str, strs[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; strSize; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (str[j] &amp;&amp; strs[i][j] &amp;&amp; str[j] == strs[i][j])</span><br><span class="line">    &#123;</span><br><span class="line">      j++;</span><br><span class="line">    &#125;</span><br><span class="line">    str[j] = <span class="string">'\0'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *strs[] = &#123;<span class="string">"lees"</span>, <span class="string">"leetcode"</span>, <span class="string">"leet"</span>, <span class="string">"leets"</span>&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> <span class="built_in">size</span> = <span class="keyword">sizeof</span>(strs) / <span class="keyword">sizeof</span>(<span class="keyword">char</span> *);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> *lcp;</span><br><span class="line"></span><br><span class="line">  lcp = longestCommonPrefix(strs, <span class="built_in">size</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, lcp);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体请查看我的 github 仓库项目</p>
+<p><a href="https://github.com/whiteCcinn/leetcode-practice" target="_blank" rel="noopener">leetcode-practice</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/LeeCode/">LeeCode</a>, <a href="/categories/LeeCode/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/LeeCode/">LeeCode</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/05/API网关/orange/"><span>【API网关】- Orange</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/05/API网关/orange/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-05T10:15:00.000Z">
+          2019-07-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>版本：0.7</p>
+</blockquote>
+<p>API 网关/网关，充当的职责无非以下几点：</p>
+<ul>
+<li>鉴权</li>
+<li>限流</li>
+<li>分流</li>
+<li>负载均衡</li>
+</ul>
+<blockquote>
+<p>隐含的功能就是动态 upstream</p>
+</blockquote>
+<p>大多与的 API 网关都是用利用 lua 实现的 Openresty 来实现的，因为它可以很好的和 nginx 结合在一起，可以同时运行 lua 脚本和 C 库，并且由于 lua 在协程上实现得十分早，对于 IO 密集型的处理十分的高效。</p>
+<p>在给予 Openresty 实现的 API 网关中，有一些是比较出名的，例如 kong/orange</p>
+<ul>
+<li><p><a href="https://github.com/Kong/kong" target="_blank" rel="noopener">kong</a> 算是行业认为最强大成熟的一个组件的，但是过于复杂了。</p>
+</li>
+<li><p><a href="https://github.com/orlabs/orange" target="_blank" rel="noopener">orange</a> 利用插件的形式来处理请求，并且间接直接，易于二次开发和扩展</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/API网关/">API网关</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/API网关/">API网关</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/3/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/5/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- sync.map | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- sync.map"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- sync.map</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/02/Golang/sync-map/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-02T05:59:51.000Z">
+          2020-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于要造一些轮子，例如 像 laravel 一样的 <code>Event组件</code>，我参考了网上的几个库</p>
+<ul>
+<li><a href="https://github.com/sadlil/go-trigger" target="_blank" rel="noopener">go-trigger</a></li>
+<li><a href="https://github.com/kataras/go-events" target="_blank" rel="noopener">go-events</a></li>
+</ul>
+<p>这 2 个库，大同小异，只有一小部分差别，新打组件将会在这 2 个库的基础上再封装</p>
+<p>这 2 个库都是比较早期的库，所以在实现上用到了 map，但是由于考虑到 map 的线程安全性问题，所以他们都使用了 go1.9 之前实现的方式，就是在结构体嵌入一个读写锁来避免线程安全问题。</p>
+<p>在 Go 1.6 之前， 内置的 map 类型是部分 goroutine 安全的，并发的读没有问题，并发的写可能有问题。自 go 1.6 之后， 并发地读写 map 会报错，这在一些知名的开源库中都存在这个问题，所以 go 1.9 之前的解决方案是额外绑定一个锁，封装成一个新的 struct 或者单独使用锁都可以。</p>
+<p>本文带你深入到 sync.Map 的具体实现中，看看为了增加一个功能，代码是如何变的复杂的,以及作者在实现 sync.Map 的一些思想。</p>
+<a id="more"></a>
+
+<h2 id="有并发问题的-map"><a href="#有并发问题的-map" class="headerlink" title="有并发问题的 map"></a>有并发问题的 map</h2><p>官方的 <a href="https://golang.org/doc/faq#atomic_maps" target="_blank" rel="noopener">faq</a> 已经提到内建的 map 不是线程(goroutine)安全的。</p>
+<p>首先，让我们看一段并发读写的代码,下列程序中一个 goroutine 一直读，一个 goroutine 一只写同一个键值，即即使读写的键不相同，而且 map 也没有”扩容”等操作，代码还是会报错。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">int</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			_ = m[<span class="number">1</span>]</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			m[<span class="number">2</span>] = <span class="number">2</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>报错信息为：fatal error: concurrent map read and map write</p>
+</blockquote>
+<blockquote>
+<p>在开发 <code>msource</code> 组件的时候，同样遇到了这个问题</p>
+</blockquote>
+<p>如果你查看 Go 的源代码: <a href="https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L542" target="_blank" rel="noopener">hashmap_fast.go#L118</a>,会看到读的时候会检查 hashWriting 标志， 如果有这个标志，就会报并发错误。</p>
+<p>写的时候会设置这个标志: <a href="https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L542" target="_blank" rel="noopener">hashmap.go#L542</a></p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">h.flags |= hashWriting</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/golang/go/blob/master/src/runtime/hashmap.go#L628" target="_blank" rel="noopener">hashmap.go#L628</a> 设置完之后会取消这个标记。</p>
+<p>当然，代码中还有好几处并发读写的检查， 比如写的时候也会检查是不是有并发的写，删除键的时候类似写，遍历的时候并发读写问题等。</p>
+<p>有时候，map 的并发问题不是那么容易被发现, 你可以利用 <code>-race</code> 参数来检查。</p>
+<h2 id="Go-1-9-之前的解决方案"><a href="#Go-1-9-之前的解决方案" class="headerlink" title="Go 1.9 之前的解决方案"></a>Go 1.9 之前的解决方案</h2><p>但是，很多时候，我们会并发地使用 map 对象，尤其是在一定规模的项目中，map 总会保存 goroutine 共享的数据。在 Go 官方 blog 的 <a href="https://blog.golang.org/go-maps-in-action" target="_blank" rel="noopener">Go maps in action</a> 一文中，提供了一种简便的解决方案。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> counter = <span class="keyword">struct</span>&#123;</span><br><span class="line">    sync.RWMutex</span><br><span class="line">    m <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span></span><br><span class="line">&#125;&#123;m: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它使用嵌入 struct 为 map 增加一个读写锁。</p>
+<p>读数据的时候很方便的加锁：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">counter.RLock()</span><br><span class="line">n := counter.m[<span class="string">"some_key"</span>]</span><br><span class="line">counter.RUnlock()</span><br><span class="line">fmt.Println(<span class="string">"some_key:"</span>, n)</span><br></pre></td></tr></table></figure>
+
+<p>写数据的时候:</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">counter.Lock()</span><br><span class="line">counter.m[<span class="string">"some_key"</span>]++</span><br><span class="line">counter.Unlock()</span><br></pre></td></tr></table></figure>
+
+<h2 id="sync-Map"><a href="#sync-Map" class="headerlink" title="sync.Map"></a>sync.Map</h2><p>可以说，上面的解决方案相当简洁，并且利用读写锁而不是 Mutex 可以进一步减少读写的时候因为锁带来的性能。</p>
+<p>但是，它在一些场景下也有问题，如果熟悉 Java 的同学，可以对比一下 java 的 <code>ConcurrentHashMap</code> 的实现，在 map 的数据非常大的情况下，一把锁会导致大并发的客户端共争一把锁，Java 的解决方案是 shard, 内部使用多个锁，每个区间共享一把锁，这样减少了数据共享一把锁带来的性能影响，<a href="https://github.com/orcaman" target="_blank" rel="noopener">orcaman</a> 提供了这个思路的一个实现： <a href="https://github.com/orcaman/concurrent-map" target="_blank" rel="noopener">concurrent-map</a>，他也询问了 Go 相关的开发人员是否在 Go 中也实现这种<a href="https://github.com/golang/go/issues/20360" target="_blank" rel="noopener">方案</a>，由于实现的复杂性，答案是 <code>Yes, we considered it</code>.,但是除非有特别的性能提升和应用场景，否则没有进一步的开发消息。</p>
+<p>那么，在 Go 1.9 中 <code>sync.Map</code> 是怎么实现的呢？它是如何解决并发提升性能的呢？</p>
+<p><code>sync.Map</code> 的实现有几个优化点，这里先列出来，我们后面慢慢分析。</p>
+<p>空间换时间。 通过冗余的两个数据结构(read、dirty),实现加锁对性能的影响。<br>使用只读数据(read)，避免读写冲突。<br>动态调整，miss 次数多了之后，将 dirty 数据提升为 read。<br>double-checking。<br>延迟删除。 删除一个键值只是打标记，只有在提升 dirty 的时候才清理删除的数据。<br>优先从 read 读取、更新、删除，因为对 read 的读取不需要锁。<br>下面我们介绍 <code>sync.Map</code> 的重点代码，以便理解它的实现思想。</p>
+<p>首先，我们看一下 <code>sync.Map</code> 的数据结构：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Map <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 当涉及到dirty数据的操作的时候，需要使用这个锁</span></span><br><span class="line">	mu Mutex</span><br><span class="line">	<span class="comment">// 一个只读的数据结构，因为只读，所以不会有读写冲突。</span></span><br><span class="line">	<span class="comment">// 所以从这个数据中读取总是安全的。</span></span><br><span class="line">	<span class="comment">// 实际上，实际也会更新这个数据的entries,如果entry是未删除的(unexpunged), 并不需要加锁。如果entry已经被删除了，需要加锁，以便更新dirty数据。</span></span><br><span class="line">	read atomic.Value <span class="comment">// readOnly</span></span><br><span class="line">	<span class="comment">// dirty数据包含当前的map包含的entries,它包含最新的entries(包括read中未删除的数据,虽有冗余，但是提升dirty字段为read的时候非常快，不用一个一个的复制，而是直接将这个数据结构作为read字段的一部分),有些数据还可能没有移动到read字段中。</span></span><br><span class="line">	<span class="comment">// 对于dirty的操作需要加锁，因为对它的操作可能会有读写竞争。</span></span><br><span class="line">	<span class="comment">// 当dirty为空的时候， 比如初始化或者刚提升完，下一次的写操作会复制read字段中未删除的数据到这个数据中。</span></span><br><span class="line">	dirty <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]*entry</span><br><span class="line">	<span class="comment">// 当从Map中读取entry的时候，如果read中不包含这个entry,会尝试从dirty中读取，这个时候会将misses加一，</span></span><br><span class="line">	<span class="comment">// 当misses累积到 dirty的长度的时候， 就会将dirty提升为read,避免从dirty中miss太多次。因为操作dirty需要加锁。</span></span><br><span class="line">	misses <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它的数据结构很简单，值包含四个字段：<code>read</code>、<code>mu</code>、<code>dirty</code>、<code>misses</code>。</p>
+<p>它使用了冗余的数据结构 <code>read</code>、<code>dirty</code>。<code>dirty</code> 中会包含 <code>read 中为删除的 entries</code>，新增加的 <code>entries 会加入到 dirty</code> 中。</p>
+<p><code>read</code> 的数据结构是：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> readOnly <span class="keyword">struct</span> &#123;</span><br><span class="line">	m       <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]*entry</span><br><span class="line">	amended <span class="keyword">bool</span> <span class="comment">// 如果Map.dirty有些数据不在中的时候，这个值为true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>amended 指明 <code>Map.dirty</code> 中有 <code>readOnly.m</code> 未包含的数据，所以如果从 Map.read 找不到数据的话，还要进一步到 Map.dirty 中查找。</p>
+<p>对 Map.read 的修改是通过原子操作进行的。</p>
+<p>虽然 <code>read</code> 和 <code>dirty</code> 有冗余数据，但这些数据是通过指针指向同一个数据，所以尽管 Map 的 value 会很大，但是冗余的空间占用还是有限的。</p>
+<p><code>readOnly.m</code> 和 <code>Map.dirty</code> 存储的值类型是<code>\*entry</code>,它包含一个指针 p, 指向用户存储的 value 值。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> entry <span class="keyword">struct</span> &#123;</span><br><span class="line">	p unsafe.Pointer <span class="comment">// *interface&#123;&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>p 有三种值：</p>
+<ul>
+<li>nil: entry 已被删除了，并且 m.dirty 为 nil</li>
+<li>expunged: entry 已被删除了，并且 m.dirty 不为 nil，而且这个 entry 不存在于 m.dirty 中</li>
+<li>其它： entry 是一个正常的值</li>
+</ul>
+<p>以上是 sync.Map 的数据结构，下面我们重点看看 <code>Load</code>、<code>Store</code>、<code>Delete</code>、<code>Range</code> 这四个方法，其它辅助方法可以参考这四个方法来理解。</p>
+<h3 id="Load"><a href="#Load" class="headerlink" title="Load"></a>Load</h3><p>加载方法，也就是提供一个键 <code>key</code>,查找对应的值 <code>value</code>,如果不存在，通过 ok 反映：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Map)</span> <span class="title">Load</span><span class="params">(key <span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">(value <span class="keyword">interface</span>&#123;&#125;, ok <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 1.首先从m.read中得到只读readOnly,从它的map中查找，不需要加锁</span></span><br><span class="line">	read, _ := m.read.Load().(readOnly)</span><br><span class="line">	e, ok := read.m[key]</span><br><span class="line">	<span class="comment">// 2. 如果没找到，并且m.dirty中有新数据，需要从m.dirty查找，这个时候需要加锁</span></span><br><span class="line">	<span class="keyword">if</span> !ok &amp;&amp; read.amended &#123;</span><br><span class="line">		m.mu.Lock()</span><br><span class="line">		<span class="comment">// 双检查，避免加锁的时候m.dirty提升为m.read,这个时候m.read可能被替换了。</span></span><br><span class="line">		read, _ = m.read.Load().(readOnly)</span><br><span class="line">		e, ok = read.m[key]</span><br><span class="line">		<span class="comment">// 如果m.read中还是不存在，并且m.dirty中有新数据</span></span><br><span class="line">		<span class="keyword">if</span> !ok &amp;&amp; read.amended &#123;</span><br><span class="line">			<span class="comment">// 从m.dirty查找</span></span><br><span class="line">			e, ok = m.dirty[key]</span><br><span class="line">			<span class="comment">// 不管m.dirty中存不存在，都将misses计数加一</span></span><br><span class="line">			<span class="comment">// missLocked()中满足条件后就会提升m.dirty</span></span><br><span class="line">			m.missLocked()</span><br><span class="line">		&#125;</span><br><span class="line">		m.mu.Unlock()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> !ok &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> e.load()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有两个值的关注的地方。一个是首先从 <code>m.read</code> 中加载，不存在的情况下，并且 <code>m.dirty</code> 中有新数据，加锁，然后从 <code>m.dirty</code> 中加载。</p>
+<p>二是这里使用了双检查的处理，因为在下面的两个语句中，这两行语句并不是一个原子操作。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> !ok &amp;&amp; read.amended &#123;</span><br><span class="line">		m.mu.Lock()</span><br></pre></td></tr></table></figure>
+
+<p>虽然第一句执行的时候条件满足，但是在加锁之前，<code>m.dirty</code> 可能被提升为 <code>m.read</code>,所以加锁后还得再检查 <code>m.read</code>，后续的方法中都使用了这个方法。</p>
+<p>双检查的技术 Java 程序员非常熟悉了，单例模式的实现之一就是利用双检查的技术。</p>
+<p>可以看到，如果我们查询的键值正好存在于 <code>m.read</code> 中，无须加锁，直接返回，理论上性能优异。即使不存在于 <code>m.read</code> 中，经过 <code>miss</code> 几次之后，<code>m.dirty</code> 会被提升为 <code>m.read</code>，又会从 <code>m.read</code> 中查找。所以对于更新／增加较少，加载存在的 key 很多的 case,性能基本和无锁的 map 类似。</p>
+<p>下面看看 <code>m.dirty</code> 是如何被提升的。<code>missLocked</code>方法中可能会将 <code>m.dirty</code> 提升。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Map)</span> <span class="title">missLocked</span><span class="params">()</span></span> &#123;</span><br><span class="line">	m.misses++</span><br><span class="line">	<span class="keyword">if</span> m.misses &lt; <span class="built_in">len</span>(m.dirty) &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	m.read.Store(readOnly&#123;m: m.dirty&#125;)</span><br><span class="line">	m.dirty = <span class="literal">nil</span></span><br><span class="line">	m.misses = <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>这个方法是更新或者新增一个 entry。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Map)</span> <span class="title">Store</span><span class="params">(key, value <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 如果m.read存在这个键，并且这个entry没有被标记删除，尝试直接存储。</span></span><br><span class="line">	<span class="comment">// 因为m.dirty也指向这个entry,所以m.dirty也保持最新的entry。</span></span><br><span class="line">	read, _ := m.read.Load().(readOnly)</span><br><span class="line">	<span class="keyword">if</span> e, ok := read.m[key]; ok &amp;&amp; e.tryStore(&amp;value) &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 如果`m.read`不存在或者已经被标记删除</span></span><br><span class="line">	m.mu.Lock()</span><br><span class="line">	read, _ = m.read.Load().(readOnly)</span><br><span class="line">	<span class="keyword">if</span> e, ok := read.m[key]; ok &#123;</span><br><span class="line">		<span class="keyword">if</span> e.unexpungeLocked() &#123; <span class="comment">//标记成未被删除</span></span><br><span class="line">			m.dirty[key] = e <span class="comment">//m.dirty中不存在这个键，所以加入m.dirty</span></span><br><span class="line">		&#125;</span><br><span class="line">		e.storeLocked(&amp;value) <span class="comment">//更新</span></span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> e, ok := m.dirty[key]; ok &#123; <span class="comment">// m.dirty存在这个键，更新</span></span><br><span class="line">		e.storeLocked(&amp;value)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123; <span class="comment">//新键值</span></span><br><span class="line">		<span class="keyword">if</span> !read.amended &#123; <span class="comment">//m.dirty中没有新的数据，往m.dirty中增加第一个新键</span></span><br><span class="line">			m.dirtyLocked() <span class="comment">//从m.read中复制未删除的数据</span></span><br><span class="line">			m.read.Store(readOnly&#123;m: read.m, amended: <span class="literal">true</span>&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">		m.dirty[key] = newEntry(value) <span class="comment">//将这个entry加入到m.dirty中</span></span><br><span class="line">	&#125;</span><br><span class="line">	m.mu.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Map)</span> <span class="title">dirtyLocked</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> m.dirty != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	read, _ := m.read.Load().(readOnly)</span><br><span class="line">	m.dirty = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]*entry, <span class="built_in">len</span>(read.m))</span><br><span class="line">	<span class="keyword">for</span> k, e := <span class="keyword">range</span> read.m &#123;</span><br><span class="line">		<span class="keyword">if</span> !e.tryExpungeLocked() &#123;</span><br><span class="line">			m.dirty[k] = e</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *entry)</span> <span class="title">tryExpungeLocked</span><span class="params">()</span> <span class="params">(isExpunged <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	p := atomic.LoadPointer(&amp;e.p)</span><br><span class="line">	<span class="keyword">for</span> p == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="comment">// 将已经删除标记为nil的数据标记为expunged</span></span><br><span class="line">		<span class="keyword">if</span> atomic.CompareAndSwapPointer(&amp;e.p, <span class="literal">nil</span>, expunged) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">		p = atomic.LoadPointer(&amp;e.p)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> p == expunged</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你可以看到，以上操作都是先从操作 <code>m.read</code> 开始的，不满足条件再加锁，然后操作 <code>m.dirty</code>。</p>
+<p><code>Store</code> 可能会在某种情况下(初始化或者 <code>m.dirty</code> 刚被提升后)从 <code>m.read</code> 中复制数据，如果这个时候 <code>m.read</code> 中数据量非常大，可能会影响性能。</p>
+<h3 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h3><p>删除一个键值。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Map)</span> <span class="title">Delete</span><span class="params">(key <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	read, _ := m.read.Load().(readOnly)</span><br><span class="line">	e, ok := read.m[key]</span><br><span class="line">	<span class="keyword">if</span> !ok &amp;&amp; read.amended &#123;</span><br><span class="line">		m.mu.Lock()</span><br><span class="line">		read, _ = m.read.Load().(readOnly)</span><br><span class="line">		e, ok = read.m[key]</span><br><span class="line">		<span class="keyword">if</span> !ok &amp;&amp; read.amended &#123;</span><br><span class="line">			<span class="built_in">delete</span>(m.dirty, key)</span><br><span class="line">		&#125;</span><br><span class="line">		m.mu.Unlock()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		e.<span class="built_in">delete</span>()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样，删除操作还是从 <code>m.read</code> 中开始， 如果这个 entry 不存在于 <code>m.read</code> 中，并且 <code>m.dirty</code> 中有新数据，则加锁尝试从 <code>m.dirty</code> 中删除。</p>
+<p>注意，还是要双检查的。 从 <code>m.dirty</code> 中直接删除即可，就当它没存在过，但是如果是从 <code>m.read</code> 中删除，并不会直接删除，而是打标记：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *entry)</span> <span class="title">delete</span><span class="params">()</span> <span class="params">(hadValue <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		p := atomic.LoadPointer(&amp;e.p)</span><br><span class="line">		<span class="comment">// 已标记为删除</span></span><br><span class="line">		<span class="keyword">if</span> p == <span class="literal">nil</span> || p == expunged &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 原子操作，e.p标记为nil</span></span><br><span class="line">		<span class="keyword">if</span> atomic.CompareAndSwapPointer(&amp;e.p, p, <span class="literal">nil</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Range"><a href="#Range" class="headerlink" title="Range"></a>Range</h3><p>因为<code>for ... range map</code>是内建的语言特性，所以没有办法使用<code>for range</code>遍历 sync.Map, 但是可以使用它的<code>Range</code>方法，通过回调的方式遍历。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Map)</span> <span class="title">Range</span><span class="params">(f <span class="keyword">func</span>(key, value <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span>)</span> &#123;</span><br><span class="line">	read, _ := m.read.Load().(readOnly)</span><br><span class="line">	<span class="comment">// 如果m.dirty中有新数据，则提升m.dirty,然后在遍历</span></span><br><span class="line">	<span class="keyword">if</span> read.amended &#123;</span><br><span class="line">		<span class="comment">//提升m.dirty</span></span><br><span class="line">		m.mu.Lock()</span><br><span class="line">		read, _ = m.read.Load().(readOnly) <span class="comment">//双检查</span></span><br><span class="line">		<span class="keyword">if</span> read.amended &#123;</span><br><span class="line">			read = readOnly&#123;m: m.dirty&#125;</span><br><span class="line">			m.read.Store(read)</span><br><span class="line">			m.dirty = <span class="literal">nil</span></span><br><span class="line">			m.misses = <span class="number">0</span></span><br><span class="line">		&#125;</span><br><span class="line">		m.mu.Unlock()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 遍历, for range是安全的</span></span><br><span class="line">	<span class="keyword">for</span> k, e := <span class="keyword">range</span> read.m &#123;</span><br><span class="line">		v, ok := e.load()</span><br><span class="line">		<span class="keyword">if</span> !ok &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> !f(k, v) &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Range 方法调用前可能会做一个 <code>m.dirty</code> 的提升，不过提升 <code>m.dirty</code> 不是一个耗时的操作。</p>
+<h4 id="sync-Map-的性能"><a href="#sync-Map-的性能" class="headerlink" title="sync.Map 的性能"></a>sync.Map 的性能</h4><p>Go 1.9 源代码中提供了性能的测试： <a href="https://github.com/golang/go/blob/master/src/sync/map_bench_test.go" target="_blank" rel="noopener">map_bench_test.go</a>、<a href="https://github.com/golang/go/blob/master/src/sync/map_reference_test.go" target="_blank" rel="noopener">map_reference_test.go</a></p>
+<p>我也基于这些代码修改了一下，得到下面的测试数据，相比较以前的解决方案，性能多少回有些提升，如果你特别关注性能，可以考虑 sync.Map。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">BenchmarkHitAll&#x2F;*sync.RWMutexMap-4   	20000000	        83.8 ns&#x2F;op</span><br><span class="line">BenchmarkHitAll&#x2F;*sync.Map-4          	30000000	        59.9 ns&#x2F;op</span><br><span class="line">BenchmarkHitAll_WithoutPrompting&#x2F;*sync.RWMutexMap-4         	20000000	        96.9 ns&#x2F;op</span><br><span class="line">BenchmarkHitAll_WithoutPrompting&#x2F;*sync.Map-4                	20000000	        64.1 ns&#x2F;op</span><br><span class="line">BenchmarkHitNone&#x2F;*sync.RWMutexMap-4                         	20000000	        79.1 ns&#x2F;op</span><br><span class="line">BenchmarkHitNone&#x2F;*sync.Map-4                                	30000000	        43.3 ns&#x2F;op</span><br><span class="line">BenchmarkHit_WithoutPrompting&#x2F;*sync.RWMutexMap-4            	20000000	        81.5 ns&#x2F;op</span><br><span class="line">BenchmarkHit_WithoutPrompting&#x2F;*sync.Map-4                   	30000000	        44.0 ns&#x2F;op</span><br><span class="line">BenchmarkUpdate&#x2F;*sync.RWMutexMap-4                          	 5000000	       328 ns&#x2F;op</span><br><span class="line">BenchmarkUpdate&#x2F;*sync.Map-4                                 	10000000	       146 ns&#x2F;op</span><br><span class="line">BenchmarkUpdate_WithoutPrompting&#x2F;*sync.RWMutexMap-4         	 5000000	       336 ns&#x2F;op</span><br><span class="line">BenchmarkUpdate_WithoutPrompting&#x2F;*sync.Map-4                	 5000000	       324 ns&#x2F;op</span><br><span class="line">BenchmarkDelete&#x2F;*sync.RWMutexMap-4                          	10000000	       155 ns&#x2F;op</span><br><span class="line">BenchmarkDelete&#x2F;*sync.Map-4                                 	30000000	        55.0 ns&#x2F;op</span><br><span class="line">BenchmarkDelete_WithoutPrompting&#x2F;*sync.RWMutexMap-4         	10000000	       173 ns&#x2F;op</span><br><span class="line">BenchmarkDelete_WithoutPrompting&#x2F;*sync.Map-4                	10000000</span><br></pre></td></tr></table></figure>
+
+<h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><p><code>sync.Map</code> 没有 <code>Len</code> 方法，并且目前没有迹象要加上 (<a href="https://github.com/golang/go/issues/20680" target="_blank" rel="noopener">issue#20680</a>),所以如果想得到当前 Map 中有效的 entries 的数量，需要使用 <code>Range</code> 方法遍历一次， 比较 X 疼。</p>
+<p><code>LoadOrStore</code> 方法如果提供的 key 存在，则返回已存在的值(Load)，否则保存提供的键值(Store)。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

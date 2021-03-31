@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>k8s の 基础知识 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="k8s の 基础知识"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>k8s の 基础知识</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/16/k8s知识点一/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-16T06:24:00.000Z">
+          2019-05-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="k8s-知识点一"><a href="#k8s-知识点一" class="headerlink" title="k8s 知识点一"></a>k8s 知识点一</h1><h2 id="k8s-总架构由于-2-个概念构成"><a href="#k8s-总架构由于-2-个概念构成" class="headerlink" title="k8s 总架构由于 2 个概念构成"></a>k8s 总架构由于 2 个概念构成</h2><ul>
+<li>Master</li>
+<li>Node</li>
+</ul>
+<p><code>Master</code> 和 <code>Node</code> 都是服务器物理机或者虚拟机, 都可以由于一台或者多台组成，如果 Master 不考虑<code>HA(高可用)</code>的情况下。一般都是 1 台 Master + N 台 Node。</p>
+<h2 id="Master-上所需要的服务"><a href="#Master-上所需要的服务" class="headerlink" title="Master 上所需要的服务"></a>Master 上所需要的服务</h2><ul>
+<li>etcd</li>
+<li>Api Server</li>
+<li>Controller Manager</li>
+<li>Scheduler</li>
+</ul>
+<p>后三个组件构成了 Kubernetes 的总控中心，这些进程实现了整个集群的资源管理、Pod 调度、弹性伸缩、安全控制、系统监控和纠错等管理功能，并且全都是自动完成。</p>
+<h2 id="Node-上所需要的服务"><a href="#Node-上所需要的服务" class="headerlink" title="Node 上所需要的服务"></a>Node 上所需要的服务</h2><ul>
+<li>kubelet</li>
+<li>proxy</li>
+</ul>
+<a id="more"></a>
+
+<p>负责对本节点上的 Pod 的生命周期进行管理，以及实现服务代理的功能</p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p>通过 Kubectl 提交一个创建 RC 的请求，该请求通过 API Server 被写入 etcd 中，此时 Controller Manager 通过 API Server 的监听资源变化的接口监听到这个 RC 事件，分析之后，发现当前集群中还没有它所对应的 Pod 实例，于是根据 RC 里的 Pod 模板定义生成一个 Pod 对象，通过 API Server 写入 etcd，接下来，此事件被 Scheduler 发现，它立即执行一个复杂的调度流程，为这个新 Pod 选定一个落户的 Node，然后通过 API Server 讲这一结果写入到 etcd 中，随后，目标 Node 上运行的 Kubelet 进程通过 API Server 监测到这个“新生的”Pod，并按照它的定义，启动该 Pod 并任劳任怨地负责它的下半生，直到 Pod 的生命结束。</p>
+<p>随后，我们通过 Kubectl 提交一个新的映射到该 Pod 的 Service 的创建请求，Controller Manager 会通过 Label 标签查询到相关联的 Pod 实例，然后生成 Service 的 Endpoints 信息，并通过 API Server 写入到 etcd 中，接下来，所有 Node 上运行的 Proxy 进程通过 API Server 查询并监听 Service 对象与其对应的 Endpoints 信息，建立一个软件方式的负载均衡器来实现 Service 访问到后端 Pod 的流量转发功能。</p>
+<h3 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h3><p>用于持久化存储集群中所有的资源对象，如 Node、Service、Pod、RC、Namespace 等；API Server 提供了操作 etcd 的封装接口 API，这些 API 基本上都是集群中资源对象的增删改查及监听资源变化的接口。</p>
+<h3 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h3><p>提供了资源对象的唯一操作入口，其他所有组件都必须通过它提供的 API 来操作资源数据，通过对相关的资源数据“全量查询”+“变化监听”，这些组件可以很“实时”地完成相关的业务功能。</p>
+<h3 id="Controller-Manager"><a href="#Controller-Manager" class="headerlink" title="Controller Manager"></a>Controller Manager</h3><p>集群内部的管理控制中心，其主要目的是实现 Kubernetes 集群的故障检测和恢复的自动化工作，比如根据 RC 的定义完成 Pod 的复制或移除，以确保 Pod 实例数符合 RC 副本的定义；根据 Service 与 Pod 的管理关系，完成服务的 Endpoints 对象的创建和更新；其他诸如 Node 的发现、管理和状态监控、死亡容器所占磁盘空间及本地缓存的镜像文件的清理等工作也是由 Controller Manager 完成的。</p>
+<h3 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h3><p>集群中的调度器，负责 Pod 在集群节点中的调度分配。</p>
+<h3 id="Kubelet"><a href="#Kubelet" class="headerlink" title="Kubelet"></a>Kubelet</h3><p>负责本 Node 节点上的 Pod 的创建、修改、监控、删除等全生命周期管理，同时 Kubelet 定时“上报”本 Node 的状态信息到 API Server 里。</p>
+<h3 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h3><p>实现了 Service 的代理与软件模式的负载均衡器。</p>
+<p>客户端通过 Kubectl 命令行工具或 Kubectl Proxy 来访问 Kubernetes 系统，在 Kubernetes 集群内部的客户端可以直接使用 Kuberctl 命令管理集群。Kubectl Proxy 是 API Server 的一个反向代理，在 Kubernetes 集群外部的客户端可以通过 Kubernetes Proxy 来访问 API Server。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/k8s/">k8s</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/k8s/">k8s</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

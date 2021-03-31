@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Centos7下自行编译PHP | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Centos7下自行编译PHP"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Centos7下自行编译PHP</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-make-php/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T04:02:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>为了满足我的一篇博文，我单独抽出来写一篇 PHP 的编译篇</p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><p>最好不要去 github 上下载，因为你不知道哪一个是稳定版，我们最好去官网寻找最新的稳定版下载</p>
+<ul>
+<li><a href="http://php.net/downloads.php" target="_blank" rel="noopener">官网下载</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;src&#x2F;</span><br><span class="line"></span><br><span class="line">sudo mkdir php</span><br><span class="line"></span><br><span class="line">cd php</span><br><span class="line"></span><br><span class="line">wget xxxxx.php -O php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">tar -zxvf php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">cd php-xx</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<blockquote>
+<p>在这里，我的 php 版本是 php-7.1.8</p>
+</blockquote>
+<p>修改源码目录所有者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R caiwh:caiwh php-7.1.8</span><br></pre></td></tr></table></figure>
+
+<p>进入目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd php-7.1.8</span><br></pre></td></tr></table></figure>
+
+<h3 id="最小化安装的模块"><a href="#最小化安装的模块" class="headerlink" title="最小化安装的模块"></a>最小化安装的模块</h3><ul>
+<li><p><code>curl扩展</code> (使用 curl 的 API)</p>
+</li>
+<li><p>–with-curl</p>
+</li>
+<li><p><code>fpm扩展</code> （管理 PHP 进程的服务）</p>
+</li>
+<li><p>–enable-fpm</p>
+</li>
+<li><p><code>openssl扩展</code> (打开 ssl 服务，很多服务都依赖这个，必须安装，例如：composer、mysql 的 ssl 等等)</p>
+</li>
+<li><p>–with-openssl</p>
+</li>
+<li><p><code>mysqlnd扩展</code> （mysql native drive）</p>
+</li>
+<li><p><a href="启动了mysql-pdo-mysql之后，如果不开启这个的话，默认会自动开启这个参数">–enable-mysqlnd</a></p>
+</li>
+<li><p>–mysql-pdo-mysql=mysqlnd</p>
+</li>
+<li><p><code>gd扩展</code> （可以操作图片）</p>
+</li>
+<li><p>–enable-gd</p>
+</li>
+<li><p>–with-jpeg-dir (GD 库默认不支持 jpeg 格式，需要额外的添加)</p>
+</li>
+<li><p><code>zlib扩展</code> (压缩解压缩服务)</p>
+</li>
+<li><p>–enable-zlib</p>
+</li>
+<li><p>–with-zlib</p>
+</li>
+<li><p>–with-libzip</p>
+</li>
+<li><p><code>mb扩展</code> (可以使用于 mb 系列的函数，例如汉字的截止之类的)</p>
+</li>
+<li><p>–enable-mbstring</p>
+</li>
+<li><p><code>socket扩展</code> （可以使用 socket 系列的函数）</p>
+</li>
+<li><p>–enable-sockets</p>
+</li>
+<li><p><code>x-debug扩展</code> （断点调试用，但是在生产环境不应该安装这个扩展，因为会拖底性能）</p>
+</li>
+<li><p>–enable-debug</p>
+</li>
+<li><p><code>readline扩展</code> （可以在 CLI 模式下直接交互，例如 php -a）</p>
+</li>
+<li><p>–enable-readline</p>
+</li>
+</ul>
+<h3 id="最后的编译参数"><a href="#最后的编译参数" class="headerlink" title="最后的编译参数"></a>最后的编译参数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;php --with-config-file-path&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;etc --with-config-file-scan-dir&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php.d --enable-mysqlnd --with-pdo-mysql&#x3D;mysqlnd --with-gd --with-jpeg-dir --with-curl --with-readline --with-openssl --with-zlib --with-libzip --enable-mbstring --enable-sockets --enable-bcmath --enable-fpm --with-fpm-user&#x3D;phper --with-fpm-group&#x3D;phper</span><br></pre></td></tr></table></figure>
+
+<p>好的，开始补类库的过程，这个时候，告诉我没有 libxm2，所以我又要去安装了，这里我们再次用 yum 安装</p>
+<p>让我们先看看我们的源是否有这些包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum search libxml2</span><br></pre></td></tr></table></figure>
+
+<p>OK，开始安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install libxml2-devel libxml2 -y</span><br></pre></td></tr></table></figure>
+
+<p>再次编译。</p>
+<p>好的，我还没有安装 libcurl 类，同样的做法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install libcurl-devel libcurl -y</span><br></pre></td></tr></table></figure>
+
+<p>再次编译。</p>
+<p>还有一些问题，针对对应的类库安装对应的，这里就不一一列出来的，一次过写出来了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install libjpeg-turbo-devel libjpeg-turbo libpng-devel libpng readline-devel readline -y</span><br></pre></td></tr></table></figure>
+
+<p>再次编译。</p>
+<p>编译完成！！</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+<p>安装的速度取决你的服务器配置。</p>
+<p>….Loading….<br>….Loading….<br>….Loading….</p>
+<p>….Waiting….<br>….Waiting….<br>….Waiting….</p>
+<p>安装完毕！！</p>
+<h3 id="配置-php-fpm"><a href="#配置-php-fpm" class="headerlink" title="配置 php-fpm"></a>配置 php-fpm</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd sapi&#x2F;fpm</span><br></pre></td></tr></table></figure>
+
+<p>开始调试 php-fpm</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;php-fpm -h</span><br></pre></td></tr></table></figure>
+
+<p>讲一下几个重要的参数</p>
+<ul>
+<li>-c 指定 php.ini 配置文件的路径</li>
+<li>-y 指定 php-fpm.conf 配置文件的路径</li>
+<li>-n 不用 php.ini 运行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo .&#x2F;php-fpm -t</span><br></pre></td></tr></table></figure>
+
+<p>好的，我们发现测试失败，说是没有配置文件，我们去这个目录下，发现又一个文件叫 <code>php-fpm.conf.default</code> copy 一份出来，把 default 去掉</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.conf.default &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.conf</span><br></pre></td></tr></table></figure>
+
+<p>开启 pid 文件</p>
+<p>详细的配置文件也要弄一份出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.d&#x2F;www.conf.default &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm.d&#x2F;www.conf</span><br></pre></td></tr></table></figure>
+
+<p>测试通过。</p>
+<p>因为我们用了 user=phper 和 group=phper 的用户去启动 php-fpm 的 worker 进程。所以，我要创建这么一个不可登录的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -M -s &#x2F;sbin&#x2F;nologin -U phper</span><br></pre></td></tr></table></figure>
+
+<p>OK。</p>
+<p>启动成功。完美。</p>
+<h3 id="把服务加入到-Systemctl"><a href="#把服务加入到-Systemctl" class="headerlink" title="把服务加入到 Systemctl"></a>把服务加入到 Systemctl</h3><p>首先，需要这么一个 shell 脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin&#x2F;</span><br><span class="line"></span><br><span class="line">sudo vim php-fpm.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## BEGIN INIT INFO</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Provides:          caiwh[471113744@qq.com]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Short-Description: starts php-fpm</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Description:       starts the PHP FastCGI Process Manager daemon</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## END INIT INFO</span></span></span><br><span class="line"></span><br><span class="line">prefix=/usr/local/php</span><br><span class="line">exec_prefix=$&#123;prefix&#125;</span><br><span class="line"></span><br><span class="line">php_fpm_BIN=$&#123;exec_prefix&#125;/sbin/php-fpm</span><br><span class="line">php_fpm_CONF=$&#123;prefix&#125;/etc/php-fpm.conf</span><br><span class="line">php_fpm_PID=$&#123;prefix&#125;/var/run/php-fpm.pid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">php_opts="--fpm-config $php_fpm_CONF --pid $php_fpm_PID"</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">wait_for_pid () &#123;</span><br><span class="line">        try=0</span><br><span class="line"></span><br><span class="line">        while test $try -lt 35 ; do</span><br><span class="line"></span><br><span class="line">                case "$1" in</span><br><span class="line">                        'created')</span><br><span class="line">                        if [ -f "$2" ] ; then</span><br><span class="line">                                try=''</span><br><span class="line">                                break</span><br><span class="line">                        fi</span><br><span class="line">                        ;;</span><br><span class="line"></span><br><span class="line">                        'removed')</span><br><span class="line">                        if [ ! -f "$2" ] ; then</span><br><span class="line">                                try=''</span><br><span class="line">                                break</span><br><span class="line">                        fi</span><br><span class="line">                        ;;</span><br><span class="line">                esac</span><br><span class="line"></span><br><span class="line">                echo -n .</span><br><span class="line">                try=`expr $try + 1`</span><br><span class="line">                sleep 1</span><br><span class="line"></span><br><span class="line">        done</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">case "$1" in</span><br><span class="line">        start)</span><br><span class="line">                echo -n "Starting php-fpm "</span><br><span class="line"></span><br><span class="line">                $php_fpm_BIN --daemonize $php_opts</span><br><span class="line"></span><br><span class="line">                if [ "$?" != 0 ] ; then</span><br><span class="line">                        echo " failed"</span><br><span class="line">                        exit 1</span><br><span class="line">                fi</span><br><span class="line"></span><br><span class="line">                wait_for_pid created $php_fpm_PID</span><br><span class="line"></span><br><span class="line">                if [ -n "$try" ] ; then</span><br><span class="line">                        echo " failed"</span><br><span class="line">                        exit 1</span><br><span class="line">                else</span><br><span class="line">                        echo " done"</span><br><span class="line">                fi</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        stop)</span><br><span class="line">                echo -n "Gracefully shutting down php-fpm "</span><br><span class="line"></span><br><span class="line">                if [ ! -r $php_fpm_PID ] ; then</span><br><span class="line">                        echo "warning, no pid file found - php-fpm is not running ?"</span><br><span class="line">                        exit 1</span><br><span class="line">                fi</span><br><span class="line"></span><br><span class="line">                kill -QUIT `cat $php_fpm_PID`</span><br><span class="line"></span><br><span class="line">                wait_for_pid removed $php_fpm_PID</span><br><span class="line"></span><br><span class="line">                if [ -n "$try" ] ; then</span><br><span class="line">                        echo " failed. Use force-quit"</span><br><span class="line">                        exit 1</span><br><span class="line">                else</span><br><span class="line">                        echo " done"</span><br><span class="line">                fi</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        status)</span><br><span class="line">                if [ ! -r $php_fpm_PID ] ; then</span><br><span class="line">                        echo "php-fpm is stopped"</span><br><span class="line">                        exit 0</span><br><span class="line">                fi</span><br><span class="line"></span><br><span class="line">                PID=`cat $php_fpm_PID`</span><br><span class="line">                if ps -p $PID | grep -q $PID; then</span><br><span class="line">                        echo "php-fpm (pid $PID) is running..."</span><br><span class="line">                else</span><br><span class="line">                        echo "php-fpm dead but pid file exists"</span><br><span class="line">                fi</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        force-quit)</span><br><span class="line">                echo -n "Terminating php-fpm "</span><br><span class="line"></span><br><span class="line">                if [ ! -r $php_fpm_PID ] ; then</span><br><span class="line">                        echo "warning, no pid file found - php-fpm is not running ?"</span><br><span class="line">                        exit 1</span><br><span class="line">                fi</span><br><span class="line"></span><br><span class="line">                kill -TERM `cat $php_fpm_PID`</span><br><span class="line"></span><br><span class="line">                wait_for_pid removed $php_fpm_PID</span><br><span class="line"></span><br><span class="line">                if [ -n "$try" ] ; then</span><br><span class="line">                        echo " failed"</span><br><span class="line">                        exit 1</span><br><span class="line">                else</span><br><span class="line">                        echo " done"</span><br><span class="line">                fi</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        restart)</span><br><span class="line">                $0 stop</span><br><span class="line">                $0 start</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        reload)</span><br><span class="line"></span><br><span class="line">                echo -n "Reload service php-fpm "</span><br><span class="line"></span><br><span class="line">                if [ ! -r $php_fpm_PID ] ; then</span><br><span class="line">                        echo "warning, no pid file found - php-fpm is not running ?"</span><br><span class="line">                        exit 1</span><br><span class="line">                fi</span><br><span class="line"></span><br><span class="line">                kill -USR2 `cat $php_fpm_PID`</span><br><span class="line"></span><br><span class="line">                echo " done"</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        configtest)</span><br><span class="line">                $php_fpm_BIN -t</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">        *)</span><br><span class="line">                echo "Usage: $0 &#123;start|stop|force-quit|restart|reload|status|configtest&#125;"</span><br><span class="line">                exit 1</span><br><span class="line">        ;;</span><br><span class="line"></span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<p>保存退出，然后修改权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 755 php-fpm.sh</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以写 systemctl 的 service 了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;php-fpm.service</span><br></pre></td></tr></table></figure>
+
+<p>把以下代码拷贝进去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Belong caiwh - php-fpm</span><br><span class="line">Documentation&#x3D; &#x2F;usr&#x2F;local&#x2F;php&#x2F;etc&#x2F;php-fpm&#x2F;</span><br><span class="line">After&#x3D;network.target remote-fs.target nss-lookup.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;forking</span><br><span class="line">ExecStartPre&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin&#x2F;php-fpm.sh configtest</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin&#x2F;php-fpm.sh start</span><br><span class="line">ExecReload&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin&#x2F;php-fpm.sh restart</span><br><span class="line">ExecStop&#x3D;&#x2F;usr&#x2F;local&#x2F;php&#x2F;sbin&#x2F;php-fpm.sh stop</span><br><span class="line">PrivateTmp&#x3D;true</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<p>完成 systemctl 重启</p>
+<p>然后就可以用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#1.systemctl start php-fpm 启动服务</span><br><span class="line">#2.systemctl stop php-fpm 停止服务</span><br><span class="line">#3.systemctl restart php-fpm 重启服务</span><br></pre></td></tr></table></figure>
+
+<p>完美结合</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/编译安装/">编译安装</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

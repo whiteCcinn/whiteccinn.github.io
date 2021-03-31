@@ -1,0 +1,308 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- confluent-kafka-go | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- confluent-kafka-go"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- confluent-kafka-go</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/01/Golang/confluent-kafka-go/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-01T01:46:51.000Z">
+          2020-06-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们部门的一些大数据服务是用到 kafka 的，这个时期正值我们对 golang 语言对一个转型阶段，对比了一下开源对 kafka 客户端，决定使用 <code>confluent-kafka-go</code>, 所以在这里记录一下<code>confluent-kafka-go</code> 的一些内容</p>
+<a id="more"></a>
+
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p><code>confluent-kafka-go</code> 是一个 confluent 官方的 golang 语言库，其依赖于 <code>librdkafka</code> 实现，大多数机器，librakafka 都已经预编译进去 golang 扩展了，不需要额外安装 librdkafka，如果不支持预编译的话，则需要额外安装。</p>
+<p>提供一个 dockerfile 的 demo</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># debian10 : buster</span></span><br><span class="line"><span class="comment"># debian9 : buster</span></span><br><span class="line"><span class="comment"># debian8 : jessie</span></span><br><span class="line"><span class="comment"># debian7 : wheezy</span></span><br><span class="line"><span class="keyword">FROM</span> golang:<span class="number">1.14</span>.<span class="number">3</span>-buster</span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> GO111MODULE=on</span><br><span class="line"><span class="keyword">ENV</span> GOPROXY=https://goproxy.io,direct</span><br><span class="line"><span class="keyword">ENV</span> GOPRIVATE=git.mingchao.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 换源</span></span><br><span class="line"><span class="comment"># 2. 加入confluent的源，安装librakafka</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> \</span></span><br><span class="line"><span class="bash">        deb http://mirrors.aliyun.com/debian/ buster main non-free contrib \</span></span><br><span class="line"><span class="bash">        deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib \</span></span><br><span class="line"><span class="bash">        deb http://mirrors.aliyun.com/debian-security buster/updates main \</span></span><br><span class="line"><span class="bash">        deb-src http://mirrors.aliyun.com/debian-security buster/updates main \</span></span><br><span class="line"><span class="bash">        deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib \</span></span><br><span class="line"><span class="bash">        deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib \</span></span><br><span class="line"><span class="bash">        deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib \</span></span><br><span class="line"><span class="bash">        deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib \</span></span><br><span class="line"><span class="bash">    &gt; /etc/apt/sources.list &amp;&amp; \</span></span><br><span class="line"><span class="bash">    apt-get update -y &amp;&amp; \</span></span><br><span class="line"><span class="bash">    wget -qO - https://packages.confluent.io/deb/5.5/archive.key |  apt-key add - &gt; /dev/null &amp;&amp; \</span></span><br><span class="line"><span class="bash">    sed -i <span class="string">'$a deb [arch=amd64] https://packages.confluent.io/deb/5.5 stable main'</span> /etc/apt/sources.list &amp;&amp; \</span></span><br><span class="line"><span class="bash">    apt-get install -y librdkafka-dev</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ARG</span> GIT_USERNAME=git</span><br><span class="line"><span class="keyword">ARG</span> GIT_PASSWORD=git-password</span><br><span class="line"><span class="keyword">ARG</span> GIT_CREDEN_FILE=/.git-credentials</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> touch <span class="variable">$&#123;GIT_CREDEN_FILE&#125;</span> &amp;&amp; \</span></span><br><span class="line"><span class="bash">    chown 600 <span class="variable">$&#123;GIT_CREDEN_FILE&#125;</span> &amp;&amp; \</span></span><br><span class="line"><span class="bash">    git config --global credential.helper <span class="string">'store --file '</span><span class="variable">$&#123;GIT_CREDEN_FILE&#125;</span> &amp;&amp; \</span></span><br><span class="line"><span class="bash">    <span class="built_in">echo</span> https://<span class="variable">$&#123;GIT_USERNAME&#125;</span>:<span class="variable">$&#123;GIT_PASSWORD&#125;</span>@git.mingchao.com | tee <span class="variable">$&#123;GIT_CREDEN_FILE&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="源码-Api-说明"><a href="#源码-Api-说明" class="headerlink" title="源码 Api 说明"></a>源码 Api 说明</h2><h3 id="consumer-go"><a href="#consumer-go" class="headerlink" title="consumer.go"></a>consumer.go</h3><ul>
+<li>这是一个 consumer 相关的文件。</li>
+</ul>
+<h4 id="Subscribe-topic-string-rebalanceCb-RebalanceCb-error"><a href="#Subscribe-topic-string-rebalanceCb-RebalanceCb-error" class="headerlink" title="Subscribe(topic string, rebalanceCb RebalanceCb) error"></a>Subscribe(topic string, rebalanceCb RebalanceCb) error</h4><p>订阅一个 topic，这个 api 会覆盖之前设置过了的 topic 订阅</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Subscribe</span><span class="params">(topic <span class="keyword">string</span>, rebalanceCb RebalanceCb)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> c.SubscribeTopics([]<span class="keyword">string</span>&#123;topic&#125;, rebalanceCb)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="SubscribeTopics-topics-string-rebalanceCb-RebalanceCb-err-error"><a href="#SubscribeTopics-topics-string-rebalanceCb-RebalanceCb-err-error" class="headerlink" title="SubscribeTopics(topics []string, rebalanceCb RebalanceCb) (err error)"></a>SubscribeTopics(topics []string, rebalanceCb RebalanceCb) (err error)</h4><ul>
+<li>订阅多个 topic</li>
+<li>这个 api 会覆盖之前设置过了的 topic 订阅</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">SubscribeTopics</span><span class="params">(topics []<span class="keyword">string</span>, rebalanceCb RebalanceCb)</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line">	ctopics := C.rd_kafka_topic_partition_list_new(C.<span class="keyword">int</span>(<span class="built_in">len</span>(topics)))</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(ctopics)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, topic := <span class="keyword">range</span> topics &#123;</span><br><span class="line">		ctopic := C.CString(topic)</span><br><span class="line">		<span class="keyword">defer</span> C.free(unsafe.Pointer(ctopic))</span><br><span class="line">		C.rd_kafka_topic_partition_list_add(ctopics, ctopic, C.RD_KAFKA_PARTITION_UA)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	e := C.rd_kafka_subscribe(c.handle.rk, ctopics)</span><br><span class="line">	<span class="keyword">if</span> e != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(e)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	c.rebalanceCb = rebalanceCb</span><br><span class="line">	c.handle.currAppRebalanceEnable = c.rebalanceCb != <span class="literal">nil</span> || c.appRebalanceEnable</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Unsubscribe-err-error"><a href="#Unsubscribe-err-error" class="headerlink" title="Unsubscribe() (err error)"></a>Unsubscribe() (err error)</h4><ul>
+<li>取消当前对 topic 的订阅</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Unsubscribe</span><span class="params">()</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line">	C.rd_kafka_unsubscribe(c.handle.rk)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Assign-partitions-TopicPartition-err-error"><a href="#Assign-partitions-TopicPartition-err-error" class="headerlink" title="Assign(partitions []TopicPartition) (err error)"></a>Assign(partitions []TopicPartition) (err error)</h4><ul>
+<li>分配一组要使用的 partition</li>
+<li>这个 api 会覆盖之前分配过的</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Assign</span><span class="params">(partitions []TopicPartition)</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line">	c.appReassigned = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">	cparts := newCPartsFromTopicPartitions(partitions)</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cparts)</span><br><span class="line"></span><br><span class="line">	e := C.rd_kafka_assign(c.handle.rk, cparts)</span><br><span class="line">	<span class="keyword">if</span> e != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(e)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Unassign-err-error"><a href="#Unassign-err-error" class="headerlink" title="Unassign() (err error)"></a>Unassign() (err error)</h4><ul>
+<li>取消当前分配的 partition</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Unassign</span><span class="params">()</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line">	c.appReassigned = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">	e := C.rd_kafka_assign(c.handle.rk, <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> e != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(e)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Commit-TopicPartition-error"><a href="#Commit-TopicPartition-error" class="headerlink" title="Commit() ([]TopicPartition, error)"></a>Commit() ([]TopicPartition, error)</h4><ul>
+<li>提交当前已经分配的 partition 的 offset 值</li>
+<li>基于 <code>StoreOffsets(offsets []TopicPartition) (storedOffsets []TopicPartition, err error)</code></li>
+<li>这是一个阻塞请求，如果需要异步操作，需要调用者自行用协程</li>
+<li>返回成功提交 offset 的 topicPartition</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Commit</span><span class="params">()</span> <span class="params">([]TopicPartition, error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> c.commit(<span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="CommitMessage-m-Message-TopicPartition-error"><a href="#CommitMessage-m-Message-TopicPartition-error" class="headerlink" title="CommitMessage(m *Message) ([]TopicPartition, error)"></a>CommitMessage(m *Message) ([]TopicPartition, error)</h4><ul>
+<li>这个 API 基于 message 结构体</li>
+<li>这是一个阻塞请求，如果需要异步操作，需要调用者自行用协程</li>
+<li>返回成功提交 offset 的 topicPartition</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">CommitMessage</span><span class="params">(m *Message)</span> <span class="params">([]TopicPartition, error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> m.TopicPartition.Error != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, newErrorFromString(ErrInvalidArg, <span class="string">"Can't commit errored message"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	offsets := []TopicPartition&#123;m.TopicPartition&#125;</span><br><span class="line">	offsets[<span class="number">0</span>].Offset++</span><br><span class="line">	<span class="keyword">return</span> c.commit(offsets)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="CommitOffsets-offsets-TopicPartition-TopicPartition-error"><a href="#CommitOffsets-offsets-TopicPartition-TopicPartition-error" class="headerlink" title="CommitOffsets(offsets []TopicPartition) ([]TopicPartition, error)"></a>CommitOffsets(offsets []TopicPartition) ([]TopicPartition, error)</h4><ul>
+<li>根据 []TopicPartition 来提交 offset</li>
+<li>这是一个阻塞请求，如果需要异步操作，需要调用者自行用协程</li>
+<li>返回成功提交 offset 的 topicPartition</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">CommitOffsets</span><span class="params">(offsets []TopicPartition)</span> <span class="params">([]TopicPartition, error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> c.commit(offsets)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="StoreOffsets-offsets-TopicPartition-storedOffsets-TopicPartition-err-error"><a href="#StoreOffsets-offsets-TopicPartition-storedOffsets-TopicPartition-err-error" class="headerlink" title="StoreOffsets(offsets []TopicPartition) (storedOffsets []TopicPartition, err error)"></a>StoreOffsets(offsets []TopicPartition) (storedOffsets []TopicPartition, err error)</h4><ul>
+<li>根据 []TopicPartition 来记录将会被提交的 offset（如果允许自动提交的话，那么会受<code>auto.commit.interval.ms</code>的影响，一定周期性提交，如果是手动提交的话则依赖 <code>Commit()</code>Api）</li>
+<li>返回成功存储的 offsets，如果至少有一个偏移量无法存储，则返回一个错误和偏移量列表。每个偏移量都可以通过它的来检查特定的错误</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">StoreOffsets</span><span class="params">(offsets []TopicPartition)</span> <span class="params">(storedOffsets []TopicPartition, err error)</span></span> &#123;</span><br><span class="line">	coffsets := newCPartsFromTopicPartitions(offsets)</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(coffsets)</span><br><span class="line"></span><br><span class="line">	cErr := C.rd_kafka_offsets_store(c.handle.rk, coffsets)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// coffsets might be annotated with an error</span></span><br><span class="line">	storedOffsets = newTopicPartitionsFromCparts(coffsets)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> cErr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> storedOffsets, newError(cErr)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> storedOffsets, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Seek-partition-TopicPartition-timeoutMs-int-error"><a href="#Seek-partition-TopicPartition-timeoutMs-int-error" class="headerlink" title="Seek(partition TopicPartition, timeoutMs int) error"></a>Seek(partition TopicPartition, timeoutMs int) error</h4><ul>
+<li>获取指定 partition 的 offset</li>
+<li>如果<code>timeoutMs</code>不是 0，则调用将等待这么长时间以执行查找。如果超时到达，内部状态将未知，并且此函数返回 ErrTimedOut。</li>
+<li>如果<code>timeoutMs</code> 为 0，它将发起查找，但立即返回，不报告任何错误(例如，异步)。</li>
+<li>Seek()只能用于已经使用的分区(通过 Assign()或隐式使用通过自平衡订阅())。</li>
+<li>要设置起始偏移量，最好使用 Assign()并为每个分区提供一个起始偏移量。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Seek</span><span class="params">(partition TopicPartition, timeoutMs <span class="keyword">int</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	rkt := c.handle.getRkt(*partition.Topic)</span><br><span class="line">	cErr := C.rd_kafka_seek(rkt,</span><br><span class="line">		C.int32_t(partition.Partition),</span><br><span class="line">		C.int64_t(partition.Offset),</span><br><span class="line">		C.<span class="keyword">int</span>(timeoutMs))</span><br><span class="line">	<span class="keyword">if</span> cErr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(cErr)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Poll-timeoutMs-int-event-Event"><a href="#Poll-timeoutMs-int-event-Event" class="headerlink" title="Poll(timeoutMs int) (event Event)"></a>Poll(timeoutMs int) (event Event)</h4><ul>
+<li>轮询消息或事件。</li>
+<li>将阻塞最多 <code>timeoutMs</code> 的超时时间</li>
+<li>以下回调可能会被触发<ul>
+<li>Subscribe()’s rebalanceCb</li>
+</ul>
+</li>
+<li>如果超时则返回 nil，否则返回一个事件</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Poll</span><span class="params">(timeoutMs <span class="keyword">int</span>)</span> <span class="params">(event Event)</span></span> &#123;</span><br><span class="line">	ev, _ := c.handle.eventPoll(<span class="literal">nil</span>, timeoutMs, <span class="number">1</span>, <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">return</span> ev</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ReadMessage-timeout-time-Duration-Message-error"><a href="#ReadMessage-timeout-time-Duration-Message-error" class="headerlink" title="ReadMessage(timeout time.Duration) (*Message, error)"></a>ReadMessage(timeout time.Duration) (*Message, error)</h4><ul>
+<li>返回一条消息</li>
+<li>这是一个方便的 API，它封装了 Poll()，只返回消息或错误。所有其他事件类型都被丢弃。</li>
+<li>该调用最多会阻塞 <code>timeout</code> 等待新消息或错误。<code>timeout</code>可以设置为-1，表示无限期等待。</li>
+<li>超时将会返回<code>(nil, err)</code> 当 err 是 <code>kafka.(Error).Code == Kafka.ErrTimedOut</code></li>
+<li>消息将会返回 <code>(msg, nil)</code>, 当有错误当时候将会返回 <code>(nil, err)</code>, 当指定 partition 错误的时候（topic，partition，offset），将会返回 <code>(msg,err)</code></li>
+<li>全部其他的事件类型，像<code>PartitionEOF</code>,<code>AssingedPartitions</code>等等将会被默认丢弃</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">ReadMessage</span><span class="params">(timeout time.Duration)</span> <span class="params">(*Message, error)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> absTimeout time.Time</span><br><span class="line">	<span class="keyword">var</span> timeoutMs <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> timeout &gt; <span class="number">0</span> &#123;</span><br><span class="line">		absTimeout = time.Now().Add(timeout)</span><br><span class="line">		timeoutMs = (<span class="keyword">int</span>)(timeout.Seconds() * <span class="number">1000.0</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		timeoutMs = (<span class="keyword">int</span>)(timeout)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		ev := c.Poll(timeoutMs)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">switch</span> e := ev.(<span class="keyword">type</span>) &#123;</span><br><span class="line">		<span class="keyword">case</span> *Message:</span><br><span class="line">			<span class="keyword">if</span> e.TopicPartition.Error != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> e, e.TopicPartition.Error</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> e, <span class="literal">nil</span></span><br><span class="line">		<span class="keyword">case</span> Error:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, e</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="comment">// Ignore other event types</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> timeout &gt; <span class="number">0</span> &#123;</span><br><span class="line">			<span class="comment">// Calculate remaining time</span></span><br><span class="line">			timeoutMs = <span class="keyword">int</span>(math.Max(<span class="number">0.0</span>, absTimeout.Sub(time.Now()).Seconds()*<span class="number">1000.0</span>))</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> timeoutMs == <span class="number">0</span> &amp;&amp; ev == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, newError(C.RD_KAFKA_RESP_ERR__TIMED_OUT)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Close-err-error"><a href="#Close-err-error" class="headerlink" title="Close() (err error)"></a>Close() (err error)</h4><ul>
+<li>关闭一个 Consumer 对象</li>
+<li>调用后，对象不再可用。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Close</span><span class="params">()</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Wait for consumerReader() or pollLogEvents to terminate (by closing readerTermChan)</span></span><br><span class="line">	<span class="built_in">close</span>(c.readerTermChan)</span><br><span class="line">	c.handle.waitGroup.Wait()</span><br><span class="line">	<span class="keyword">if</span> c.eventsChanEnable &#123;</span><br><span class="line">		<span class="built_in">close</span>(c.events)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	C.rd_kafka_queue_destroy(c.handle.rkq)</span><br><span class="line">	c.handle.rkq = <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line">	e := C.rd_kafka_consumer_close(c.handle.rk)</span><br><span class="line">	<span class="keyword">if</span> e != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(e)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	c.handle.cleanup()</span><br><span class="line"></span><br><span class="line">	C.rd_kafka_destroy(c.handle.rk)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="GetMetadata-topic-string-allTopics-bool-timeoutMs-int-Metadata-error"><a href="#GetMetadata-topic-string-allTopics-bool-timeoutMs-int-Metadata-error" class="headerlink" title="GetMetadata(topic string, allTopics bool, timeoutMs int) (Metadata, error)"></a>GetMetadata(topic <em>string, allTopics bool, timeoutMs int) (</em>Metadata, error)</h4><ul>
+<li>用于查询集群中 broker 和 topic 的元数据</li>
+<li>如果 <code>topic</code> 参数不为 nil，则返回和 topoic 相关数据，否则（如果<code>allTopics</code>参数为 false，那么将会返回当前使用 topic 的元数据，如果 <code>allTopics</code>参数为 true, 那么将返回 broker 中所有 topic 的元数据）</li>
+<li>GetMetadata 相当于 Java API 中的 listTopics、describeTopics 和 describeCluster。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">GetMetadata</span><span class="params">(topic *<span class="keyword">string</span>, allTopics <span class="keyword">bool</span>, timeoutMs <span class="keyword">int</span>)</span> <span class="params">(*Metadata, error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> getMetadata(c, topic, allTopics, timeoutMs)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="QueryWatermarkOffsets-topic-string-partition-int32-timeoutMs-int-low-high-int64-err-error"><a href="#QueryWatermarkOffsets-topic-string-partition-int32-timeoutMs-int-low-high-int64-err-error" class="headerlink" title="QueryWatermarkOffsets(topic string, partition int32, timeoutMs int) (low, high int64, err error)"></a>QueryWatermarkOffsets(topic string, partition int32, timeoutMs int) (low, high int64, err error)</h4><ul>
+<li>根据 topic 和 partition，查询当前 broker 中他们的低水位和高水位的 offset</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">QueryWatermarkOffsets</span><span class="params">(topic <span class="keyword">string</span>, partition <span class="keyword">int32</span>, timeoutMs <span class="keyword">int</span>)</span> <span class="params">(low, high <span class="keyword">int64</span>, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> queryWatermarkOffsets(c, topic, partition, timeoutMs)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="GetWatermarkOffsets-topic-string-partition-int32-low-high-int64-err-error"><a href="#GetWatermarkOffsets-topic-string-partition-int32-low-high-int64-err-error" class="headerlink" title="GetWatermarkOffsets(topic string, partition int32) (low, high int64, err error)"></a>GetWatermarkOffsets(topic string, partition int32) (low, high int64, err error)</h4><ul>
+<li>根据 topic 和 partition 返回当前服务存储的低水位和高水位的 offset</li>
+<li>每个 fetch 响应或通过调用 <code>QueryWatermarkOffsets</code> 填充高水位的 offset</li>
+<li>如果设置了 <code>statistics.interval.ms</code>, 低水位将会有一个 <code>statistics.interval.ms</code> 的周期来更新</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">GetWatermarkOffsets</span><span class="params">(topic <span class="keyword">string</span>, partition <span class="keyword">int32</span>)</span> <span class="params">(low, high <span class="keyword">int64</span>, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> getWatermarkOffsets(c, topic, partition)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="OffsetsForTimes-times-TopicPartition-timeoutMs-int-offsets-TopicPartition-err-error"><a href="#OffsetsForTimes-times-TopicPartition-timeoutMs-int-offsets-TopicPartition-err-error" class="headerlink" title="OffsetsForTimes(times []TopicPartition, timeoutMs int) (offsets []TopicPartition, err error)"></a>OffsetsForTimes(times []TopicPartition, timeoutMs int) (offsets []TopicPartition, err error)</h4><ul>
+<li>每个分区返回的偏移量是最早的偏移量，其时间戳大于或等于相应分区中的给定时间戳。如果提供的时间戳超过分区中最后一条消息的时间戳，则返回-1 值。</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">OffsetsForTimes</span><span class="params">(times []TopicPartition, timeoutMs <span class="keyword">int</span>)</span> <span class="params">(offsets []TopicPartition, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> offsetsForTimes(c, times, timeoutMs)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Subscription-topics-string-err-error"><a href="#Subscription-topics-string-err-error" class="headerlink" title="Subscription() (topics []string, err error)"></a>Subscription() (topics []string, err error)</h4><ul>
+<li>返回当前被订阅的 topic</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Subscription</span><span class="params">()</span> <span class="params">(topics []<span class="keyword">string</span>, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> cTopics *C.rd_kafka_topic_partition_list_t</span><br><span class="line"></span><br><span class="line">	cErr := C.rd_kafka_subscription(c.handle.rk, &amp;cTopics)</span><br><span class="line">	<span class="keyword">if</span> cErr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, newError(cErr)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cTopics)</span><br><span class="line"></span><br><span class="line">	topicCnt := <span class="keyword">int</span>(cTopics.cnt)</span><br><span class="line">	topics = <span class="built_in">make</span>([]<span class="keyword">string</span>, topicCnt)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; topicCnt; i++ &#123;</span><br><span class="line">		crktpar := C._c_rdkafka_topic_partition_list_entry(cTopics,</span><br><span class="line">			C.<span class="keyword">int</span>(i))</span><br><span class="line">		topics[i] = C.GoString(crktpar.topic)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> topics, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Assignment-partitions-TopicPartition-err-error"><a href="#Assignment-partitions-TopicPartition-err-error" class="headerlink" title="Assignment() (partitions []TopicPartition, err error)"></a>Assignment() (partitions []TopicPartition, err error)</h4><ul>
+<li>返回当前指派的 partition</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Assignment</span><span class="params">()</span> <span class="params">(partitions []TopicPartition, err error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> cParts *C.rd_kafka_topic_partition_list_t</span><br><span class="line"></span><br><span class="line">	cErr := C.rd_kafka_assignment(c.handle.rk, &amp;cParts)</span><br><span class="line">	<span class="keyword">if</span> cErr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, newError(cErr)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cParts)</span><br><span class="line"></span><br><span class="line">	partitions = newTopicPartitionsFromCparts(cParts)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> partitions, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Committed-partitions-TopicPartition-timeoutMs-int-offsets-TopicPartition-err-error"><a href="#Committed-partitions-TopicPartition-timeoutMs-int-offsets-TopicPartition-err-error" class="headerlink" title="Committed(partitions []TopicPartition, timeoutMs int) (offsets []TopicPartition, err error)"></a>Committed(partitions []TopicPartition, timeoutMs int) (offsets []TopicPartition, err error)</h4><ul>
+<li>查询已经提交 commit 的 offset</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Committed</span><span class="params">(partitions []TopicPartition, timeoutMs <span class="keyword">int</span>)</span> <span class="params">(offsets []TopicPartition, err error)</span></span> &#123;</span><br><span class="line">	cparts := newCPartsFromTopicPartitions(partitions)</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cparts)</span><br><span class="line">	cerr := C.rd_kafka_committed(c.handle.rk, cparts, C.<span class="keyword">int</span>(timeoutMs))</span><br><span class="line">	<span class="keyword">if</span> cerr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, newError(cerr)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> newTopicPartitionsFromCparts(cparts), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Position-partitions-TopicPartition-offsets-TopicPartition-err-error"><a href="#Position-partitions-TopicPartition-offsets-TopicPartition-err-error" class="headerlink" title="Position(partitions []TopicPartition) (offsets []TopicPartition, err error)"></a>Position(partitions []TopicPartition) (offsets []TopicPartition, err error)</h4><ul>
+<li>根据 partition 返回其 offset</li>
+<li>典型的用法是调用 assign()来获取分区列表，然后将其传递给 Position()来获取每个分区的当前 offset</li>
+<li>消费的位置是分区读取的下一个消息，例如（最后一条信息的+1）</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Position</span><span class="params">(partitions []TopicPartition)</span> <span class="params">(offsets []TopicPartition, err error)</span></span> &#123;</span><br><span class="line">	cparts := newCPartsFromTopicPartitions(partitions)</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cparts)</span><br><span class="line">	cerr := C.rd_kafka_position(c.handle.rk, cparts)</span><br><span class="line">	<span class="keyword">if</span> cerr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, newError(cerr)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> newTopicPartitionsFromCparts(cparts), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Pause-partitions-TopicPartition-err-error"><a href="#Pause-partitions-TopicPartition-err-error" class="headerlink" title="Pause(partitions []TopicPartition) (err error)"></a>Pause(partitions []TopicPartition) (err error)</h4><ul>
+<li>根据提供的 partition 暂停消费</li>
+<li>如果设置了<code>go.events.channel.enable</code>，只会受到<code>go.events.channel.size</code>的影响，这个 API 将不会生效</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Pause</span><span class="params">(partitions []TopicPartition)</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line">	cparts := newCPartsFromTopicPartitions(partitions)</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cparts)</span><br><span class="line">	cerr := C.rd_kafka_pause_partitions(c.handle.rk, cparts)</span><br><span class="line">	<span class="keyword">if</span> cerr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(cerr)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Resume-partitions-TopicPartition-err-error"><a href="#Resume-partitions-TopicPartition-err-error" class="headerlink" title="Resume(partitions []TopicPartition) (err error)"></a>Resume(partitions []TopicPartition) (err error)</h4><ul>
+<li>唤醒被暂停的 partition</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">Resume</span><span class="params">(partitions []TopicPartition)</span> <span class="params">(err error)</span></span> &#123;</span><br><span class="line">	cparts := newCPartsFromTopicPartitions(partitions)</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_topic_partition_list_destroy(cparts)</span><br><span class="line">	cerr := C.rd_kafka_resume_partitions(c.handle.rk, cparts)</span><br><span class="line">	<span class="keyword">if</span> cerr != C.RD_KAFKA_RESP_ERR_NO_ERROR &#123;</span><br><span class="line">		<span class="keyword">return</span> newError(cerr)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="GetConsumerGroupMetadata-ConsumerGroupMetadata-error"><a href="#GetConsumerGroupMetadata-ConsumerGroupMetadata-error" class="headerlink" title="GetConsumerGroupMetadata() (*ConsumerGroupMetadata, error)"></a>GetConsumerGroupMetadata() (*ConsumerGroupMetadata, error)</h4><ul>
+<li>返回当前消费者组的元数据</li>
+<li>这个返回的对象，应该传递给事务生产者的 SendOffsetsToTransaction() API</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Consumer)</span> <span class="title">GetConsumerGroupMetadata</span><span class="params">()</span> <span class="params">(*ConsumerGroupMetadata, error)</span></span> &#123;</span><br><span class="line">	cgmd := C.rd_kafka_consumer_group_metadata(c.handle.rk)</span><br><span class="line">	<span class="keyword">if</span> cgmd == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, NewError(ErrState, <span class="string">"Consumer group metadata not available"</span>, <span class="literal">false</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> C.rd_kafka_consumer_group_metadata_destroy(cgmd)</span><br><span class="line"></span><br><span class="line">	serialized, err := serializeConsumerGroupMetadata(cgmd)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> &amp;ConsumerGroupMetadata&#123;serialized&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/Kafka/">Kafka</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

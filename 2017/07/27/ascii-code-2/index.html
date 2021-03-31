@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>字符编码深度剖析 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="字符编码深度剖析"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>字符编码深度剖析</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/ascii-code-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T14:44:00.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在这里，我们对如下4种编码进行对比</p>
+<ul>
+<li>unicode编码</li>
+<li>utf8编码</li>
+<li>ascii编码</li>
+<li>asni编码</li>
+</ul>
+<h3 id="ASCII编码和ASNI编码的区别"><a href="#ASCII编码和ASNI编码的区别" class="headerlink" title="ASCII编码和ASNI编码的区别"></a>ASCII编码和ASNI编码的区别</h3><p>字符内码(charcter code)指的是用来代表字符的内码.读者在输入和存储文档时都要使用内码,内码分为 单字节内码 – Single-Byte character sets (SBCS),可以支持<strong>255</strong>（ <code>8bits = (2^8)-1 = 255</code>）个字符编码. 双字节内码 – Double-Byte character sets)(DBCS),可以支持<strong>65000</strong>个字符编码（最多支持<code>16 bits = (2^16)-1 = 65535</code>）. 前者即为ASCII编码，后者对应ANSI. 至于简体中文编码GB2312，实际上它是ANSI的一个代码页</p>
+<h3 id="UNICODE编码"><a href="#UNICODE编码" class="headerlink" title="UNICODE编码"></a>UNICODE编码</h3><p>unicode 是一种编码表格，例如，给一个汉字规定一个代码。类似 GB2312-1980, GB18030等，只不过字集不同。 一个unicode码可能转成长度为一个BYTE,或两个，三个，四个BYTE（<code>最多6个byte</code>）的UTF8码，取决于unicode码的值。英文unicode码因为值小于<strong>0x80</strong>（<code>单字节字符</code>）,只要用一个BYTE的UTF8传送，<code>比送unicode两个bytes快</code>。</p>
+<p>如上，ANSI有很多代码页，使用不同代码页的内码无法在其他代码也正常显示，这就是为什么日文版／繁体中文版游戏无法在简体中文平台直接显示的原因．</p>
+<p>Unicode也是一种字符编码方法，不过它是由国际组织设计，可以容纳<strong>全世界所有语言文字的编码方案</strong>．它是一种<code>２字节编码</code>，能够提供６５５３５个字符， 这个数字是<strong>不够表示所有的字符</strong>的（汉语就有５５０００多字符），所以，通过一个代理对的机制来实现附加的９１７，４７６个字符表示，以达到所有字符都具有<code>唯一编码</code>．</p>
+<h3 id="Unicode和BigEndianUnicode"><a href="#Unicode和BigEndianUnicode" class="headerlink" title="Unicode和BigEndianUnicode"></a>Unicode和BigEndianUnicode</h3><p>这两者只是存储顺序不同，如＂A＂的unicode编码为65 00 其BigEndianUnicode编码为00 65</p>
+<p>其实就是类比于我之前说过的大小端的介绍</p>
+<h3 id="UTF8编码"><a href="#UTF8编码" class="headerlink" title="UTF8编码"></a>UTF8编码</h3><p>UTF8全称：Unicode Transformation Format – 8 bit（unicode转化格式为8位的流数据）</p>
+<p>Unicode是一个字符集，而UTF-8是Unicode的其中一种，Unicode是定长的都为双字节，而UTF-8是可变的，对于汉字来说Unicode占有的字节比UTF-8占用的字节少1个字节。Unicode为双字节，而UTF-8中汉字占三个字节。</p>
+<p>是Unicode传送格式。即把Unicode文件转换成BYTE的传送流。</p>
+<p>其中UTF-16和Unicode编码大致一样, UTF-8就是以8位为单元对Unicode进行编码。</p>
+<p>UTF-8编码字符理论上可以最多到6个字节长,然而<code>16位BMP（Basic Multilingual Plane）字符</code>最多只用到3字节长。从Unicode到UTF-8的编码方式如下：</p>
+<table>
+<thead>
+<tr>
+<th>Unicode编码(16进制)</th>
+<th>UTF-8 字节流(二进制)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0000 - 007F</td>
+<td>0xxxxxxx</td>
+</tr>
+<tr>
+<td>0080 - 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0800 - FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>100000 - 1FFFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>200000 - 3FFFFFF</td>
+<td>111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>4000000 - 7FFFFFFF</td>
+<td>1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+</tbody></table>
+<p>例如“我”字的Unicode编码是4f6b。4f6b在0800-FFFF之间，所以肯定要用3字节模板了：1110xxxx 10xxxxxx 10xxxxxx。将4f6b写成二进制是：100 111101 101011， 用这个比特流依次代替模板中的x，得到：11100100 10111101 10101011，即E4 9C AB。</p>
+<h3 id="用PHP实现unicode编码和utf8编码的转变"><a href="#用PHP实现unicode编码和utf8编码的转变" class="headerlink" title="用PHP实现unicode编码和utf8编码的转变"></a>用PHP实现unicode编码和utf8编码的转变</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * UTF-8编码字符理论上可以最多到6个字节长,然而16位BMP（Basic Multilingual Plane）字符最多只用到3字节长。下面看一下UTF-8编码表：</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * U-00000000 - U-0000007F: 0xxxxxxx</span></span><br><span class="line"><span class="comment"> * U-00000080 - U-000007FF: 110xxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00000800 - U-0000FFFF: 1110xxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00010000 - U-001FFFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00200000 - U-03FFFFFF: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-04000000 - U-7FFFFFFF: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 单字符汉字转换unicode(16进制)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $utf8_str</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">utf8_transform_unicode</span><span class="params">($utf8_str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  $unicode = (ord($utf8_str&#123;<span class="number">0</span>&#125;) &amp; <span class="number">0xF</span>) &lt;&lt; <span class="number">12</span>;</span><br><span class="line">  $unicode |= (ord($utf8_str&#123;<span class="number">1</span>&#125;) &amp; <span class="number">0x3F</span>) &lt;&lt; <span class="number">6</span>;</span><br><span class="line">  $unicode |= (ord($utf8_str&#123;<span class="number">2</span>&#125;) &amp; <span class="number">0x3F</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> dechex($unicode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * unicode编码转汉字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $unicode</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unicode_transform_utf8</span><span class="params">($unicode)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 十六进制转十进制</span></span><br><span class="line">  $unicode  = (int)hexdec($unicode);</span><br><span class="line">  $ord_1    = decbin(<span class="number">0xe0</span> | ($unicode &gt;&gt; <span class="number">12</span>));</span><br><span class="line">  $ord_2    = decbin(<span class="number">0x80</span> | (($unicode &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x3f</span>));</span><br><span class="line">  $ord_3    = decbin(<span class="number">0x80</span> | ($unicode &amp; <span class="number">0x3f</span>));</span><br><span class="line">  $utf8_str = chr(bindec($ord_1)) . chr(bindec($ord_2)) . chr(bindec($ord_3));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $utf8_str;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$str = <span class="string">'我'</span>;</span><br><span class="line"><span class="keyword">echo</span> utf8_transform_unicode($str);</span><br><span class="line"></span><br><span class="line">$unicode = <span class="string">'6211'</span>;</span><br><span class="line"><span class="keyword">echo</span> unicode_transform_utf8($unicode);</span><br></pre></td></tr></table></figure>
+
+<p>后续，我会出一个用php直接实现编码转换和汉字字符串截取的PHP扩展，都会用到这次的知识，后续见。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/ascii/">ascii</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

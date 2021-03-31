@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【正则表达式】 - 超简单练习题 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【正则表达式】 - 超简单练习题"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【正则表达式】 - 超简单练习题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/regular-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T05:58:00.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="1-匹配一段文本中的每行的邮箱"><a href="#1-匹配一段文本中的每行的邮箱" class="headerlink" title="1. 匹配一段文本中的每行的邮箱"></a>1. 匹配一段文本中的每行的邮箱</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$str &#x3D; &#39;123@qq.comaaa@163.combbb@126.comasdfasfs33333@adfcom&#39;;</span><br><span class="line"></span><br><span class="line">preg_match_all(&quot;&#x2F;\w+@(?:qq|126|163)\.com&#x2F;&quot;, $str, $matches);</span><br><span class="line"></span><br><span class="line">var_dump($matches);</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h3 id="2-匹配一段文本中的每行的时间字符串，比如：‘1990-07-12’"><a href="#2-匹配一段文本中的每行的时间字符串，比如：‘1990-07-12’" class="headerlink" title="2. 匹配一段文本中的每行的时间字符串，比如：‘1990-07-12’"></a>2. 匹配一段文本中的每行的时间字符串，比如：‘1990-07-12’</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$str &#x3D; &#39;asfasf1990-07-12asdfAAAbbbb434241&#39;;</span><br><span class="line"></span><br><span class="line">preg_match_all(&quot;&#x2F;(?P&lt;year&gt;19[0-9]&#123;2&#125;)-(?P&lt;month&gt;\d+)-(?P&lt;day&gt;\d+)&#x2F;&quot;, $str, $matches);</span><br><span class="line"></span><br><span class="line">var_dump($matches);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-匹配一段文本中的-1-12-的值"><a href="#3-匹配一段文本中的-1-12-的值" class="headerlink" title="3. 匹配一段文本中的 1-12 的值"></a>3. 匹配一段文本中的 1-12 的值</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$str &#x3D; &#39;23123156865423150506087111009&#39;;</span><br><span class="line"></span><br><span class="line">preg_match_all(&#39;&#x2F;1[0-2]|[1-9]&#x2F;&#39;,$str, $matches);</span><br><span class="line"></span><br><span class="line">var_dump($matches);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/正则/">正则</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/正则/">正则</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

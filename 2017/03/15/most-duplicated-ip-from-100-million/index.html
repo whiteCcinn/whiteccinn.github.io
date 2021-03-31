@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>模拟从1亿个ip中访问次数最多的IP--PHP | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="模拟从1亿个ip中访问次数最多的IP--PHP"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>模拟从1亿个ip中访问次数最多的IP--PHP</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/15/most-duplicated-ip-from-100-million/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-15T06:03:38.000Z">
+          2017-03-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前提："><a href="#前提：" class="headerlink" title="前提："></a>前提：</h2><ul>
+<li>存储在一个文件中</li>
+<li>内存有限，时间无限。</li>
+</ul>
+<h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h2><ul>
+<li>采用类似分表的办法，将文件拆分到各个文件中再做统计运算，提高检索速度，分散内存压力</li>
+<li>涉及到 ip 的，首先要考虑的就是将 ip 转程长整形，理由是整型省内存，并且支持一般都支持整形索引，比字符串索引速度快</li>
+<li>数组存储的数据结构，采用冗余的策略，记录一组数组中重复最多的 ip 和数据</li>
+<li>独立小文件胜出的，再和分出来的其他的 N-1 个小文件胜出的比较</li>
+</ul>
+<a id="more"></a>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 模拟从1亿个ip中访问次数最多的IP</span></span><br><span class="line"><span class="comment"> * 创建文件</span></span><br><span class="line"><span class="comment"> * Created by PhpStorm.</span></span><br><span class="line"><span class="comment"> * User: admin</span></span><br><span class="line"><span class="comment"> * Date: 2017/3/14</span></span><br><span class="line"><span class="comment"> * Time: 16:19</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">const</span> MAX_NUM = <span class="number">100000000</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> HASH_NUM = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> FILE_NAME = <span class="string">'IpFile.txt'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> $hashIps = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">generateIp</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">// 大概15个字节byte</span></span><br><span class="line">    $number = <span class="string">'192.168'</span>;</span><br><span class="line">    $number = $number . <span class="string">'.'</span> . random_int(<span class="number">0</span>, <span class="number">255</span>) . <span class="string">'.'</span> . random_int(<span class="number">0</span>, <span class="number">255</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $number;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">generateIpFiles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * fopen 的mode，如果加上b，例如wb的话，是说明强调说明这个文件是二进制文件</span></span><br><span class="line"><span class="comment">     * 如果1亿次的话，那就是15byte*1E = 15E byte /1024</span></span><br><span class="line"><span class="comment">     * 由于机器性能比较差，文件我只生成了700M的数据。可能只有5千万条数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    $handler = fopen(<span class="keyword">self</span>::FILE_NAME, <span class="string">'w'</span>);</span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="keyword">self</span>::MAX_NUM; $i++)</span><br><span class="line">    &#123;</span><br><span class="line">      $ip = <span class="keyword">self</span>::generateIp();</span><br><span class="line">      fwrite($handler, $ip . PHP_EOL);</span><br><span class="line">    &#125;</span><br><span class="line">    fclose($handler);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * ip转成长整形</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> string $ip</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">ipToLong</span><span class="params">(string $ip)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">list</span>($position1, $position2, $position3, $position4) = explode(<span class="string">'.'</span>, $ip);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ($position1 &lt;&lt; <span class="number">24</span>) | ($position2 &lt;&lt; <span class="number">16</span>) | ($position3 &lt;&lt; <span class="number">8</span>) | ($position4);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 哈希取模</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> string $ip</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">hash</span><span class="params">(string $ip)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    $longInt = <span class="keyword">self</span>::ipToLong($ip);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $longInt % <span class="keyword">self</span>::HASH_NUM;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 拆分文件</span></span><br><span class="line"><span class="comment">   * 考虑：</span></span><br><span class="line"><span class="comment">   * 1.1E行数据，一次性加载文件这是不明智的做法，所以我们需要一行一行来读取，也可以理解为缓存读取。</span></span><br><span class="line"><span class="comment">   * 2.假如1E个ip，我们直接一行行读写操作的话，需要操作的io就是1E次，所以这个是十分不明智的，所以我们可以根据自身服务器的内存比例来进行划分出预定的数组来保存</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">divideIpsFiles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    $handler = fopen(<span class="keyword">self</span>::FILE_NAME, <span class="string">'r'</span>);</span><br><span class="line">    $count   = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (($ip = fgets($handler)) !== <span class="keyword">false</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      $count++;</span><br><span class="line">      $hashIp                     = <span class="keyword">self</span>::hash($ip);</span><br><span class="line">      <span class="keyword">self</span>::$hashIps[ $hashIp ][] = $ip;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 当处理了50000万条数据的时候，就写入一次性写入文件。</span></span><br><span class="line">      <span class="keyword">if</span> ($count == <span class="number">50000</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">self</span>::$hashIps <span class="keyword">as</span> $key =&gt; $hip)</span><br><span class="line">        &#123;</span><br><span class="line">          $handler2 = fopen($key . <span class="string">'.txt'</span>, <span class="string">'a'</span>);</span><br><span class="line">          <span class="keyword">while</span> (($ip = current($hip)) !== <span class="keyword">false</span>)</span><br><span class="line">          &#123;</span><br><span class="line">            $byte = fwrite($handler2, $ip);</span><br><span class="line">            <span class="keyword">if</span> ($byte === <span class="keyword">false</span>)</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="keyword">die</span>(<span class="string">'Shutdown'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            next($hip);</span><br><span class="line">          &#125;</span><br><span class="line">          fclose($handler2);</span><br><span class="line">        &#125;</span><br><span class="line">        $count         = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">self</span>::$hashIps = [];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    fclose($handler);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">calus</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    $last = [];</span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">1000</span>; $i++)</span><br><span class="line">    &#123;</span><br><span class="line">      $first   = [</span><br><span class="line">          <span class="string">'item'</span> =&gt; [],</span><br><span class="line">          <span class="string">'max'</span>  =&gt; [<span class="string">'ip'</span> =&gt; <span class="number">0</span>, <span class="string">'count'</span> =&gt; <span class="number">0</span>]</span><br><span class="line">      ];</span><br><span class="line">      $handler = fopen($i . <span class="string">'.txt'</span>, <span class="string">'r'</span>);</span><br><span class="line">      <span class="keyword">while</span> (($ip = fgets($handler)) !== <span class="keyword">false</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> (array_key_exists($ip, $first[<span class="string">'item'</span>]))</span><br><span class="line">        &#123;</span><br><span class="line">          $first[<span class="string">'item'</span>][ $ip ]++;</span><br><span class="line">        &#125; <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">          $first[<span class="string">'item'</span>][ $ip ] = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($first[<span class="string">'item'</span>][ $ip ] &gt; $first[<span class="string">'max'</span>][<span class="string">'count'</span>])</span><br><span class="line">        &#123;</span><br><span class="line">          $first[<span class="string">'max'</span>][<span class="string">'ip'</span>]    = $ip;</span><br><span class="line">          $first[<span class="string">'max'</span>][<span class="string">'count'</span>] = $first[<span class="string">'item'</span>][ $ip ];</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      fclose($handler);</span><br><span class="line"></span><br><span class="line">      $last[ $first[<span class="string">'max'</span>][<span class="string">'ip'</span>] ] = $first[<span class="string">'max'</span>][<span class="string">'count'</span>];</span><br><span class="line"></span><br><span class="line">      <span class="keyword">unset</span>($first);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'IP最多重复的是：'</span> . array_search(($count = max($last)), $last) . <span class="string">',重复次数为:'</span> . $count;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 移除文件</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">deleteFiles</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">1000</span>; $i++)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (file_exists($i . <span class="string">'.txt'</span>))</span><br><span class="line">      &#123;</span><br><span class="line">        unlink($i . <span class="string">'.txt'</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'移除完毕'</span> . PHP_EOL;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!file_exists(Test::FILE_NAME))</span><br><span class="line">&#123;</span><br><span class="line">  Test::generateIpFiles();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//Test::deleteFiles();</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//Test::divideIpsFiles();</span></span><br><span class="line"></span><br><span class="line">Test::calus();</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/大数据/">大数据</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

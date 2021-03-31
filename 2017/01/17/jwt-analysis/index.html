@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深度解剖JWT认证流程 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="深度解剖JWT认证流程"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>深度解剖JWT认证流程</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/17/jwt-analysis/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-17T02:40:00.000Z">
+          2017-01-17
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><blockquote>
+<p>说明简介</p>
+</blockquote>
+<p>传统的 cookie-session 机制可以保证的接口安全，在没有通过认证的情况下会跳转至登入界面或者调用失败。</p>
+<p>在如今 RESTful 化的 API 接口下，cookie-session 已经不能很好发挥其余热保护好你的 API 。</p>
+<p>更多的形式下采用的基于 Token 的验证机制，JWT 本质的也是一种 Token，但是其中又有些许不同。</p>
+<hr>
+<h2 id="什么是-JWT"><a href="#什么是-JWT" class="headerlink" title="什么是 JWT"></a>什么是 JWT</h2><p>JWT 及时 JSON Web Token，它是基于 <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener" title="RFC 7519">RFC 7519</a> 所定义的一种在各个系统中传递紧凑和自包含的 JSON 数据形式。</p>
+<ul>
+<li><strong>紧凑（Compact）</strong> ：由于传送的数据小，JWT 可以通过 GET、POST 和 放在 HTTP 的 header 中，同时也是因为小也能传送的更快。</li>
+<li><strong>自包含（self-contained）</strong> : Payload 中能够包含用户的信息，避免数据库的查询。</li>
+</ul>
+<p>JSON Web Token 由三部分组成使用 <code>.</code> 分割开：</p>
+<ul>
+<li>header （头部）</li>
+<li>payload （载荷）</li>
+<li>Signature（签名）</li>
+</ul>
+<a id="more"></a>
+
+<p>一个完整的 JWT 为以下的形式：</p>
+<p><code>xxxxx.yyyy.zzzz</code></p>
+<p>Header 一般由两个部分组成</p>
+<ul>
+<li>alg</li>
+<li>tpy</li>
+</ul>
+<p>alg 是所采用的加密 hash 算法（HS256，MD5 等），tpy 就是 token 的类型了，在这里就肯定是”JWT”。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"alg"</span>: <span class="string">"HS256"</span>,</span><br><span class="line">  <span class="attr">"tpy"</span>: <span class="string">"JWT"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个基础上，我们采用 Base64 加密的算法来加密第一部分 <code>header</code></p>
+<p>结果如下：</p>
+<p><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</code></p>
+<p>那么，目前 JWT 的形式不完整形态就为：</p>
+<p><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.&lt;second part&gt;.&lt;third part&gt;</code></p>
+<p>Payload 一般分了几个部分，它是整个 JWT 的核心信息，相当于 body，其中包含了许多种的声明（<strong>claims</strong>）。</p>
+<ul>
+<li><strong>（保留声明）reserved claims</strong> ：预定义的 <a href="http://www.iana.org/assignments/jwt/jwt.xhtml" target="_blank" rel="noopener" title="预定义声明">一些声明</a>，并不是强制的但是推荐，它们包括 <strong>iss</strong> (issuer)，<strong>exp</strong> (expiration time)，<strong>sub</strong> (subject)，<strong>aud</strong>(audience) 等。</li>
+<li><strong>（公有声明）public claims</strong> : 这个部分可以随便定义，但是要注意和 <a href="http://www.iana.org/assignments/jwt/jwt.xhtml" target="_blank" rel="noopener" title="预定义声明">IANA JSON Web Token</a> 冲突。</li>
+</ul>
+<p>Payload 一般由以下部分组成</p>
+<ul>
+<li>issu （签发者）</li>
+<li>sub （面向对象）</li>
+<li>iat （签发时间）</li>
+<li>exp （过期时间）</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"issu"</span>:<span class="string">"Baicai"</span>,</span><br><span class="line">  <span class="attr">"sub"</span>:<span class="string">"http://usblog.crazylaw.cn"</span>,</span><br><span class="line">  <span class="attr">"iat"</span>:<span class="number">1484618744</span></span><br><span class="line">  <span class="string">"exp"</span>:<span class="number">1484618754</span> (注：<span class="number">10</span>s后过期)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Signature</p>
+<p>在创建该部分时候你应该已经有了 编码后的 Header 和 Payload 还需要一个一个秘钥，这个加密的算法应该 Header 中指定。</p>
+<p>一个使用 HMAC SHA256 的例子如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">  base64UrlEncode(header) + &quot;.&quot; +</span><br><span class="line">  base64UrlEncode(payload),</span><br><span class="line">  secret)</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>signature</code> 是用来验证发送者的 JWT 的同时也能确保在期间不被篡改。</p>
+<p>所以，做后你的一个完整的 JWT 应该是如下形式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ</span><br></pre></td></tr></table></figure>
+
+<p><code>注意被 . 分割开的三个部分</code></p>
+<p>JSON Web Token 的工作流程</p>
+<p>在用户使用证书或者账号密码登入的时候一个 JSON Web Token 将会返回，同时可以把这个 JWT 存储在 local storage、或者 cookie 中，用来替代传统的在服务器端创建一个 session 返回一个 cookie。</p>
+<p><img src="http://usblog.crazylaw.cn/usr/uploads/2017/01/537119459.jpg" alt=""></p>
+<p>当用户想要使用受保护的路由时候，应该要在请求得时候带上 JWT ，一般的是在 header 的 Authorization 使用 Bearer 的形式，一个包含的 JWT 的请求头的 Authorization 如下：</p>
+<p><code>Authorization: Bearer &lt;token&gt;</code></p>
+<p>这是一中无状态的认证机制，用户的状态从来不会存在服务端，在访问受保护的路由时候回校验 HTTP header 中 Authorization 的 JWT，同时 JWT 是会带上一些必要的信息，不需要多次的查询数据库。</p>
+<p>这种无状态的操作可以充分的使用数据的 APIs，甚至是在下游服务上使用，这些 APIs 和哪服务器没有关系，因此，由于没有 cookie 的存在，所以在不存在跨域（CORS, Cross-Origin Resource Sharing）的问题。</p>
+<hr>
+<h4 id="你们以为到这里就完了？其实还没有，还有-JWT-超时的问题以及传输的位置还没有讲。"><a href="#你们以为到这里就完了？其实还没有，还有-JWT-超时的问题以及传输的位置还没有讲。" class="headerlink" title="你们以为到这里就完了？其实还没有，还有 JWT 超时的问题以及传输的位置还没有讲。"></a>你们以为到这里就完了？其实还没有，还有 JWT 超时的问题以及传输的位置还没有讲。</h4><p>JWT 一般你可以选择放在 <code>GET</code> 方法的 <code>query</code> 作为参数传递给服务器校验。你也可以选择 <code>POST</code> 方法的<code>body</code> 来传递该该参数，但是我们知道 GET、POST 方法都有自身的传递数据长度，我们要节约这些资源的话，我还是推荐放在头部。并且服务器端每次校验 jwt 的时候，可以设置一个 <code>leeway</code> ，我把它叫为迂回时间，这个时间的作用是在 jwt 超过了有效时间，但是可以刷新 jwt 而存在的，我们可以称之为 <code>刷新令牌时间</code>，只要在这个时间范围内，服务器端就会在响应性头设置新的 jwt 返回给客户端，客户端需要检测这个响应头是否存在这个属性来更新 jwt 的值，否则，如果 jwt 超过了这个 leeway，那么，你的 app 将需要重新登录来获取授权。</p>
+<hr>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/JWT/">JWT</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

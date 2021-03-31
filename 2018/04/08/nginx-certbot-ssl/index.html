@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【SSL】使用certbot工具申请letsencrypt的ssl证书 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【SSL】使用certbot工具申请letsencrypt的ssl证书"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【SSL】使用certbot工具申请letsencrypt的ssl证书</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/04/08/nginx-certbot-ssl/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-04-08T02:55:00.000Z">
+          2018-04-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="申请-ssl-证书之前，先梳理几个要点："><a href="#申请-ssl-证书之前，先梳理几个要点：" class="headerlink" title="申请 ssl 证书之前，先梳理几个要点："></a>申请 ssl 证书之前，先梳理几个要点：</h2><p>1、确定好拟申请 ssl 证书的域名，这里为了便于说明假设申请 ssl 的域名为：a.baicai.com，<a href="http://www.baicai.com、account.baicai.com" target="_blank" rel="noopener">www.baicai.com、account.baicai.com</a> 等其他域名（和主机），没有本质上的区别，仅名称上的差异；</p>
+<p>2、确定拟申请 ssl 证书的域名正确解析到当前主机，本例也就是通过<a href="http://blog.crazylaw.com" target="_blank" rel="noopener">http://blog.crazylaw.com</a> 能够正确解析到当前主机（注意是正确解析，至于是不是能正确访问依据 certbot 的模式不同要求也不同）；</p>
+<p>3、确定好拟申请 ssl 证书域名解析到当前主机后的 web 根目录，假设为：/www/blog/</p>
+<h2 id="Github-上拉取-cerbot"><a href="#Github-上拉取-cerbot" class="headerlink" title="Github 上拉取 cerbot"></a>Github 上拉取 cerbot</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;certbot&#x2F;certbot</span><br></pre></td></tr></table></figure>
+
+<p>然后进入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd cerbot</span><br></pre></td></tr></table></figure>
+
+<p>接着看到<code>cerbot-auto</code>的可执行文件</p>
+<p>然后生成证书。</p>
+<p><font color="red">注意，如果你第一次使用 letsencrypy 的话，一般需要指定邮箱，并且 letsencrypy 会发送证书到你的邮箱，请确认订阅 letsencrypy，下面的命令是带上了邮箱信息的</font>！</p>
+<p><font color="red">注意，需要暂时停止 nginx</font>！</p>
+<h2 id="standalone-模式申请-ssl-证书"><a href="#standalone-模式申请-ssl-证书" class="headerlink" title="standalone 模式申请 ssl 证书"></a>standalone 模式申请 ssl 证书</h2><p>standalone 模式不需要上述梳理出的 3 个要点中的第三条，也就意味着如果你的主机需要关停 80 端口（或和 443 端口）的 web 服务，譬如正在运行的 nginx、Apache 需要关停。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">##standalone模式，其中-d参数指定拟申请ssl证书的域名 #可以通过多个-d参数指定多个域名，但你得确保这些指定的多个域名均能正常解析到当前主机</span><br><span class="line"></span><br><span class="line">.&#x2F;certbot-auto certonly --standalone --email you@email.com -d example.com -d www.example.com -d other.example.net</span><br></pre></td></tr></table></figure>
+
+<h2 id="非-standalone-模式申请-ssl-证书"><a href="#非-standalone-模式申请-ssl-证书" class="headerlink" title="非 standalone 模式申请 ssl 证书"></a>非 standalone 模式申请 ssl 证书</h2><p>这种模式需要使用-w 参数（或者–webroot-path 参数）指定当前正在运行的 web 服务器的根目录。–webroot-path 参数指定 web 根目录后，<code>certbot工具会自动在该目录下生成.well-known的隐藏目录</code>，以及用于效验域名所有者的特定文件，此文件 Let’s Encrypt 的服务器会主动发起 http 请求去读取从达到效验域名所有者或者管理者就是本次操作 certbot 工具的人；certbot 工具自动生成的完整目录为：-w 参数指定的根目录<code>/.well-known/acme-challenge</code>，对于 nginx 而言 web 根目录下的隐藏目录默认情况下是不允许访问的，所以 nginx 情况下再执行非 standalone 模式申请 ssl 证书之前，<code>需要将nginx网站根目录下的.well-known隐藏目录设置成允许访问</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">##nginx对应主机的配置文件中添加允许.well-known隐藏目录的访问</span><br><span class="line">#注意配置文件中禁止浏览隐藏文件的相关代码引起冲突</span><br><span class="line">location ~ &#x2F;.well-known &#123;</span><br><span class="line">    allow all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果熟悉 nginx，甚至可以为.well-known 隐藏目录指定单独的 root 入口；这就是 nginx 有关的合理利用了，不再补充。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##--webroot指定当前正在运行的web server的根目录</span><br><span class="line">certbot certonly --webroot -w &#x2F;var&#x2F;www&#x2F; -d c1c2.test.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="一般使用-standalone-模式，继续"><a href="#一般使用-standalone-模式，继续" class="headerlink" title="一般使用 standalone 模式，继续"></a>一般使用 standalone 模式，继续</h2><p>接着如果你没订阅过的话，会在邮箱收到邮件，然后你要选择订阅。接着你会看到如下信息，选择 <code>a</code> 和 <code>y</code> 之后。</p>
+<p>默认路径如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;fullchain.pem</span><br><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;privkey.pem</span><br></pre></td></tr></table></figure>
+
+<p>如何更新？这里截图写得很清楚了，再执行一次 <code>certbot-auto</code> 命令+参数即可，如果你想全部重新执行一边的话，可以使用 <code>certbot-auto renew</code>。</p>
+<h2 id="nginx-配置"><a href="#nginx-配置" class="headerlink" title="nginx 配置"></a>nginx 配置</h2><p>然后我们重启 nginx，即可。！</p>
+<h2 id="如何实现自动化？"><a href="#如何实现自动化？" class="headerlink" title="如何实现自动化？"></a>如何实现自动化？</h2><ul>
+<li>停止 nginx</li>
+<li>执行 certbot-auto</li>
+<li>重启 nginx</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a><a href="/tags/ssl/">ssl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

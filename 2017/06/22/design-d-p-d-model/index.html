@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>设计模式の装饰器模式和观察者模式的区别 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="设计模式の装饰器模式和观察者模式的区别"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>设计模式の装饰器模式和观察者模式的区别</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-d-p-d-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T06:18:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>观察者模式完美的将观察者和被观察对象分开，系统中的每个类将重点放在某一个功能上，而不是其他的方面（对象之间的交互），很好的体现了单一职责原则。观察者将自己注册到被观察者的容器中，被观察者不应该过问观察者的具体类型，而是使用观察者的接口。这样的优点是：假定程序中还有别的观察者，那么这个观察者是相同的接口即可，基于接口而不是具体的实现，这一点为程序提供了更大的灵活性。</p>
+<p>现实生活中像移动的就业信息推送系统，希望得到业务的人（观察者）先到移动注册，然后如果有具体的信息，移动会主动的推送到预订业务的人，不需要预订业务的人去主动询问。</p>
+<h2 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h2><p>装饰者模式不在不改变原类文件的情况下动态的扩展一个对象的功能。它是通过创建一个包装对象，也就是装饰来包裹真实的对象。当我们需要为某个对象动态地增加一个功能的或职责的时候，可以考虑使用装饰者模式；当某个对象的职责经常发生变化或者经常需要动态的增加职责，避免为了适应变化而增加爱继承子类扩展的方式，因为这种扩展可能会造成子类膨胀的速度过快，难以控制，此时可以使用装饰着模式。</p>
+<p>对于这中模式的实现，会有被装饰的具体对象，被装饰的抽象，装饰者的抽象，和若干个装饰着，这若干个装饰者并不是创建各种不同的对象（所以装饰者模式为结构型模式而不是创建型模式），而是每个装饰者都会有一个真实的对象的引用，然后在这个具体对象方法的前后添加一些新的功能，起到装饰的作用。例如有两个装饰 1，和装饰 2，那么可以把装饰 1 当作装饰 2 的具体对象作为参数传进去，这个时候就会产生另外一种新的装饰了，而且没有新的子类。</p>
+<p>现实生活着的例子例如包饺子，步骤分为和陷，和面，杆皮，包饺子，煮饺子，可以在和陷这个方法的前面多加点配菜，也可以在和面这个方法的前面在面里面加个鸡蛋，也可以同时用这两个装饰先加菜后和面加鸡蛋，这样就可以用两个已经存在的装饰产生一个新的装饰了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

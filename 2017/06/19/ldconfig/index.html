@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>linux の动态库 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="linux の动态库"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>linux の动态库</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/19/ldconfig/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-19T06:24:00.000Z">
+          2017-06-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="1-lib-和-usr-lib-的区别"><a href="#1-lib-和-usr-lib-的区别" class="headerlink" title="1. /lib 和 /usr/lib 的区别"></a>1. /lib 和 /usr/lib 的区别</h2><p>/lib 里面给的是 root 和内核所需<code>so(动态库)</code>或者<code>a(静态)</code>之类的库文件，而/usr/lib 是普通用户能够使用的。</p>
+<p>Linux 的程序有两种模式，这个你应该知道，是<code>用户模式</code>和<code>内核模式</code>，和这个也是有关系的，不再冗述。</p>
+<p>简单说,/lib 是内核级的,/usr/lib 是系统级的,/usr/local/lib 是用户级的.</p>
+<p>/lib/ — 包含许多被 /bin/ 和 /sbin/ 中的程序使用的库文件。目录 /usr/lib/ 中含有更多用于用户程序的库文件。/lib 目录下放置的是/bin 和/sbin 目录下程序所需的库文件。/lib 目录下的文件的名称遵循下面的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">libc.so.*</span><br><span class="line">ld*</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>仅仅被/usr 目录下的程序所使用的共享库不必放到/lib 目录下。只有/bin 和/sbin 下的程序所需要的库有必要放到/lib 目录下。实际上，libm.so.*类型的库文件如果被是/bin 和/sbin 所需要的，也可以放到/usr/lib 下。</p>
+<ul>
+<li><p>/bin/ — 用来贮存用户命令。目录 /usr/bin 也被用来贮存用户命令。</p>
+</li>
+<li><p>/sbin/ — 许多系统命令（例如 shutdown）的贮存位置。目录 /usr/sbin 中也包括了许多系统命令。</p>
+</li>
+<li><p>/root/ — 根用户（超级用户）的主目录。</p>
+</li>
+<li><p>/mnt/ — 该目录中通常包括系统引导后被挂载的文件系统的挂载点。譬如，默认的光盘挂载点是 /mnt/cdrom/.</p>
+</li>
+<li><p>/boot/ — 包括内核和其它系统启动期间使用的文件。</p>
+</li>
+<li><p>/lost+found/ — 被 fsck 用来放置零散文件（没有名称的文件）。</p>
+</li>
+<li><p>/lib/ — 包含许多被 /bin/ 和 /sbin/ 中的程序使用的库文件。目录 /usr/lib/ 中含有更多用于用户程序的库文件。</p>
+</li>
+<li><p>/dev/ — 贮存设备文件。</p>
+</li>
+<li><p>/etc/ — 包含许多配置文件和目录。</p>
+</li>
+<li><p>/var/ — 用于贮存 variable（或不断改变的）文件，例如日志文件和打印机假脱机文件。</p>
+</li>
+<li><p>/usr/ — 包括与系统用户直接有关的文件和目录，例如应用程序及支持它们的库文件。</p>
+</li>
+<li><p>/proc/ — 一个虚拟的文件系统（不是实际贮存在磁盘上的），它包括被某些程序使用的系统信息。</p>
+</li>
+<li><p>/initrd/ — 用来在计算机启动时挂载 initrd.img 映像文件的目录以及载入所需设备模块的目录。</p>
+</li>
+</ul>
+<p>警告</p>
+<p>不要删除 /initrd/ 目录。如果你删除了该目录后再重新引导 Red Hat Linux 时，你将无法引导你的计算机。</p>
+<ul>
+<li><p>/tmp/ — 用户和程序的临时目录。 /tmp 给予所有系统用户读写权。</p>
+</li>
+<li><p>/home/ — 用户主目录的默认位置。</p>
+</li>
+<li><p>/opt/ — 可选文件和程序的贮存目录。该目录主要被第三方开发者用来简易地安装和卸装他们的软件包。</p>
+</li>
+</ul>
+<h2 id="2-ldconfig"><a href="#2-ldconfig" class="headerlink" title="2.ldconfig"></a>2.ldconfig</h2><blockquote>
+<p>ldconfig 是一个动态链接库管理命令，其目的为了让动态链接库为系统所共享。</p>
+</blockquote>
+<h3 id="2-1-ldconfig-的主要用途："><a href="#2-1-ldconfig-的主要用途：" class="headerlink" title="2.1 ldconfig 的主要用途："></a>2.1 ldconfig 的主要用途：</h3><p>默认搜寻/lilb 和/usr/lib，以及配置文件/etc/ld.so.conf 内所列的目录下的库文件。</p>
+<p>搜索出可共享的动态链接库，库文件的格式为：lib<strong>*.so.</strong>，进而创建出动态装入程序(ld.so)所需的连接和缓存文件。</p>
+<p>缓存文件默认为/etc/ld.so.cache，该文件保存已排好序的动态链接库名字列表。</p>
+<p>ldconfig 通常在系统启动时运行，而当用户安装了一个新的动态链接库时，就需要手工运行这个命令。</p>
+<h3 id="2-2-ldconfig-需要注意的地方："><a href="#2-2-ldconfig-需要注意的地方：" class="headerlink" title="2.2 ldconfig 需要注意的地方："></a>2.2 ldconfig 需要注意的地方：</h3><p>往/lib 和/usr/lib 里面加东西，是不用修改/etc/ld.so.conf 文件的，但是添加完后需要调用下 ldconfig，不然添加的 library 会找不到。</p>
+<p>如果添加的 library 不在/lib 和/usr/lib 里面的话，就一定要修改/etc/ld.so.conf 文件，往该文件追加 library 所在的路径，然后也需要重新调用下 ldconfig 命令。比如在安装 MySQL 的时候，其库文件/usr/local/mysql/lib，就需要追加到/etc/ld.so.conf 文件中。命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;lib&quot; &gt;&gt; &#x2F;etc&#x2F;ld.so.conf</span><br><span class="line"></span><br><span class="line">ldconfig -v | grep mysql</span><br></pre></td></tr></table></figure>
+
+<p>如果添加的 library 不在/lib 或/usr/lib 下，但是却没有权限操作写/etc/ld.so.conf 文件的话，这时就需要往 export 里写一个全局变量 LD_LIBRARY_PATH，就可以了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

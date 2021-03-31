@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Linux】顺序写盘和随机写盘 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Linux】顺序写盘和随机写盘"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Linux】顺序写盘和随机写盘</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/12/10/Linux/顺序写盘和随机写盘/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-12-10T09:43:43.000Z">
+          2019-12-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="linux-的文件描述符"><a href="#linux-的文件描述符" class="headerlink" title="linux 的文件描述符"></a>linux 的文件描述符</h1><p>文件描述符（FD:file descriptors），也可以说是文件句柄，当某个程序打开文件时，内核返回相应的文件描述符，程序为了处理该文件必须引用此描述符。文件描述符是一个正整数，用以标明每一个被进程所打开的文件和 socket。最前面的三个文件描述符（0，1，2）分别与标准输入（stdin），标准输出（stdout）和标准错误（stderr）对应，后面打开的文件依此类推对应 3、4…… 。</p>
+<p>linux 系统对每个用户、进程、或整个系统的可打开文件描述符数量都有一个限制，一般默认为 1024。当我们在系统或应用的日志中碰到“too many open files”错误记录时，这个其实不是说打开的文件过多，而是打开的文件描述符数量已达到了限制，这时就需要增加文件描述符的数量限制了。</p>
+<a id="more"></a>
+
+<h2 id="获取系统打开的文件描述符数量"><a href="#获取系统打开的文件描述符数量" class="headerlink" title="获取系统打开的文件描述符数量"></a>获取系统打开的文件描述符数量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat /proc/sys/fs/file-nr</span><br><span class="line">1216    0       197787</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一列 1216 ：为已分配的 FD 数量</li>
+<li>第二列 0 ：为已分配但尚未使用的 FD 数量</li>
+<li>第三列 197787 ：为系统可用的最大 FD 数量</li>
+</ul>
+<p>已用 FD 数量＝为已分配的 FD 数量 - 为已分配但尚未使用的 FD 数量。注意，这些数值是系统层面的。</p>
+<h2 id="获取进程打开的文件描述符数量"><a href="#获取进程打开的文件描述符数量" class="headerlink" title="获取进程打开的文件描述符数量"></a>获取进程打开的文件描述符数量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pidof vim</span><br><span class="line">3253</span><br><span class="line">[root@localhost ~]# ll /proc/3253/fd</span><br><span class="line">lrwx------. 1 test test 64  6月  8 18:11 0 -&gt; /dev/pts/0</span><br><span class="line">lrwx------. 1 test test 64  6月  8 18:11 1 -&gt; /dev/pts/0</span><br><span class="line">lrwx------. 1 test test 64  6月  8 18:11 2 -&gt; /dev/pts/0</span><br><span class="line">lrwx------. 1 test test 64  6月  8 18:11 4 -&gt; /home/test/.bash_history.swp</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 vim 进程用了 4 个 FD</p>
+<h2 id="更改文件描述符限制"><a href="#更改文件描述符限制" class="headerlink" title="更改文件描述符限制"></a>更改文件描述符限制</h2><p>当碰到“too many open files”错误时，就需要增加文件描述符的限制数量，系统的默认文件描述符都比较大，一般来说，只需增加用户或进程的就可以了</p>
+<h3 id="用户或进程"><a href="#用户或进程" class="headerlink" title="用户或进程"></a>用户或进程</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -n</span><br><span class="line">1024</span><br><span class="line">[root@localhost ~]# ulimit -n 10240</span><br><span class="line">[root@localhost ~]# ulimit -n</span><br><span class="line">10240</span><br></pre></td></tr></table></figure>
+
+<p>注意，使用 ulimit 命令更改后只是在当前会话生效，当退出当前会话重新登录后又会回到默认值 1024，要永久更改可以修改文件 <code>/etc/security/limit.conf</code>，如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#vi /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<p>加入 “abc hard nofile 10240”</p>
+<ul>
+<li><p>abc：用户名，即允许 test 使用 ulimit 命令更改 FD 限制，最大值不超过 10240，更改后 abc 用户的每一个进程（以 abc 用户运行的进程）可打开的 FD 数量为 10240 个</p>
+</li>
+<li><p>hard：限制类型，有 soft/hard 两种，达到 soft 限制会在系统的日志（一般为/var/log/messages）里面记录一条告警日志，但不影响使用。hard，达到这个限制，有日志且会影响使用。</p>
+</li>
+<li><p>nofile：限制的内容，nofile - max number of open files</p>
+</li>
+<li><p>1024 ：值</p>
+</li>
+</ul>
+<p>更改后，退出终端重新登录，用 ulimit 看看有没有生效，如果没生效，可以在 abc 用户的.bash_profile 文件加上 ulimit -n 10240 ,以使用户 abc 每次登录时都会将 FD 最大值更改为 10240，如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]#echo "ulimit -n 10240" &gt;&gt; /home/abc/ .bash_profile</span><br><span class="line">10240</span><br><span class="line">[root@localhost ~]# su - abc</span><br><span class="line">[abc@localhost ~]\$ ulimit -n</span><br><span class="line">10240</span><br></pre></td></tr></table></figure>
+
+<p>limit.conf 文件里面本身已有很详细的使用方法，这个下次可以说说。</p>
+<h3 id="系统级别"><a href="#系统级别" class="headerlink" title="系统级别"></a>系统级别</h3><p>将整个操作系统可以使用的 FD 数量更改为 51200</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# echo "51200" &gt; /proc/sys/fs/file-max</span><br><span class="line">[root@localhost ~]# cat /proc/sys/fs/file-nr</span><br><span class="line">1184    0       51200</span><br></pre></td></tr></table></figure>
+
+<p>像这样更改在系统重启后会恢复到默认值，要永久更改可以在 sysctl.conf 文件加上 fs.file-max = 51200</p>
+<p>如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# echo "fs.file-max = 51200" &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+
+<h1 id="获取打开的文件数量"><a href="#获取打开的文件数量" class="headerlink" title="获取打开的文件数量"></a>获取打开的文件数量</h1><p>linux 的一切皆为文件，那么如何知道系统/应用打开了哪些或是多少个文件呢？很简单，用 lsof 命令就行了，lsof，list open files 的简写，可列出程序或系统正在使用的文件。</p>
+<h2 id="获取整个系统打开的文件数量"><a href="#获取整个系统打开的文件数量" class="headerlink" title="获取整个系统打开的文件数量"></a>获取整个系统打开的文件数量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lsof |wc -l</span><br><span class="line">1864</span><br></pre></td></tr></table></figure>
+
+<h2 id="获取某个用户打开的文件数量"><a href="#获取某个用户打开的文件数量" class="headerlink" title="获取某个用户打开的文件数量"></a>获取某个用户打开的文件数量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# lsof -u test |wc -l</span><br><span class="line">15</span><br></pre></td></tr></table></figure>
+
+<h2 id="获取某个程序打开的文件数量"><a href="#获取某个程序打开的文件数量" class="headerlink" title="获取某个程序打开的文件数量"></a>获取某个程序打开的文件数量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pidof vim</span><br><span class="line">3253</span><br><span class="line">[root@localhost ~]# lsof -p 3253 |wc -l</span><br><span class="line">31</span><br></pre></td></tr></table></figure>
+
+<p>上面所示只是用 lsof 来显示已打开的文件数量，lsof 的功能远不止这些，有兴趣可以 man lsof 看一下</p>
+<table>
+<thead>
+<tr>
+<th align="center">指标</th>
+<th align="center">测试值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">测试时长</td>
+<td align="center">12 小时 15 分</td>
+</tr>
+<tr>
+<td align="center">数据量</td>
+<td align="center">108000000</td>
+</tr>
+<tr>
+<td align="center">平均消费速率（TPS）</td>
+<td align="center">6500 条/秒</td>
+</tr>
+<tr>
+<td align="center">总结</td>
+<td align="center">在这种高峰数据量的情况下，mthinkingdata 会堵塞一部分流量，除非优化利用 Redis 的机制，使服务支持多个 Redis 实例存储</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

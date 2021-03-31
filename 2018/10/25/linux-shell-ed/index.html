@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Linux命令】ed命令 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Linux命令】ed命令"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Linux命令】ed命令</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-ed/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T12:22:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>ed 是 linux 下原始的编辑器，类似于一个行为记录器</p>
+<p>ed 的所有操作都可以用一个文本来记录</p>
+<p>里面的内容是所有的操作，有点类似于 dockerfile 的形式</p>
+<a id="more"></a>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">. 当前行</span><br><span class="line">$ 文本最后一行</span><br><span class="line">n 文本第 n 行（ n 为数字，下同；m 亦是 ）</span><br><span class="line">-n 从文本当前行数起，向前第 n 行</span><br><span class="line">+n 从文本当前行数起，向后第 n 行</span><br><span class="line">- 相当于 -1 行地址</span><br><span class="line">+ 相当于 +1 行地址</span><br><span class="line">m，n 文本的第 m 到 n 行</span><br><span class="line">, 文本的所有行</span><br><span class="line">; 文本当前行到最后一行</span><br><span class="line">&#x2F;reg&#x2F; 从文本当前行数起，下一个匹配 reg 的行</span><br><span class="line">?reg? 从文本当前行数起，上一个匹配 reg 的行</span><br><span class="line">&#39;x 由 k 命令标记的行（ x 为一小写字母 ）</span><br><span class="line">正则表达式如下：(只涉及 ed 所支持的正则表达式)</span><br><span class="line">. 匹配任何单个字符。</span><br><span class="line">[char-class] 匹配任何一个在 char-class 里的单个字符。如果中间出现 &#39;-&#39; ，则意为其左边的字符和其右边的</span><br><span class="line">字符之间的所有字符。例如，[abc] 匹配 a 或 b 或 c；[a-z] 匹配任意一个小写字母(a、b、c、</span><br><span class="line">...、z)，[0-9] 匹配任意一个数字(0、1、2、...、9)。</span><br><span class="line">char-class 也可以为一些字符集。如下：</span><br><span class="line">[:alpha:] 相当于 [a-zA-Z]</span><br><span class="line">[:lower:] 相当于 [a-z]</span><br><span class="line">[:upper:] 相当于 [A-Z]</span><br><span class="line">[:digit:] 相当于 [0-9]</span><br><span class="line">[:alnum:] 相当于 [a-zA-Z0-9]</span><br><span class="line">[:blank:] 匹配 &#39; &#39;(空格)、 &#39;\t&#39;(制表符)</span><br><span class="line">[:space:] 匹配 &#39; &#39;(空格)、&#39;\t&#39;(制表符)、&#39;\n&#39;(新行)、&#39;\f&#39;()、&#39;\v&#39;(垂直制表符)、&#39;\r&#39;(回车符)</span><br><span class="line">[:cntrl:] 匹配控制字符。在 ASCII 码中，这些控制字符是从八进制数字 000 到 037, 和 177 (DEL)</span><br><span class="line">[:print:] 匹配 相当于 [:alnum:]、[:punct:] 和 空格</span><br><span class="line">[:graph:] 匹配 相当于 [:alnum:] 、 [:punct:]</span><br><span class="line">[:punct:] 匹配 &#96;! &quot; # $ % &amp; &#39; ( ) * + , - . &#x2F; : ; &lt; &#x3D; &gt; ? @ [ \ ] ^ _ &#96; &#123; | &#125; ~ &#39; 等标点符号</span><br><span class="line">[:xdigit:] 匹配十六进制字符 &#39;0 1 2 3 4 5 6 7 8 9 A B C D E F a b c d e f&#39;</span><br><span class="line">[^char-class] 匹配 [char-class] 的补集，即匹配任意一个不在 char-class 里的单个字符</span><br><span class="line">* 匹配前面的子表达式零次或多次。例如，&#39;ab*&#39; 能匹配 &quot;a&quot; 以及 &quot;abb&quot;。 * 等价于&#39;\&#123;0,\&#125;&#39;</span><br><span class="line">\+ 匹配前面的子表达式一次或多次。例如，&#39;ab\+&#39; 能匹配 &quot;ab&quot; 以及 &quot;abb&quot;，但不能匹配 &quot;a&quot;。\+ 等</span><br><span class="line">价于 \&#123;1,\&#125;</span><br><span class="line">\? 匹配前面的子表达式零次或一次。例如，&quot;word(s)\?&quot; 可以匹配 &quot;word&quot; 或 &quot;words&quot; 。\? 等价于</span><br><span class="line">\&#123;0,1\&#125;</span><br><span class="line">\&#123;n,m\&#125; m 和 n 均为非负整数，其中n &lt;&#x3D; m。最少匹配 n 次且最多匹配 m 次。 &quot;a&#123;1,3&#125;&quot; 将匹配 &quot;baaaaab&quot;</span><br><span class="line">中的前三个 a。&#39;a&#123;0,1&#125;&#39; 等价于 &#39;a\?&#39;。请注意在逗号和两个数之间不能有空格</span><br><span class="line">\&#123;n,\&#125; n 是一个非负整数。至少匹配n 次。例如，&#39;a\&#123;2,\&#125;&#39; 不能匹配 &quot;abc&quot; 中的 &#39;a&#39;，但能匹配</span><br><span class="line">&quot;baaaaab&quot;中的所有 a。&#39;a\&#123;1,\&#125;&#39; 等价于 &#39;a\+&#39;。&#39;a\&#123;0,\&#125;&#39; 则等价于 &#39;a*&#39;</span><br><span class="line">\&#123;n\&#125; n 是一个非负整数。匹配确定的 n 次。例如，&#39;a\&#123;2\&#125;&#39; 不能匹配 &quot;bab&quot; 中的 &#39;a&#39;，但是能匹配</span><br><span class="line">&quot;baab&quot;中的两个 a</span><br><span class="line">^ 匹配输入字符串的开始位置</span><br><span class="line">$ 匹配输入字符串的结束位置</span><br><span class="line">\&lt; 匹配一个单词的前边界。例如，&#39;\&lt;el&#39; 匹配 &quot;element&quot;,但不能匹配 &quot;help&quot;</span><br><span class="line">\&gt; 匹配一个单词的后边界。例如，&#39;ly\&gt;&#39; 匹配 &quot;lovely&quot;，但不匹配 &quot;lying&quot;</span><br><span class="line">\b 匹配一个单词边界，也就是指单词和空格间的位置。例如， &#39;er\b&#39; 可以匹配&quot;never&quot; 中的 &#39;er&#39;，</span><br><span class="line">但不能匹配&quot;verb&quot; 中的 &#39;er&#39;</span><br><span class="line">\B 匹配非单词边界。&#39;er\B&#39; 能匹配 &quot;verb&quot; 中的 &#39;er&#39;，但不能匹配 &quot;never&quot; 中的 &#39;er&#39;</span><br><span class="line">\w 匹配任何非单词字符。等价于 &#39;[^A-Za-z0-9_]&#39;</span><br><span class="line">\W 匹配任何非单词字符。等价于 &#39;[^A-Za-z0-9_]&#39;</span><br><span class="line">\&#96; 匹配一个句子的边界</span><br><span class="line"> 定义向后引用。&#39;\n&#39;(n为一正整数)代表第 n 个括号中匹配的字符串</span><br><span class="line">ed 命令：</span><br><span class="line">ed 命令都是单个字符，其中一些命令有一些选项。如果一命令超过一行，应使 &#39;\&#39; 结束每一行。</span><br><span class="line">命令如下：(括号内为默认地址)</span><br><span class="line">(.)a 切换到输入模式,将新输入的文本追加到指定行的后面，当前行被设为输入文本的最后一行</span><br><span class="line">(.)i 切换到输入模式,将新输入的文本插入到指定行的前面，当前行被设为输入文本的最后一行</span><br><span class="line">(.,.)c 切换到输入模式,将新输入的文本替换成指定行，当前行被设为输入文本的最后一行</span><br><span class="line">(.,.)d 删除指定行，如果被删除的文本后还有文本行，则当前行被设为该行，否则设为被删除的文本的</span><br><span class="line">上一行</span><br><span class="line">(.+1) 无命令时，默认 p 命令，但打印下一行内容，当前行被设为打印行</span><br><span class="line">(.+1)zn 一次跳动 n 行，如果未指出 n ，默认当前终端屏幕大小，当前行被设为最后被打印的行</span><br><span class="line">(.,.)p 打印指定行，当前行被设为打印行的最后一行</span><br><span class="line">P ed 命令模式下提示符开关命令，默认提示符为 &#39;*&#39;</span><br><span class="line">(.,.)l 在每行最后加一 &#39;$&#39; 符号指定结尾，并打印输出</span><br><span class="line">(.,.)n 打印指定行号和内容，行号与行内容用制表符分割,当前行被设为打印行的最后一行</span><br><span class="line">($)&#x3D; 打印指定行行号</span><br><span class="line">(.,.)# 注释行，将被忽略</span><br><span class="line">(.)k char 用一小写字母标记指定行</span><br><span class="line">(.,.)s&#x2F;reg&#x2F;replacement&#x2F;</span><br><span class="line">(.,.)s&#x2F;reg&#x2F;replacement&#x2F;g</span><br><span class="line">(.,.)s&#x2F;reg&#x2F;replacement&#x2F;n</span><br><span class="line">替换指定行命令</span><br><span class="line">(.,.)s 重复上一次替换命令，当前行被设为最后一个被改变的行</span><br><span class="line">(1,$)g&#x2F;reg&#x2F;cmd-list 所有匹配 &#39;&#x2F;reg&#x2F;&#39; 的行执行 cmd-list 命令，在命令执行前，当前行被设为匹配行。当所有匹配</span><br><span class="line">行执行完命令后，当前行被设定为最后一个匹配行。cmd-list 中每一行只能有一个命令，但有多</span><br><span class="line">个命令时，应以 &#39;\&#39; 结束每一行</span><br><span class="line">(1,$)G&#x2F;reg&#x2F; 与 g&#x2F;reg&#x2F;cmd-list 相似，但匹配的每一行所执行的命令由用户各个定义。</span><br><span class="line">(1,$)v&#x2F;reg&#x2F;cmd-list 与 g&#x2F;reg&#x2F;cmd-list 相反，指不匹配行</span><br><span class="line">(1,$)V&#x2F;reg&#x2F; 与 G&#x2F;reg&#x2F; 相反，指不匹配行</span><br><span class="line">(.,.+1)j 合并指定行内容,当前行被设为合并行</span><br><span class="line">(.,.)m(.) 移动左边源指定行到右边目的指定行后,当前行被设为移动行的最后一行</span><br><span class="line">(.,.)t(.) 复制左边源指定行到右边目的指定行后，当前行被设为复制行的最后一行</span><br><span class="line">(.,.)y 复制指定行到缓存，当前行不改变</span><br><span class="line">(.)x 复制缓存内容到指定行后，当前行被设为复制行的最后一行</span><br><span class="line">u 撤销上一次命令，当前地址被设为上一次地址</span><br><span class="line">h 打印最后一个错误说明</span><br><span class="line">H 错误说明开关，默认不输出</span><br><span class="line">e file 编辑文件并设定文件名</span><br><span class="line">E file 强制编辑文件，同 e file，但丢失以前的修改，不做警告</span><br><span class="line">!cmd 执行 shell 命令 cmd</span><br><span class="line">e !cmd 先将ed 缓冲区清除，替换 cmd 命令的输出</span><br><span class="line">f file 设置文件名，如果每给出 file 参数，则打印文件名</span><br><span class="line">($)r file 把指定文件内容追加到指定行后，当前行被设为追加文本的最后一行</span><br><span class="line">($)r !cmd 把命令的输出追加到指定行后，当前行被设为追加文本的最后一行</span><br><span class="line">(1,$)w file 保存指定文本内容到指定文件(覆盖保存)</span><br><span class="line">(1,$)W file 保存指定文本内容到指定文件(追加保存)，当前行不改变</span><br><span class="line">(1,$)w !cmd 输出指定文本内容到 cmd 的标准输入，当前行不改变</span><br><span class="line">(1,$)wq flie 保存指定文本内容到指定文件(覆盖保存)，并退出编辑器</span><br><span class="line">q 退出 ed 编辑器，退出前若所作的修改没保存，发出警告</span><br><span class="line">Q 强制退出 ed 编辑器，同 q 命令，但退出前若所作的修改没保存，不警告</span><br><span class="line">P ed 命令提示符显示开关。 &#39;*&#39; 为 ed 默认提示符，利用 ed 命令 -p 选项，其可被更改为任意字符</span><br><span class="line">更为详细之处请参阅 man info 手册</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ ed              &lt;- 激活 ed 命令</span><br><span class="line">a                 &lt;- 告诉 ed 我要编辑新文件</span><br><span class="line">My name is Titan. &lt;- 输入第一行内容</span><br><span class="line">And I love Perl very much. &lt;- 输入第二行内容</span><br><span class="line">.                 &lt;- 返回 ed 的命令行状态</span><br><span class="line">i                 &lt;- 告诉 ed 我要在最后一行之前插入内容</span><br><span class="line">I am 24.          &lt;- 将“I am 24.”插入“My name is Titan.”和“And I love Perl very much.”之间</span><br><span class="line">.                 &lt;- 返回 ed 的命令行状态</span><br><span class="line">c                 &lt;- 告诉 ed 我要替换最后一行输入内容</span><br><span class="line">I am 24 years old. &lt;- 将“I am 24.”替换成“I am 24 years old.”（注意：这里替换的是最后输的内容）</span><br><span class="line">.                 &lt;- 返回 ed 的命令行状态</span><br><span class="line">w readme.text     &lt;- 将文件命名为“readme.text”并保存（注意：如果是编辑已经存在的文件，只需要敲入 w 即可）</span><br><span class="line">q                 &lt;- 完全退出 ed 编辑器</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat readme.text</span><br><span class="line">My name is Titan.</span><br><span class="line">I am 24 years old.</span><br><span class="line">And I love Perl vrey much.</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

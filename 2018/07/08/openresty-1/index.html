@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【OpenResty】 带你入门高性能http代理服务器应用 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【OpenResty】 带你入门高性能http代理服务器应用"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【OpenResty】 带你入门高性能http代理服务器应用</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/08/openresty-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-07T16:23:00.000Z">
+          2018-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenResty® 是一个基于 Nginx 与 Lua 的高性能 Web 平台，其内部集成了大量精良的 Lua 库、第三方模块以及大多数的依赖项。用于方便地搭建能够处理超高并发、扩展性极高的动态 Web 应用、Web 服务和动态网关。</p>
+<p>OpenResty® 通过汇聚各种设计精良的 Nginx 模块（主要由 OpenResty 团队自主开发），从而将 Nginx 有效地变成一个强大的通用 Web 应用平台。这样，Web 开发人员和系统工程师可以使用 Lua 脚本语言调动 Nginx 支持的各种 C 以及 Lua 模块，快速构造出足以胜任 10K 乃至 1000K 以上单机并发连接的高性能 Web 应用系统。</p>
+<p>OpenResty® 的目标是让你的 Web 服务直接跑在 Nginx 服务内部，充分利用 Nginx 的非阻塞 I/O 模型，不仅仅对 HTTP 客户端请求,甚至于对远程后端诸如 MySQL、PostgreSQL、Memcached 以及 Redis 等都进行一致的高性能响应。</p>
+<blockquote>
+<p>以上都是官方说辞</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>这里我使用都 mac 系统都 brew 安装都 openresty，类似于 centos 下都 yum 安装。默认都情况下，openresty 已经帮忙安装好了 luajit（lua 解析器），和 MySQL、PostgreSQL、Memcached 以及 Redis 等扩展的 lua 文件，具体如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">├── cjson.so</span><br><span class="line">├── ngx</span><br><span class="line">│   ├── balancer.lua</span><br><span class="line">│   ├── base64.lua</span><br><span class="line">│   ├── errlog.lua</span><br><span class="line">│   ├── ocsp.lua</span><br><span class="line">│   ├── process.lua</span><br><span class="line">│   ├── re.lua</span><br><span class="line">│   ├── resp.lua</span><br><span class="line">│   ├── semaphore.lua</span><br><span class="line">│   ├── ssl</span><br><span class="line">│   │   └── session.lua</span><br><span class="line">│   └── ssl.lua</span><br><span class="line">├── redis</span><br><span class="line">│   └── parser.so</span><br><span class="line">└── resty</span><br><span class="line">    ├── aes.lua</span><br><span class="line">    ├── core</span><br><span class="line">    │   ├── base.lua</span><br><span class="line">    │   ├── base64.lua</span><br><span class="line">    │   ├── ctx.lua</span><br><span class="line">    │   ├── exit.lua</span><br><span class="line">    │   ├── hash.lua</span><br><span class="line">    │   ├── misc.lua</span><br><span class="line">    │   ├── phase.lua</span><br><span class="line">    │   ├── regex.lua</span><br><span class="line">    │   ├── request.lua</span><br><span class="line">    │   ├── response.lua</span><br><span class="line">    │   ├── shdict.lua</span><br><span class="line">    │   ├── time.lua</span><br><span class="line">    │   ├── uri.lua</span><br><span class="line">    │   ├── var.lua</span><br><span class="line">    │   └── worker.lua</span><br><span class="line">    ├── core.lua</span><br><span class="line">    ├── dns</span><br><span class="line">    │   └── resolver.lua</span><br><span class="line">    ├── limit</span><br><span class="line">    │   ├── conn.lua</span><br><span class="line">    │   ├── count.lua</span><br><span class="line">    │   ├── req.lua</span><br><span class="line">    │   └── traffic.lua</span><br><span class="line">    ├── lock.lua</span><br><span class="line">    ├── lrucache</span><br><span class="line">    │   └── pureffi.lua</span><br><span class="line">    ├── lrucache.lua</span><br><span class="line">    ├── md5.lua</span><br><span class="line">    ├── memcached.lua</span><br><span class="line">    ├── mysql.lua</span><br><span class="line">    ├── random.lua</span><br><span class="line">    ├── redis.lua</span><br><span class="line">    ├── sha.lua</span><br><span class="line">    ├── sha1.lua</span><br><span class="line">    ├── sha224.lua</span><br><span class="line">    ├── sha256.lua</span><br><span class="line">    ├── sha384.lua</span><br><span class="line">    ├── sha512.lua</span><br><span class="line">    ├── string.lua</span><br><span class="line">    ├── upload.lua</span><br><span class="line">    ├── upstream</span><br><span class="line">    │   └── healthcheck.lua</span><br><span class="line">    └── websocket</span><br><span class="line">        ├── client.lua</span><br><span class="line">        ├── protocol.lua</span><br><span class="line">        └── server.lua</span><br></pre></td></tr></table></figure>
+
+<p>我们需要做的步骤很简单。找到配置文件。</p>
+<p>然后需要关注的主要目录只有 1 个。</p>
+<ul>
+<li>lualib ，上图中的 tree 结构就是由这个目录下显示的。</li>
+</ul>
+<p>我们需要找到对应 openresty 的 nginx 启动的可执行文件。</p>
+<p>我们进入到<code>bin</code>目录。</p>
+<p>发现了 openrestry 这个<code>软连接</code>，指向到是我们上级目录 nginx 中到 sbin 中到 nginx 可执行文件。</p>
+<p>我们需要找到对应到配置文件和路径。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;openresty -t</span><br></pre></td></tr></table></figure>
+
+<p>从结果中，我们找到了配置文件到路径，并且打开配置文件，进行添加部分内容。</p>
+<p>（其实就是 nginx 到配置，只不过需要加上一些内容来加载 lua 相关的包和扩展）</p>
+<p>在这里，我们需要加上这 2 行代码，这是 lua 的标准配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># lua配置</span><br><span class="line">lua_package_path &quot;&#x2F;usr&#x2F;local&#x2F;opt&#x2F;openresty&#x2F;lualib&#x2F;?.lua;;&quot;; #lua 模块</span><br><span class="line">lua_package_cpath &quot;&#x2F;usr&#x2F;local&#x2F;opt&#x2F;openresty&#x2F;lualib&#x2F;?.so;;&quot;; #c模块</span><br></pre></td></tr></table></figure>
+
+<p>里面的路径就是刚才我们找到的<code>lualib</code>的路径，至于为什么是<code>;;</code>呢，这里代表着找的是 2 个路径，一个是默认路径，一个是指定路径。</p>
+<p>写完之后，就可以写我们的 lua 代码了。</p>
+<p>这里，我们设置了一个<code>server</code>段，端口设置为<code>8080</code>，需要注意的是<font color="red">charset utf-8;</font>，这个配置项务必写上，否则在你 lua 代码中输出的中文，将会乱码。</p>
+<p>然后我们配置了 location，设置了默认的响应类型为 text/html.</p>
+<p><code>lua_code_cache off</code>这个也是十分重要的，在开发模式下，我们添加上这句话，我们就不必每次写完 lua 文件都重启一遍 nginx，这里如果没有 cache 都话，每次都会去由于 luajit 来从头解析一遍 lua，类似于我们 php 中都 opcache 都作用。所以，如果在生产环境中，务必设置为 on，或者删掉这句话（默认为:<code>lua_code_cache on</code>）。</p>
+<p>接下来就是 nginx 配置中，挂载 lua 文件都一个重要语句了，那就是<code>content_by_lua_file</code>，这里我们都脚本语言 lua 就可以嵌入到 nginx 中去了。</p>
+<p>我们来看看我写到一个和<code>redis</code>通信到一个例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">local redis &#x3D; require &quot;resty.redis&quot;</span><br><span class="line">local red &#x3D; redis:new()</span><br><span class="line"></span><br><span class="line">red:set_timeout(1000)</span><br><span class="line"></span><br><span class="line">local ok, err &#x3D; red:connect(&quot;127.0.0.1&quot;, 6379)</span><br><span class="line">if not ok then</span><br><span class="line">    ngx.say(&quot;failed to connect: &quot;, err)</span><br><span class="line">    return</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local clientIp &#x3D; ngx.req.get_headers()[&quot;X-Real-Ip&quot;]</span><br><span class="line">if clientIP &#x3D;&#x3D; nil then</span><br><span class="line">   clientIp &#x3D; ngx.req.get_headers()[&quot;x_forwarded_for&quot;]</span><br><span class="line">end</span><br><span class="line">if clientIP &#x3D;&#x3D; nil then</span><br><span class="line">   clientIP &#x3D; ngx.var.remote_addr</span><br><span class="line">end</span><br><span class="line">local incrKey &#x3D; &quot;user:&quot;..clientIP..&quot;:freq&quot;</span><br><span class="line">local blockKey &#x3D; &quot;user:&quot;..clientIP..&quot;:block&quot;</span><br><span class="line"></span><br><span class="line">local is_block,err &#x3D; red:get(blockKey)</span><br><span class="line">if tonumber(is_block) &#x3D;&#x3D; 1 then</span><br><span class="line">   ngx.say(blockKey..&quot;你被限流了！&quot;)</span><br><span class="line">   ngx.exit(ngx.HTTP_FORBIDDEN)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">ngx.say(blockKey..&quot;调用成功！&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>具体到 lua 语法就不详细说明了，这里需要大家去学一下 lua 的基本语法。</p>
+<p>当我们执行的时候，就可以看到了这么一串东西了，当我在 redis 中设置对应当 key 当时候。</p>
+<p>我们再来访问一下，这个时候就会发现，有变化了。</p>
+<p>经过这个简单的例子，我们就可以想到，我们经常说在要 http 代理服务器中对请求进行拦截，或者一些高并发例如秒杀等拦截的时候，我们就可以借助 openresty 来进行一个<code>流量削峰</code>，等请求真正到达我们等下游服务器等时候，爆炸了请求已经被过滤掉了 80%无用的请求。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a><a href="/tags/Openresty/">Openresty</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

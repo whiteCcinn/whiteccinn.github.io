@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Docker】docker-apline的问题 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Docker】docker-apline的问题"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Docker】docker-apline的问题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/18/docker/docker-apline的问题/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-18T12:28:30.000Z">
+          2020-06-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天领导发现了一个docker的问题，他在用apline作为基础镜像的时候，在公司的服务器上无法<code>ping baidu.com</code></p>
+<p>但是我们却是能在nslookup中解析到域名。</p>
+<a id="more"></a>
+
+<h2 id="问题1-ping-baidu-com"><a href="#问题1-ping-baidu-com" class="headerlink" title="问题1. ping baidu.com"></a>问题1. ping baidu.com</h2><p>在用apline作为基础镜像的时候，发现无法ping的情况，在我翻阅了一些文献的。说到了docker-apline是以<code>8.8.8.8</code>Google的dns服务作为默认网关。</p>
+<p>又由于我国具有“墙”的特性，所以我们需要指定国内的dns服务器，例如<code>114.114.114.114</code>，但是这些并不能解决我们的问题。</p>
+<p>又有一些网友说是因为我们自己的dns网关服务不正常导致的，但是确实我们的dns服务一直很正常。</p>
+<p>基于了这些都不能解决我们问题点。基于感觉到了没有任何希望。</p>
+<p>但是后来还是找到了一些另类的解决思路。</p>
+<p>例如有一批人提到了<code>/etc/resolve.conf</code>的<code>ndots</code>的参数。</p>
+<p>于是好奇的搜索了一些<code>ndots</code>相关的内容，发现这个是用于<code>优化dns解析速度</code>的参数。</p>
+<h2 id="ndots"><a href="#ndots" class="headerlink" title="ndots"></a>ndots</h2><p><code>options ndots:0</code> 稍微有点麻烦，我查了一些资料。如果需要查找域名是相对域名，且该域名中包含的. 的数目大于或等于 <code>option ndots:${n}</code>命令指定的数，则查询的仅是该域名。否则会依次往传入的域名后追加 search 列表（search 列表在这里没有，详见<code>search</code>）中的后缀，直到解析出ip地址，或者解析完列表中所有后缀才会停止。这里设置成 0，意思就是对于传入的相对域名，只查询该域名。</p>
+<p>一般ndots都是5即可。最高就是15。</p>
+<p>默认：1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ndots:n</span><br><span class="line">	Sets a threshold for the number of dots which must appear in a name given to res_query(3) (see resolver(3)) before an initial absolute query will be made.  The default  for  n  is  1, meaning  that  if  there  are  any  dots  in a name, the name will be tried first as an absolute name before any search list elements are appended to it.  The value for this option is silently capped to 15.</span><br></pre></td></tr></table></figure>
+
+<p>于是抱着尝试的态度。</p>
+<p>没有加入参数前</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@webapp_public_S1_192.168.8.135_61618_A ~]# docker run -it --rm composer:2.0 ping baidu.com</span><br><span class="line">ping: bad address 'baidu.com'</span><br></pre></td></tr></table></figure>
+
+<p>加入参数后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@webapp_public_S1_192.168.8.135_61618_A ~]# docker run -it --dns-opt&#x3D;ndots:5 --rm composer:2.0 ping baidu.com</span><br><span class="line">PING baidu.com (39.156.69.79): 56 data bytes</span><br><span class="line">64 bytes from 39.156.69.79: seq&#x3D;0 ttl&#x3D;43 time&#x3D;37.941 ms</span><br><span class="line">64 bytes from 39.156.69.79: seq&#x3D;1 ttl&#x3D;43 time&#x3D;37.891 ms</span><br></pre></td></tr></table></figure>
+
+<p> 神奇的一幕出现了，dns服务正常解析了。于是可以确定ndots在解决apline域名解析上有重要的作用。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

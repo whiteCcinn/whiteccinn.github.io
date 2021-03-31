@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Docker】如何选择hub.docker中的tag标签 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Docker】如何选择hub.docker中的tag标签"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Docker】如何选择hub.docker中的tag标签</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/25/docker/docker-tags的选择/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-25T03:28:30.000Z">
+          2020-05-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>很多小伙伴或许还不清楚各个tag的区别，其实最大的一个问题在于，你需要了解各大操作系统的不同。</p>
+<a id="more"></a>
+
+<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><ul>
+<li>debian</li>
+<li>ubuntu</li>
+<li>centos</li>
+<li><a href="https://alpineliµnux.org/" target="_blank" rel="noopener">alpine</a></li>
+</ul>
+<h2 id="debian"><a href="#debian" class="headerlink" title="debian"></a>debian</h2><h3 id="Debian-发行版本"><a href="#Debian-发行版本" class="headerlink" title="Debian 发行版本"></a>Debian 发行版本</h3><p>Debian 一直维护着至少三个发行版本：稳定版（stable），测试版（testing）和不稳定版（unstable）。</p>
+<h4 id="稳定版（stable）"><a href="#稳定版（stable）" class="headerlink" title="稳定版（stable）"></a>稳定版（stable）</h4><p>稳定版包含了 Debian 官方最近一次发行的软件包。</p>
+<p>作为 Debian 的正式发行版本，它是我们优先推荐给用户您选用的版本。</p>
+<p>当前 Debian 的稳定版版本号是 10，<code>开发代号为 buster</code>。最初版本为 10，于 2019年07月06日 发布，其更新 10.4 已于 2020年05月09日 发布。</p>
+<h4 id="测试版（testing）"><a href="#测试版（testing）" class="headerlink" title="测试版（testing）"></a>测试版（testing）</h4><p>测试版包含了那些暂时未被收录进入稳定版的软件包，但它们已经进入了候选队列。使用这个版本的最大益处在于它拥有更多版本较新的软件。</p>
+<p>想要了解 什么是测试版以及 如何成为稳定版的更多信息，请看 Debian FAQ。</p>
+<p>当前的测试版版本代号是 <code>bullseye</code>。</p>
+<h4 id="不稳定版（unstable）"><a href="#不稳定版（unstable）" class="headerlink" title="不稳定版（unstable）"></a>不稳定版（unstable）</h4><p>不稳定版存放了 Debian 现行的开发工作。通常，只有开发者和那些喜欢过惊险刺激生活的人选用该版本。推荐使用不稳定版的用户订阅 debian-devel-announce 邮件列表，以接收关于重大变更的通知，比如有可能导致问题的升级。</p>
+<p>不稳定版的版本代号永远都被称为 <code>sid</code>。</p>
+<ul>
+<li>下一代 Debian 正式发行版的代号为 bullseye — 发布时间尚未确定</li>
+<li>Debian 10（buster） — 当前的稳定版（stable）</li>
+<li>Debian 9（stretch） — 旧的稳定版（oldstable）</li>
+<li>Debian 8（jessie） — 更旧的稳定版（oldoldstable）</li>
+<li>Debian 7（wheezy） — 被淘汰的稳定版</li>
+<li>Debian 6.0（squeeze） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 5.0（lenny） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 4.0（etch） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 3.1（sarge） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 3.0（woody） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 2.2（potato） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 2.1（slink） — 被淘汰的稳定版</li>
+<li>Debian GNU/Linux 2.0（hamm） — 被淘汰的稳定版</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

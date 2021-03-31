@@ -1,0 +1,1185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>PHP-CS-Fixer 配置详细对比 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="PHP-CS-Fixer 配置详细对比"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>PHP-CS-Fixer 配置详细对比</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/21/php-cs-fixer配置项详细对比说明/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-21T01:50:00.000Z">
+          2019-05-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们项目比较多，而且每个人的编写代码的风格也不太一致，我们希望尽可能在格式上得到统一，这样子的好处有如下几点：</p>
+<ul>
+<li>遵循 PSR2</li>
+<li>codereview 的时候可以免除格式差异所带来的干扰</li>
+<li>统一格式有利于大家在这个基础上写出更为优雅的代码格式</li>
+</ul>
+<p>因此，我们实现了用于的统一格式化配套的工具链：</p>
+<ul>
+<li><code>husky-php</code>：用于实现客户端 <code>githook 钩子</code>，用于执行触发我们的 husky 项目（默认支持自动格式化，冲突校验）</li>
+<li><code>composer-husky-plugin</code>：专门由 <code>husky-php</code> 定制的 composer 插件，用于自动部署<code>husky-php</code></li>
+<li><code>php-cs-fixer-config</code>：专门定义 <code>php-cs-fixer</code> 格式配置的组件</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="PHP-CS-Fixer"><a href="#PHP-CS-Fixer" class="headerlink" title="PHP_CS_Fixer"></a>PHP_CS_Fixer</h2><p>这是一个代码格式化工具，并且支持很多高级格式内容。</p>
+<p><a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer" target="_blank" rel="noopener">PHP_CS_FIXER</a></p>
+<h2 id="配置项"><a href="#配置项" class="headerlink" title="配置项"></a>配置项</h2><h3 id="PSR2"><a href="#PSR2" class="headerlink" title="@PSR2"></a>@PSR2</h3><p>遵循 PSR2 的标准</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">    <span class="string">'@PSR2'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1,$args2=<span class="number">0</span>)</span></span>&#123;</span><br><span class="line">    $a=<span class="number">2</span>;</span><br><span class="line">    var_dump($args1,$args2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a=<span class="number">2</span>;</span><br><span class="line">    var_dump($args1, $args2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="align-multiline-comment-PhpCsFixer"><a href="#align-multiline-comment-PhpCsFixer" class="headerlink" title="align_multiline_comment [@PhpCsFixer]"></a>align_multiline_comment [@PhpCsFixer]</h3><p>每行多行 DocComments 必须有一个星号（PSR-5），并且必须与第一行对齐。</p>
+<p>可选配置项</p>
+<ul>
+<li>comment_type<ul>
+<li>phpdocs_only （默认）</li>
+<li>phpdocs_like</li>
+<li>all_multiline</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>暂时未知三个选项的具体区别，目前来看效果都是一致的，例子如下</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'align_multiline_comment'</span> =&gt; [</span><br><span class="line">      <span class="string">'comment_type'</span> =&gt; <span class="string">'phpdocs_only'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>     $args1</span></span><br><span class="line"><span class="comment"><span class="doctag">@param</span> int $args2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a=<span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>     $args1</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> int $args2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a=<span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="array-indentation-PhpCsFixer"><a href="#array-indentation-PhpCsFixer" class="headerlink" title="array_indentation [@PhpCsFixer]"></a>array_indentation [@PhpCsFixer]</h3><p>数组的每个元素必须缩进一次。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'array_indentation'</span>=&gt;<span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>     $args1</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> int $args2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $array=[</span><br><span class="line">    <span class="string">'1'</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>     $args1</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> int $args2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $array=[</span><br><span class="line">        <span class="string">'1'</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="array-syntax-PhpCsFixer"><a href="#array-syntax-PhpCsFixer" class="headerlink" title="array_syntax [@PhpCsFixer]"></a>array_syntax [@PhpCsFixer]</h3><p>应使用配置的语法声明 PHP 数组。</p>
+<p>可选配置项</p>
+<ul>
+<li>syntax<ul>
+<li>long (默认，用<code>array</code>关键字来定义数组)</li>
+<li>short (用<code>[]</code>关键字来定义数组)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'array_syntax'</span> =&gt; [</span><br><span class="line">      <span class="string">'syntax'</span> =&gt; <span class="string">'short'</span>,</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>     $args1</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> int $args2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $array=<span class="keyword">array</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>     $args1</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> int $args2</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">($args1, $args2=<span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $array=[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="backtick-to-shell-exec"><a href="#backtick-to-shell-exec" class="headerlink" title="backtick_to_shell_exec"></a>backtick_to_shell_exec</h3><p>将反引号运算符转换为 shell_exec 调用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'backtick_to_shell_exec'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $out = `<span class="keyword">echo</span> Hello`;</span><br><span class="line">    var_dump($out);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A();</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $out = shell_exec(<span class="string">"echo Hello"</span>);</span><br><span class="line">    var_dump($out);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A();</span><br></pre></td></tr></table></figure>
+
+<h3 id="binary-operator-spaces-Symfony-PhpCsFixer"><a href="#binary-operator-spaces-Symfony-PhpCsFixer" class="headerlink" title="binary_operator_spaces [@Symfony, @PhpCsFixer]"></a>binary_operator_spaces [@Symfony, @PhpCsFixer]</h3><p>“=”, “<em>“, “/“, “%”, “&lt;”, “&gt;”, “|”, “^”, “+”, “-“, “&amp;”, “&amp;=”, “&amp;&amp;”, “||”, “.=”, “/=”, “=&gt;”, “==”, “&gt;=”, “===”, “!=”, “&lt;&gt;”, “!==”, “&lt;=”, “and”, “or”, “xor”, “-=”, “%=”, “</em>=”, “|=”, “+=”, “&lt;&lt;”, “&lt;&lt;=”, “&gt;&gt;”, “&gt;&gt;=”, “^=”, “<strong>“, “</strong>=”, “&lt;=&gt;”, “??”这一类的二进制运算符应按配置包含的空格。</p>
+<p>可选配置项</p>
+<ul>
+<li>align_double_arrow (双箭头居中格式，将会为废弃，用 default/operators 来代替更详细的配置)<ul>
+<li>false</li>
+<li>null</li>
+<li>true</li>
+</ul>
+</li>
+<li>align_equals (等于号居中格式，将会为废弃，用 default/operators 来代替更详细的配置)<ul>
+<li>false</li>
+<li>null</li>
+<li>true</li>
+</ul>
+</li>
+<li>default (默认)<ul>
+<li>align （居中）</li>
+<li>align_single_space （默认，单空格居中）</li>
+<li>align_single_space_minimal (和 align_single_space 的区别是如果空格大于 1 个的时候，会缩减到 1 个)</li>
+<li>no_space （没有空格）</li>
+<li>single_space (单空格，不居中)</li>
+<li>null (不做任何改变)</li>
+</ul>
+</li>
+<li>operators（array） （针对特殊的操作符做特殊的处理）<ul>
+<li>key ：”=”, “<em>“, “/“, “%”, “&lt;”, “&gt;”, “|”, “^”, “+”, “-“, “&amp;”, “&amp;=”, “&amp;&amp;”, “||”, “.=”, “/=”, “=&gt;”, “==”, “&gt;=”, “===”, “!=”, “&lt;&gt;”, “!==”, “&lt;=”, “and”, “or”, “xor”, “-=”, “%=”, “</em>=”, “|=”, “+=”, “&lt;&lt;”, “&lt;&lt;=”, “&gt;&gt;”, “&gt;&gt;=”, “^=”, “<strong>“, “</strong>=”, “&lt;=&gt;”, “??”</li>
+<li>value 同 default</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这里就不测试 align_double_arrow 和 align_equals 了，因为这 2 个参数会被废弃</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'binary_operator_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'align'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a = <span class="number">1</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">    $a = <span class="number">12</span>&amp;<span class="number">1</span>;</span><br><span class="line">    $bb=<span class="number">1112</span>|<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a = <span class="number">1</span> &gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">    $a = <span class="number">12</span>&amp;<span class="number">1</span>;</span><br><span class="line">    $bb=<span class="number">1112</span>|<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'binary_operator_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'align_single_space'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a = <span class="number">1</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">    $a = <span class="number">12</span>&amp;<span class="number">1</span>;</span><br><span class="line">    $bb=<span class="number">1112</span>|<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a  = <span class="number">1</span>  &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &amp; <span class="number">1</span>;</span><br><span class="line">    $bb = <span class="number">1112</span> | <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'binary_operator_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'align_single_space_minimal'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a  = <span class="number">1</span>  &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &amp; <span class="number">1</span>;</span><br><span class="line">    $bb = <span class="number">1112</span> |            <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a  = <span class="number">1</span>  &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &amp; <span class="number">1</span>;</span><br><span class="line">    $bb = <span class="number">1112</span> | <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'binary_operator_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'no_space'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a  = <span class="number">1</span>  &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    $a  = <span class="number">12</span> &amp; <span class="number">1</span>;</span><br><span class="line">    $bb = <span class="number">1112</span> | <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a=<span class="number">1</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a=<span class="number">12</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a=<span class="number">12</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">    $a=<span class="number">12</span>&amp;<span class="number">1</span>;</span><br><span class="line">    $bb=<span class="number">1112</span>|<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'binary_operator_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'default'</span> =&gt; <span class="string">'single_space'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a=<span class="number">1</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a=<span class="number">12</span>&gt;&gt;<span class="number">2</span>;</span><br><span class="line">    $a=<span class="number">12</span>&lt;&lt;<span class="number">1</span>;</span><br><span class="line">    $a=<span class="number">12</span>&amp;<span class="number">1</span>;</span><br><span class="line">    $bb=<span class="number">1112</span>|<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a = <span class="number">1</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span> &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    $a = <span class="number">12</span> &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    $a = <span class="number">12</span> &amp; <span class="number">1</span>;</span><br><span class="line">    $bbbb = <span class="number">1112</span> | <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'binary_operator_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'operators'</span> =&gt; [</span><br><span class="line">      <span class="string">'='</span> =&gt; <span class="string">'no_space'</span></span><br><span class="line">    ]</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $array = [</span><br><span class="line">        <span class="string">'a'</span>=&gt;<span class="number">1</span>,</span><br><span class="line">        <span class="string">'bb'</span>=&gt;<span class="number">2</span>,</span><br><span class="line">        <span class="string">'ccc'</span>=&gt;<span class="number">3</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $array=[</span><br><span class="line">        <span class="string">'a'</span> =&gt; <span class="number">1</span>,</span><br><span class="line">        <span class="string">'bb'</span> =&gt; <span class="number">2</span>,</span><br><span class="line">        <span class="string">'ccc'</span> =&gt; <span class="number">3</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="blank-line-after-namespace-PSR2-Symfony-PhpCsFixer"><a href="#blank-line-after-namespace-PSR2-Symfony-PhpCsFixer" class="headerlink" title="blank_line_after_namespace [@PSR2, @Symfony, @PhpCsFixer]"></a>blank_line_after_namespace [@PSR2, @Symfony, @PhpCsFixer]</h3><p>命名空间之后空一行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'blank_line_after_namespace'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Test</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Test</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="blank-line-after-opening-tag-Symfony-PhpCsFixer"><a href="#blank-line-after-opening-tag-Symfony-PhpCsFixer" class="headerlink" title="blank_line_after_opening_tag [@Symfony, @PhpCsFixer]"></a>blank_line_after_opening_tag [@Symfony, @PhpCsFixer]</h3><p><code>&lt;?php</code> 后面加一个空行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'blank_line_after_namespace'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Test</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Test</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="blank-line-before-return"><a href="#blank-line-before-return" class="headerlink" title="blank_line_before_return"></a>blank_line_before_return</h3><p>return 前面加一个空白行（弃用！用 blank_line_before_statement 代替）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'blank_line_before_return'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $a = <span class="string">'123'</span></span><br><span class="line">   <span class="keyword">return</span> $a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   $a = <span class="string">'123'</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> $a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="blank-line-before-statement-Symfony-PhpCsFixer"><a href="#blank-line-before-statement-Symfony-PhpCsFixer" class="headerlink" title="blank_line_before_statement [@Symfony, @PhpCsFixer]"></a>blank_line_before_statement [@Symfony, @PhpCsFixer]</h3><p>空行换行必须在任何已配置的语句之前</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'blank_line_before_statement'</span> =&gt; [</span><br><span class="line">    <span class="string">'statements'</span> =&gt; [</span><br><span class="line">      <span class="string">'break'</span>,</span><br><span class="line">      <span class="string">'continue'</span>,</span><br><span class="line">      <span class="string">'declare'</span>,</span><br><span class="line">      <span class="string">'return'</span>,</span><br><span class="line">      <span class="string">'throw'</span>,</span><br><span class="line">      <span class="string">'try'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>可选配置项</p>
+<ul>
+<li>statements (赋值数组)<ul>
+<li>break</li>
+<li>case</li>
+<li>continue</li>
+<li>declare</li>
+<li>default</li>
+<li>die</li>
+<li>do</li>
+<li>exit</li>
+<li>for</li>
+<li>foreach</li>
+<li>goto</li>
+<li>if</li>
+<li>include</li>
+<li>include_once</li>
+<li>require</li>
+<li>require_once</li>
+<li>return</li>
+<li>switch</li>
+<li>throw</li>
+<li>try</li>
+<li>while</li>
+<li>yield</li>
+</ul>
+</li>
+</ul>
+<p>默认配置项的值为：[‘break’, ‘continue’, ‘declare’, ‘return’, ‘throw’, ‘try’]</p>
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">switch</span> ($a) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($a == <span class="keyword">true</span>)&#123;</span><br><span class="line">            $a = <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> \<span class="keyword">Exception</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $a = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">switch</span> ($a) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($a == <span class="keyword">true</span>) &#123;</span><br><span class="line">            $a = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> \<span class="keyword">Exception</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="braces-PSR2-Symfony-PhpCsFixer"><a href="#braces-PSR2-Symfony-PhpCsFixer" class="headerlink" title="braces [@PSR2, @Symfony, @PhpCsFixer]"></a>braces [@PSR2, @Symfony, @PhpCsFixer]</h3><p>每个结构的主体必须用大括号括起来。大括号应妥善放置。大括号应适当缩进。</p>
+<p>可选配置项</p>
+<ul>
+<li>allow_single_line_closure (是否应该允许单行 lambda 表示法)<ul>
+<li>true</li>
+<li>false (默认)</li>
+</ul>
+</li>
+<li>position_after_anonymous_constructs (在匿名构造（匿名类和 lambda 函数）之后是否应将开括号放在“next”或“same”行)<ul>
+<li>next</li>
+<li>same (默认)</li>
+</ul>
+</li>
+<li>position_after_functions_and_oop_constructs 在优雅结构（非匿名类，接口，特征，方法和非 lambda 函数）之后，是否应将开括号放在“next”或“same”行上<ul>
+<li>next （默认）</li>
+<li>same</li>
+</ul>
+</li>
+</ul>
+<p>这个规则就不写了，因为这个就是最佳的了，因为是 PSR2 标准（偷懒）</p>
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        $a = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123; <span class="keyword">echo</span> <span class="number">1</span>;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $a = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="cast-spaces-Symfony-PhpCsFixer"><a href="#cast-spaces-Symfony-PhpCsFixer" class="headerlink" title="cast_spaces [@Symfony, @PhpCsFixer]"></a>cast_spaces [@Symfony, @PhpCsFixer]</h3><p>类型转换的时候，是否需要在中间加空格</p>
+<p>可选配置项</p>
+<ul>
+<li>space<ul>
+<li>none</li>
+<li>single (默认)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'cast_spaces'</span> =&gt; [</span><br><span class="line">    <span class="string">'space'</span> =&gt; [</span><br><span class="line">      <span class="string">'single'</span>,</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> (int)<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> (int) <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="class-attributes-separation-Symfony-PhpCsFixer"><a href="#class-attributes-separation-Symfony-PhpCsFixer" class="headerlink" title="class_attributes_separation [@Symfony, @PhpCsFixer]"></a>class_attributes_separation [@Symfony, @PhpCsFixer]</h3><p>Class, trait 和 interface 的属性是否需要一个空行隔开</p>
+<p>可选配置项</p>
+<ul>
+<li>elements （数组）<ul>
+<li>const</li>
+<li>method</li>
+<li>property</li>
+</ul>
+</li>
+</ul>
+<p>默认配置项的值为：[‘const’, ‘method’, ‘property’]</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'class_attributes_separation'</span>  =&gt; [</span><br><span class="line">      <span class="string">'elements'</span> =&gt; [<span class="string">'const'</span>, <span class="string">'method'</span>, <span class="string">'property'</span>]</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $a;</span><br><span class="line">    <span class="keyword">private</span> $b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> $b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="class-definition-PSR2-Symfony-PhpCsFixer"><a href="#class-definition-PSR2-Symfony-PhpCsFixer" class="headerlink" title="class_definition [@PSR2, @Symfony, @PhpCsFixer]"></a>class_definition [@PSR2, @Symfony, @PhpCsFixer]</h3><p><code>class</code>,<code>trait</code>,<code>interface</code> 关键字周围是否只有一个空格</p>
+<p>可选配置项</p>
+<ul>
+<li>multi_line_extends_each_single_line<ul>
+<li>true</li>
+<li>false (默认)</li>
+</ul>
+</li>
+<li>single_item_single_line<ul>
+<li>true</li>
+<li>false (默认)</li>
+</ul>
+</li>
+<li>single_line<ul>
+<li>true</li>
+<li>false (默认)</li>
+</ul>
+</li>
+</ul>
+<p>PSR2 标准的就不具体配置了</p>
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span>          <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $a;</span><br><span class="line">    <span class="keyword">private</span> $b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> $b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="class-keyword-remove"><a href="#class-keyword-remove" class="headerlink" title="class_keyword_remove"></a>class_keyword_remove</h3><p><code>::class</code> 关键字移除，转成字符串</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'class_keyword_remove'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> A::class;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'A'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="combine-consecutive-issets-PhpCsFixer"><a href="#combine-consecutive-issets-PhpCsFixer" class="headerlink" title="combine_consecutive_issets [@PhpCsFixer]"></a>combine_consecutive_issets [@PhpCsFixer]</h3><p>当多个 isset 通过&amp;&amp;连接的时候，合并处理</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'combine_consecutive_issets'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">isset</span>($a) &amp;&amp; <span class="keyword">isset</span>($b) &amp;&amp; <span class="keyword">isset</span>($c);</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">isset</span>($a, $b, $c);</span><br></pre></td></tr></table></figure>
+
+<h3 id="combine-consecutive-unsets-PhpCsFixer"><a href="#combine-consecutive-unsets-PhpCsFixer" class="headerlink" title="combine_consecutive_unsets [@PhpCsFixer]"></a>combine_consecutive_unsets [@PhpCsFixer]</h3><p>当多个 unset 使用的时候，合并处理</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'combine_consecutive_unsets'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unset</span>($a);</span><br><span class="line"><span class="keyword">unset</span>($b);</span><br><span class="line"><span class="keyword">unset</span>($c);</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unset</span>($a, $b, $c);</span><br></pre></td></tr></table></figure>
+
+<h3 id="combine-nested-dirname-PHP70Migration-risky-PHP71Migration-risky"><a href="#combine-nested-dirname-PHP70Migration-risky-PHP71Migration-risky" class="headerlink" title="combine_nested_dirname [@PHP70Migration:risky, @PHP71Migration:risky]"></a>combine_nested_dirname [@PHP70Migration:risky, @PHP71Migration:risky]</h3><p>Replace multiple nested calls of dirname by only one call with second $level parameter. Requires PHP &gt;= 7.0.</p>
+<p>Risky rule: risky when the function <code>dirname</code> is overridden.</p>
+<h3 id="comment-to-phpdoc-PhpCsFixer-risky"><a href="#comment-to-phpdoc-PhpCsFixer-risky" class="headerlink" title="comment_to_phpdoc [@PhpCsFixer:risky]"></a>comment_to_phpdoc [@PhpCsFixer:risky]</h3><p>Comments with annotation should be docblock when used on structural elements.</p>
+<p>Risky rule: risky as new docblocks might mean more, e.g. a Doctrine entity might have a new column in database.</p>
+<h3 id="compact-nullable-typehint-PhpCsFixer"><a href="#compact-nullable-typehint-PhpCsFixer" class="headerlink" title="compact_nullable_typehint [@PhpCsFixer]"></a>compact_nullable_typehint [@PhpCsFixer]</h3><blockquote>
+<p>暂时不太清楚什么区别</p>
+</blockquote>
+<h3 id="concat-space-Symfony-PhpCsFixer"><a href="#concat-space-Symfony-PhpCsFixer" class="headerlink" title="concat_space [@Symfony, @PhpCsFixer]"></a>concat_space [@Symfony, @PhpCsFixer]</h3><p>连接字符是否需要空格</p>
+<p>可选配置项</p>
+<ul>
+<li>spacing<ul>
+<li>none (默认)</li>
+<li>one</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'concat_space'</span>  =&gt; [</span><br><span class="line">    <span class="string">'spacing'</span> =&gt; <span class="string">'one'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="string">''</span>;</span><br><span class="line">$c = <span class="string">'c'</span>;</span><br><span class="line">$b = $a.$c;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="string">''</span>;</span><br><span class="line">$c = <span class="string">'c'</span>;</span><br><span class="line">$b = $a . $c;</span><br></pre></td></tr></table></figure>
+
+<h3 id="date-time-immutable"><a href="#date-time-immutable" class="headerlink" title="date_time_immutable"></a>date_time_immutable</h3><p>Class DateTimeImmutable should be used instead of DateTime.</p>
+<p>Risky rule: risky when the code relies on modifying <code>DateTime</code> objects or if any of the <code>date_create*</code> functions are overridden.</p>
+<h3 id="declare-equal-normalize-Symfony-PhpCsFixer"><a href="#declare-equal-normalize-Symfony-PhpCsFixer" class="headerlink" title="declare_equal_normalize [@Symfony, @PhpCsFixer]"></a>declare_equal_normalize [@Symfony, @PhpCsFixer]</h3><p>declare 语句中的等于号是否需要空格</p>
+<p>可选配置项</p>
+<ul>
+<li>space<ul>
+<li>none</li>
+<li>single（默认）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'declare_equal_normalize'</span>  =&gt; [</span><br><span class="line">    <span class="string">'space'</span> =&gt; <span class="string">'single'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span>(ticks=<span class="number">1</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span>(ticks = <span class="number">1</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="declare-strict-types-PHP70Migration-risky-PHP71Migration-risky"><a href="#declare-strict-types-PHP70Migration-risky-PHP71Migration-risky" class="headerlink" title="declare_strict_types [@PHP70Migration:risky, @PHP71Migration:risky]"></a>declare_strict_types [@PHP70Migration:risky, @PHP71Migration:risky]</h3><p>Force strict types declaration in all files. Requires PHP &gt;= 7.0.</p>
+<p>Risky rule: forcing strict types will stop non strict code from working.</p>
+<h3 id="dir-constant-Symfony-risky-PhpCsFixer-risky"><a href="#dir-constant-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="dir_constant [@Symfony:risky, @PhpCsFixer:risky]"></a>dir_constant [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Replaces dirname(__FILE__) expression with equivalent __DIR__ constant.</p>
+<p>Risky rule: risky when the function <code>dirname</code> is overridden.</p>
+<h3 id="doctrine-annotation-array-assignment-DoctrineAnnotation"><a href="#doctrine-annotation-array-assignment-DoctrineAnnotation" class="headerlink" title="doctrine_annotation_array_assignment [@DoctrineAnnotation]"></a>doctrine_annotation_array_assignment [@DoctrineAnnotation]</h3><p>Doctrine annotations must use configured operator for assignment in arrays.</p>
+<p>Configuration options:</p>
+<p>ignored_tags (array): list of tags that must not be treated as Doctrine Annotations; defaults to [‘abstract’, ‘access’, ‘code’, ‘deprec’, ‘encode’, ‘exception’, ‘final’, ‘ingroup’, ‘inheritdoc’, ‘inheritDoc’, ‘magic’, ‘name’, ‘toc’, ‘tutorial’, ‘private’, ‘static’, ‘staticvar’, ‘staticVar’, ‘throw’, ‘api’, ‘author’, ‘category’, ‘copyright’, ‘deprecated’, ‘example’, ‘filesource’, ‘global’, ‘ignore’, ‘internal’, ‘license’, ‘link’, ‘method’, ‘package’, ‘param’, ‘property’, ‘property-read’, ‘property-write’, ‘return’, ‘see’, ‘since’, ‘source’, ‘subpackage’, ‘throws’, ‘todo’, ‘TODO’, ‘usedBy’, ‘uses’, ‘var’, ‘version’, ‘after’, ‘afterClass’, ‘backupGlobals’, ‘backupStaticAttributes’, ‘before’, ‘beforeClass’, ‘codeCoverageIgnore’, ‘codeCoverageIgnoreStart’, ‘codeCoverageIgnoreEnd’, ‘covers’, ‘coversDefaultClass’, ‘coversNothing’, ‘dataProvider’, ‘depends’, ‘expectedException’, ‘expectedExceptionCode’, ‘expectedExceptionMessage’, ‘expectedExceptionMessageRegExp’, ‘group’, ‘large’, ‘medium’, ‘preserveGlobalState’, ‘requires’, ‘runTestsInSeparateProcesses’, ‘runInSeparateProcess’, ‘small’, ‘test’, ‘testdox’, ‘ticket’, ‘uses’, ‘SuppressWarnings’, ‘noinspection’, ‘package_version’, ‘enduml’, ‘startuml’, ‘fix’, ‘FIXME’, ‘fixme’, ‘override’]<br>operator (‘:’, ‘=’): the operator to use; defaults to ‘=’</p>
+<h3 id="doctrine-annotation-braces-DoctrineAnnotation"><a href="#doctrine-annotation-braces-DoctrineAnnotation" class="headerlink" title="doctrine_annotation_braces [@DoctrineAnnotation]"></a>doctrine_annotation_braces [@DoctrineAnnotation]</h3><p>Doctrine annotations without arguments must use the configured syntax.</p>
+<p>Configuration options:</p>
+<p>ignored_tags (array): list of tags that must not be treated as Doctrine Annotations; defaults to [‘abstract’, ‘access’, ‘code’, ‘deprec’, ‘encode’, ‘exception’, ‘final’, ‘ingroup’, ‘inheritdoc’, ‘inheritDoc’, ‘magic’, ‘name’, ‘toc’, ‘tutorial’, ‘private’, ‘static’, ‘staticvar’, ‘staticVar’, ‘throw’, ‘api’, ‘author’, ‘category’, ‘copyright’, ‘deprecated’, ‘example’, ‘filesource’, ‘global’, ‘ignore’, ‘internal’, ‘license’, ‘link’, ‘method’, ‘package’, ‘param’, ‘property’, ‘property-read’, ‘property-write’, ‘return’, ‘see’, ‘since’, ‘source’, ‘subpackage’, ‘throws’, ‘todo’, ‘TODO’, ‘usedBy’, ‘uses’, ‘var’, ‘version’, ‘after’, ‘afterClass’, ‘backupGlobals’, ‘backupStaticAttributes’, ‘before’, ‘beforeClass’, ‘codeCoverageIgnore’, ‘codeCoverageIgnoreStart’, ‘codeCoverageIgnoreEnd’, ‘covers’, ‘coversDefaultClass’, ‘coversNothing’, ‘dataProvider’, ‘depends’, ‘expectedException’, ‘expectedExceptionCode’, ‘expectedExceptionMessage’, ‘expectedExceptionMessageRegExp’, ‘group’, ‘large’, ‘medium’, ‘preserveGlobalState’, ‘requires’, ‘runTestsInSeparateProcesses’, ‘runInSeparateProcess’, ‘small’, ‘test’, ‘testdox’, ‘ticket’, ‘uses’, ‘SuppressWarnings’, ‘noinspection’, ‘package_version’, ‘enduml’, ‘startuml’, ‘fix’, ‘FIXME’, ‘fixme’, ‘override’]<br>syntax (‘with_braces’, ‘without_braces’): whether to add or remove braces; defaults to ‘without_braces’</p>
+<h3 id="doctrine-annotation-indentation-DoctrineAnnotation"><a href="#doctrine-annotation-indentation-DoctrineAnnotation" class="headerlink" title="doctrine_annotation_indentation [@DoctrineAnnotation]"></a>doctrine_annotation_indentation [@DoctrineAnnotation]</h3><p>Doctrine annotations must be indented with four spaces.</p>
+<p>Configuration options:</p>
+<p>ignored_tags (array): list of tags that must not be treated as Doctrine Annotations; defaults to [‘abstract’, ‘access’, ‘code’, ‘deprec’, ‘encode’, ‘exception’, ‘final’, ‘ingroup’, ‘inheritdoc’, ‘inheritDoc’, ‘magic’, ‘name’, ‘toc’, ‘tutorial’, ‘private’, ‘static’, ‘staticvar’, ‘staticVar’, ‘throw’, ‘api’, ‘author’, ‘category’, ‘copyright’, ‘deprecated’, ‘example’, ‘filesource’, ‘global’, ‘ignore’, ‘internal’, ‘license’, ‘link’, ‘method’, ‘package’, ‘param’, ‘property’, ‘property-read’, ‘property-write’, ‘return’, ‘see’, ‘since’, ‘source’, ‘subpackage’, ‘throws’, ‘todo’, ‘TODO’, ‘usedBy’, ‘uses’, ‘var’, ‘version’, ‘after’, ‘afterClass’, ‘backupGlobals’, ‘backupStaticAttributes’, ‘before’, ‘beforeClass’, ‘codeCoverageIgnore’, ‘codeCoverageIgnoreStart’, ‘codeCoverageIgnoreEnd’, ‘covers’, ‘coversDefaultClass’, ‘coversNothing’, ‘dataProvider’, ‘depends’, ‘expectedException’, ‘expectedExceptionCode’, ‘expectedExceptionMessage’, ‘expectedExceptionMessageRegExp’, ‘group’, ‘large’, ‘medium’, ‘preserveGlobalState’, ‘requires’, ‘runTestsInSeparateProcesses’, ‘runInSeparateProcess’, ‘small’, ‘test’, ‘testdox’, ‘ticket’, ‘uses’, ‘SuppressWarnings’, ‘noinspection’, ‘package_version’, ‘enduml’, ‘startuml’, ‘fix’, ‘FIXME’, ‘fixme’, ‘override’]<br>indent_mixed_lines (bool): whether to indent lines that have content before closing parenthesis; defaults to false</p>
+<h3 id="doctrine-annotation-spaces-DoctrineAnnotation"><a href="#doctrine-annotation-spaces-DoctrineAnnotation" class="headerlink" title="doctrine_annotation_spaces [@DoctrineAnnotation]"></a>doctrine_annotation_spaces [@DoctrineAnnotation]</h3><p>Fixes spaces in Doctrine annotations.</p>
+<p>Configuration options:</p>
+<p>after_argument_assignments (null, bool): whether to add, remove or ignore spaces after argument assignment operator; defaults to false<br>after_array_assignments_colon (null, bool): whether to add, remove or ignore spaces after array assignment : operator; defaults to true<br>after_array_assignments_equals (null, bool): whether to add, remove or ignore spaces after array assignment = operator; defaults to true<br>around_argument_assignments (bool): whether to fix spaces around argument assignment operator; defaults to true. DEPRECATED: use options before_argument_assignments and after_argument_assignments instead<br>around_array_assignments (bool): whether to fix spaces around array assignment operators; defaults to true. DEPRECATED: use options before_array_assignments_equals, after_array_assignments_equals, before_array_assignments_colon and after_array_assignments_colon instead<br>around_commas (bool): whether to fix spaces around commas; defaults to true<br>around_parentheses (bool): whether to fix spaces around parentheses; defaults to true<br>before_argument_assignments (null, bool): whether to add, remove or ignore spaces before argument assignment operator; defaults to false<br>before_array_assignments_colon (null, bool): whether to add, remove or ignore spaces before array : assignment operator; defaults to true<br>before_array_assignments_equals (null, bool): whether to add, remove or ignore spaces before array = assignment operator; defaults to true<br>ignored_tags (array): list of tags that must not be treated as Doctrine Annotations; defaults to [‘abstract’, ‘access’, ‘code’, ‘deprec’, ‘encode’, ‘exception’, ‘final’, ‘ingroup’, ‘inheritdoc’, ‘inheritDoc’, ‘magic’, ‘name’, ‘toc’, ‘tutorial’, ‘private’, ‘static’, ‘staticvar’, ‘staticVar’, ‘throw’, ‘api’, ‘author’, ‘category’, ‘copyright’, ‘deprecated’, ‘example’, ‘filesource’, ‘global’, ‘ignore’, ‘internal’, ‘license’, ‘link’, ‘method’, ‘package’, ‘param’, ‘property’, ‘property-read’, ‘property-write’, ‘return’, ‘see’, ‘since’, ‘source’, ‘subpackage’, ‘throws’, ‘todo’, ‘TODO’, ‘usedBy’, ‘uses’, ‘var’, ‘version’, ‘after’, ‘afterClass’, ‘backupGlobals’, ‘backupStaticAttributes’, ‘before’, ‘beforeClass’, ‘codeCoverageIgnore’, ‘codeCoverageIgnoreStart’, ‘codeCoverageIgnoreEnd’, ‘covers’, ‘coversDefaultClass’, ‘coversNothing’, ‘dataProvider’, ‘depends’, ‘expectedException’, ‘expectedExceptionCode’, ‘expectedExceptionMessage’, ‘expectedExceptionMessageRegExp’, ‘group’, ‘large’, ‘medium’, ‘preserveGlobalState’, ‘requires’, ‘runTestsInSeparateProcesses’, ‘runInSeparateProcess’, ‘small’, ‘test’, ‘testdox’, ‘ticket’, ‘uses’, ‘SuppressWarnings’, ‘noinspection’, ‘package_version’, ‘enduml’, ‘startuml’, ‘fix’, ‘FIXME’, ‘fixme’, ‘override’]</p>
+<h3 id="elseif-PSR2-Symfony-PhpCsFixer"><a href="#elseif-PSR2-Symfony-PhpCsFixer" class="headerlink" title="elseif [@PSR2, @Symfony, @PhpCsFixer]"></a>elseif [@PSR2, @Symfony, @PhpCsFixer]</h3><p>用<code>elseif</code>来代替<code>else if</code></p>
+<p>由于是 PSR2 的标准，所以就不配置了</p>
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($a = <span class="number">1</span>) &#123;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ($a = <span class="number">1</span>) &#123;</span><br><span class="line">&#125; <span class="keyword">elseif</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="encoding-PSR1-PSR2-Symfony-PhpCsFixer"><a href="#encoding-PSR1-PSR2-Symfony-PhpCsFixer" class="headerlink" title="encoding [@PSR1, @PSR2, @Symfony, @PhpCsFixer]"></a>encoding [@PSR1, @PSR2, @Symfony, @PhpCsFixer]</h3><p>PHP 代码必须只使用没有 BOM 的 UTF-8（删除 BOM）。</p>
+<p>由于是 PSR2 的标准，所以就不配置了</p>
+<blockquote>
+<p>这个也没什么好演示的了</p>
+</blockquote>
+<h3 id="ereg-to-preg-Symfony-risky-PhpCsFixer-risky"><a href="#ereg-to-preg-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="ereg_to_preg [@Symfony:risky, @PhpCsFixer:risky]"></a>ereg_to_preg [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Replace deprecated ereg regular expression functions with preg.</p>
+<p>Risky rule: risky if the <code>ereg</code> function is overridden.</p>
+<h3 id="error-suppression-Symfony-risky-PhpCsFixer-risky"><a href="#error-suppression-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="error_suppression [@Symfony:risky, @PhpCsFixer:risky]"></a>error_suppression [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Error control operator should be added to deprecation notices and/or removed from other cases.</p>
+<p>Risky rule: risky because adding/removing <code>@</code> might cause changes to code behaviour or if <code>trigger_error</code> function is overridden.</p>
+<p>Configuration options:</p>
+<p>mute_deprecation_error (bool): whether to add @ in deprecation notices; defaults to true<br>noise_remaining_usages (bool): whether to remove @ in remaining usages; defaults to false<br>noise_remaining_usages_exclude (array): list of global functions to exclude from removing @; defaults to []</p>
+<h3 id="escape-implicit-backslashes-PhpCsFixer"><a href="#escape-implicit-backslashes-PhpCsFixer" class="headerlink" title="escape_implicit_backslashes [@PhpCsFixer]"></a>escape_implicit_backslashes [@PhpCsFixer]</h3><p>是否需要自动帮忙添加转义字符</p>
+<p>可选配置项</p>
+<ul>
+<li>double_quoted (双引号)<ul>
+<li>true （默认）</li>
+<li>false</li>
+</ul>
+</li>
+<li>heredoc_syntax （heredoc 的语法）<ul>
+<li>true （默认）</li>
+<li>false</li>
+</ul>
+</li>
+<li>single_quoted (单引号)<ul>
+<li>true</li>
+<li>false （默认）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'escape_implicit_backslashes'</span>  =&gt; [</span><br><span class="line">      <span class="string">'double_quoted'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">      <span class="string">'heredoc_syntax'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">      <span class="string">'single_quoted'</span> =&gt; <span class="keyword">false</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="string">"\d"</span>;</span><br><span class="line">$a = <span class="string">&lt;&lt;&lt;HEREDOC</span></span><br><span class="line"><span class="string">\d</span></span><br><span class="line"><span class="string">HEREDOC;</span></span><br><span class="line">$a = <span class="string">'\d'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="string">"\\d"</span>;</span><br><span class="line">$a = <span class="string">&lt;&lt;&lt;HEREDOC</span></span><br><span class="line"><span class="string">\\d</span></span><br><span class="line"><span class="string">HEREDOC;</span></span><br><span class="line">$a = <span class="string">'\d'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="explicit-indirect-variable-PhpCsFixer"><a href="#explicit-indirect-variable-PhpCsFixer" class="headerlink" title="explicit_indirect_variable [@PhpCsFixer]"></a>explicit_indirect_variable [@PhpCsFixer]</h3><p>Add curly braces to indirect variables to make them clear to understand. Requires PHP &gt;= 7.0.</p>
+<h3 id="explicit-string-variable-PhpCsFixer"><a href="#explicit-string-variable-PhpCsFixer" class="headerlink" title="explicit_string_variable [@PhpCsFixer]"></a>explicit_string_variable [@PhpCsFixer]</h3><p>把双引号或者 heredoc 字符串内部的隐形变量转成显性</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line"> <span class="string">'explicit_string_variable'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="string">'b'</span>;</span><br><span class="line">$a = <span class="string">"\d $b"</span>;</span><br><span class="line">$a = <span class="string">&lt;&lt;&lt;HEREDOC</span></span><br><span class="line"><span class="string">\d <span class="subst">$b</span></span></span><br><span class="line"><span class="string">HEREDOC;</span></span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="string">'b'</span>;</span><br><span class="line">$a = <span class="string">"\d $&#123;b&#125;"</span>;</span><br><span class="line">$a = <span class="string">&lt;&lt;&lt;HEREDOC</span></span><br><span class="line"><span class="string">\d $&#123;b&#125;</span></span><br><span class="line"><span class="string">HEREDOC;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="final-class"><a href="#final-class" class="headerlink" title="final_class"></a>final_class</h3><p>All classes must be final, except abstract ones and Doctrine entities.</p>
+<p>Risky rule: risky when subclassing non-abstract classes.</p>
+<h3 id="final-internal-class-PhpCsFixer-risky"><a href="#final-internal-class-PhpCsFixer-risky" class="headerlink" title="final_internal_class [@PhpCsFixer:risky]"></a>final_internal_class [@PhpCsFixer:risky]</h3><p>Internal classes should be final.</p>
+<p>Risky rule: changing classes to <code>final</code> might cause code execution to break.</p>
+<p>Configuration options:</p>
+<p>annotation-black-list (array): class level annotations tags that must be omitted to fix the class, even if all of the white list ones are used as well. (case insensitive); defaults to [‘@final’, ‘@Entity’, ‘@ORM\Entity’]<br>annotation-white-list (array): class level annotations tags that must be set in order to fix the class. (case insensitive); defaults to [‘@internal’]<br>consider-absent-docblock-as-internal-class (bool): should classes without any DocBlock be fixed to final?; defaults to false</p>
+<h3 id="fopen-flag-order-Symfony-risky-PhpCsFixer-risky"><a href="#fopen-flag-order-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="fopen_flag_order [@Symfony:risky, @PhpCsFixer:risky]"></a>fopen_flag_order [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Order the flags in fopen calls, b and t must be last.</p>
+<p>Risky rule: risky when the function <code>fopen</code> is overridden.</p>
+<h3 id="fopen-flags-Symfony-risky-PhpCsFixer-risky"><a href="#fopen-flags-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="fopen_flags [@Symfony:risky, @PhpCsFixer:risky]"></a>fopen_flags [@Symfony:risky, @PhpCsFixer:risky]</h3><p>The flags in fopen calls must omit t, and b must be omitted or included consistently.</p>
+<p>Risky rule: risky when the function <code>fopen</code> is overridden.</p>
+<p>Configuration options:</p>
+<p>b_mode (bool): the b flag must be used (true) or omitted (false); defaults to true</p>
+<h3 id="fopen-flags-Symfony-risky-PhpCsFixer-risky-1"><a href="#fopen-flags-Symfony-risky-PhpCsFixer-risky-1" class="headerlink" title="fopen_flags [@Symfony:risky, @PhpCsFixer:risky]"></a>fopen_flags [@Symfony:risky, @PhpCsFixer:risky]</h3><p>The flags in fopen calls must omit t, and b must be omitted or included consistently.</p>
+<p>Risky rule: risky when the function <code>fopen</code> is overridden.</p>
+<p>Configuration options:</p>
+<p>b_mode (bool): the b flag must be used (true) or omitted (false); defaults to true</p>
+<h3 id="full-opening-tag-PSR1-PSR2-Symfony-PhpCsFixer"><a href="#full-opening-tag-PSR1-PSR2-Symfony-PhpCsFixer" class="headerlink" title="full_opening_tag [@PSR1, @PSR2, @Symfony, @PhpCsFixer]"></a>full_opening_tag [@PSR1, @PSR2, @Symfony, @PhpCsFixer]</h3><p>php 代码必须用 <code>&lt;?php</code> 或者 <code>&lt;?=</code> 不能是其他</p>
+<blockquote>
+<p>这个在以前的前后段代码一起的时候可能需要注意的问题，在这里不做过多的演示</p>
+</blockquote>
+<h3 id="fully-qualified-strict-types-PhpCsFixer"><a href="#fully-qualified-strict-types-PhpCsFixer" class="headerlink" title="fully_qualified_strict_types [@PhpCsFixer]"></a>fully_qualified_strict_types [@PhpCsFixer]</h3><p>Transforms imported FQCN parameters and return types in function arguments to short version.</p>
+<h3 id="function-declaration-PSR2-Symfony-PhpCsFixer"><a href="#function-declaration-PSR2-Symfony-PhpCsFixer" class="headerlink" title="function_declaration [@PSR2, @Symfony, @PhpCsFixer]"></a>function_declaration [@PSR2, @Symfony, @PhpCsFixer]</h3><p>必包函数关键字<code>function后面是否需要空格</code></p>
+<p>可选配置项</p>
+<ul>
+<li>closure_function_spacing （闭包函数 function 是否需要空格）<ul>
+<li>none</li>
+<li>one (默认)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line"> <span class="string">'function_declaration'</span>  =&gt; [</span><br><span class="line">   <span class="string">'closure_function_spacing'</span> =&gt; <span class="string">'one'</span></span><br><span class="line"> ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="function"><span class="keyword">function</span><span class="params">($a, $b)</span> </span>&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="function"><span class="keyword">function</span> <span class="params">($a, $b)</span> </span>&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="function-to-constant-Symfony-risky-PhpCsFixer-risky"><a href="#function-to-constant-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="function_to_constant [@Symfony:risky, @PhpCsFixer:risky]"></a>function_to_constant [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Replace core functions calls returning constants with the constants.</p>
+<p>Risky rule: risky when any of the configured functions to replace are overridden.</p>
+<p>Configuration options:</p>
+<p>functions (a subset of [‘get_called_class’, ‘get_class’, ‘php_sapi_name’, ‘phpversion’, ‘pi’]): list of function names to fix; defaults to [‘get_class’, ‘php_sapi_name’, ‘phpversion’, ‘pi’]</p>
+<h3 id="function-typehint-space-Symfony-PhpCsFixer"><a href="#function-typehint-space-Symfony-PhpCsFixer" class="headerlink" title="function_typehint_space [@Symfony, @PhpCsFixer]"></a>function_typehint_space [@Symfony, @PhpCsFixer]</h3><p>在闭包函数的参数类型约束的时候，是否需要空格</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line"> <span class="string">'function_typehint_space'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="function"><span class="keyword">function</span><span class="params">(array$a, $b)</span> </span>&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="function"><span class="keyword">function</span> <span class="params">(array $a, $b)</span> </span>&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="general-phpdoc-annotation-remove"><a href="#general-phpdoc-annotation-remove" class="headerlink" title="general_phpdoc_annotation_remove"></a>general_phpdoc_annotation_remove</h3><p>在 phpdoc 中应该忽略的注解</p>
+<p>可选配置项</p>
+<ul>
+<li>annotations(数组)<ul>
+<li>author</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+<p>默认可选配置项的值：[]</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'general_phpdoc_annotation_remove'</span>  =&gt; [</span><br><span class="line">    <span class="string">'annotations'</span> =&gt; [</span><br><span class="line">        <span class="string">'author'</span></span><br><span class="line">    ]</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@copyright</span> 471113744<span class="doctag">@qq</span>.com</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> caiwenhui</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">$a = <span class="string">'1'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@copyright</span> caiwenhui</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">$a = <span class="string">'1'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="hash-to-slash-comment"><a href="#hash-to-slash-comment" class="headerlink" title="hash_to_slash_comment"></a>hash_to_slash_comment</h3><p>Single line comments should use double slashes // and not hash #. DEPRECATED: use single_line_comment_style instead.</p>
+<h3 id="header-comment"><a href="#header-comment" class="headerlink" title="header_comment"></a>header_comment</h3><p>Add, replace or remove header comment.</p>
+<p>Configuration options:</p>
+<p>comment_type (‘comment’, ‘PHPDoc’): comment syntax type; defaults to ‘comment’; DEPRECATED alias: commentType<br>header (string): proper header content; required<br>location (‘after_declare_strict’, ‘after_open’): the location of the inserted header; defaults to ‘after_declare_strict’<br>separate (‘both’, ‘bottom’, ‘none’, ‘top’): whether the header should be separated from the file content with a new line; defaults to ‘both’</p>
+<h3 id="heredoc-indentation-PHP73Migration"><a href="#heredoc-indentation-PHP73Migration" class="headerlink" title="heredoc_indentation [@PHP73Migration]"></a>heredoc_indentation [@PHP73Migration]</h3><p>Heredoc/nowdoc content must be properly indented. Requires PHP &gt;= 7.3.</p>
+<h3 id="heredoc-to-nowdoc-PhpCsFixer"><a href="#heredoc-to-nowdoc-PhpCsFixer" class="headerlink" title="heredoc_to_nowdoc [@PhpCsFixer]"></a>heredoc_to_nowdoc [@PhpCsFixer]</h3><p>当一个 heredoc 里面没有变量当时候，可以转成 nowdoc</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'heredoc_to_nowdoc'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="string">'a'</span>;</span><br><span class="line">$a = <span class="string">&lt;&lt;&lt;HEREDOC</span></span><br><span class="line"><span class="string">$&#123;b&#125;</span></span><br><span class="line"><span class="string">HEREDOC;</span></span><br><span class="line"></span><br><span class="line">$c = <span class="string">&lt;&lt;&lt;CNOWDOC</span></span><br><span class="line"><span class="string">\$b</span></span><br><span class="line"><span class="string">CNOWDOC;</span></span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$b = <span class="string">'a'</span>;</span><br><span class="line">$a = <span class="string">&lt;&lt;&lt;HEREDOC</span></span><br><span class="line"><span class="string">$&#123;b&#125;</span></span><br><span class="line"><span class="string">HEREDOC;</span></span><br><span class="line"></span><br><span class="line">$c = <span class="string">&lt;&lt;&lt;'CNOWDOC'</span></span><br><span class="line"><span class="string"><span class="subst">$b</span></span></span><br><span class="line"><span class="string">CNOWDOC;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="implode-call-Symfony-risky-PhpCsFixer-risky"><a href="#implode-call-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="implode_call [@Symfony:risky, @PhpCsFixer:risky]"></a>implode_call [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Function implode must be called with 2 arguments in the documented order.</p>
+<p>Risky rule: risky when the function <code>implode</code> is overridden.</p>
+<h3 id="include-Symfony-PhpCsFixer"><a href="#include-Symfony-PhpCsFixer" class="headerlink" title="include [@Symfony, @PhpCsFixer]"></a>include [@Symfony, @PhpCsFixer]</h3><p>Include/Require 的时候，不应该用括号扩起来，应该用空格分割</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'include'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span>(<span class="string">'test.php'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">'test.php'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="increment-style-Symfony-PhpCsFixer"><a href="#increment-style-Symfony-PhpCsFixer" class="headerlink" title="increment_style [@Symfony, @PhpCsFixer]"></a>increment_style [@Symfony, @PhpCsFixer]</h3><p>Pre- or post-increment and decrement operators should be used if possible.</p>
+<p>Configuration options:</p>
+<p>style (‘post’, ‘pre’): whether to use pre- or post-increment and decrement operators; defaults to ‘pre’</p>
+<h3 id="indentation-type-PSR2-Symfony-PhpCsFixer"><a href="#indentation-type-PSR2-Symfony-PhpCsFixer" class="headerlink" title="indentation_type [@PSR2, @Symfony, @PhpCsFixer]"></a>indentation_type [@PSR2, @Symfony, @PhpCsFixer]</h3><p>Code MUST use configured indentation type.</p>
+<h3 id="is-null-Symfony-risky-PhpCsFixer-risky"><a href="#is-null-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="is_null [@Symfony:risky, @PhpCsFixer:risky]"></a>is_null [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Replaces is_null($var) expression with null === $var.</p>
+<p>Risky rule: risky when the function <code>is_null</code> is overridden.</p>
+<p>Configuration options:</p>
+<p>use_yoda_style (bool): whether Yoda style conditions should be used; defaults to true. DEPRECATED: use yoda_style fixer instead</p>
+<h3 id="line-ending-PSR2-Symfony-PhpCsFixer"><a href="#line-ending-PSR2-Symfony-PhpCsFixer" class="headerlink" title="line_ending [@PSR2, @Symfony, @PhpCsFixer]"></a>line_ending [@PSR2, @Symfony, @PhpCsFixer]</h3><p>所有的 PHP 文件编码必须一致</p>
+<h3 id="linebreak-after-opening-tag"><a href="#linebreak-after-opening-tag" class="headerlink" title="linebreak_after_opening_tag"></a>linebreak_after_opening_tag</h3><p>在&lt;?php 标签所在的行不允许存在代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'linebreak_after_opening_tag'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> $a = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">$a = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$a = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">$a = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="list-syntax"><a href="#list-syntax" class="headerlink" title="list_syntax"></a>list_syntax</h3><p>List (array destructuring) assignment should be declared using the configured syntax. Requires PHP &gt;= 7.1.</p>
+<p>Configuration options:</p>
+<p>syntax (‘long’, ‘short’): whether to use the long or short list syntax; defaults to ‘long’</p>
+<h3 id="logical-operators-PhpCsFixer-risky"><a href="#logical-operators-PhpCsFixer-risky" class="headerlink" title="logical_operators [@PhpCsFixer:risky]"></a>logical_operators [@PhpCsFixer:risky]</h3><p>Use &amp;&amp; and || logical operators instead of and and or.</p>
+<p>Risky rule: risky, because you must double-check if using and/or with lower precedence was intentional.</p>
+<h3 id="lowercase-cast-Symfony-PhpCsFixer"><a href="#lowercase-cast-Symfony-PhpCsFixer" class="headerlink" title="lowercase_cast [@Symfony, @PhpCsFixer]"></a>lowercase_cast [@Symfony, @PhpCsFixer]</h3><p>数据类型转换必须小写</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'lowercase_cast'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$a = (INT)<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$a = (int)<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="lowercase-constants-PSR2-Symfony-PhpCsFixer"><a href="#lowercase-constants-PSR2-Symfony-PhpCsFixer" class="headerlink" title="lowercase_constants [@PSR2, @Symfony, @PhpCsFixer]"></a>lowercase_constants [@PSR2, @Symfony, @PhpCsFixer]</h3><p>true, false, null 这几个 php 常量必须为小写</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'lowercase_constants'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">TRUE</span>;</span><br><span class="line">$a = <span class="keyword">FALSE</span>;</span><br><span class="line">$a = <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">true</span>;</span><br><span class="line">$a = <span class="keyword">false</span>;</span><br><span class="line">$a = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="lowercase-keywords-PSR2-Symfony-PhpCsFixer"><a href="#lowercase-keywords-PSR2-Symfony-PhpCsFixer" class="headerlink" title="lowercase_keywords [@PSR2, @Symfony, @PhpCsFixer]"></a>lowercase_keywords [@PSR2, @Symfony, @PhpCsFixer]</h3><p>PHP 关键字必须小写</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'lowercase_keywords'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">CLASS</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="lowercase-static-reference-Symfony-PhpCsFixer"><a href="#lowercase-static-reference-Symfony-PhpCsFixer" class="headerlink" title="lowercase_static_reference [@Symfony, @PhpCsFixer]"></a>lowercase_static_reference [@Symfony, @PhpCsFixer]</h3><p>静态调用必须小写,例如：<code>self</code>, <code>static</code>, <code>parent</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'lowercase_static_reference'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> $b;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">STATIC</span>::$b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> $b;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span>::$b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="magic-constant-casing-Symfony-PhpCsFixer"><a href="#magic-constant-casing-Symfony-PhpCsFixer" class="headerlink" title="magic_constant_casing [@Symfony, @PhpCsFixer]"></a>magic_constant_casing [@Symfony, @PhpCsFixer]</h3><p>Magic constants should be referred to using the correct casing.</p>
+<h3 id="magic-method-casing-Symfony-PhpCsFixer"><a href="#magic-method-casing-Symfony-PhpCsFixer" class="headerlink" title="magic_method_casing [@Symfony, @PhpCsFixer]"></a>magic_method_casing [@Symfony, @PhpCsFixer]</h3><p>Magic method definitions and calls must be using the correct casing.</p>
+<h3 id="mb-str-functions"><a href="#mb-str-functions" class="headerlink" title="mb_str_functions"></a>mb_str_functions</h3><p>Replace non multibyte-safe functions with corresponding mb function.</p>
+<p>Risky rule: risky when any of the functions are overridden.</p>
+<h3 id="method-argument-space-PSR2-Symfony-PhpCsFixer"><a href="#method-argument-space-PSR2-Symfony-PhpCsFixer" class="headerlink" title="method_argument_space [@PSR2, @Symfony, @PhpCsFixer]"></a>method_argument_space [@PSR2, @Symfony, @PhpCsFixer]</h3><p>在方法参数和方法调用中，每个逗号之前不能有空格，每个逗号后必须有一个空格。参数列表可以分为多行，每行后续行缩进一次。这样做时，列表中的第一项必须在下一行，并且每行必须只有一个参数。</p>
+<p>可选配置项</p>
+<ul>
+<li>after_heredoc (是否应删除 heredoc end 和逗号之间的空格)<ul>
+<li>true</li>
+<li>false (默认)</li>
+</ul>
+</li>
+<li>ensure_fully_multiline (确保多行参数列表的每个参数都在其自己的行上,废弃，on_multiline 改为使用选项)<ul>
+<li>true</li>
+<li>false （默认）</li>
+</ul>
+</li>
+<li>keep_multiple_spaces_after_comma （逗号后是否保留多个空格）<ul>
+<li>true</li>
+<li>false（默认）</li>
+</ul>
+</li>
+<li>on_multiline （定义如何处理包含换行符函数的参数列表）<ul>
+<li>ensure_fully_multiline</li>
+<li>ensure_single_line</li>
+<li>ignore （默认）</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这个也是比较重要，比较繁琐，但是容易理解，这里就不具体举例子了</p>
+</blockquote>
+<h3 id="method-chaining-indentation-PhpCsFixer"><a href="#method-chaining-indentation-PhpCsFixer" class="headerlink" title="method_chaining_indentation [@PhpCsFixer]"></a>method_chaining_indentation [@PhpCsFixer]</h3><p>Method chaining MUST be properly indented. Method chaining with different levels of indentation is not supported.</p>
+<h3 id="modernize-types-casting-Symfony-risky-PhpCsFixer-risky"><a href="#modernize-types-casting-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="modernize_types_casting [@Symfony:risky, @PhpCsFixer:risky]"></a>modernize_types_casting [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Replaces intval, floatval, doubleval, strval and boolval function calls with according type casting operator.</p>
+<h3 id="multiline-comment-opening-closing-PhpCsFixer"><a href="#multiline-comment-opening-closing-PhpCsFixer" class="headerlink" title="multiline_comment_opening_closing [@PhpCsFixer]"></a>multiline_comment_opening_closing [@PhpCsFixer]</h3><p>DocBlocks 必须以两个星号开头，多行注释必须以单个星号开头，在开头的斜线后面。两者必须在结束斜杠之前以单个星号结尾</p>
+<h3 id="multiline-whitespace-before-semicolons-PhpCsFixer"><a href="#multiline-whitespace-before-semicolons-PhpCsFixer" class="headerlink" title="multiline_whitespace_before_semicolons [@PhpCsFixer]"></a>multiline_whitespace_before_semicolons [@PhpCsFixer]</h3><p>在结束分号之前禁止多行空格或将分号移动到链接调用的新行。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'multiline_whitespace_before_semicolons'</span>  =&gt; [</span><br><span class="line">    <span class="string">'strategy'</span> =&gt; <span class="string">'no_multi_line'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="native-constant-invocation-Symfony-risky-PhpCsFixer-risky"><a href="#native-constant-invocation-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="native_constant_invocation [@Symfony:risky, @PhpCsFixer:risky]"></a>native_constant_invocation [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Add leading \ before constant invocation of internal constant to speed up resolving. Constant name match is case-sensitive, except for null, false and true.</p>
+<p>Risky rule: risky when any of the constants are namespaced or overridden.</p>
+<p>Configuration options:</p>
+<p>exclude (array): list of constants to ignore; defaults to [‘null’, ‘false’, ‘true’]<br>fix_built_in (bool): whether to fix constants returned by get_defined_constants. User constants are not accounted in this list and must be specified in the include one; defaults to true<br>include (array): list of additional constants to fix; defaults to []<br>scope (‘all’, ‘namespaced’): only fix constant invocations that are made within a namespace or fix all; defaults to ‘all’</p>
+<h3 id="native-function-casing-Symfony-PhpCsFixer"><a href="#native-function-casing-Symfony-PhpCsFixer" class="headerlink" title="native_function_casing [@Symfony, @PhpCsFixer]"></a>native_function_casing [@Symfony, @PhpCsFixer]</h3><p>Function defined by PHP should be called using the correct casing.</p>
+<h3 id="native-function-invocation-Symfony-risky-PhpCsFixer-risky"><a href="#native-function-invocation-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="native_function_invocation [@Symfony:risky, @PhpCsFixer:risky]"></a>native_function_invocation [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Add leading \ before function invocation to speed up resolving.</p>
+<p>Risky rule: risky when any of the functions are overridden.</p>
+<p>Configuration options:</p>
+<p>exclude (array): list of functions to ignore; defaults to []<br>include (array): list of function names or sets to fix. Defined sets are @internal (all native functions), @all (all global functions) and @compiler_optimized (functions that are specially optimized by Zend); defaults to [‘@internal’]<br>scope (‘all’, ‘namespaced’): only fix function calls that are made within a namespace or fix all; defaults to ‘all’<br>strict (bool): whether leading \ of function call not meant to have it should be removed; defaults to false</p>
+<h3 id="native-function-type-declaration-casing-Symfony-PhpCsFixer"><a href="#native-function-type-declaration-casing-Symfony-PhpCsFixer" class="headerlink" title="native_function_type_declaration_casing [@Symfony, @PhpCsFixer]"></a>native_function_type_declaration_casing [@Symfony, @PhpCsFixer]</h3><p>Native type hints for functions should use the correct case.</p>
+<h3 id="new-with-braces-Symfony-PhpCsFixer"><a href="#new-with-braces-Symfony-PhpCsFixer" class="headerlink" title="new_with_braces [@Symfony, @PhpCsFixer]"></a>new_with_braces [@Symfony, @PhpCsFixer]</h3><p>使用 new 关键字创建的所有实例必须后跟括号。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'new_with_braces'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> A;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> A();</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-alias-functions-Symfony-risky-PhpCsFixer-risky"><a href="#no-alias-functions-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="no_alias_functions [@Symfony:risky, @PhpCsFixer:risky]"></a>no_alias_functions [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Master functions shall be used instead of aliases.</p>
+<p>Risky rule: risky when any of the alias functions are overridden.</p>
+<p>Configuration options:</p>
+<p>sets (a subset of [‘@internal’, ‘@IMAP’, ‘@mbreg’, ‘@all’]): list of sets to fix. Defined sets are @internal (native functions), @IMAP (IMAP functions), @mbreg (from ext-mbstring) @all (all listed sets); defaults to [‘@internal’, ‘@IMAP’]</p>
+<h3 id="no-alternative-syntax-PhpCsFixer"><a href="#no-alternative-syntax-PhpCsFixer" class="headerlink" title="no_alternative_syntax [@PhpCsFixer]"></a>no_alternative_syntax [@PhpCsFixer]</h3><p>一般是结合在 html 页面写 php 的时候才用到 (alternative_syntax)[<a href="https://www.php.net/manual/zh/control-structures.alternative-syntax.php]" target="_blank" rel="noopener">https://www.php.net/manual/zh/control-structures.alternative-syntax.php]</a></p>
+<h3 id="no-binary-string-PhpCsFixer"><a href="#no-binary-string-PhpCsFixer" class="headerlink" title="no_binary_string [@PhpCsFixer]"></a>no_binary_string [@PhpCsFixer]</h3><p>There should not be a binary flag before strings.</p>
+<h3 id="no-blank-lines-after-class-opening-Symfony-PhpCsFixer"><a href="#no-blank-lines-after-class-opening-Symfony-PhpCsFixer" class="headerlink" title="no_blank_lines_after_class_opening [@Symfony, @PhpCsFixer]"></a>no_blank_lines_after_class_opening [@Symfony, @PhpCsFixer]</h3><p>class 开标签后面不应该有空</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_blank_lines_after_class_opening'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> $d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> $d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-blank-lines-after-phpdoc-Symfony-PhpCsFixer"><a href="#no-blank-lines-after-phpdoc-Symfony-PhpCsFixer" class="headerlink" title="no_blank_lines_after_phpdoc [@Symfony, @PhpCsFixer]"></a>no_blank_lines_after_phpdoc [@Symfony, @PhpCsFixer]</h3><p>phpdoc 后面不应该有空行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_blank_lines_after_phpdoc'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A class</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> $d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A class</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> $d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-blank-lines-before-namespace"><a href="#no-blank-lines-before-namespace" class="headerlink" title="no_blank_lines_before_namespace"></a>no_blank_lines_before_namespace</h3><p>命名空间之前不应该有空行</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_blank_lines_before_namespace'</span>  =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">caiwenhui</span></span><br><span class="line"></span><br><span class="line"><span class="title">class</span> <span class="title">A</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="title">private</span> $<span class="title">d</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">caiwenhui</span></span><br><span class="line"></span><br><span class="line"><span class="title">class</span> <span class="title">A</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="title">private</span> $<span class="title">d</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-break-comment-PSR2-Symfony-PhpCsFixer"><a href="#no-break-comment-PSR2-Symfony-PhpCsFixer" class="headerlink" title="no_break_comment [@PSR2, @Symfony, @PhpCsFixer]"></a>no_break_comment [@PSR2, @Symfony, @PhpCsFixer]</h3><p>There must be a comment when fall-through is intentional in a non-empty case body.</p>
+<p>Configuration options:</p>
+<p>comment_text (string): the text to use in the added comment and to detect it; defaults to ‘no break’</p>
+<h3 id="no-closing-tag-PSR2-Symfony-PhpCsFixer"><a href="#no-closing-tag-PSR2-Symfony-PhpCsFixer" class="headerlink" title="no_closing_tag [@PSR2, @Symfony, @PhpCsFixer]"></a>no_closing_tag [@PSR2, @Symfony, @PhpCsFixer]</h3><p><code>?&gt;</code> 关闭标签必须在 PHP 文件中去掉</p>
+<h3 id="no-empty-comment-Symfony-PhpCsFixer"><a href="#no-empty-comment-Symfony-PhpCsFixer" class="headerlink" title="no_empty_comment [@Symfony, @PhpCsFixer]"></a>no_empty_comment [@Symfony, @PhpCsFixer]</h3><p>不应该存在空注释</p>
+<h3 id="no-empty-phpdoc-Symfony-PhpCsFixer"><a href="#no-empty-phpdoc-Symfony-PhpCsFixer" class="headerlink" title="no_empty_phpdoc [@Symfony, @PhpCsFixer]"></a>no_empty_phpdoc [@Symfony, @PhpCsFixer]</h3><p>不应该存在空的 phpdoc</p>
+<h3 id="no-empty-statement-Symfony-PhpCsFixer"><a href="#no-empty-statement-Symfony-PhpCsFixer" class="headerlink" title="no_empty_statement [@Symfony, @PhpCsFixer]"></a>no_empty_statement [@Symfony, @PhpCsFixer]</h3><p>不应该存在空的结构体</p>
+<h3 id="no-extra-blank-lines-Symfony-PhpCsFixer"><a href="#no-extra-blank-lines-Symfony-PhpCsFixer" class="headerlink" title="no_extra_blank_lines [@Symfony, @PhpCsFixer]"></a>no_extra_blank_lines [@Symfony, @PhpCsFixer]</h3><p>移除额外的空行，在[‘break’, ‘case’, ‘continue’, ‘curly_brace_block’, ‘default’, ‘extra’, ‘parenthesis_brace_block’, ‘return’, ‘square_brace_block’, ‘switch’, ‘throw’, ‘use’, ‘useTrait’, ‘use_trait’中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_extra_blank_lines'</span>  =&gt; [</span><br><span class="line">    <span class="string">'tokens'</span> =&gt; [</span><br><span class="line">      <span class="string">'return'</span></span><br><span class="line">    ]</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>可选配置项</p>
+<ul>
+<li>tokens （数组）<ul>
+<li>break</li>
+<li>case</li>
+<li>continue</li>
+<li>curly_brace_block</li>
+<li>default</li>
+<li>extra ( 默认)</li>
+<li>parenthesis_brace_block</li>
+<li>return</li>
+<li>square_brace_block</li>
+<li>switch</li>
+<li>throw</li>
+<li>use</li>
+<li>useTrait</li>
+<li>use_trait</li>
+</ul>
+</li>
+</ul>
+<p>可选配置项默认值：[‘extra’]</p>
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-homoglyph-names-Symfony-risky-PhpCsFixer-risky"><a href="#no-homoglyph-names-Symfony-risky-PhpCsFixer-risky" class="headerlink" title="no_homoglyph_names [@Symfony:risky, @PhpCsFixer:risky]"></a>no_homoglyph_names [@Symfony:risky, @PhpCsFixer:risky]</h3><p>Replace accidental usage of homoglyphs (non ascii characters) in names.</p>
+<p>Risky rule: renames classes and cannot rename the files. You might have string references to renamed code (<code>$$name</code>).</p>
+<h3 id="no-leading-import-slash-Symfony-PhpCsFixer"><a href="#no-leading-import-slash-Symfony-PhpCsFixer" class="headerlink" title="no_leading_import_slash [@Symfony, @PhpCsFixer]"></a>no_leading_import_slash [@Symfony, @PhpCsFixer]</h3><p>在 use 语句中，取消前置斜杠</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_leading_import_slash'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> \<span class="title">A</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">A</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-leading-namespace-whitespace-Symfony-PhpCsFixer"><a href="#no-leading-namespace-whitespace-Symfony-PhpCsFixer" class="headerlink" title="no_leading_namespace_whitespace [@Symfony, @PhpCsFixer]"></a>no_leading_namespace_whitespace [@Symfony, @PhpCsFixer]</h3><p>在声明命令空间的时候，不允许有前置空格</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_leading_namespace_whitespace'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">A</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">A</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-mixed-echo-print-Symfony-PhpCsFixer"><a href="#no-mixed-echo-print-Symfony-PhpCsFixer" class="headerlink" title="no_mixed_echo_print [@Symfony, @PhpCsFixer]"></a>no_mixed_echo_print [@Symfony, @PhpCsFixer]</h3><p>不允许混合使用<code>echo</code>和<code>print</code>语句</p>
+<p>可选配置项</p>
+<ul>
+<li>use<ul>
+<li>echo (默认)</li>
+<li>print</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_mixed_echo_print'</span> =&gt; [</span><br><span class="line">    <span class="string">'use'</span> =&gt; <span class="string">'echo'</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">print</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-multiline-whitespace-around-double-arrow-Symfony-PhpCsFixer"><a href="#no-multiline-whitespace-around-double-arrow-Symfony-PhpCsFixer" class="headerlink" title="no_multiline_whitespace_around_double_arrow [@Symfony, @PhpCsFixer]"></a>no_multiline_whitespace_around_double_arrow [@Symfony, @PhpCsFixer]</h3><p>运算符 <code>=&gt;</code> 不应被多行空格包围。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_multiline_whitespace_around_double_arrow'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$a = [</span><br><span class="line">    <span class="number">1</span> =&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="string">'33'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = [</span><br><span class="line">    <span class="number">1</span> =&gt; <span class="string">'33'</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-null-property-initialization-PhpCsFixer"><a href="#no-null-property-initialization-PhpCsFixer" class="headerlink" title="no_null_property_initialization [@PhpCsFixer]"></a>no_null_property_initialization [@PhpCsFixer]</h3><p>属性不能用显式初始化 null</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_null_property_initialization'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> $dd = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> $dd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-php4-constructor"><a href="#no-php4-constructor" class="headerlink" title="no_php4_constructor"></a>no_php4_constructor</h3><p>Convert PHP4-style constructors to __construct.</p>
+<p>Risky rule: risky when old style constructor being fixed is overridden or overrides parent one.</p>
+<h3 id="no-short-bool-cast-Symfony-PhpCsFixer"><a href="#no-short-bool-cast-Symfony-PhpCsFixer" class="headerlink" title="no_short_bool_cast [@Symfony, @PhpCsFixer]"></a>no_short_bool_cast [@Symfony, @PhpCsFixer]</h3><p>Short cast bool using double exclamation mark should not be used.</p>
+<h3 id="no-short-echo-tag-PhpCsFixer"><a href="#no-short-echo-tag-PhpCsFixer" class="headerlink" title="no_short_echo_tag [@PhpCsFixer]"></a>no_short_echo_tag [@PhpCsFixer]</h3><p>用 <code>&lt;?php echo</code> 来代替 <code>&lt;?=</code></p>
+<h3 id="no-singleline-whitespace-before-semicolons-Symfony-PhpCsFixer"><a href="#no-singleline-whitespace-before-semicolons-Symfony-PhpCsFixer" class="headerlink" title="no_singleline_whitespace_before_semicolons [@Symfony, @PhpCsFixer]"></a>no_singleline_whitespace_before_semicolons [@Symfony, @PhpCsFixer]</h3><p>禁止在关闭分号前使用单行空格。</p>
+<h3 id="no-spaces-after-function-name-PSR2，-Symfony，-PhpCsFixer"><a href="#no-spaces-after-function-name-PSR2，-Symfony，-PhpCsFixer" class="headerlink" title="no_spaces_after_function_name [@PSR2，@Symfony，@PhpCsFixer]"></a>no_spaces_after_function_name [@PSR2，@Symfony，@PhpCsFixer]</h3><p>在函数或者方法定义的时候，不允许函数和左括号之间有空格</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_spaces_after_function_name'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-spaces-around-offset-Symfony-PhpCsFixer"><a href="#no-spaces-around-offset-Symfony-PhpCsFixer" class="headerlink" title="no_spaces_around_offset [@Symfony, @PhpCsFixer]"></a>no_spaces_around_offset [@Symfony, @PhpCsFixer]</h3><p>There MUST NOT be spaces around offset braces.</p>
+<p>Configuration options:</p>
+<p>positions (a subset of [‘inside’, ‘outside’]): whether spacing should be fixed inside and/or outside the offset braces; defaults to [‘inside’, ‘outside’]</p>
+<h3 id="no-spaces-inside-parenthesis-PSR2-Symfony-PhpCsFixer"><a href="#no-spaces-inside-parenthesis-PSR2-Symfony-PhpCsFixer" class="headerlink" title="no_spaces_inside_parenthesis [@PSR2, @Symfony, @PhpCsFixer]"></a>no_spaces_inside_parenthesis [@PSR2, @Symfony, @PhpCsFixer]</h3><p>在左括号后面不能有空格。在右括号之前不能有空格。</p>
+<h3 id="no-superfluous-elseif-PhpCsFixer"><a href="#no-superfluous-elseif-PhpCsFixer" class="headerlink" title="no_superfluous_elseif [@PhpCsFixer]"></a>no_superfluous_elseif [@PhpCsFixer]</h3><p>Replaces superfluous elseif with if.</p>
+<h3 id="no-superfluous-phpdoc-tags"><a href="#no-superfluous-phpdoc-tags" class="headerlink" title="no_superfluous_phpdoc_tags"></a>no_superfluous_phpdoc_tags</h3><p>删除没有提供有效信息的@param 和@return 注解</p>
+<p> 可选配置项</p>
+<ul>
+<li>allow_mixed （是否允许 mixed 注解存在）<ul>
+<li>true</li>
+<li>false （默认）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_superfluous_phpdoc_tags'</span> =&gt; [</span><br><span class="line">    <span class="string">'allow_mixed'</span> =&gt; <span class="keyword">false</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $c</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-trailing-comma-in-list-call-Symfony，-PhpCsFixer"><a href="#no-trailing-comma-in-list-call-Symfony，-PhpCsFixer" class="headerlink" title="no_trailing_comma_in_list_call [@Symfony，@ PhpCsFixer]"></a>no_trailing_comma_in_list_call [@Symfony，@ PhpCsFixer]</h3><p>Remove trailing commas in list function calls.</p>
+<h3 id="no-trailing-comma-in-singleline-array-Symfony-PhpCsFixer"><a href="#no-trailing-comma-in-singleline-array-Symfony-PhpCsFixer" class="headerlink" title="no_trailing_comma_in_singleline_array [@Symfony, @PhpCsFixer]"></a>no_trailing_comma_in_singleline_array [@Symfony, @PhpCsFixer]</h3><p>PHP 单行数组不应该有逗号。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_trailing_comma_in_singleline_array'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$array = [<span class="number">1</span>,<span class="number">2</span>,];</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$array = [<span class="number">1</span>,<span class="number">2</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-trailing-whitespace-PSR2，-Symfony，-PhpCsFixer"><a href="#no-trailing-whitespace-PSR2，-Symfony，-PhpCsFixer" class="headerlink" title="no_trailing_whitespace [@PSR2，@Symfony，@PhpCsFixer]"></a>no_trailing_whitespace [@PSR2，@Symfony，@PhpCsFixer]</h3><p>删除非空行末尾的尾随空格。</p>
+<blockquote>
+<p>意思如描述</p>
+</blockquote>
+<h3 id="no-trailing-whitespace-in-comment-PSR2，-Soundfony，-PhpCsFixer"><a href="#no-trailing-whitespace-in-comment-PSR2，-Soundfony，-PhpCsFixer" class="headerlink" title="no_trailing_whitespace_in_comment [@PSR2，@Soundfony，@PhpCsFixer]"></a>no_trailing_whitespace_in_comment [@PSR2，@Soundfony，@PhpCsFixer]</h3><p>注释或 PHPDoc 中必须没有尾随空格。</p>
+<blockquote>
+<p>意思如描述</p>
+</blockquote>
+<h3 id="no-unneeded-control-parentheses-Symfony，-PhpCsFixer"><a href="#no-unneeded-control-parentheses-Symfony，-PhpCsFixer" class="headerlink" title="no_unneeded_control_parentheses [@Symfony，@PhpCsFixer]"></a>no_unneeded_control_parentheses [@Symfony，@PhpCsFixer]</h3><p>删除控制语句周围不需要的括号。</p>
+<p>可选配置项</p>
+<ul>
+<li>statements （数组）<ul>
+<li>break</li>
+<li>clone</li>
+<li>continue</li>
+<li>echo_print</li>
+<li>return</li>
+<li>switch_case</li>
+<li>yield</li>
+</ul>
+</li>
+</ul>
+<p>可选配置项默认值：[‘break’, ‘clone’, ‘continue’, ‘echo_print’, ‘return’, ‘switch_case’, ‘yield’]</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_unneeded_curly_braces'</span> =&gt; [</span><br><span class="line">    <span class="string">'statements'</span> =&gt; [<span class="string">'break'</span>, <span class="string">'clone'</span>, <span class="string">'continue'</span>, <span class="string">'echo_print'</span>, <span class="string">'return'</span>, <span class="string">'switch_case'</span>, <span class="string">'yield'</span>]</span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-unneeded-curly-braces-Symfony，-PhpCsFixer"><a href="#no-unneeded-curly-braces-Symfony，-PhpCsFixer" class="headerlink" title="no_unneeded_curly_braces [@Symfony，@PhpCsFixer]"></a>no_unneeded_curly_braces [@Symfony，@PhpCsFixer]</h3><p>删除不需要的花括号，这些花括号是多余的，不属于控制结构的主体。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_unneeded_curly_braces'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-unneeded-final-method-Symfony，-PhpCsFixer"><a href="#no-unneeded-final-method-Symfony，-PhpCsFixer" class="headerlink" title="no_unneeded_final_method [@Symfony，@PhpCsFixer]"></a>no_unneeded_final_method [@Symfony，@PhpCsFixer]</h3><p>终态类一定不能有终态方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_unneeded_final_method'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">echoA</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">echoA</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-unreachable-default-argument-value-PhpCsFixer-risky"><a href="#no-unreachable-default-argument-value-PhpCsFixer-risky" class="headerlink" title="no_unreachable_default_argument_value [@PhpCsFixer:risky]"></a>no_unreachable_default_argument_value [@PhpCsFixer:risky]</h3><p>In function arguments there must not be arguments with default values before non-default ones.</p>
+<p>Risky rule: modifies the signature of functions; therefore risky when using systems (such as some Symfony components) that rely on those (for example through reflection).</p>
+<h3 id="no-unset-cast-PhpCsFixer"><a href="#no-unset-cast-PhpCsFixer" class="headerlink" title="no_unset_cast [@PhpCsFixer]"></a>no_unset_cast [@PhpCsFixer]</h3><p>必须设置变量 null 而不是使用(unset)强制转换。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_unset_cast'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = (<span class="keyword">unset</span>)$b;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-unset-on-property-PhpCsFixer-risky"><a href="#no-unset-on-property-PhpCsFixer-risky" class="headerlink" title="no_unset_on_property [@PhpCsFixer:risky]"></a>no_unset_on_property [@PhpCsFixer:risky]</h3><p>Properties should be set to null instead of using unset.</p>
+<p>Risky rule: changing variables to <code>null</code> instead of unsetting them will mean they still show up when looping over class variables.</p>
+<h3 id="no-unused-imports-Symfony-PhpCsFixer"><a href="#no-unused-imports-Symfony-PhpCsFixer" class="headerlink" title="no_unused_imports [@Symfony, @PhpCsFixer]"></a>no_unused_imports [@Symfony, @PhpCsFixer]</h3><p>引入 use 后但是没有用到的类要删除</p>
+<blockquote>
+<p>如描述</p>
+</blockquote>
+<h3 id="no-useless-else-PhpCsFixer"><a href="#no-useless-else-PhpCsFixer" class="headerlink" title="no_useless_else [@PhpCsFixer]"></a>no_useless_else [@PhpCsFixer]</h3><p>不需要没有用的 else 分支</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_useless_else'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($a, $b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($a) &#123;</span><br><span class="line">        <span class="keyword">return</span> $a;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> $b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($a, $b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ($a) &#123;</span><br><span class="line">        <span class="keyword">return</span> $a;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-whitespace-before-comma-in-array-Symfony，-PhpCsFixer"><a href="#no-whitespace-before-comma-in-array-Symfony，-PhpCsFixer" class="headerlink" title="no_whitespace_before_comma_in_array [@Symfony，@PhpCsFixer]"></a>no_whitespace_before_comma_in_array [@Symfony，@PhpCsFixer]</h3><p>在数组声明中，每个逗号前不得有空格。</p>
+<p>可选配置项</p>
+<ul>
+<li>after_heredoc （是否应删除 heredoc end 和逗号之间的空格）<ul>
+<li>true</li>
+<li>false （默认）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'no_whitespace_before_comma_in_array'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = [<span class="number">1</span> , <span class="number">2</span> , <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="no-whitespace-in-blank-line-Symfony，-PhpCsFixer"><a href="#no-whitespace-in-blank-line-Symfony，-PhpCsFixer" class="headerlink" title="no_whitespace_in_blank_line [@Symfony，@PhpCsFixer]"></a>no_whitespace_in_blank_line [@Symfony，@PhpCsFixer]</h3><p>删除空行中的空格</p>
+<blockquote>
+<p>如描述</p>
+</blockquote>
+<h3 id="non-printable-character-Symfony-risky-PhpCsFixer-risky-PHP70Migration-risky-PHP71Migration-risky"><a href="#non-printable-character-Symfony-risky-PhpCsFixer-risky-PHP70Migration-risky-PHP71Migration-risky" class="headerlink" title="non_printable_character [@Symfony:risky, @PhpCsFixer:risky, @PHP70Migration:risky, @PHP71Migration:risky]"></a>non_printable_character [@Symfony:risky, @PhpCsFixer:risky, @PHP70Migration:risky, @PHP71Migration:risky]</h3><p>Remove Zero-width space (ZWSP), Non-breaking space (NBSP) and other invisible unicode symbols.</p>
+<p>Risky rule: risky when strings contain intended invisible characters.</p>
+<p>Configuration options:</p>
+<p>use_escape_sequences_in_strings (bool): whether characters should be replaced with escape sequences in strings; defaults to false</p>
+<h3 id="normalize-index-brace-Symfony-PhpCsFixer"><a href="#normalize-index-brace-Symfony-PhpCsFixer" class="headerlink" title="normalize_index_brace [@Symfony, @PhpCsFixer]"></a>normalize_index_brace [@Symfony, @PhpCsFixer]</h3><p>Array index should always be written by using square braces.</p>
+<h3 id="not-operator-with-space"><a href="#not-operator-with-space" class="headerlink" title="not_operator_with_space"></a>not_operator_with_space</h3><p>逻辑 NOT 运算符（!）应该具有前导和尾随空格。</p>
+<blockquote>
+<p>如描述</p>
+</blockquote>
+<h3 id="not-operator-with-successor-space"><a href="#not-operator-with-successor-space" class="headerlink" title="not_operator_with_successor_space"></a>not_operator_with_successor_space</h3><p>逻辑 NOT 运算符（!）应该有一个尾随空格。</p>
+<blockquote>
+<p>如描述</p>
+</blockquote>
+<h3 id="phpdoc-align-Symfony，-PhpCsFixer"><a href="#phpdoc-align-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_align [@Symfony，@PhpCsFixer]"></a>phpdoc_align [@Symfony，@PhpCsFixer]</h3><p>给定 phpdoc 标签的所有项目必须左对齐或（默认情况下）垂直对齐。</p>
+<p>配置选项：</p>
+<p>align（’left’，’vertical’）：对齐评论; 默认为’vertical’<br>tags（子集[‘param’, ‘property’, ‘return’, ‘throws’, ‘type’, ‘var’, ‘method’]）：应该对齐的标签; 默认为 [‘param’, ‘return’, ‘throws’, ‘type’, ‘var’</p>
+<h3 id="phpdoc-annotation-without-dot-Symfony，-PhpCsFixer"><a href="#phpdoc-annotation-without-dot-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_annotation_without_dot [@Symfony，@PhpCsFixer]"></a>phpdoc_annotation_without_dot [@Symfony，@PhpCsFixer]</h3><p>PHPDoc 注释描述不应该是一个句子。</p>
+<h3 id="phpdoc-indent-Symfony，-PhpCsFixer"><a href="#phpdoc-indent-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_indent [@Symfony，@PhpCsFixer]"></a>phpdoc_indent [@Symfony，@PhpCsFixer]</h3><p>Docblock 应与文档主题具有相同的缩进。</p>
+<h3 id="phpdoc-inline-tag-Symfony，-PhpCsFixer"><a href="#phpdoc-inline-tag-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_inline_tag [@Symfony，@PhpCsFixer]"></a>phpdoc_inline_tag [@Symfony，@PhpCsFixer]</h3><p>修复 PHPDoc 内联标记，使@inheritdoc 内联始终。</p>
+<h3 id="phpdoc-no-empty-return-Symfony，-PhpCsFixer"><a href="#phpdoc-no-empty-return-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_no_empty_return [@Symfony，@ PhpCsFixer]"></a>phpdoc_no_empty_return [@Symfony，@ PhpCsFixer]</h3><p>@return void 和@return null 注释应该 PHPDoc 的被省略。</p>
+<h3 id="phpdoc-no-package-Symfony，-PhpCsFixer"><a href="#phpdoc-no-package-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_no_package [@Symfony，@ PhpCsFixer]"></a>phpdoc_no_package [@Symfony，@ PhpCsFixer]</h3><p>@package 和@subpackage 注释应该 PHPDoc 的被省略。</p>
+<h3 id="phpdoc-order-PhpCsFixer"><a href="#phpdoc-order-PhpCsFixer" class="headerlink" title="phpdoc_order [@PhpCsFixer]"></a>phpdoc_order [@PhpCsFixer]</h3><p>应该对 PHPDoc 中的@param 注释进行排序，以便首先@throws 注释，然后是@return 注释，然后是注释。</p>
+<h3 id="phpdoc-return-self-reference-Symfony，-PhpCsFixer"><a href="#phpdoc-return-self-reference-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_return_self_reference [@Symfony，@ PhpCsFixer]"></a>phpdoc_return_self_reference [@Symfony，@ PhpCsFixer]</h3><p>@return 返回对自身的引用的方法的注释类型必须是已配置的注释。</p>
+<p>配置选项：</p>
+<p>replacements（array）：替换的返回类型与新的返回类型之间的映射; 默认为[‘this’ =&gt; ‘$this’, ‘@this’ =&gt; ‘$this’, ‘$self’ =&gt; ‘self’, ‘@self’ =&gt; ‘self’, ‘$static’ =&gt; ‘static’, ‘@static’ =&gt; ‘static’]</p>
+<h3 id="phpdoc-scalar-Symfony，-PhpCsFixer"><a href="#phpdoc-scalar-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_scalar [@Symfony，@PhpCsFixer]"></a>phpdoc_scalar [@Symfony，@PhpCsFixer]</h3><p>标量类型应始终以相同的形式编写。int 不 integer，bool 不 boolean，float 不是 real 或 double。</p>
+<p>配置选项：</p>
+<p>types（子集[‘boolean’, ‘callback’, ‘double’, ‘integer’, ‘real’, ‘str’]）：要修复的类型的映射; 默认为[‘boolean’, ‘double’, ‘integer’, ‘real’, ‘str’]</p>
+<h3 id="phpdoc-separation-Symfony，-PhpCsFixer"><a href="#phpdoc-separation-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_separation [@Symfony，@ PhpCsFixer]"></a>phpdoc_separation [@Symfony，@ PhpCsFixer]</h3><p>PHPDoc 中的注释应该组合在一起，以便相同类型的注释紧跟在一起，并且不同类型的注释由单个空行分隔。</p>
+<h3 id="phpdoc-single-line-var-spacing-Symfony，-PhpCsFixer"><a href="#phpdoc-single-line-var-spacing-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_single_line_var_spacing [@Symfony，@ PhpCsFixer]"></a>phpdoc_single_line_var_spacing [@Symfony，@ PhpCsFixer]</h3><p>单行@varPHPDoc 应该有适当的间距。</p>
+<h3 id="phpdoc-summary-Symfony，-PhpCsFixer"><a href="#phpdoc-summary-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_summary [@Symfony，@ PhpCsFixer]"></a>phpdoc_summary [@Symfony，@ PhpCsFixer]</h3><p>PHPDoc 摘要应以句号，感叹号或问号结尾。</p>
+<h3 id="phpdoc-to-comment-Symfony，-PhpCsFixer"><a href="#phpdoc-to-comment-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_to_comment [@Symfony，@ PhpCsFixer]"></a>phpdoc_to_comment [@Symfony，@ PhpCsFixer]</h3><p>Docblock 只应用于结构元素。</p>
+<h3 id="phpdoc-trim-Symfony，-PhpCsFixer"><a href="#phpdoc-trim-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_trim [@Symfony，@ PhpCsFixer]"></a>phpdoc_trim [@Symfony，@ PhpCsFixer]</h3><p>PHPDoc 应该以内容开头和结尾，不包括 docblock 的第一行和最后一行。</p>
+<h3 id="phpdoc-trim-consecutive-blank-line-separation-PhpCsFixer"><a href="#phpdoc-trim-consecutive-blank-line-separation-PhpCsFixer" class="headerlink" title="phpdoc_trim_consecutive_blank_line_separation [@PhpCsFixer]"></a>phpdoc_trim_consecutive_blank_line_separation [@PhpCsFixer]</h3><p>在摘要之后和 PHPDoc 中的描述之后删除额外的空白行。</p>
+<h3 id="phpdoc-var-annotation-correct-order-PhpCsFixer"><a href="#phpdoc-var-annotation-correct-order-PhpCsFixer" class="headerlink" title="phpdoc_var_annotation_correct_order [@PhpCsFixer]"></a>phpdoc_var_annotation_correct_order [@PhpCsFixer]</h3><p>@var 和@type 注释必须具有正确顺序的类型和名称。</p>
+<h3 id="phpdoc-var-without-name-Symfony，-PhpCsFixer"><a href="#phpdoc-var-without-name-Symfony，-PhpCsFixer" class="headerlink" title="phpdoc_var_without_name [@Symfony，@ PhpCsFixer]"></a>phpdoc_var_without_name [@Symfony，@ PhpCsFixer]</h3><p>@var 和@type 注释不应包含变量名称。</p>
+<h3 id="protected-to-private-Symfony，-PhpCsFixer"><a href="#protected-to-private-Symfony，-PhpCsFixer" class="headerlink" title="protected_to_private [@Symfony，@ PhpCsFixer]"></a>protected_to_private [@Symfony，@ PhpCsFixer]</h3><p>尽可能将 protected 变量和方法转换 private。</p>
+<h3 id="single-blank-line-at-eof-PSR2，-Soundfony，-PhpCsFixer"><a href="#single-blank-line-at-eof-PSR2，-Soundfony，-PhpCsFixer" class="headerlink" title="single_blank_line_at_eof [@ PSR2，@ Soundfony，@ PhpCsFixer]"></a>single_blank_line_at_eof [@ PSR2，@ Soundfony，@ PhpCsFixer]</h3><p>没有结束标记的 PHP 文件必须始终以单个空行换头结束。</p>
+<h3 id="single-import-per-statement-PSR2，-Symfony，-PhpCsFixer"><a href="#single-import-per-statement-PSR2，-Symfony，-PhpCsFixer" class="headerlink" title="single_import_per_statement [@ PSR2，@ Symfony，@ PhpCsFixer]"></a>single_import_per_statement [@ PSR2，@ Symfony，@ PhpCsFixer]</h3><p>每个声明必须有一个 use 关键字。(针对 PHP7 可以多个 use)</p>
+<h3 id="single-line-after-imports-PSR2，-Symfony，-PhpCsFixer"><a href="#single-line-after-imports-PSR2，-Symfony，-PhpCsFixer" class="headerlink" title="single_line_after_imports [@ PSR2，@ Symfony，@ PhpCsFixer]"></a>single_line_after_imports [@ PSR2，@ Symfony，@ PhpCsFixer]</h3><p>每个命名空间使用必须在它自己的行上，并且在 use 语句块之后必须有一个空行。</p>
+<h3 id="single-line-comment-style-Symfony，-PhpCsFixer"><a href="#single-line-comment-style-Symfony，-PhpCsFixer" class="headerlink" title="single_line_comment_style [@Symfony，@PhpCsFixer]"></a>single_line_comment_style [@Symfony，@PhpCsFixer]</h3><p>只有一行实际内容的单行注释和多行注释应使用//语法。</p>
+<p>配置选项：</p>
+<p>comment_types（子集[‘asterisk’, ‘hash’]）：要修复的注释类型列表; 默认为[‘asterisk’, ‘hash’]</p>
+<h3 id="space-after-semicolon-Symfony，-PhpCsFixer"><a href="#space-after-semicolon-Symfony，-PhpCsFixer" class="headerlink" title="space_after_semicolon [@Symfony，@PhpCsFixer]"></a>space_after_semicolon [@Symfony，@PhpCsFixer]</h3><p>分号后修复空格</p>
+<p>可选配置项</p>
+<ul>
+<li>remove_in_empty_for_expressions （是否应删除空 for 表达式的空格）<ul>
+<li>true</li>
+<li>false (默认)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'space_after_semicolon'</span> =&gt; [</span><br><span class="line">    <span class="string">'remove_in_empty_for_expressions'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">  ]</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>;      $i &lt; <span class="number">10</span>;      $i++) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">10</span>; $i++) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="standardize-increment-Symfony，-PhpCsFixer"><a href="#standardize-increment-Symfony，-PhpCsFixer" class="headerlink" title="standardize_increment [@Symfony，@PhpCsFixer]"></a>standardize_increment [@Symfony，@PhpCsFixer]</h3><p>如果可能，应使用递增和递减运算符。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'standardize_increment'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="number">0</span>;</span><br><span class="line">$a += <span class="number">1</span>;</span><br><span class="line">$a -= <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="number">0</span>;</span><br><span class="line">++$a;</span><br><span class="line">--$a;</span><br></pre></td></tr></table></figure>
+
+<h3 id="switch-case-semicolon-to-colon-PSR2，-Symfony，-PhpCsFixer"><a href="#switch-case-semicolon-to-colon-PSR2，-Symfony，-PhpCsFixer" class="headerlink" title="switch_case_semicolon_to_colon [@PSR2，@Symfony，@PhpCsFixer]"></a>switch_case_semicolon_to_colon [@PSR2，@Symfony，@PhpCsFixer]</h3><p>case 之后应该是冒号而不是分号。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'switch_case_semicolon_to_colon'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$type = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">switch</span> ($type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$type = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">switch</span> ($type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="switch-case-space-PSR2，-Symfony，-PhpCsFixer"><a href="#switch-case-space-PSR2，-Symfony，-PhpCsFixer" class="headerlink" title="switch_case_space [@PSR2，@Symfony，@PhpCsFixer]"></a>switch_case_space [@PSR2，@Symfony，@PhpCsFixer]</h3><p>删除 case 冒号和大小写值之间的额外空格。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'switch_case_space'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$type = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">switch</span> ($type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>           :</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>             :</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$type = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">switch</span> ($type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ternary-operator-spaces-Symfony-PhpCsFixer"><a href="#ternary-operator-spaces-Symfony-PhpCsFixer" class="headerlink" title="ternary_operator_spaces [@Symfony, @PhpCsFixer]"></a>ternary_operator_spaces [@Symfony, @PhpCsFixer]</h3><p>三元操作符周围有标准空格</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$rules = [</span><br><span class="line">  <span class="string">'ternary_operator_spaces'</span> =&gt; <span class="keyword">true</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>原始格式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">empty</span>($e)?<span class="keyword">true</span>:<span class="keyword">false</span>;</span><br></pre></td></tr></table></figure>
+
+<p>格式化后：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">empty</span>($e) ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ternary-to-null-coalescing-PHP70Migration-PHP71Migration-PHP73Migration"><a href="#ternary-to-null-coalescing-PHP70Migration-PHP71Migration-PHP73Migration" class="headerlink" title="ternary_to_null_coalescing [@PHP70Migration, @PHP71Migration, @PHP73Migration]"></a>ternary_to_null_coalescing [@PHP70Migration, @PHP71Migration, @PHP73Migration]</h3><p>Use null coalescing operator ?? where possible. Requires PHP &gt;= 7.0.</p>
+<h3 id="trailing-comma-in-multiline-array-Symfony，-PhpCsFixer"><a href="#trailing-comma-in-multiline-array-Symfony，-PhpCsFixer" class="headerlink" title="trailing_comma_in_multiline_array [@Symfony，@PhpCsFixer]"></a>trailing_comma_in_multiline_array [@Symfony，@PhpCsFixer]</h3><p>PHP 多行数组应该有一个尾随逗号。</p>
+<p>配置选项：</p>
+<p>after_heredoc（bool）：是否也应该在 heredoc 结束后放置一个尾随逗号; 默认为 false</p>
+<h3 id="trim-array-spaces-Symfony，-PhpCsFixer"><a href="#trim-array-spaces-Symfony，-PhpCsFixer" class="headerlink" title="trim_array_spaces [@Symfony，@ PhpCsFixer]"></a>trim_array_spaces [@Symfony，@ PhpCsFixer]</h3><p>数组应该像函数/方法参数一样格式化，不带前导或尾随单行空格。</p>
+<h3 id="unary-operator-spaces-Symfony，-PhpCsFixer"><a href="#unary-operator-spaces-Symfony，-PhpCsFixer" class="headerlink" title="unary_operator_spaces [@Symfony，@ PhpCsFixer]"></a>unary_operator_spaces [@Symfony，@ PhpCsFixer]</h3><p>一元运算符应放在其操作数旁边。</p>
+<h3 id="whitespace-after-comma-in-array-Symfony，-PhpCsFixer"><a href="#whitespace-after-comma-in-array-Symfony，-PhpCsFixer" class="headerlink" title="whitespace_after_comma_in_array [@Symfony，@ PhpCsFixer]"></a>whitespace_after_comma_in_array [@Symfony，@ PhpCsFixer]</h3><p>在数组声明中，每个逗号后必须有一个空格。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上均为 php-cs-fixer 的配置详，有一些风险的配置，我们不提倡使用，所以并没有翻译，而且一些没有给出例子。情况有 2 种，一种是：暂时不了解具体用法。一种是字面意思可懂。</p>
+<p>每个配置项后面的中括号中的<code>@xxx</code>的写法代表这个配置在什么 tag 中生效，具体相关的可以查看 php-cs-fixer 的官网文档。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

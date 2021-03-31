@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【DevOps】Jenkins-shared-library 实战 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【DevOps】Jenkins-shared-library 实战"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【DevOps】Jenkins-shared-library 实战</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/07/10/DevOps/Jenkins-shared-library/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-07-10T09:35:30.000Z">
+          2020-07-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近公司用了 <code>jenkins</code> 做为 <code>CI/CD</code> 的工具，<code>jenkins</code>是什么，我就不和大家详细说明了。</p>
+<p>今天主要讲的是 <code>jenkins</code> 的 <code>pipeline</code>，旧版的 jenkins 我不太了解，但是听说这个 pipeline 是新出的。</p>
+<p>今天要讲的也不单单是<code>pipeline</code>，更是有强力干货<code>share-library</code>相关的内容。</p>
+<a id="more"></a>
+
+<h2 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h2><p>目前我们的 jenkins 服务用过<code>普通的pipeline</code>和 <code>多分支的pipeline</code>，其主要区别就是<code>多分支pipeline</code>更加灵活一些，能够让我们少做一些逻辑处理。<br>但是这引入了一个问题，那就是我们的<code>jenkins</code>，必须存在与对应的分支中，也因此，pipeline 的流程变成了代码管理，并且由于我们存在多个项目，那么将会有<code>项目数 * 2(master/pre-develop)</code> 那么多的 jenkins 需要管理，于是就导致了我们有很多这种冗余的写法，这还不是最糟糕的，最糟糕的是如果我们需要修改一些通用的内容的时候，就需要一个个去修改，这绝对是灾难级别的需求。</p>
+<h2 id="Shared-library"><a href="#Shared-library" class="headerlink" title="Shared-library"></a>Shared-library</h2><p>幸好，或许 jenkins 已经考虑到了这种情况的出现，给我们提供了<code>shared-library</code>，在共享库的存在下，我们可以写一些自定义的定制功能。但是这不是没有代价的，代价就是你需要了解<code>groovy</code>这门语言，这是<code>java</code>的派生语言，提供了弱类型的语法，让写 groovy 脚本的变得更加轻松简单，但是也因此，groovy 和 java 的语法常常可以混在一起写，显得有点杂乱。</p>
+<p>但是有总比没有好，我们把共享库分成了 2 个库，分别是<code>resource-libraries</code>，<code>jenkins-shard-library</code>。</p>
+<ul>
+<li><code>resource-libraries</code><ul>
+<li>这个资源共享库定义了我们需要部署不同的配置资源信息，主要是对应<code>libraryResource</code>这个 api 来加载资源</li>
+</ul>
+</li>
+<li><code>jenkins-shard-library</code><ul>
+<li>这个共享库定义了我们需要的通用方法，例如部署流程已经需要统一对外的 api</li>
+</ul>
+</li>
+</ul>
+<h3 id="resource-libraries"><a href="#resource-libraries" class="headerlink" title="resource-libraries"></a>resource-libraries</h3><p>目前，我们的资源库目录结构如下，基本不存在 src 目录，这也意味者这个库不存在独特的<code>类</code>代码，只有统一对外开放的<code>vars</code>，整个库对外开放的 api 只有一个<code>mresource_load</code>方法，核心作用就是加载<code>resources</code>目录中的个项目的配置。由于可能会存在不同组之间的相同项目名，所以我们以<code>组/项目</code>为目录切分资源配置文件，文件以<code>yaml</code>格式为统一标准。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  resource-libraries git:(master) tree</span><br><span class="line">.</span><br><span class="line">├── README.MD</span><br><span class="line">├── resources</span><br><span class="line">│   ├── GamePlatform</span><br><span class="line">│   │   └── mcfx-admin.yaml</span><br><span class="line">│   ├── mc-game-admin</span><br><span class="line">│   │   └── om.yaml</span><br><span class="line">│   └── mc-webapp</span><br><span class="line">│       └── testing-tools.yaml</span><br><span class="line">├── tests</span><br><span class="line">│   └── test_mresource_load.groovy</span><br><span class="line">└── vars</span><br><span class="line">    └── mresource_load.groovy</span><br></pre></td></tr></table></figure>
+
+<p>基本结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">➜  resource-libraries git:(master) cat resources&#x2F;mc-webapp&#x2F;testing-tools.yaml</span><br><span class="line">type: &#39;normal&#39;</span><br><span class="line"></span><br><span class="line">git_credentials_id: &#39;basedev-git-account&#39;</span><br><span class="line"></span><br><span class="line">common: &amp;common</span><br><span class="line">  directory: &#39;&#x2F;data&#x2F;webapp&#x2F;testing-tools&#39;</span><br><span class="line">  deploy_ssh_id: &#39;basedev_tp_normal&#39;</span><br><span class="line"></span><br><span class="line">debug:</span><br><span class="line">  address: &#39;192.168.8.29:61618&#39;</span><br><span class="line">  &lt;&lt;: *common</span><br><span class="line">production:</span><br><span class="line">  address: &#39;192.168.8.93:61618&#39;</span><br><span class="line">  &lt;&lt;: *common</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">➜  resource-libraries git:(master) cat resources&#x2F;mc-game-admin&#x2F;om.yaml</span><br><span class="line">type: job_name</span><br><span class="line"></span><br><span class="line">git_credentials_id: &#39;basedev_24_om&#39;</span><br><span class="line">debug_address: &amp;debug_address &#39;192.168.8.47:61618&#39;</span><br><span class="line">release_address: &amp;release_address &#39;192.168.8.47:61618&#39;</span><br><span class="line">deploy_ssh_id: &amp;deploy_ssh_id &#39;basedev_tp_normal&#39;</span><br><span class="line"></span><br><span class="line">basedev-m24-om:</span><br><span class="line">  debug:</span><br><span class="line">    address: *debug_address</span><br><span class="line">    directory: &#39;&#x2F;data&#x2F;m24&#x2F;web&#x2F;om_debug&#39;</span><br><span class="line">    deploy_ssh_id: *deploy_ssh_id</span><br><span class="line">  production:</span><br><span class="line">    address: *release_address</span><br><span class="line">    directory: &#39;&#x2F;data&#x2F;m24&#x2F;web&#x2F;om&#39;</span><br><span class="line">    deploy_ssh_id: *deploy_ssh_id</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>(*)type<ul>
+<li>normal 普通模式</li>
+<li>job_name job_name 模式。对于一个代码仓库，需要分项目部署的我们定义为 job_name 模式，这个的好处就是不同的项目可以以同一份配置文件进行不同的配置管理</li>
+</ul>
+</li>
+<li>(*)git_credentials_id<ul>
+<li>这是 checkout 下来的 git 唯一凭证 id</li>
+</ul>
+</li>
+<li>common<ul>
+<li>这个是推荐但是非必须存在的结构，这里存放一些我们在下面定义的一些通用配置来减少冗余</li>
+</ul>
+</li>
+<li>支持的环境<ul>
+<li>debug</li>
+<li>reviews</li>
+<li>production</li>
+</ul>
+</li>
+<li>环境必填的属性如下<ul>
+<li>address (ip+port)<ul>
+<li>支持 string</li>
+<li>支持 list</li>
+</ul>
+</li>
+<li>directory 代码部署目录<ul>
+<li>支持 string</li>
+<li>支持 list</li>
+</ul>
+</li>
+<li>deploy_ssh_id<ul>
+<li>部署代码到服务的 ssh 的唯一凭证 id</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>由以上构成我们的配置文件的格式。</p>
+<h3 id="jenkins-shard-library"><a href="#jenkins-shard-library" class="headerlink" title="jenkins-shard-library"></a>jenkins-shard-library</h3><p>这个共享库直接影响到我们的 jenkinsfile 的写法，这是直接作用与 jenkinsfile 的共享库，先来一个目前 jenkinsfile 的写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def link &#x3D; &#39;https:&#x2F;&#x2F;xxx.com&#x2F;mc-webapp&#x2F;testing-tools&#39;</span><br><span class="line"></span><br><span class="line">mpipeline&#123;</span><br><span class="line">    repo&#x3D;link</span><br><span class="line">    script&#x3D;this</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">import xxx.jenkins.LaravelPipeline</span><br><span class="line">def larvaelPipeline &#x3D; new LaravelPipeline(this)</span><br><span class="line"></span><br><span class="line">node &#123;</span><br><span class="line">    larvaelPipeline.preBuild().build().debug().reviews().production().execute()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就是目前的 jenkinsfile 的写法，可以看到这个 jenkinsfile 没有定制的东西，除了一个<code>link</code>仓库链接之外，其他都是公用的内容。<br>接下来说一下<code>jenkinsfile-dsl</code></p>
+<p>这个东西也就是我们在 jenkinsfile 中看到的<code>mpipeline</code>的结构体，这个是由于我们这个库提供的一个<code>dsl结构</code>，并非原始 jenkinsfile 提供的<br>所有的 jenkinsfile 必须存在这个<code>dsl</code>，并且需要写在流程的头部，以确保 jenkinsfile 的初始化对应的事情（checkout+环境变量+关键字加载）</p>
+<p>目前，封装了一个基于<code>laravel</code>项目的 pipeline 操作类，用这个类来进行流程的统一创建管理。最后我们在 <code>node</code>结构中进行流程的 api 调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">➜  jenkins-shard-library git:(master)   tree</span><br><span class="line">.</span><br><span class="line">├── Jenkinsfile.example</span><br><span class="line">├── README.MD</span><br><span class="line">├── jars</span><br><span class="line">│   └── groovy-cps-1.1.jar</span><br><span class="line">├── resources</span><br><span class="line">├── src</span><br><span class="line">│   └── xxx</span><br><span class="line">│       └── xxx</span><br><span class="line">│           └── jenkins</span><br><span class="line">│               ├── Constant.groovy</span><br><span class="line">│               ├── Deploy.groovy</span><br><span class="line">│               ├── Git.groovy</span><br><span class="line">│               ├── LaravelPipeline.groovy</span><br><span class="line">│               ├── MPipeline.groovy</span><br><span class="line">│               ├── MetlNotify.groovy</span><br><span class="line">│               ├── Repo.groovy</span><br><span class="line">│               └── SummaryNotify.groovy</span><br><span class="line">├── tests</span><br><span class="line">│   ├── RepoTest.groovy</span><br><span class="line">│   └── classfiles</span><br><span class="line">│       └── xxx</span><br><span class="line">│           └── xxx</span><br><span class="line">│               └── jenkins</span><br><span class="line">│                   ├── Constant.class</span><br><span class="line">│                   ├── Git.class</span><br><span class="line">│                   ├── MPipeline.class</span><br><span class="line">│                   ├── MetlNotify.class</span><br><span class="line">│                   ├── Repo.class</span><br><span class="line">│                   └── SummaryNotify.class</span><br><span class="line">└── vars</span><br><span class="line">    ├── mpipeline.groovy</span><br><span class="line">    └── notify.groovy</span><br></pre></td></tr></table></figure>
+
+<p>详细的就不多做讲解，只说一些重要的，LaravelPipeline 对外提供的 api 有：</p>
+<ul>
+<li>preBuild()<ul>
+<li>构建前需要做的事情，例如<code>发送通知任务开始</code></li>
+</ul>
+</li>
+<li>build(isParallel = true)<ul>
+<li>构建过程，参数<code>isParallel = true</code>是否并行构建</li>
+</ul>
+</li>
+<li>deployment(def sshId = null)<ul>
+<li>部署 api，主要是把 debug，reviews，production 写在了一起</li>
+</ul>
+</li>
+<li>customDeploy(def closure = {})<ul>
+<li>自定义部署流程，参数是一个回调函数，需要参考共享库的写法</li>
+</ul>
+</li>
+<li>debug(def sshId)<ul>
+<li>如果是对应的分支，那么将会部署到 debug 环境</li>
+</ul>
+</li>
+<li>reviews(def sshId)<ul>
+<li>如果是对应的分支，那么将会部署到 reviews 环境</li>
+</ul>
+</li>
+<li>production(def sshId)<ul>
+<li>如果是对应的分支，那么将会部署到 production 环境</li>
+</ul>
+</li>
+<li>show()<ul>
+<li>这是一个用于查看构建流程的方法，并不会真正运行各个结构的 stage 里面的内容。但是可以看到节点连线图</li>
+</ul>
+</li>
+<li>execute(def config = [show: false])<ul>
+<li>这是一个启动执行的方法，如果传入了参数 show=true，那么该方法等于 show 方法</li>
+</ul>
+</li>
+</ul>
+<p>对于全局关键字的提供有：</p>
+<ul>
+<li>mpipeline<ul>
+<li>用于初始化整个部署流程，其中包含了 checkout 和环境变量等的初始化</li>
+</ul>
+</li>
+<li>notify<ul>
+<li>用于发送通知</li>
+</ul>
+</li>
+</ul>
+<p>最终的效果如下：</p>
+<p><img src="/images/CI-CD/%E6%B5%81%E7%A8%8B%E8%8A%82%E7%82%B9%E5%9B%BE.png" alt="流程节点图"></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/DevOps/">DevOps</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/DevOps/">DevOps</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

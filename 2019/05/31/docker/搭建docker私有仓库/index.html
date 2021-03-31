@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Docker】搭建docker私有仓库 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Docker】搭建docker私有仓库"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Docker】搭建docker私有仓库</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/31/docker/搭建docker私有仓库/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-31T03:28:30.000Z">
+          2019-05-31
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了配合 k8s，需要搭建一个私有仓库，防止镜像泄漏出去。</p>
+<a id="more"></a>
+
+<h2 id="机器准备"><a href="#机器准备" class="headerlink" title="机器准备"></a>机器准备</h2><p>最小化分布式集群安装，一台master，一台node。后续可以调整为多master，解决单点问题，node的话也可以增加以加入集群。</p>
+<table>
+<thead>
+<tr>
+<th>hostname</th>
+<th>IP</th>
+<th>配置</th>
+<th>操作系统</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>matser</td>
+<td>192.168.8.171</td>
+<td>4核8G</td>
+<td>CentOS Linux release 7.2.1511 (Core)，Linux version 3.10.0-327.el7.x86_64，gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC)</td>
+</tr>
+<tr>
+<td>node1</td>
+<td>192.168.8.174</td>
+<td>4核8G</td>
+<td>CentOS Linux release 7.2.1511 (Core) ，Linux version 3.10.0-327.el7.x86_64，gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC)</td>
+</tr>
+</tbody></table>
+<p>## 安装</p>
+<h3 id="registry"><a href="#registry" class="headerlink" title="registry"></a>registry</h3><p>这个是 docker 官方提供的仓库镜像，现在已经进入了<code>2.x</code>的时代，对应的仓库在 github 上并不是<code>docker-registry</code>，<code>docker-registry</code> 已经归档了，并且不进行维护了，所以目前<code>hub.docker</code> 上的 <code>registry</code> 对应在 github 上的仓库名字叫做 <code>docker/distribution</code></p>
+<p>安装 <code>registry</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 5000:5000 -v `pwd`/data:/tmp/registry-dev --restart=always --name registry registry:2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS                    NAMES</span><br><span class="line">15d7f8c43400        registry:2             "/entrypoint.sh /e..."   12 minutes ago      Up 50 seconds       0.0.0.0:5000-&gt;5000/tcp   registry</span><br></pre></td></tr></table></figure>
+
+<p>这个时候私有仓库镜像成功建立了，我们测试一下。</p>
+<p>拉取镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull busybox:latest</span><br></pre></td></tr></table></figure>
+
+<p>重新打tag</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag busybox:latest 192.168.8.171:5000/tonybai/busybox:latest</span><br></pre></td></tr></table></figure>
+
+<p>推送到指定仓库 , 结果发现推送 <code>失败</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master registry]# docker push 192.168.8.171:5000/tonybai/busybox</span><br><span class="line">The push refers to a repository [192.168.8.171:5000/tonybai/busybox]</span><br><span class="line">Get https://192.168.8.171:5000/v1/_ping: http: server gave HTTP response to HTTPS client</span><br></pre></td></tr></table></figure>
+
+<p>那是因为我们的docker，并没有设置<code>不安全私有仓库白名单</code></p>
+<p>所以这个时候我们需要修改<code>/etc/docker/daemon.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">     <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://registry.docker-cn.com"</span>],</span><br><span class="line">     <span class="attr">"insecure-registries"</span>: [</span><br><span class="line">        <span class="string">"192.168.8.171:5000"</span></span><br><span class="line">     ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们重启docker即可，容器会随之启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>启动成功后，然后再推送一次.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master registry]# docker rmi 10.10.105.71:5000/tonybai/busybox</span><br><span class="line">Untagged: 10.10.105.71:5000/tonybai/busybox:latest</span><br></pre></td></tr></table></figure>
+
+<p>成功了，不过他告诉我我没有指定tags所以默认的他加上了<code>latest</code>标签。</p>
+<h3 id="secure-registry"><a href="#secure-registry" class="headerlink" title="secure registry"></a>secure registry</h3><ul>
+<li>自签名证书</li>
+<li>证书服务提供商</li>
+</ul>
+<p>这里，我们主要是用自签名证书，所以需要在每个拉取我们私有仓库的镜像的时候，都需要拥有我们证书才可以拉取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# mkdir ~&#x2F;openssl&#x2F;certs&#x2F; &amp;&amp; cd ~&#x2F;openssl&#x2F;certs&#x2F; &amp;&amp; openssl req -newkey rsa:2048 -nodes -sha256 -keyout certs&#x2F;domain.key -x509 -days 365 -out certs&#x2F;domain.crt</span><br><span class="line">Generating a 2048 bit RSA private key</span><br><span class="line">.....+++</span><br><span class="line">...................................................................................................................................................+++</span><br><span class="line">writing new private key to &#39;certs&#x2F;domain.key&#39;</span><br><span class="line">-----</span><br><span class="line">You are about to be asked to enter information that will be incorporated</span><br><span class="line">into your certificate request.</span><br><span class="line">What you are about to enter is what is called a Distinguished Name or a DN.</span><br><span class="line">There are quite a few fields but you can leave some blank</span><br><span class="line">For some fields there will be a default value,</span><br><span class="line">If you enter &#39;.&#39;, the field will be left blank.</span><br><span class="line">-----</span><br><span class="line">Country Name (2 letter code) [XX]:CN</span><br><span class="line">State or Province Name (full name) []:Guangdong</span><br><span class="line">Locality Name (eg, city) [Default City]:Guangzhou</span><br><span class="line">Organization Name (eg, company) [Default Company Ltd]:xxx</span><br><span class="line">Organizational Unit Name (eg, section) []:xx</span><br><span class="line">Common Name (eg, your name or your server&#39;s hostname) []:mcdockerhub.com</span><br><span class="line">Email Address []:471113744@qq.com</span><br></pre></td></tr></table></figure>
+
+<p>由于我们的 <code>Common Name</code> 设置了 <code>mcdockerhub.com</code>，所以我们需要修改一下hosts（除非你有公网解析到这个IP）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts/</span><br><span class="line"></span><br><span class="line">192.168.8.171 master mcdockerhub.com</span><br></pre></td></tr></table></figure>
+
+<p>移除之前我们创建的 <code>registy</code>，然后我们重新创建一个</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop registy &amp;&amp; docker rm registy</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 5000:5000 --restart=always --name registry -v /root/openssl/data:/tmp/registry-dev -v /root/openssl/certs:/certs -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key docker.io/registry:2</span><br></pre></td></tr></table></figure>
+
+<p>接着我们重新打一个对应registy的tag</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag docker.io/busybox mcdockerhub.com:5000/tonybai/busybox</span><br></pre></td></tr></table></figure>
+
+<p>推送镜像到域名仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# docker push mcdockerhub.com:5000/tonybai/busybox</span><br><span class="line">The push refers to a repository [mcdockerhub.com:5000/tonybai/busybox]</span><br><span class="line">Get https://mcdockerhub.com:5000/v1/_ping: x509: certificate signed by unknown authority</span><br></pre></td></tr></table></figure>
+
+<p>我们发现<code>报错</code>了。这是因为 <code>没有把证书</code> 对应起来。</p>
+<p>把证书放在docker请求的证书目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;etc&#x2F;docker&#x2F;certs.d&#x2F;mcdockerhub.com:5000 &amp;&amp; cp ~&#x2F;openssl&#x2F;certs&#x2F;domain.crt &#x2F;etc&#x2F;docker&#x2F;certs.d&#x2F;mcdockerhub.com:5000&#x2F;ca.crt</span><br></pre></td></tr></table></figure>
+
+<p>再推送一次</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# docker push mcdockerhub.com:5000/tonybai/busybox</span><br><span class="line">The push refers to a repository [mcdockerhub.com:5000/tonybai/busybox]</span><br><span class="line">d1156b98822d: Pushed</span><br><span class="line">latest: digest: sha256:4fe8827f51a5e11bb83afa8227cbccb402df840d32c6b633b7ad079bc8144100 size: 527</span><br></pre></td></tr></table></figure>
+
+<p>接着就是成功了。如果其他机器需要推送或者拉取的话，记得要把证书放在对应的机器的对应目录下，否则被视为没有被授权。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

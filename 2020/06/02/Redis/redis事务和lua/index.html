@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Redis】- 事务和Lua脚本 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Redis】- 事务和Lua脚本"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Redis】- 事务和Lua脚本</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/06/02/Redis/redis事务和lua/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-06-02T02:46:51.000Z">
+          2020-06-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Redis 我们用的蛮多的了，但是一直也没有整理什么资料，刚好今天要处理一下，顺便一下相关的事务和 lua 脚本的内容，由于管道(pipeline)不在这次原子性问题当中，所以我们就不加进来比较说明了。</p>
+<a id="more"></a>
+
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Redis 的原子性问题，在一直高并发的场景下，是一个需要重视的问题，否则原子性不满足将会导致业务逻辑出现问题。</p>
+<p>在这里，我们常用解决原子性问题的一般都是用 redis 自带的命令，例如 brpoplpush 之类的命令</p>
+<p>但是我们可能需要更多的组合成一个原子性操作</p>
+<p>因此，这里会有 2 种选择，分别如下：</p>
+<ul>
+<li>事务</li>
+<li>lua 脚本</li>
+</ul>
+<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>redis 事务提供了一种“将多个命令打包， 然后一次性、按顺序地执行”的机制， 并且事务在执行的期间不会主动中断</p>
+<p>我们可以通过 MULTI 命令开启一个事务，类似于 mysql 的 BEGIN TRANSACTION 语句</p>
+<p>在该语句之后执行的命令都将被视为事务之内的操作</p>
+<p>最后我们可以通过执行 <code>EXEC/DISCARD</code> 命令来提交/回滚该事务内的所有操作</p>
+<p>这两个 Redis 命令可被视为等同于关系型数据库中的 COMMIT/ROLLBACK 语句</p>
+<p>服务器在执行完事务中的所有命令之后， 才会继续处理其他客户端的其他命令</p>
+<p>被执行的命令要么全部都被执行，要么一个也不执行，并且事务执行过程中不会被其他工作打断</p>
+<p>一个 redis 事务从开始到执行会经历以下三个阶段：</p>
+<p><img src="/images/Redis/redis%E4%BA%8B%E5%8A%A1.png" alt="redis事务流程"></p>
+<h4 id="开始事务-–-MULTI"><a href="#开始事务-–-MULTI" class="headerlink" title="开始事务 – MULTI"></a>开始事务 – MULTI</h4><p>multi 命令让客户端从非事务状态切换到事务状态</p>
+<h4 id="命令入队"><a href="#命令入队" class="headerlink" title="命令入队"></a>命令入队</h4><p>如果客户端处于非事务状态下，那么所有发送给服务端的命令都会立即被服务器执行，而如果客户端处于事务状态下，那么所有命令都还不会立即执行，而是被发送到一个事务队列中，返回 QUEUED，表示入队成功</p>
+<p>事务队列是一个数组， 每个数组项是都包含三个属性</p>
+<ul>
+<li>cmd – 要执行的命令</li>
+<li>argv – 命令的参数</li>
+<li>argc – 参数个数</li>
+</ul>
+<p>例如，我们执行以下两个命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; SET msg &quot;hello caiwenhui&quot;</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; GET msg</span><br><span class="line">QUEUED</span><br></pre></td></tr></table></figure>
+
+<p>redis server 将创建以下事务队列：</p>
+<table>
+<thead>
+<tr>
+<th>index</th>
+<th>cmd</th>
+<th>argv</th>
+<th>argc</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>SET</td>
+<td>[“msg”, “hello caiwenhui”]</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>GET</td>
+<td>[“msg”]</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<h4 id="执行事务"><a href="#执行事务" class="headerlink" title="执行事务"></a>执行事务</h4><p>如果客户端正处于事务状态， 那么当 EXEC 命令执行时， 服务器根据客户端所保存的事务队列， 以先进先出（FIFO）的方式执行事务队列中的命令</p>
+<p>然后将执行命令所得的结果以 FIFO 的顺序保存到一个回复队列中</p>
+<p>例如，当我们执行上述两个命令后执行 EXEC 命令，将会创建如下回复队列：</p>
+<table>
+<thead>
+<tr>
+<th>index</th>
+<th>类型</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>status code reply</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>1</td>
+<td>bulk reply</td>
+<td>“hello moto”</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; multi</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; SET msg &quot;hello caiwenhi&quot;</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; GET msg</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; EXEC</span><br><span class="line">1) OK</span><br><span class="line">1) hello caiwenhui</span><br></pre></td></tr></table></figure>
+
+<h3 id="WATCH"><a href="#WATCH" class="headerlink" title="WATCH"></a>WATCH</h3><p>Watch 命令用于监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断</p>
+<p>WATCH 命令只能在客户端进入事务状态之前执行， 在事务状态下发送 WATCH 命令会引发错误</p>
+<p>redis 中保存了一个 watched_keys 字典，字典的键是这个数据库被监视的键，而字典的值则是一个链表，链表中保存了所有监视这个键的客户端</p>
+<p>每当一个客户端执行 WATCH 命令，对应的 key 指向的链表中就会增加该客户端的节点</p>
+<p><img src="/images/Redis/redis-watch-key.png" alt="redis-watch-key"></p>
+<p>图意味着，key1 正在被 client1 和 client2 两个客户端监视着，key2 被 client3 监视着，key3 被 client4 监视着</p>
+<p>一旦对数据库键空间进行的修改成功执行，multi.c 的 touchWatchedKey 函数都会被调用，他的工作就是遍历上述字典中该 key 所对应的整个链表的所有节点，打开每一个 WATCH 该 key 的 client 的 REDIS_DIRTY_CAS 选项</p>
+<p>当客户端发送 EXEC 命令触发事务执行时，服务器会对客户端状态进行检查，如果客户端的 REDIS_DIRTY_CAS 选项已经被打开，那么说明被客户端监视的键至少有一个已经被修改，事务安全性已经被破坏，则服务端直接向客户端返回空回复，表示事务执行失败</p>
+<p>当一个客户端结束它的事务时，无论事务是成功执行，还是失败， watched_keys 字典中和这个客户端相关的资料都会被清除</p>
+<h3 id="redis-事务的特性"><a href="#redis-事务的特性" class="headerlink" title="redis 事务的特性"></a>redis 事务的特性</h3><ul>
+<li>如果在执行 exec 之前事务中断了，那么所有的命令都不会执行</li>
+<li>如果某个命令语法错误，不仅会导致该命令入队失败，整个事务都将无法执行</li>
+<li>如果执行了 exec 命令之后，那么所有的命令都会按序执行</li>
+<li>当 redis 在执行命令时，如果出现了错误，那么 redis 不会终止其它命令的执行，这是与关系型数据库事务最大的区别，redis 事务不会因为某个命令执行失败而回滚</li>
+</ul>
+<h3 id="redis-事务的缺陷"><a href="#redis-事务的缺陷" class="headerlink" title="redis 事务的缺陷"></a>redis 事务的缺陷</h3><h4 id="不满足原子性"><a href="#不满足原子性" class="headerlink" title="不满足原子性"></a>不满足原子性</h4><p>与关系型数据库的事务不同，redis 事务是不满足原子性的，一个事务执行过程中，其他事务或 client 是可以对相应的 key 进行修改的</p>
+<p>想要避免这样的并发性问题就需要使用 WATCH 命令，但是通常来说，必须经过仔细考虑才能决定究竟需要对哪些 key 进行 WATCH 加锁</p>
+<p>额外的 WATCH 会增加事务失败的可能，而缺少必要的 WATCH 又会让我们的程序产生竞争条件</p>
+<h4 id="后执行的命令无法依赖先执行命令的结果"><a href="#后执行的命令无法依赖先执行命令的结果" class="headerlink" title="后执行的命令无法依赖先执行命令的结果"></a>后执行的命令无法依赖先执行命令的结果</h4><p>由于事务中的所有命令都是互相独立的，在遇到 exec 命令之前并没有真正的执行，所以我们无法在事务中的命令中使用前面命令的查询结果</p>
+<p>我们唯一可以做的就是通过 watch 保证在我们进行修改时，如果其它事务刚好进行了修改，则我们的修改停止，然后应用层做相应的处理</p>
+<h4 id="事务中的每条命令都会与-redis-服务器进行网络交互"><a href="#事务中的每条命令都会与-redis-服务器进行网络交互" class="headerlink" title="事务中的每条命令都会与 redis 服务器进行网络交互"></a>事务中的每条命令都会与 redis 服务器进行网络交互</h4><p>redis 事务开启之后，每执行一个操作返回的都是 queued，这里就涉及到客户端与服务器端的多次交互</p>
+<p>明明是需要一次批量执行的 n 条命令，还需要通过多次网络交互，显然非常浪费</p>
+<blockquote>
+<p>这个就是为什么会有 pipeline 的原因，减少 RTT 的时间</p>
+</blockquote>
+<h2 id="redis-事务缺陷的解决-–-Lua"><a href="#redis-事务缺陷的解决-–-Lua" class="headerlink" title="redis 事务缺陷的解决 – Lua"></a>redis 事务缺陷的解决 – Lua</h2><p>Lua 是一个小巧的脚本语言，有标准 C 编写，几乎在所有操作系统和平台上都可以编译运行</p>
+<p>一个完整的 Lua 解释器不过 200k，在目前所有脚本引擎中，Lua 的速度是最快的，这一切都决定了 Lua 是作为嵌入式脚本的最佳选择</p>
+<p>redis 2.6 版本之后也内嵌了一个 Lua 解释器，可以用于一些简单的事务与逻辑运算</p>
+<h3 id="Redis-内嵌-Lua-的优势"><a href="#Redis-内嵌-Lua-的优势" class="headerlink" title="Redis 内嵌 Lua 的优势"></a>Redis 内嵌 Lua 的优势</h3><h4 id="在服务端实现业务逻辑"><a href="#在服务端实现业务逻辑" class="headerlink" title="在服务端实现业务逻辑"></a>在服务端实现业务逻辑</h4><p>按照我们上面介绍的，redis 事务执行中，每一条指令之间是相互独立的，我们无法让后面的操作依赖前面命名的结果，这就让整个事务仅仅成为了一个命令集合，在命令之间我们完全无法做任何事</p>
+<p>但是，Lua 作为一个脚本语言，可以拥有分支、循环等语法结构，可以进行业务逻辑的编写</p>
+<h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>由于 Lua 脚本是提交到 Redis server 进行一次性执行的，整个执行过程中不会被其他任何工作打断，其它任何脚本或者命令都无法执行,也就不会引起竞争条件，从而本身就实现了事务的原子性</p>
+<p>但是，这同样会引起一个问题，正如官方文档所说的，正是由于 script 执行的原子性，<code>所以我们不要在 script 中执行过长开销的程序，否则会验证影响其它请求的执行</code></p>
+<h4 id="可复用"><a href="#可复用" class="headerlink" title="可复用"></a>可复用</h4><p>所有 Lua 脚本都是可重用的，这样就减少了网络开销</p>
+<ul>
+<li>EVAL script numkeys key[key …] arg [arg…]</li>
+<li>EVALSHA sha1</li>
+<li>SCRIPT LOAD script</li>
+<li>SCRIPT EXISTS sha1</li>
+</ul>
+<h5 id="EVAL"><a href="#EVAL" class="headerlink" title="EVAL"></a>EVAL</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EVAL script numkeys key [key ...] arg [arg ...]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>script</td>
+<td>一段 Lua 脚本或 Lua 脚本文件所在路径及文件名</td>
+</tr>
+<tr>
+<td>numkeys</td>
+<td>Lua 脚本对应参数数量</td>
+</tr>
+<tr>
+<td>key [key …]</td>
+<td>Lua 中通过全局变量 KEYS 数组存储的传入参数</td>
+</tr>
+<tr>
+<td>arg [arg …]</td>
+<td>Lua 中通过全局变量 ARGV 数组存储的传入附加参数</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">EVAL &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot; 2 key1 key2 first second</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;first&quot;</span><br><span class="line">4) &quot;second&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/Redis/redis-lua.png" alt="redis-lua"></p>
+<h5 id="SCRIPT-LOAD-与-EVALSHA-命令"><a href="#SCRIPT-LOAD-与-EVALSHA-命令" class="headerlink" title="SCRIPT LOAD 与 EVALSHA 命令"></a>SCRIPT LOAD 与 EVALSHA 命令</h5><p>对于不立即执行的 Lua 脚本，或需要重用的 Lua 脚本，可以通过 SCRIPT LOAD 提前载入 Lua 脚本，这个命令会立即返回对应的 SHA1 校验码</p>
+<p>当需要执行函数时，通过 EVALSHA 调用 SCRIPT LOAD 返回的 SHA1 即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT LOAD &quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot;</span><br><span class="line">&quot;232fd51614574cf0867b83d384a5e898cfd24e5a&quot;</span><br><span class="line"></span><br><span class="line">EVALSHA &quot;232fd51614574cf0867b83d384a5e898cfd24e5a&quot; 2 key1 key2 first second</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br><span class="line">3) &quot;first&quot;</span><br><span class="line">4) &quot;second&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="通过-Lua-脚本执行-redis-命令"><a href="#通过-Lua-脚本执行-redis-命令" class="headerlink" title="通过 Lua 脚本执行 redis 命令"></a>通过 Lua 脚本执行 redis 命令</h4><p>在 Lua 脚本中，只要使用 redis.call 传入 redis 命令就可以直接执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval &quot;return redis.call(&#39;set&#39;,KEYS[1],&#39;bar&#39;)&quot; 1 foo     --等同于在服务端执行 set foo bar</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用-Lua-脚本实现访问频率限制"><a href="#使用-Lua-脚本实现访问频率限制" class="headerlink" title="使用 Lua 脚本实现访问频率限制"></a>使用 Lua 脚本实现访问频率限制</h4><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--</span></span><br><span class="line"><span class="comment">-- KEYS[1] 要限制的ip</span></span><br><span class="line"><span class="comment">-- ARGV[1] 限制的访问次数</span></span><br><span class="line"><span class="comment">-- ARGV[2] 限制的时间</span></span><br><span class="line"><span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> key = <span class="string">"rate.limit:"</span> .. KEYS[<span class="number">1</span>]</span><br><span class="line"><span class="keyword">local</span> limit = <span class="built_in">tonumber</span>(ARGV[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">local</span> expire_time = ARGV[<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> is_exists = redis.call(<span class="string">"EXISTS"</span>, key)</span><br><span class="line"><span class="keyword">if</span> is_exists == <span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> redis.call(<span class="string">"INCR"</span>, key) &gt; limit <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    redis.call(<span class="string">"SET"</span>, key, <span class="number">1</span>)</span><br><span class="line">    redis.call(<span class="string">"EXPIRE"</span>, key, expire_time)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Redis/">Redis</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Redis/">Redis</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

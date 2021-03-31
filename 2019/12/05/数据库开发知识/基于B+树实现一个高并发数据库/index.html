@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【数据库开发知识】基于B+树实现一个高并发数据库 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【数据库开发知识】基于B+树实现一个高并发数据库"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【数据库开发知识】基于B+树实现一个高并发数据库</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-12-05T09:43:43.000Z">
+          2019-12-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="开发笔记"><a href="#开发笔记" class="headerlink" title="开发笔记"></a>开发笔记</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M (3) <span class="comment">// B+树的阶数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIMIT_M_2 (M &gt;&gt; 1) <span class="comment">// M的中点</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> True (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> False (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INDEX_NAME (<span class="meta-string">"index"</span>) <span class="comment">// 索引文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SUCCESS (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR (-1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OPEN_MODE (O_RDWR | O_CREAT | O_TRUNC) <span class="comment">// 打开文件的模式：可读可写打开 | 若此文件不存在则创建它 | 如果文件已存在，并且以只写或可读可写方式打开，则将其长度截断（Truncate）为0字节</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) <span class="comment">// 文件的权限：660</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> KeyType; <span class="comment">// 关键字的数据类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">off_t</span> Record; <span class="comment">// 索引所对应的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span>&#123;</span></span><br><span class="line">	<span class="keyword">int</span> isLeaf;                <span class="comment">// 是否是叶子节点</span></span><br><span class="line">	<span class="keyword">int</span> keynum;                <span class="comment">// 关键字个数</span></span><br><span class="line">	KeyType key[M + <span class="number">1</span>];        <span class="comment">// 存放的关键字的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">ptr</span>[<span class="title">M</span> + 1];</span><span class="comment">// 关键字子树的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	Record value[M + <span class="number">1</span>];       <span class="comment">// 关键字对应的value，当节点为叶子节点的时候才有效</span></span><br><span class="line">&#125;BPTNode, *BPTree;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到 <code>BPTNode</code> 是我们的节点结构体，这个结构体占用的内存大小我们计算一下：</p>
+<p>记住内存对齐的原则，并且指针占用 8 个字节，off_t 一般是 64 位，占用 8 个字节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(int)+4(int)+4(KeyType)*4(M+1)+4(*pts)*4(M+1)+4(*next)+8(Record)*4(M+1) &#x3D; 4+4+16+32+8+32 &#x3D; 96bytes</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>## 构建 B+树</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从索引文件中读取数据，创建b+树</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> BPTree <span class="title">CreatBPTree</span><span class="params">(BPTree T)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> fd;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>, ret = <span class="number">-1</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> file_len = <span class="number">-1</span>;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">stat</span> <span class="title">statbuff</span>;</span></span><br><span class="line">  KeyType temp = <span class="number">0</span>;</span><br><span class="line">  KeyType *q;</span><br><span class="line">  Record t_record = <span class="number">0</span>;</span><br><span class="line">  Record *p;</span><br><span class="line"></span><br><span class="line">  q = &amp;temp;</span><br><span class="line">  p = &amp;t_record;</span><br><span class="line"></span><br><span class="line">  file_len = get_file_size(INDEX_NAME);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ((fd = <span class="built_in">open</span>(INDEX_NAME, O_RDONLY)) == <span class="number">-1</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Open index file failled!\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (i &lt; file_len)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ((ret = pread(fd, q, <span class="number">4</span>, i)) == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">close</span>(fd);</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ((ret = pread(fd, p, <span class="number">4</span>, i + <span class="number">4</span>)) == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">close</span>(fd);</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    T = Insert(T, *q, *p);</span><br><span class="line">    i = i + <span class="number">8</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">close</span>(fd);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以只读的方式打开索引未见，用于构建 B+树。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>, <a href="/categories/数据结构/数据库/">数据库</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/数据库开发知识/">数据库开发知识</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

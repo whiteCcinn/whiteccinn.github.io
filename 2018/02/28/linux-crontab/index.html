@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Linux】- 定时任务 - crontab | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Linux】- 定时任务 - crontab"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Linux】- 定时任务 - crontab</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/linux-crontab/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T07:13:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="crontab-定时任务"><a href="#crontab-定时任务" class="headerlink" title="crontab 定时任务"></a>crontab 定时任务</h2><p>通过 crontab 命令，我们可以在固定的间隔时间执行指定的系统指令或 shell script 脚本。时间间隔的单位可以是分钟、小时、日、月、周及以上的任意组合。这个命令非常适合周期性的日志分析或数据备份等工作。</p>
+<p>在 Linux 系统中，Linux 任务调度的工作主要分为以下两类：<br>1、系统执行的工作：系统周期性所要执行的工作，如备份系统数据、清理缓存<br>2、个人执行的工作：某个用户定期要做的工作，例如每隔 10 分钟检查邮件服务器是否有新信，这些工作可由每个用户自行设置</p>
+<p>一、/etc/crontab、/etc/cron.deny 、 /etc/cron.allow 文件介绍</p>
+<p>系统调度的任务一般存放在/etc/crontab 这个文件下，里面存放了一些系统运行的调度程序，通过命令我们可以看一下里面的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@caiwh ~]# cat &#x2F;etc&#x2F;crontab</span><br><span class="line">SHELL&#x3D;&#x2F;bin&#x2F;bash</span><br><span class="line">PATH&#x3D;&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin</span><br><span class="line">MAILTO&#x3D;root</span><br><span class="line">HOME&#x3D;&#x2F;</span><br><span class="line"></span><br><span class="line"># For details see man 4 crontabs</span><br><span class="line"></span><br><span class="line"># Example of job definition:</span><br><span class="line"># .---------------- minute (0 - 59)</span><br><span class="line"># |  .------------- hour (0 - 23)</span><br><span class="line"># |  |  .---------- day of month (1 - 31)</span><br><span class="line"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span><br><span class="line"># |  |  |  |  .---- day of week (0 - 6) (Sunday&#x3D;0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span><br><span class="line"># |  |  |  |  |</span><br><span class="line"># *  *  *  *  * user-name command to be executed</span><br></pre></td></tr></table></figure>
+
+<p><font color="red">一定要注意默认的环境变量，否则直接写在 crontab -e 写的命令，由于不在当前的默认的环境变量中。所以会可能找不到。</font>.</p>
+<p>这些任务都会是系统在运行起来后自动进行调度的。同时在/etc 目录下还存放了/etc/cron.deny 和 /etc/cron.allow 文件</p>
+<ul>
+<li><p>/etc/cron.deny 表示不能使用 crontab 命令的用户</p>
+</li>
+<li><p>/etc/cron.allow 表示能使用 crontab 的用户。</p>
+</li>
+</ul>
+<p>如果两个文件同时存在，那么/etc/cron.allow 优先。</p>
+<p>如果两个文件都不存在，那么只有 root 用户可以安排作业。</p>
+<h3 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">crontab [-u user] file</span><br><span class="line">crontab [-u user] [ -e | -l | -r ]</span><br></pre></td></tr></table></figure>
+
+<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><ul>
+<li>-u user：用来设定某个用户的 crontab 服务；</li>
+<li>file：file 是命令文件的名字,表示将 file 做为 crontab 的任务列表文件并载入 crontab。如果在命令行中没有指定这个文件，crontab 命令将接受标准输入（键盘）上键入的命令，并将它们载入 crontab。</li>
+<li>-e：编辑某个用户的 crontab 文件内容。如果不指定用户，则表示编辑当前用户的 crontab 文件。</li>
+<li>-l：显示某个用户的 crontab 文件内容，如果不指定用户，则表示显示当前用户的 crontab 文件内容。</li>
+<li>-r：从/var/spool/cron 目录中删除某个用户的 crontab 文件，如果不指定用户，则默认删除当前用户的 crontab 文件。</li>
+<li>-i：在删除用户的 crontab 文件时给确认提示。</li>
+</ul>
+<h3 id="crontab-的文件格式"><a href="#crontab-的文件格式" class="headerlink" title="crontab 的文件格式"></a>crontab 的文件格式</h3><p>分 时 日 月 星期 要运行的命令</p>
+<ul>
+<li>第 1 列分钟 0 ～ 59</li>
+<li>第 2 列小时 0 ～ 23（0 表示子夜）</li>
+<li>第 3 列日 1 ～ 31</li>
+<li>第 4 列月 1 ～ 12</li>
+<li>第 5 列星期 0 ～ 7（0 和 7 表示星期天）</li>
+<li>第 6 列要运行的命令</li>
+</ul>
+<h3 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h3><ol>
+<li>创建一个新的 crontab 文件</li>
+</ol>
+<p>向 cron 进程提交一个 crontab 文件之前，首先要设置环境变量 EDITOR。cron 进程根据它来确定使用哪个编辑器编辑 crontab 文件。99%的 UNIX 和 LINUX 用户都使用 vi，如果你也是这样，那么你就编辑$HOME 目录下的. profile 文件，在其中加入这样一行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EDITOR&#x3D;vi; export EDITOR</span><br></pre></td></tr></table></figure>
+
+<p>然后保存并退出。不妨创建一个名为<user> cron 的文件，其中<user>是用户名，例如， davecron。在该文件中加入如下的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># (put your own initials here)echo the date to the console every</span><br><span class="line"># 15minutes between 6pm and 6am</span><br><span class="line">0,15,30,45 18-06 * * * &#x2F;bin&#x2F;echo &#39;date&#39; &gt; &#x2F;dev&#x2F;console</span><br></pre></td></tr></table></figure>
+
+<p>保存并退出。注意前面 5 个域用空格分隔。</p>
+<p>在上面的例子中，系统将每隔 15 分钟向控制台输出一次当前时间。如果系统崩溃或挂起，从最后所显示的时间就可以一眼看出系统是什么时间停止工作的。在有些系统中，用 tty1 来表示控制台，可以根据实际情况对上面的例子进行相应的修改。为了提交你刚刚创建的 crontab 文件，可以把这个新创建的文件作为 cron 命令的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab davecron</span><br></pre></td></tr></table></figure>
+
+<p>现在该文件已经提交给 cron 进程，它将每隔 1 5 分钟运行一次。同时，新创建文件的一个副本已经被放在/var/spool/cron 目录中，文件名就是用户名(即 dave)。</p>
+<h3 id="列出-crontab-文件"><a href="#列出-crontab-文件" class="headerlink" title="列出 crontab 文件"></a>列出 crontab 文件</h3><p>使用-l 参数列出 crontab 文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -l</span><br><span class="line">0,15,30,45 18-06 * * * &#x2F;bin&#x2F;echo &#96;date&#96; &gt; dev&#x2F;tty1</span><br></pre></td></tr></table></figure>
+
+<p>可以使用这种方法在$HOME 目录中对 crontab 文件做一备份</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -l &gt; $HOME&#x2F;mycron</span><br></pre></td></tr></table></figure>
+
+<p>这样，一旦不小心误删了 crontab 文件，可以用上一节所讲述的方法迅速恢复。</p>
+<h3 id="编辑-crontab-文件"><a href="#编辑-crontab-文件" class="headerlink" title="编辑 crontab 文件"></a>编辑 crontab 文件</h3><p>如果希望添加、删除或编辑 crontab 文件中的条目，而 EDITOR 环境变量又设置为 vi，那么就可以用 vi 来编辑 crontab 文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>可以像使用 vi 编辑其他任何文件那样修改 crontab 文件并退出。如果修改了某些条目或添加了新的条目，那么在保存该文件时， cron 会对其进行必要的完整性检查。如果其中的某个域出现了超出允许范围的值，它会提示你。<br>我们在编辑 crontab 文件时，没准会加入新的条目。例如，加入下面的一条</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># DT:delete core files,at 3.30am on 1,7,14,21,26,26 days of each month</span><br><span class="line">	30 3 1,7,14,21,26 * * &#x2F;bin&#x2F;find -name &#39;core&#39; -exec rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<p>保存并退出。</p>
+<p>note</p>
+<pre><code>最好在crontab文件的每一个条目之上加入一条注释，这样就可以知道它的功能、运行时间，更为重要的是，知道这是哪位用户的定时作业。</code></pre><p>删除 crontab 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">crontab -r</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用实例"><a href="#使用实例" class="headerlink" title="使用实例"></a>使用实例</h2><p>实例 1：每 1 分钟执行一次 myCommand</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * myCommand</span><br></pre></td></tr></table></figure>
+
+<p>实例 2：每小时的第 3 和第 15 分钟执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3,15 * * * * myCommand</span><br></pre></td></tr></table></figure>
+
+<p>实例 3：在上午 8 点到 11 点的第 3 和第 15 分钟执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3,15 8-11 * * * myCommand</span><br></pre></td></tr></table></figure>
+
+<p>实例 4：每隔两天的上午 8 点到 11 点的第 3 和第 15 分钟执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    3,15 8-11 *&#x2F;2  *  * myCommand</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line"></span><br><span class="line">实例 5：每周一上午 8 点到 11 点的第 3 和第 15 分钟执行</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;shell</span><br><span class="line">    3,15 8-11 * * 1 myCommand</span><br></pre></td></tr></table></figure>
+
+<p>实例 6：每晚的 21:30 重启 smb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">    30 21 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例7：每月1、10、22日的4 : 45重启smb</span><br><span class="line">&#96;&#96;&#96;&#96;</span><br><span class="line">    45 4 1,10,22 * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例 8：每周六、周日的 1 : 10 重启 smb</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    10 1 * * 6,0 &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例9：每天18 : 00至23 : 00之间每隔30分钟重启smb</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0,30 18-23 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例 10：每星期六的晚上 11 : 00 pm 重启 smb</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 23 * * 6 &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line"></span><br><span class="line">实例11：每一小时重启smb</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    * *&#x2F;1 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例12：晚上11点到早上7点之间，每隔一小时重启smb</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 23-7 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line"></span><br><span class="line">## 使用注意事项</span><br><span class="line"></span><br><span class="line">注意环境变量问题</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">有时我们创建了一个crontab，但是这个任务却无法自动执行，而手动执行这个任务却没有问题，这种情况一般是由于在crontab文件中没有配置环境变量引起的。</span><br><span class="line"></span><br><span class="line">在crontab文件中定义多个调度任务时，需要特别注环境变量的设置，因为我们手动执行某个任务时，是在当前shell环境下进行的，程序当然能找到环境变量，而系统自动执行任务调度时，是不会加载任何环境变量的，因此，就需要在crontab文件中指定任务运行所需的所有环境变量，这样，系统执行任务调度时就没有问题了。</span><br><span class="line"></span><br><span class="line">不要假定cron知道所需要的特殊环境，它其实并不知道。所以你要保证在shelll脚本中提供所有必要的路径和环境变量，除了一些自动设置的全局变量。所以注意如下3点：</span><br><span class="line"></span><br><span class="line">1. 脚本中涉及文件路径时写全局路径；</span><br><span class="line">2. 脚本执行要用到java或其他环境变量时，通过source命令引入环境变量，如::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    cat start_cbp.sh</span><br><span class="line">    !&#x2F;bin&#x2F;sh</span><br><span class="line">    source &#x2F;etc&#x2F;profile</span><br><span class="line">    export RUN_CONF&#x3D;&#x2F;home&#x2F;d139&#x2F;conf&#x2F;platform&#x2F;cbp&#x2F;cbp_jboss.conf</span><br><span class="line">    &#x2F;usr&#x2F;local&#x2F;jboss-4.0.5&#x2F;bin&#x2F;run.sh -c mev &amp;</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">3. 当手动执行脚本OK，但是crontab死活不执行时,很可能是环境变量惹的祸，可尝试在crontab中直接引入环境变量解决问题。</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 * * * * . &#x2F;etc&#x2F;profile;&#x2F;bin&#x2F;sh &#x2F;var&#x2F;www&#x2F;java&#x2F;audit_no_count&#x2F;bin&#x2F;restart_audit.sh</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">注意清理系统用户的邮件日志</span><br><span class="line"></span><br><span class="line">每条任务调度执行完毕，系统都会将任务输出信息通过电子邮件的形式发送给当前系统用户，这样日积月累，日志信息会非常大，可能会影响系统的正常运行，因此，将每条任务进行重定向处理非常重要。</span><br><span class="line">例如，可以在 crontab 文件中设置如下形式，忽略日志输出::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 *&#x2F;3 * * * &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;apachectl restart &gt;&#x2F;dev&#x2F;null 2&gt;&amp;1</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">&quot;&#x2F;dev&#x2F;null 2&gt;&amp;1&quot;表示先将标准输出重定向到&#x2F;dev&#x2F;null，然后将标准错误重定向到标准输出，由于标准输出已经重定向到了&#x2F;dev&#x2F;null，因此标准错误也会重定向到&#x2F;dev&#x2F;null，这样日志输出问题就解决了。</span><br><span class="line"></span><br><span class="line">系统级任务调度与用户级任务调度</span><br><span class="line"></span><br><span class="line">系统级任务调度主要完成系统的一些维护操作，用户级任务调度主要完成用户自定义的一些任务，可以将用户级任务调度放到系统级任务调度来完成（不建议这么做），但是反过来却不行，root用户的任务调度操作可以通过&quot;crontab –uroot –e&quot;来设置，也可以将调度任务直接写入&#x2F;etc&#x2F;crontab文件，需要注意的是，如果要定义一个定时重启系统的任务，就必须将任务放到&#x2F;etc&#x2F;crontab文件，即使在root用户下创建一个定时重启系统的任务也是无效的。</span><br><span class="line"></span><br><span class="line">其他注意事项</span><br><span class="line"></span><br><span class="line">新创建的cron job，不会马上执行，至少要过2分钟才执行。如果重启cron则马上执行。</span><br><span class="line"></span><br><span class="line">当crontab失效时，可以尝试&#x2F;etc&#x2F;init.d&#x2F;crond restart解决问题。或者查看日志看某个job有没有执行&#x2F;报错tail -f &#x2F;var&#x2F;log&#x2F;cron。</span><br><span class="line"></span><br><span class="line">千万别乱运行crontab -r。它从Crontab目录（&#x2F;var&#x2F;spool&#x2F;cron）中删除用户的Crontab文件。删除了该用户的所有crontab都没了。</span><br><span class="line"></span><br><span class="line">在crontab中%是有特殊含义的，表示换行的意思。如果要用的话必须进行转义\%，如经常用的date ‘+%Y%m%d’在crontab里是不会执行的，应该换成date ‘+\%Y\%m\%d’。</span><br><span class="line"></span><br><span class="line">更新系统时间时区后需要重启cron,在ubuntu中服务名为cron::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    $service cron restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">ubuntu下启动、停止与重启cron::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    $sudo &#x2F;etc&#x2F;init.d&#x2F;cron start</span><br><span class="line">    $sudo &#x2F;etc&#x2F;init.d&#x2F;cron stop</span><br><span class="line">    $sudo &#x2F;etc&#x2F;init.d&#x2F;cron restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">Centso系统下管理crond</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">systemctl restart crond</span><br><span class="line">&#96;&#96;&#96;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Crontab/">Crontab</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

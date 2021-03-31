@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>docker-python-httpruner | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="docker-python-httpruner"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>docker-python-httpruner</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/08/22/docker-python-httpruner/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-22T11:56:00.000Z">
+          2018-08-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="Httprunner"><a href="#Httprunner" class="headerlink" title="Httprunner"></a>Httprunner</h1><p>最近，由于某些原因，了解到了 httprunner。</p>
+<p>先贴上我的本次文章的主题：</p>
+<ul>
+<li><p>支持 docker 环境</p>
+</li>
+<li><p>支持 jsonschema</p>
+</li>
+<li><p>粗略封装成了应用型框架</p>
+</li>
+<li><p>import python-file 的时候，请写基于项目根目录的路径</p>
+</li>
+</ul>
+<p>目标：<br><a href="https://github.com/whiteCcinn/httprunner-docker" target="_blank" rel="noopener">[Github:httprunner-docker]</a></p>
+<p><a href="https://hub.docker.com/r/ccinn/httprunner-docker" target="_blank" rel="noopener">[HubDocker:httprunner-docker]</a></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>源自于：<br><a href="http://cn.httprunner.org/" target="_blank" rel="noopener" title="httprunner">[httprunner]</a></p>
+<p><img src="https://usblog.crazylaw.cn/usr/uploads/2018/08/852562228.png" alt=""></p>
+<p>可以看到，它是一个由 python 写的测试框架。</p>
+<p>HttpRunner 是一款面向 HTTP(S) 协议的通用测试框架，只需编写维护一份 YAML/JSON 脚本，即可实现自动化测试、性能测试、线上监控、持续集成等多种测试需求。</p>
+<p>作为一名后端语言开发人员，python 能力不算太强，一边写，一遍学习。在本机上开发上遇到了各种瓶颈，可以说是看得懂和自己写是二回事。于是，这里可以把我当作一个测试新手人员，和大家一起记录学习的过程。</p>
+<p>首先，我选择了 pycharm 这一款 JB 的产品作为我的 ide。</p>
+<p>我发现它有一些智能的地方，比如自带 python 等环境，但是这也是致命麻烦的地方（可能是我孤陋寡闻了），就是想着如果我有一个项目，用到 httprunner 作为测试框架，那么我的目录不固定，我要到处引入 <code>__init__.py</code>的文件，显得很痛苦。而且，python 我所了解到的是 3.x 和 2.x 还是有一些区别的。</p>
+<p>默认它安装的是 2.x，但是作为开发人员，在学习的过程中，当然期待是最新的，后续，由于需求的原因，我又去看了一下 2.x 和 3.x 兼容的问题，但是这里就不做叙述了。</p>
+<p>我们大家平时用的环境比较多的是 2 中，一种是<code>window</code>，一种是<code>maxOS</code>，万一我在 ide 环境下运行得好好的，去到我的生成环境却无法运行了怎么办？或者说，想要模拟服务器上运行的话，或者方便移植的话，怎么处理？答案是：<code>docker</code>。是的，我们可以用 docker 来解决这个问题。</p>
+<p>但是我翻看了一下<code>httprunner</code>的官方，并没有提供出<code>docker</code>文件，于是那好吧，那我就自己撸一个吧，再加上参考了几个文章，构建出了一套<code>基于httprunner的测试开发框架</code>，整套体系就在我的 github 中，大家可以去看看。</p>
+<p>项目目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">├── .env                             ## demo所使用的环境变量</span><br><span class="line">├── .env.example</span><br><span class="line">├── Dockerfile                    ## 本项目的Dockerfile</span><br><span class="line">├── README.MD</span><br><span class="line">├── config</span><br><span class="line">│   ├── demo_data.ini            ## 可变数据的设置</span><br><span class="line">│   └── test_data.ini              ## 多个可变数据的设置</span><br><span class="line">├── docker-entrypoint.sh      ## Dockerfile的入口点</span><br><span class="line">├── jsonschemas                  ## 用于支持json-schema</span><br><span class="line">│   └── demo-jsonschema</span><br><span class="line">│       └── user.schema.json</span><br><span class="line">├── lib                          ## 存放自己测试框架所需要用到的类库（例如生成token的算法）</span><br><span class="line">├── parameters                      ## 用于解析ini数据</span><br><span class="line">│   ├── common.py</span><br><span class="line">│   └── header.py</span><br><span class="line">├── reports                            ## 报告默认生成的地方</span><br><span class="line">│   └── 1534933506.html</span><br><span class="line">├── requirements.txt             ## 项目初始化依赖安装列表</span><br><span class="line">├── run-all.sh                        ## 大家批量运行用例写的一个十分简单的shell脚本</span><br><span class="line">├── testcases                        ## （重点）存放我们的用例</span><br><span class="line">│   ├── debugtalk.py</span><br><span class="line">│   └── demo.json</span><br><span class="line">└── util                               ## 本项目官方所用的工具类和自定义公共函数</span><br><span class="line">    ├── common_config.py</span><br><span class="line">    ├── env.py</span><br><span class="line">    ├── function.py</span><br><span class="line">    └── validation_json_schema.py</span><br></pre></td></tr></table></figure>
+
+<p>这里，我在上面已经大致写了每个目录所干什么的了。</p>
+<hr>
+<h2 id="起步"><a href="#起步" class="headerlink" title="起步"></a>起步</h2><p>你需要安装好 docker，docker 作为虚拟化技术，建议大家都多学学。即使是测试的同学，也要积极拥抱各种前沿的技术哦。加油～！</p>
+<h3 id="1-安装-docker"><a href="#1-安装-docker" class="headerlink" title="1. 安装 docker"></a>1. 安装 docker</h3><p>略过….</p>
+<h3 id="2-下载项目"><a href="#2-下载项目" class="headerlink" title="2. 下载项目"></a>2. 下载项目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;whiteCcinn&#x2F;httprunner-docker.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-进入项目"><a href="#3-进入项目" class="headerlink" title="3. 进入项目"></a>3. 进入项目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd httprunner-docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-编译-dockerfile-生成项目镜像"><a href="#4-编译-dockerfile-生成项目镜像" class="headerlink" title="4. 编译 dockerfile 生成项目镜像"></a>4. 编译 dockerfile 生成项目镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t httprunner .</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-通过镜像运行容器代替-httprunner"><a href="#5-通过镜像运行容器代替-httprunner" class="headerlink" title="5. 通过镜像运行容器代替 httprunner"></a>5. 通过镜像运行容器代替 httprunner</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner</span><br></pre></td></tr></table></figure>
+
+<p>为了帮助不熟悉 docker 的同学在这里强调一下参数</p>
+<ul>
+<li><p><code>-it</code> 让 docker 容器拥有交互的能力。（重要的是加了这个参数，你可以通过 <code>/bin/sh</code> 进入容器执行也是可以的，而且加了这个参数，容器内部的<code>颜色样式</code>才会被打印出来，不然会全部白色，十分难以辨别 ）</p>
+</li>
+<li><p><code>--rm</code> 可以理解为临时创建一个容器，容器运行结束后便会自行销毁，这个大家可以不用理解，但是加了这个参数字面的意思就是它不会重复 new 很多随机命名的容器。</p>
+</li>
+<li><p><code>-v</code> 这个是 docker 中相对来说比较重要的命令，用了这个命令，你的 docker 容器和你的本机目录将会变成共享卷，通俗一点就是加了这个命令，你新加的用例 json 文件，才会和 docker 容器里面的目录同步，并且你所生成的测试报告，才可以在本地直接访问。由于我们是在项目下执行的，所以我们用<code>$PWD</code>命令来快速获取当前目录的路径，然后映射到我们的容器里面的路径<code>/usr/src/myapp</code>（因为我们的 docker 项目的工作路径就是在这里，这个不需要修改）</p>
+</li>
+<li><p><code>httprunner</code> 这个就是我们刚才用<code>docker build -t httprunner .</code>打印出来的<code>httprunner</code>的名字。</p>
+</li>
+</ul>
+<h3 id="6-结果"><a href="#6-结果" class="headerlink" title="6. 结果"></a>6. 结果</h3><p>大家可以看到，这个时候，默认的，我们可以看到<code>hrun</code>提供给我们的命令提示信息。具体的大家，可以观看 httprunner 官方文档。</p>
+<hr>
+<h2 id="运行官方-demo"><a href="#运行官方-demo" class="headerlink" title="运行官方 demo"></a>运行官方 demo</h2><p>执行如下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner .&#x2F;testcases&#x2F;demo.json</span><br></pre></td></tr></table></figure>
+
+<p>这里可以看到，我们的官方 demo 成功运行了，并且生成的测试报告就在<code>reports</code>目录中。</p>
+<p>可以看到，demo 中，运行了 2 个用例。</p>
+<ul>
+<li><p><code>/user - use jsonschema</code> （该用例运用了 jsonschema 来校验具体数据是否正常）</p>
+</li>
+<li><p><code>/favicon.ico - not use jsonschema</code> （该用例没有用 jsonschema 来校验具体数据，仅仅用了 httprunner 提供的校验）</p>
+</li>
+</ul>
+<p>并且我们可以看到，用到 <code>json-schema</code> 来作为校验的时候，我们的 <code>Validators</code> 中 <code>jsonschema_error</code>为空的时候，就是代表数据信息通过了<code>json-schema</code>的校验。</p>
+<h4 id="尝试一下不通过-json-schema-的结果"><a href="#尝试一下不通过-json-schema-的结果" class="headerlink" title="尝试一下不通过 json-schema 的结果"></a>尝试一下不通过 json-schema 的结果</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&quot;message&quot;: &#123;</span><br><span class="line">  &quot;$id&quot;: &quot;#&#x2F;properties&#x2F;message&quot;,</span><br><span class="line">  &quot;type&quot;: &quot;string&quot;,                          ## 把这里改成&quot;object&quot;</span><br><span class="line">  &quot;title&quot;: &quot;The Message Schema&quot;,</span><br><span class="line">  &quot;default&quot;: &quot;&quot;,</span><br><span class="line">  &quot;examples&quot;: [</span><br><span class="line">    &quot;Requires authentication&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;pattern&quot;: &quot;^(.*)$&quot;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>终端：</p>
+<p>这里可以我们可以看到终端会抛出一丢<code>红色的错误信息</code>。</p>
+<p>我们提取一段关键信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ERROR    validate: jsonschema_error equals (str)	&#x3D;&#x3D;&gt; fail</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">jsonschema.exceptions.ValidationError: &#39;Requires authentication&#39; is not of type &#39;object&#39;</span><br><span class="line"></span><br><span class="line">Failed validating &#39;type&#39; in schema[&#39;properties&#39;][&#39;message&#39;]:</span><br><span class="line">    &#123;&#39;$id&#39;: &#39;#&#x2F;properties&#x2F;message&#39;,</span><br><span class="line">     &#39;default&#39;: &#39;&#39;,</span><br><span class="line">     &#39;examples&#39;: [&#39;Requires authentication&#39;],</span><br><span class="line">     &#39;pattern&#39;: &#39;^(.*)$&#39;,</span><br><span class="line">     &#39;title&#39;: &#39;The Message Schema&#39;,</span><br><span class="line">     &#39;type&#39;: &#39;object&#39;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段信息告诉我们，message 不是 object 类型，所以报错了。</p>
+<p>测试报告的结果：</p>
+<p>这里我们看到这个测试报告，变成了我们所期待的错误的样子，并且也可以具体的信息。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h2 id="start"><a href="#start" class="headerlink" title="start"></a>start</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t httprunner .</span><br></pre></td></tr></table></figure>
+
+<h5 id="运行单独测试用例："><a href="#运行单独测试用例：" class="headerlink" title="运行单独测试用例："></a>运行单独测试用例：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner testcases&#x2F;you-json-file.json</span><br><span class="line"></span><br><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner .&#x2F;testcases&#x2F;you-json-file.json</span><br><span class="line"></span><br><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner hrun testcases&#x2F;you-json-file.json</span><br></pre></td></tr></table></figure>
+
+<h5 id="批量运行："><a href="#批量运行：" class="headerlink" title="批量运行："></a>批量运行：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner run-all.sh</span><br></pre></td></tr></table></figure>
+
+<h5 id="进入容器内部操作："><a href="#进入容器内部操作：" class="headerlink" title="进入容器内部操作："></a>进入容器内部操作：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp httprunner &#x2F;bin&#x2F;sh</span><br></pre></td></tr></table></figure>
+
+<p>本项目的命令都做了兼容处理，避免了一些命令错误，请大家放心使用，作为一名开发人员，希望本文章对大家的测试有所帮助。如果使用过程中遇到问题，环境在本 github 项目中提 issue。</p>
+<p>我也相当于是个测试新手，大家觉得文章好的话，记得在 github 给项目 Star 一个哦。</p>
+<p>后续，我会针对 httprunner 开发者模式，进行研究，看看 httprunner 还可以怎么优化。接下来大家一起期待吧～</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>, <a href="/categories/Docker/Python/">Python</a>, <a href="/categories/Docker/Python/测试/">测试</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a><a href="/tags/Python/">Python</a><a href="/tags/测试/">测试</a><a href="/tags/jsonschema/">jsonschema</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

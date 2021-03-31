@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Nginx】- Rewrite功能 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Nginx】- Rewrite功能"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Nginx】- Rewrite功能</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/nginx-rewrite/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T01:57:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Nginx 作为一个 http 服务器，其中最重要的一个特点就是 rewrite 功能，这个功能算是 nginx 必会内容了，接下来，我们详细说明一下 URL 重写配置以及信息详解</p>
+<p>Nginx-rewrite 依赖</p>
+<ul>
+<li>PCRE 软件的支持，支持 perl 兼容正则表达式语句进行规则匹配</li>
+</ul>
+<p>rewrite 是实现 URL 重写的关键指令，根据 regex（正则表达式）部分内容，重定向到 replacement，结尾是 flag 标记。</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rewrite   &lt;regex&gt;    &lt;replacement&gt; [flag]</span><br><span class="line"></span><br><span class="line">关键字     正则表达式  替换内容       flag标记</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>关键字：固定 rewrite 开启的关键字</p>
+</li>
+<li><p>正则：perl 兼容正则表达式语句进行规则匹配</p>
+</li>
+<li><p>替代内容：将正则匹配的内容替换成 replacement</p>
+</li>
+<li><p>flag 标记：rewrite 支持的 flag 标记</p>
+</li>
+</ul>
+<a id="more"></a>
+
+<h3 id="flag-标记说明："><a href="#flag-标记说明：" class="headerlink" title="flag 标记说明："></a>flag 标记说明：</h3><ul>
+<li><p>last 本条规则匹配完成后，继续向下匹配新的 location URI 规则</p>
+</li>
+<li><p>break 本条规则匹配完成即终止，不再匹配后面的任何规则</p>
+</li>
+<li><p>redirect 返回 302 临时重定向，浏览器地址会显示跳转后的 URL 地址</p>
+</li>
+<li><p>permanent 返回 301 永久重定向，浏览器地址会显示跳转后的 URL 地址</p>
+</li>
+</ul>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p><code>rewrite ^/(.*) http://usblog.crazylaw.cn/$1 permanent;</code></p>
+<p>这个例子，无论说明请求过来，都会永久重定向到<code>http://usblog.crazylaw.cn/$1</code>上，返回状态吗 301</p>
+<p>具体例子:<br>当具体的 url 请求:<br><code>https://nginx.crazylaw.cn/index.php/archives/333/</code><br>被 nginx-rewirte 之后,链接变成如下<br><code>https://usblog.crazylaw.cn/index.php/archives/333/</code></p>
+<h2 id="location"><a href="#location" class="headerlink" title="location"></a>location</h2><p>另外有一些<code>location</code>关键字，需要用到以下特殊符号：</p>
+<ul>
+<li><p><code>~ &lt;rule&gt;</code> 为区分大小写匹配</p>
+</li>
+<li><p><code>~* &lt;rule&gt;</code> 为不区分大小写匹配</p>
+</li>
+<li><p><code>!~ &lt;rule&gt;</code> 和 <code>!~* &lt;rule&gt;</code> 分别是区分大小写不匹配以及不区分大小写不匹配</p>
+</li>
+</ul>
+<h2 id="逻辑判断专用符号"><a href="#逻辑判断专用符号" class="headerlink" title="逻辑判断专用符号"></a>逻辑判断专用符号</h2><ul>
+<li><p><code>-f &lt;file&gt;</code> 和 <code>!-f &lt;file&gt;</code> 判断是否存在文件</p>
+</li>
+<li><p><code>-d &lt;dir&gt;</code> 和 <code>!-d &lt;dir&gt;</code> 判断是否存在目录</p>
+</li>
+<li><p><code>-e &lt;file|[dir]&gt;</code> 和 <code>!-e &lt;file|[dir]&gt;</code> 判断是否存在文件或者目录</p>
+</li>
+<li><p><code>!x</code> 和 <code>!-x</code> 判断文件是否可以执行</p>
+</li>
+</ul>
+<h2 id="Proxy-pass"><a href="#Proxy-pass" class="headerlink" title="Proxy_pass"></a>Proxy_pass</h2><p>该关键字和<code>rewrite</code>要做一点区别，<code>proxy_pass</code>用于反向代理，顾名思义，和重定向不同，<code>proxy_pass</code>并不会改变浏览器的 url，整个关键字是用于内部服务器请求转发的。</p>
+<p>特点可以归纳如下：</p>
+<ul>
+<li>不影响浏览器地址栏的 url</li>
+<li>设置被代理 server 的协议和地址，URI 可选（可以有，也可以没有）</li>
+<li>协议可以为 http 或 https</li>
+<li>地址可以为域名或者 IP，端口可选；eg：<code>proxy_pass http://localhost:8000/uri/;</code></li>
+</ul>
+<p>如果一个域名可以解析到多个地址，那么这些地址会被轮流使用，此外，还可以把一个地址指定为 server group（如：nginx 的 upstream）, eg:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">    server backend1.example.com       weight=5;</span><br><span class="line">    server backend2.example.com:8080;</span><br><span class="line">    server unix:/tmp/backend3;</span><br><span class="line"></span><br><span class="line">    server backup1.example.com:8080   backup;</span><br><span class="line">    server backup2.example.com:8080   backup;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://backend;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 proxy_pass 的 URL 定向里包括 URI，那么请求中匹配到 location 中 URI 的部分会被 proxy_pass 后面 URL 中的 URI 替换，eg：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;name&#x2F; &#123;</span><br><span class="line">    proxy_pass http:&#x2F;&#x2F;127.0.0.1&#x2F;remote&#x2F;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求http:&#x2F;&#x2F;127.0.0.1&#x2F;name&#x2F;test.html 会被代理到http:&#x2F;&#x2F;example.com&#x2F;remote&#x2F;test.htm</span><br></pre></td></tr></table></figure>
+
+<p>如果 proxy_pass 的 URL 定向里不包括 URI，那么请求中的 URI 会保持原样传送给后端 server，eg：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F;name&#x2F; &#123;</span><br><span class="line">    proxy_pass http:&#x2F;&#x2F;127.0.0.1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">请求http:&#x2F;&#x2F;127.0.0.1&#x2F;name&#x2F;test.html 会被代理到http:&#x2F;&#x2F;127.0.0.1&#x2F;name&#x2F;test.html</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

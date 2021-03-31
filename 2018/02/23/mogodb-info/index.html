@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Mongodb】- 知识整理 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Mongodb】- 知识整理"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Mongodb】- 知识整理</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/mogodb-info/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T09:07:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Mongodb 作为 nosql 数据库的代表，和传统的 mysql 的关系型数据库不同，他的数据结构只有一种，那就是 BSON，没有固定的 schema，所以他是 no schema 的数据存储方式。</p>
+<p>需要注意的是，Mongodb 只支持单文档事务，所以用到的业务中不应该有事务性强的数据源。</p>
+<p>这么说比较直白。具体举例几个应用场景：</p>
+<ul>
+<li><p>游戏场景，使用 MongoDB 存储游戏用户信息，用户的装备、积分等直接以内嵌文档的形式存储，方便查询、更新</p>
+</li>
+<li><p>物流场景，使用 MongoDB 存储订单信息，订单状态在运送过程中会不断更新，以 MongoDB 内嵌数组的形式来存储，一次查询就能将订单所有的变更读取出来。</p>
+</li>
+<li><p>社交场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能</p>
+</li>
+</ul>
+<p>等等</p>
+<a id="more"></a>
+
+<h2 id="Mongodb-的优势"><a href="#Mongodb-的优势" class="headerlink" title="Mongodb 的优势"></a>Mongodb 的优势</h2><ol>
+<li><p>更高的写负载<br>默认情况下，对比事务安全，MongoDB 更关注高的插入速度。如果你需要加载大量低价值的业务数据，比如日志收集，那么 MongoDB 将很适合你的用例，但是必须避免在要求高事务安全的情景下使用 MongoDB，比如一个 1000 万美元的交易。</p>
+</li>
+<li><p>处理很大的规模的单表：<br>数据库扩展是非常有挑战性的，当单表格大小达到 5-10GB 时，MySQL 表格性能会毫无疑问的降低。如果你需要分片并且分割你的数据库，MongoDB 将很容易实现这一点。</p>
+</li>
+<li><p>不可靠环境保证高可用性<br>设置副本集（主-从服务器设置）不仅方便而且很快，此外，使用 MongoDB 还可以快速、安全及自动化的实现节点（或数据中心）故障转移。</p>
+</li>
+<li><p>使用基于位置的数据查询，查的更快<br>MongoDB 支持二维空间索引，比如管道，因此可以快速及精确的从指定位置获取数据。<br>MongoDB 在启动后会将数据库中的数据以文件映射的方式加载到内存中。如果内存资源相当丰富的话，这将极大地提高数据库的查询速度，毕竟内存的 I/O 效率比磁盘高多了</p>
+</li>
+<li><p>非结构化数据的爆发增长<br>增加列在有些情况下可能锁定整个数据表，或者增加负载从而导致性能下降，这个问题通常发生在表格大于 1GB 的情况下。鉴于 MongoDB 的弱数据结构模式，添加 1 个新字段不会对旧表格有任何影响，整个过程会非常快速；因此，在应用程序发生改变时，你不需要专门的 1 个 DBA 去修改数据库模式。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>动态查询</p>
+</li>
+<li><p>全索引支持,扩展到内部对象和内嵌数组</p>
+</li>
+<li><p>查询记录分析</p>
+</li>
+<li><p>快速,就地更新</p>
+</li>
+<li><p>高效存储二进制大对象 (比如照片和视频)</p>
+</li>
+<li><p>复制和故障切换支持</p>
+</li>
+<li><p>Auto- Sharding 自动分片支持云级扩展性</p>
+</li>
+<li><p>MapReduce 支持复杂聚合</p>
+</li>
+<li><p>商业支持,培训和咨询</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>不支持复杂的真正的事务</p>
+</li>
+<li><p>不支持多表联查</p>
+</li>
+<li><p>MongoDB 占用空间过大</p>
+</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/MongoDb/">MongoDb</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/MongoDb/">MongoDb</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

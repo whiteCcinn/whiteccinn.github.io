@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Systemctl服务管理软件 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Systemctl服务管理软件"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Systemctl服务管理软件</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-systemctl/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T03:21:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>由于特殊原因!!刚才写的文章没保存下来!!!接下来简写.!!!</p>
+<p>Centos7 和 Centos7 之前的版本有几点比较重要的不同,一个是 firewall-cmd 代替了 iptables，然后就是 systemctl 代替了 service。这里，现在我就写一下如何使用 systemctl 管理服务。</p>
+<hr>
+<h1 id="服务的基本命令"><a href="#服务的基本命令" class="headerlink" title="服务的基本命令"></a>服务的基本命令</h1><ul>
+<li><p>systemctl status xx （服务状态）</p>
+</li>
+<li><p>systemctl start xx （服务启动）</p>
+</li>
+<li><p>systemctl stop xx （停止服务）</p>
+</li>
+<li><p>systemctl restart xx（重启服务）</p>
+</li>
+<li><p>systemctl enable xx （服务随开机启动）</p>
+</li>
+<li><p>systemctl disable xx （服务取消随启动）</p>
+</li>
+<li><p>systemctl cat xx （查看服务的配置信息）</p>
+</li>
+<li><p>systemctl daemon-reload (每次修改了一个 service 配置或者新增了一个配置，都需要执行这个命令，让 systemctl 服务重启，然后重新加载服务配置文件)</p>
+</li>
+<li><p>systemctl list-dependencies [target name]（查看依赖树状图，十分的直观好用）</p>
+</li>
+</ul>
+<hr>
+<a id="more"></a>
+
+<h1 id="添加服务"><a href="#添加服务" class="headerlink" title="添加服务"></a>添加服务</h1><p>我们的服务配置文件存放的路径为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>在这个文件下，你可以看到这些服务，但是你的 nginx 服务不是 yum 等软件管理工具安装的话，这里是不会存在<code>nginx.service</code>这个文件的，这个文件需要我们手动添加。</p>
+<p><img src="https://usblog.crazylaw.cn/usr/uploads/2017/08/2218887774.png" alt=""></p>
+<p>这里，以添加 nginx 服务到 systemctl 为例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;nginx.service</span><br></pre></td></tr></table></figure>
+
+<p>以下是我 nginx 的配置文件的信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Belong caiwh - nginx - high performance web server</span><br><span class="line">Documentation= ----&gt; http://nginx.org/en/docs/</span><br><span class="line">After=network.target remote-fs.target nss-lookup.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">PIDFile=/var/run/nginx.pid</span><br><span class="line">ExecStartPre=/usr/sbin/nginx -t -c /etc/nginx/nginx.conf</span><br><span class="line">ExecStart=/usr/sbin/nginx -c /etc/nginx/nginx.conf</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line">ExecStop=/bin/kill -s QUIT $MAINPID</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="keyword">if</span> you don<span class="string">'t like use ExecStop,you can use:</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">KillSignal=SIGQUIT</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#why KillMode use process? because the nginx master process will be control the child process</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">KillMode=process</span></span><br><span class="line">PrivateTmp=true</span><br><span class="line">TimeoutStopSec=5</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>保存。然后执行如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<p>然后启动 nginx:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
+
+<p>接下来，要介绍，我们 systemctl 的重要内容了。</p>
+<hr>
+<h1 id="开启启动和不开启启动的区别"><a href="#开启启动和不开启启动的区别" class="headerlink" title="开启启动和不开启启动的区别"></a>开启启动和不开启启动的区别</h1><p>开启启动的情况下，systemctl 只会启动以下路径的服务配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/systemd/system</span><br></pre></td></tr></table></figure>
+
+<p>但是，一般我们的基本服务，都是配置在以下路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system</span><br></pre></td></tr></table></figure>
+
+<p>当我们用到上述介绍到的命令 <code>systemctl enable xx</code> 的时候，其实就是在 <code>/etc/systemd/system</code> 目录里面创建以下软连接到 <code>/usr/lib/systemd/system</code> 里面</p>
+<hr>
+<h1 id="Unit-区块：启动顺序与依赖关系"><a href="#Unit-区块：启动顺序与依赖关系" class="headerlink" title="[Unit] 区块：启动顺序与依赖关系"></a>[Unit] 区块：启动顺序与依赖关系</h1><ul>
+<li><p><code>Description</code> 给出当前服务的简单描述</p>
+</li>
+<li><p><code>Documentation</code> 给出文档位置</p>
+</li>
+<li><p><code>After</code> 表示该服务要在当前目标组或者目标服务启动之后才能启动（在这里就是 nginx 服务需要在 network.target remote-fs.target nss-lookup.target 启动之后才可以启动）</p>
+</li>
+<li><p><code>Before</code> 与 After 相对</p>
+</li>
+<li><p><code>Wants</code> 表示该服务和哪一些服务有 <code>弱依赖</code> 关系。意思就是，所依赖的服务如果启动失败的话或者异常了，也不会影响到该服务的启动和继续运行</p>
+</li>
+<li><p><code>Requires</code> 与 <code>Wants</code> 相反 ，<code>强依赖</code></p>
+</li>
+</ul>
+<h1 id="Service-区块：启动行为"><a href="#Service-区块：启动行为" class="headerlink" title="[Service] 区块：启动行为"></a>[Service] 区块：启动行为</h1><ul>
+<li><p><code>EnvironmentFile</code> 表示该服务自定义的配置参数变量文件，文件已 <code>KEY=VALUE</code> 键值对的形式存在，后续可以用 <code>$KEY</code> 来读取 value。</p>
+</li>
+<li><p><code>ExecReload</code> : 重启服务时执行的命令</p>
+</li>
+<li><p><code>ExecStop</code> : 停止服务时执行的命令</p>
+</li>
+<li><p><code>ExecStartPre</code> : 启动服务之前执行的命令</p>
+</li>
+<li><p><code>ExecStart</code> : 启动服务执行的命令</p>
+</li>
+<li><p><code>ExecStartPost</code> : 启动服务之后执行的命令</p>
+</li>
+<li><p><code>ExecStopPost</code> : 停止服务之后执行的命令</p>
+</li>
+</ul>
+<p>所有的启动设置之前，都可以加上一个连词号<code>（-）</code>，表示”抑制错误”，即发生错误的时候，不影响其他命令的执行。比如，<code>EnvironmentFile=-/etc/my-conf</code>（注意等号后面的那个连词号），就表示即使 <code>/etc/my-conf</code> 文件不存在，也不会抛出错误。</p>
+<ul>
+<li><code>Type</code> 启动类型</li>
+</ul>
+<ol>
+<li><code>simple（默认值）</code>：ExecStart 字段启动的进程为主进程</li>
+<li><code>forking</code>：ExecStart 字段将以 fork()方式启动，此时父进程将会退出，子进程将成为主进程</li>
+<li><code>oneshot</code>：类似于 simple，但只执行一次，Systemd 会等它执行完，才启动其他服务</li>
+<li><code>dbus</code>：类似于 simple，但会等待 D-Bus 信号后启动</li>
+<li><code>notify</code>：类似于 simple，启动结束后会发出通知信号，然后 Systemd 再启动其他服务</li>
+<li><code>idle</code>：类似于 simple，但是要等到其他任务都执行完，才会启动该服务。一种使用场合是为让该服务的输出，不与其他服务的输出相混合</li>
+</ol>
+<ul>
+<li><code>KillMode</code> 杀死进程模式</li>
+</ul>
+<ol>
+<li><code>control-group（默认值）</code>：当前控制组里面的所有子进程，都会被杀掉</li>
+<li><code>process</code>：只杀主进程</li>
+<li><code>mixed</code>：主进程将收到 SIGTERM 信号，子进程收到 SIGKILL 信号</li>
+<li><code>none</code>：没有进程会被杀掉，只是执行服务的 stop 命令。</li>
+</ol>
+<ul>
+<li><code>Restar</code> 重启进程模式</li>
+</ul>
+<ol>
+<li><code>no（默认值）</code>：退出后不会重启</li>
+<li><code>on-success</code>：只有正常退出时（退出状态码为 0），才会重启</li>
+<li><code>on-failure</code>：非正常退出时（退出状态码非 0），包括被信号终止和超时，才会重启</li>
+<li><code>on-abnormal</code>：只有被信号终止和超时，才会重启</li>
+<li><code>on-abort</code>：只有在收到没有捕捉到的信号终止时，才会重启</li>
+<li><code>on-watchdog</code>：超时退出，才会重启</li>
+<li><code>always</code>：不管是什么退出原因，总是重启</li>
+</ol>
+<h1 id="Install-区块"><a href="#Install-区块" class="headerlink" title="[Install] 区块"></a>[Install] 区块</h1><ul>
+<li><code>WantedBy</code> 表示该服务所在的 Target 组</li>
+</ul>
+<p>这个设置非常重要，因为执行 systemctl enable xx 命令时，xx.service 的一个符号链接，就会放在/etc/systemd/system 目录下面的 WantedBy 命名的目录的子目录之中。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Centos7/">Centos7</a><a href="/tags/Systemctl/">Systemctl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>基于tire-tree的关键字匹配 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="基于tire-tree的关键字匹配"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>基于tire-tree的关键字匹配</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/23/数据结构/trie-tree/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-23T07:20:00.000Z">
+          2018-01-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>字典树，又称前缀树或 trie 树，是一种有序树，用于保存关联数组，其中的键通常是字符串。与二叉查找树不同，键不是直接保存在节点中，而是由节点在树中的位置决定。一个节点的所有子孙都有相同的前缀，也就是这个节点对应的字符串，而根节点对应空字符串。</p>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><p>早期的时候，我在 github 上写了一个，但是一直没有写博文。</p>
+<p><a href="https://github.com/whiteCcinn/tire-php" target="_blank" rel="noopener">https://github.com/whiteCcinn/tire-php</a></p>
+<p>当时写的时候，比较复杂，因为汉字的编码问题，里面会设置一些 ascii 码和 utf-8 编码的转码代码，看上去比较复杂。接下来，会贴一段通过正则实现的代码。</p>
+<p>那么 trie 树怎么实现关键字的匹配呢? 这里以一幅图来讲解 trie 树匹配的过程。</p>
+<a id="more"></a>
+
+<h3 id="其中要点："><a href="#其中要点：" class="headerlink" title="其中要点："></a>其中要点：</h3><h4 id="构造-trie-树"><a href="#构造-trie-树" class="headerlink" title="构造 trie 树"></a>构造 trie 树</h4><ul>
+<li>将关键词用上面介绍的 preg_split()函数拆分为单个字符。如科学家就拆分为科、学、家三个字符。</li>
+<li>在最后一个字符后添加一个特殊字符 <font color="red">`</font>，此字符作为一个关键词的结尾（图中的粉红三角），以此字符来标识查到了一个关键词（不然，我们不知道匹配到科、学两个字符时算不算匹配成功）。<font color="red">`</font>，此字符作为一个关键词的结尾（图中的粉红三角），以此字符来标识查到了一个关键词（不然，我们不知道匹配到科、学两个字符时算不算匹配成功）。</li>
+<li>检查根部是否有第一个字符(科)节点，如果有了此节点，到步骤 4。 如果还没有，在根部添加值为科的节点。</li>
+<li>依次检查并添加学、家 两个节点。</li>
+<li>在结尾添加<font color="red">`</font>节点，并继续下一个关键词的插入。</li>
+</ul>
+<h4 id="匹配"><a href="#匹配" class="headerlink" title="匹配"></a>匹配</h4><p>然后我们以 这位科学家很了不起！为例来发起匹配。</p>
+<ul>
+<li>首先我们将句子拆分为单个字符 这、位、…；</li>
+<li>从根查询第一个字符这，并没有以这个字符开头的关键词，将字符“指针”向后移，直到找到根下有的字符节点科;</li>
+<li>接着在节点科下寻找值为 学节点，找到时，结果子树的深度已经到了 2，关键词的最短长度是 2，此时需要在学结点下查找是否有<font color="red">`</font>，找到意味着匹配成功，返回关键词，并将字符“指针”后移，如果找不到则继续在此结点下寻找下一个字符。</li>
+<li>如此遍历，直到最后，返回所有匹配结果。</li>
+</ul>
+<p>PHP 代码实现：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Trie</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * node struct</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * node = array(</span></span><br><span class="line"><span class="comment">     * val-&gt;word</span></span><br><span class="line"><span class="comment">     * next-&gt;array(node)/null</span></span><br><span class="line"><span class="comment">     * depth-&gt;int</span></span><br><span class="line"><span class="comment">     * )</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> $root    = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'depth'</span> =&gt; <span class="number">0</span>,</span><br><span class="line">        <span class="string">'next'</span>  =&gt; <span class="keyword">array</span>(),</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">private</span> $matched = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">append</span><span class="params">($keyword)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $words = preg_split(<span class="string">'/(?&lt;!^)(?!$)/u'</span>, $keyword);</span><br><span class="line">        array_push($words, <span class="string">'`'</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;insert(<span class="keyword">$this</span>-&gt;root, $words);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">match</span><span class="params">($str)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;matched = <span class="keyword">array</span>();</span><br><span class="line">        $words         = preg_split(<span class="string">'/(?&lt;!^)(?!$)/u'</span>, $str);</span><br><span class="line">        <span class="keyword">while</span> (count($words) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            $matched = <span class="keyword">array</span>();</span><br><span class="line">            $res     = <span class="keyword">$this</span>-&gt;query(<span class="keyword">$this</span>-&gt;root, $words, $matched);</span><br><span class="line">            <span class="keyword">if</span> ($res) &#123;</span><br><span class="line">                <span class="keyword">$this</span>-&gt;matched[] = implode(<span class="string">''</span>, $matched);</span><br><span class="line">            &#125;</span><br><span class="line">            array_shift($words);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;matched;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">insert</span><span class="params">(&amp;$node, $words)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>($words)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $word = array_shift($words);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>($node[<span class="string">'next'</span>][$word])) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;insert($node[<span class="string">'next'</span>][$word], $words);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $tmp_node            = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">'depth'</span> =&gt; $node[<span class="string">'depth'</span>] + <span class="number">1</span>,</span><br><span class="line">                <span class="string">'next'</span>  =&gt; <span class="keyword">array</span>(),</span><br><span class="line">            );</span><br><span class="line">            $node[<span class="string">'next'</span>][$word] = $tmp_node;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;insert($node[<span class="string">'next'</span>][$word], $words);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">query</span><span class="params">($node, $words, &amp;$matched)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $word = array_shift($words);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>($node[<span class="string">'next'</span>][$word])) &#123;</span><br><span class="line">            array_push($matched, $word);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">isset</span>($node[<span class="string">'next'</span>][$word][<span class="string">'next'</span>][<span class="string">'`'</span>])) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;query($node[<span class="string">'next'</span>][$word], $words, $matched);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $matched = <span class="keyword">array</span>();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$tire = <span class="keyword">new</span> Trie();</span><br><span class="line">$msg = <span class="string">'性派对'</span>;</span><br><span class="line">$tire-&gt;append(<span class="string">'性'</span>);</span><br><span class="line">$tire-&gt;append(<span class="string">'性爱'</span>);</span><br><span class="line">$tire-&gt;append(<span class="string">'性爱2'</span>);</span><br><span class="line">$tire-&gt;append(<span class="string">'性爱3'</span>);</span><br><span class="line"></span><br><span class="line">print_r($tire-&gt;match($msg));</span><br></pre></td></tr></table></figure>
+
+<p>注意到，上面的这一段代码有一个弱点就是按照最短匹配。当你输入<code>性爱排队</code>的时候，无法搜索出<code>性爱</code>，只能搜索到<code>性</code>。</p>
+<p>以下的代码进行了升级，全匹配。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Trie</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * node struct</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * node = array(</span></span><br><span class="line"><span class="comment">     * val-&gt;word</span></span><br><span class="line"><span class="comment">     * next-&gt;array(node)/null</span></span><br><span class="line"><span class="comment">     * depth-&gt;int</span></span><br><span class="line"><span class="comment">     * )</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> $root    = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">'depth'</span> =&gt; <span class="number">0</span>,</span><br><span class="line">        <span class="string">'next'</span>  =&gt; <span class="keyword">array</span>(),</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">private</span> $matched = <span class="keyword">array</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">append</span><span class="params">($keyword)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $words = preg_split(<span class="string">'/(?&lt;!^)(?!$)/u'</span>, $keyword);</span><br><span class="line">        array_push($words, <span class="string">'`'</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;insert(<span class="keyword">$this</span>-&gt;root, $words);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">match</span><span class="params">($str)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;matched = <span class="keyword">array</span>();</span><br><span class="line">        $words         = preg_split(<span class="string">'/(?&lt;!^)(?!$)/u'</span>, $str);</span><br><span class="line">        <span class="keyword">while</span> (count($words) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            $matched = <span class="keyword">array</span>();</span><br><span class="line">            $res     = <span class="keyword">$this</span>-&gt;query(<span class="keyword">$this</span>-&gt;root, $words, $matched);</span><br><span class="line">            <span class="keyword">if</span> ($res) &#123;</span><br><span class="line">                <span class="keyword">$this</span>-&gt;matched[] = implode(<span class="string">''</span>, $matched);</span><br><span class="line">            &#125;</span><br><span class="line">            array_shift($words);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;matched;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">insert</span><span class="params">(&amp;$node, $words)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>($words)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $word = array_shift($words);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>($node[<span class="string">'next'</span>][$word])) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;insert($node[<span class="string">'next'</span>][$word], $words);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $tmp_node            = <span class="keyword">array</span>(</span><br><span class="line">                <span class="string">'depth'</span> =&gt; $node[<span class="string">'depth'</span>] + <span class="number">1</span>,</span><br><span class="line">                <span class="string">'next'</span>  =&gt; <span class="keyword">array</span>(),</span><br><span class="line">            );</span><br><span class="line">            $node[<span class="string">'next'</span>][$word] = $tmp_node;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;insert($node[<span class="string">'next'</span>][$word], $words);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">query</span><span class="params">($node, $words, &amp;$matched)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $word = array_shift($words);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>($node[<span class="string">'next'</span>][$word])) &#123;</span><br><span class="line">            array_push($matched, $word);</span><br><span class="line">            $keys = array_keys($node[<span class="string">'next'</span>][$word][<span class="string">'next'</span>]);</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">empty</span>($keys) &amp;&amp; in_array(<span class="string">'`'</span>, $keys)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (count($keys) == <span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">$this</span>-&gt;matched[] = implode(<span class="string">''</span>, $matched);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;query($node[<span class="string">'next'</span>][$word], $words, $matched);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $matched = <span class="keyword">array</span>();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$tire = <span class="keyword">new</span> Trie();</span><br><span class="line">$msg  = <span class="string">'性爱派对'</span>;</span><br><span class="line">$tire-&gt;append(<span class="string">'性'</span>);</span><br><span class="line">$tire-&gt;append(<span class="string">'性爱'</span>);</span><br><span class="line">$tire-&gt;append(<span class="string">'性爱派'</span>);</span><br><span class="line"></span><br><span class="line">print_r($tire-&gt;match($msg));</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/树/">树</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

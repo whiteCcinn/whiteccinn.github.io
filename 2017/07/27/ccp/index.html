@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>PHP 实现 Promise+协程调用 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="PHP 实现 Promise+协程调用"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>PHP 实现 Promise+协程调用</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/ccp/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T14:13:00.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <ul>
+<li>PHP 实现 Promise+协程调用</li>
+</ul>
+<p>github 地址：<a href="https://github.com/whiteCcinn/ccp" target="_blank" rel="noopener">ccp</a></p>
+<blockquote>
+<p>觉得好记的给个 Start 喔。</p>
+</blockquote>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>在 PHP 当中，我们或多或少会使用到异步编程的思想，但是异步编程难免给我们带来回调地狱的感觉，并且代码可读性十分之差，在 ES6 规范里面，或者更早就可以推出了一个做 Promise 的东西，利用 Promise，你可以用同步的做法来实现异步的操作，代码可读性上大大提高，不仅如此，由于异步编程和异步 IO 的混合使用，导致代码的准确性难以提高，不可否认的是，Promise 的推出，大大的提高了你们编写异步代码的可靠性，虽然这也是会损耗一些十分微小的性能，但是任何取舍都是相对的。</p>
+<a id="more"></a>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.ecma-international.org/ecma-262/6.0/#sec-promise-objects" target="_blank" rel="noopener">ECMAScript 2015 (6th Edition, ECMA-262) Promise</a></li>
+<li><a href="https://promisesaplus.com/" target="_blank" rel="noopener">ECMAScript Latest Draft (ECMA-262)Promise</a></li>
+</ul>
+<h2 id="支持-PromiseAPI"><a href="#支持-PromiseAPI" class="headerlink" title="支持 PromiseAPI"></a>支持 PromiseAPI</h2><ol>
+<li><code>promise-&gt;then</code></li>
+<li><code>primise-&gt;catch</code></li>
+<li><code>Promise::all</code></li>
+<li><code>Promise::race</code></li>
+<li><code>Promise::resolve</code></li>
+<li><code>Promise::reject</code></li>
+<li><code>Promise::warp</code></li>
+<li><code>Promise::co</code></li>
+<li><code>等等</code></li>
+</ol>
+<h2 id="翻译切换"><a href="#翻译切换" class="headerlink" title="翻译切换"></a>翻译切换</h2><ul>
+<li><a href="https://github.com/whiteCcinn/ccp/blob/master/README.md" target="_blank" rel="noopener">English.MD</a></li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Promise/">Promise</a><a href="/tags/ES6/">ES6</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Laravel】Service Container 服务容器用法 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Laravel】Service Container 服务容器用法"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Laravel】Service Container 服务容器用法</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/08/php-laravel/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-08T04:50:00.000Z">
+          2018-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Laravel 是一款 PHP 开源框架，最近学习了一下 Symfony，现在来了解一下 Laravel 的最新版本的一些东西。</p>
+<p>其实说到服务器容器，相信大家都会直接提到<code>依赖注入</code>的概念，其实服务容器的概念，就和我们设计模式中的对象池差不多，把所有的对象都放在一个池子里面去，而不必一个个去 new 了。而且支持每次都新建和单例，等等。</p>
+<p>在这些的基础之上，衍生出了 2 个概念<code>Ioc：控制反转</code>，<code>Di：依赖注入</code>，这些概念，在我的认知里，早起出自 java 框架之中。主要的目的就是实现对象依赖解耦。具体的设计模式的理念，可以参考我博客中的设计模式一系列的文章。</p>
+<p>下述主要参考了谋篇 laravel 服务容器介绍摘录+部分自我实践整理。对比了一下和官网的介绍差不多，更多的主要是例子的说明。</p>
+<h2 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h2><p>Laravel 中有一大堆访问 Container 实例的姿势，比如最简单的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container = app();</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>但我们还是先关注下 Container 类本身。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Laravel 官方文档中一般使用 <span class="keyword">$this</span>-&gt;app 代替 $container。它是 Application 类的实例，而 Application 类继承自 Container 类。</span><br></pre></td></tr></table></figure>
+
+<h4 id="用法一：基本用法，用type-hint-类型提示-注入-依赖："><a href="#用法一：基本用法，用type-hint-类型提示-注入-依赖：" class="headerlink" title="用法一：基本用法，用type hint (类型提示) 注入 依赖："></a>用法一：基本用法，用<code>type hint (类型提示) 注入</code> 依赖：</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">'./vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Container</span>\<span class="title">Container</span>;</span><br><span class="line">$container = Container::getInstance();</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $dependency;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(AnotherClass $dependency)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;dependency = $dependency;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AnotherClass</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$instance = $container-&gt;make(MyClass::class);</span><br><span class="line"></span><br><span class="line">var_dump($instance)</span><br></pre></td></tr></table></figure>
+
+<p>接下来用 Container 的 make 方法来代替 new MyClass:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$instance = $container-&gt;make(MyClass::class);</span><br></pre></td></tr></table></figure>
+
+<p>Container 会自动实例化依赖的对象，所以它等同于：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$instance = <span class="keyword">new</span> MyClass(<span class="keyword">new</span> AnotherClass());</span><br></pre></td></tr></table></figure>
+
+<p>如果 AnotherClass 也有 依赖，那么 Container 会递归注入它所需的依赖。</p>
+<blockquote>
+<p>Container 使用 Reflection (反射) 来找到并实例化构造函数参数中的那些类。</p>
+</blockquote>
+<h4 id="用法二：Binding-Interfaces-to-Implementations-绑定接口到实现"><a href="#用法二：Binding-Interfaces-to-Implementations-绑定接口到实现" class="headerlink" title="用法二：Binding Interfaces to Implementations (绑定接口到实现)"></a>用法二：Binding Interfaces to Implementations (绑定接口到实现)</h4><p>用 Container 可以轻松地写一个接口，然后在运行时实例化一个具体的实例。 首先定义接口：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MyInterface</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">AnotherInterface</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后声明实现这些接口的具体类。下面这个类不但实现了一个接口，还依赖了实现另一个接口的类实例：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> <span class="keyword">implements</span> <span class="title">MyInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $dependency;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 依赖了一个实现 AnotherInterface 接口的类的实例</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(AnotherInterface $dependency)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;dependency = $dependency;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在用 Container 的 bind() 方法来让每个 接口 和实现它的类一一对应起来：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bind(MyInterface::class, MyClass::class);</span><br><span class="line">$container-&gt;bind(AnotherInterface::class, AnotherClass::class);</span><br></pre></td></tr></table></figure>
+
+<p>最后，用<code>接口名</code> <strong>而不是</strong> <code>类名</code> 来传给 make():</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$instance = $container-&gt;make(MyInterface::class);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：如果你忘记绑定它们，会导致一个 Fatal Error:”Uncaught ReflectionException: Class MyInterface does not exist”。</p>
+</blockquote>
+<p>实战</p>
+<p>下面是可封装的 Cache 层：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Cache</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($key)</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">put</span><span class="params">($key, $value)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Worker</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $cache;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Cache $cache)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;cache = $cache;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">result</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 去缓存里查询</span></span><br><span class="line">        $result = <span class="keyword">$this</span>-&gt;cache-&gt;get(<span class="string">'worker'</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($result === <span class="keyword">null</span>) &#123;</span><br><span class="line">             <span class="comment">// 如果缓存里没有，就去别的地方查询，然后再放进缓存中</span></span><br><span class="line">            $result = do_something_slow();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">$this</span>-&gt;cache-&gt;put(<span class="string">'worker'</span>, $result);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Container</span>\<span class="title">Container</span>;</span><br><span class="line"></span><br><span class="line">$container = Container::getInstance();</span><br><span class="line">$container-&gt;bind(Cache::class, RedisCache::class);</span><br><span class="line"></span><br><span class="line">$result = $container-&gt;make(Worker::class)-&gt;result();</span><br><span class="line"><span class="comment">// 这里用 Redis 做缓存，如果改用其他缓存，只要把 RedisCache 换成别的就行了，easy!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="用法三：Binding-Abstract-amp-Concret-Classes-（绑定抽象类和具体类）"><a href="#用法三：Binding-Abstract-amp-Concret-Classes-（绑定抽象类和具体类）" class="headerlink" title="用法三：Binding Abstract &amp; Concret Classes （绑定抽象类和具体类）"></a>用法三：Binding Abstract &amp; Concret Classes （绑定抽象类和具体类）</h2><p>绑定还可以用在抽象类：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bind(MyAbstract::class, MyConcreteClass::class);</span><br></pre></td></tr></table></figure>
+
+<p>或者继承的类中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bind(MySQLDatabase::class, CustomMySQLDatabase::class);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法四：自定义绑定"><a href="#用法四：自定义绑定" class="headerlink" title="用法四：自定义绑定"></a>用法四：自定义绑定</h2><p>如果类需要一些附加的配置项，可以把 bind() 方法中的第二个参数换成 Closure (闭包函数)：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bind(Database::class, <span class="function"><span class="keyword">function</span> <span class="params">(Container $container)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MySQLDatabase(MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>闭包也可用于定制 具体类 的实例化方式：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bind(GitHub\Client::class, <span class="function"><span class="keyword">function</span> <span class="params">(Container $container)</span> </span>&#123;</span><br><span class="line">    $client = <span class="keyword">new</span> GitHub\Client;</span><br><span class="line">    $client-&gt;setEnterpriseUrl(GITHUB_HOST);</span><br><span class="line">    <span class="keyword">return</span> $client;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法五：Resolving-Callbacks-回调"><a href="#用法五：Resolving-Callbacks-回调" class="headerlink" title="用法五：Resolving Callbacks (回调)"></a>用法五：Resolving Callbacks (回调)</h2><p>可用 <code>resolveing()</code>方法来注册一个 callback (回调函数)，而不是直接覆盖掉之前的 绑定。 <code>这个函数会在绑定的类解析完成之后调用</code>。</p>
+<p><font color="red">注意此时的回调函数中，第一个参数是对应被解析的对象，第二个参数是容器(container)&lt;=&gt;应用(app)</font>.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;resolving(GitHub\Client::class, <span class="function"><span class="keyword">function</span> <span class="params">($client, Container $container)</span> </span>&#123;</span><br><span class="line">    $client-&gt;setEnterpriseUrl(GITHUB_HOST);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如果有一大堆 callbacks，他们全部都会被调用。对于 <code>接口</code> 和 <code>抽象类</code> 也可以这么用：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;resolving(Logger::class, <span class="function"><span class="keyword">function</span> <span class="params">(Logger $logger)</span> </span>&#123;</span><br><span class="line">    $logger-&gt;setLevel(<span class="string">'debug'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$container-&gt;resolving(FileLogger::class, <span class="function"><span class="keyword">function</span> <span class="params">(FileLogger $logger)</span> </span>&#123;</span><br><span class="line">    $logger-&gt;setFilename(<span class="string">'logs/debug.log'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$container-&gt;bind(Logger::class, FileLogger::class);</span><br><span class="line"></span><br><span class="line">$logger = $container-&gt;make(Logger::class);</span><br></pre></td></tr></table></figure>
+
+<p>更 <code>diao</code> 的是，还可以注册成「<strong>什么类解析完之后都调用</strong>」：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;resolving(function ($object, Container $container) &#123;</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>但这个估计只有 <code>logging</code>和 <code>debugging</code> 才会用到。</p>
+</blockquote>
+<h2 id="用法六：Extending-a-Class-扩展一个类"><a href="#用法六：Extending-a-Class-扩展一个类" class="headerlink" title="用法六：Extending a Class (扩展一个类)"></a>用法六：Extending a Class (扩展一个类)</h2><p>使用 extend() 方法，可以封装一个类然后返回一个不同的对象 (代理模式)：</p>
+<p><font color="red">（为什么不是装饰器模式？，因为装饰器模式不需要实现一样的接口，但是代理模式下，代理类需要和原来的类一样实现同一接口）</font>.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;extend(APIClient::class, <span class="function"><span class="keyword">function</span> <span class="params">($client, Container $container)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> APIClientProxy($client);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><font color="red">注意：这两个类要实现相同的 <code>接口</code>，不然用类型提示的时候会出错：</font>.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Getable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APIClient</span> <span class="keyword">implements</span> <span class="title">Getable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'yes!'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APIClentProxy</span> <span class="keyword">implements</span> <span class="title">Getable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $client;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(APIClient $client)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = $client;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'no!'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $client;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Getable $client)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;client = $client;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$container-&gt;extend(APIClient::class, <span class="function"><span class="keyword">function</span> <span class="params">($client, Container $container)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> APIClentProxy($client);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$container-&gt;bind(Getable::class, APIClient::class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 此时 $instance 的 $client 属性已经是 APIClentProxy 类型了</span></span><br><span class="line">$instance = $container-&gt;make(User::class);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法七：单例"><a href="#用法七：单例" class="headerlink" title="用法七：单例"></a>用法七：单例</h2><p>使用 <code>bind()</code> 方法绑定后，每次解析时都会<code>新实例化</code>一个对象(或重新调用闭包)，如果想获取 <code>单例</code> ，则用 <code>singleton()</code> 方法<strong>代替</strong> <code>bind()</code>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;singleton(Cache::class, RedisCache::class);</span><br></pre></td></tr></table></figure>
+
+<p>绑定单例 闭包</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;singleton(Database::class, <span class="function"><span class="keyword">function</span> <span class="params">(Container $container)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MySQLDatabase(<span class="string">'localhost'</span>, <span class="string">'testdb'</span>, <span class="string">'user'</span>, <span class="string">'pass'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>绑定 <code>具体类</code> 的时候，不需要第二个参数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;singleton(MySQLDatabase::class);</span><br></pre></td></tr></table></figure>
+
+<p>在每种情况下，<code>单例</code> 对象将在第一次需要时创建，然后在后续重复使用。</p>
+<p>如果你已经有一个 <code>实例</code> 并且想<code>重复使用</code>，可以用 <code>instance()</code> 方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;instance(Container::class, $container);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Laravel 就是用这种方法来确保每次获取到的都是同一个 Container 实例：</p>
+</blockquote>
+<h2 id="用法七：Arbitrary-Binding-Names-任意绑定名称"><a href="#用法七：Arbitrary-Binding-Names-任意绑定名称" class="headerlink" title="用法七：Arbitrary Binding Names (任意绑定名称)"></a>用法七：Arbitrary Binding Names (任意绑定名称)</h2><p><code>Container</code> 还可以<font color="red">绑定任意字符串</font>而不是 <strong>类/接口名称</strong>。<font color="red">但这种情况下不能使用类型提示，并且只能用 <code>make()</code> 来获取实例。</font></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bind(<span class="string">'database'</span>, MySQLDatabase::class);</span><br><span class="line">$db = $container-&gt;make(<span class="string">'database'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>为了<font color="red">同时支持类/接口名称和短名称</font>，可以使用 <code>alias()</code>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;singleton(Cache::class, RedisCache::class);</span><br><span class="line">$container-&gt;alias(Cache::class, <span class="string">'cache'</span>);</span><br><span class="line"></span><br><span class="line">$cache1 = $container-&gt;make(Cache::class);</span><br><span class="line">$cache2 = $container-&gt;make(<span class="string">'cache'</span>);</span><br><span class="line"></span><br><span class="line">assert($cache1 === $cache2);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法八：保存任何值"><a href="#用法八：保存任何值" class="headerlink" title="用法八：保存任何值"></a>用法八：保存任何值</h2><p><code>Container</code> 还可以用来保存任何值，例如 <code>configuration</code> 数据：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;instance(<span class="string">'database.name'</span>, <span class="string">'testdb'</span>);</span><br><span class="line">$db_name = $container-&gt;make(<span class="string">'database.name'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>它支持数组访问语法，这样用起来更自然：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container[<span class="string">'database.name'</span>] = <span class="string">'testdb'</span>;</span><br><span class="line">$db_name = $container[<span class="string">'database.name'</span>];</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这是因为 Container 实现了 PHP 的 ArrayAccess 接口。</p>
+</blockquote>
+<p>当处理 Closure 绑定的时候，你会发现这个方式非常好用：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;singleton(<span class="string">'database'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Container $container)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MySQLDatabase(</span><br><span class="line">        $container[<span class="string">'database.host'</span>],</span><br><span class="line">        $container[<span class="string">'database.name'</span>],</span><br><span class="line">        $container[<span class="string">'database.user'</span>],</span><br><span class="line">        $container[<span class="string">'database.pass'</span>]</span><br><span class="line">    );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Laravel 自己没有用这种方式来处理配置项，它使用了一个单独的 Config 类本身。 PHP-DI 用了。</p>
+</blockquote>
+<p><font color="red">数组访问语法还可以代替 make() 来实例化对象：</font>.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$db = $container[<span class="string">'database'</span>];</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法九：Dependency-Injection-for-Functions-amp-Methods-给函数或方法注入依赖"><a href="#用法九：Dependency-Injection-for-Functions-amp-Methods-给函数或方法注入依赖" class="headerlink" title="用法九：Dependency Injection for Functions &amp; Methods (给函数或方法注入依赖)"></a>用法九：Dependency Injection for Functions &amp; Methods (给函数或方法注入依赖)</h2><p>除了给构造函数注入依赖，Laravel 还可以往<code>任意函数</code>中注入：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">do_something</span><span class="params">(Cache $cache)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">$result = $container-&gt;call(<span class="string">'do_something'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>函数的附加<code>参数</code>可以作为<code>索引或关联数组传递</code>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">show_product</span><span class="params">(Cache $cache, $id, $tab = <span class="string">'details'</span>)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// show_product($cache, 1)</span></span><br><span class="line">$container-&gt;call(<span class="string">'show_product'</span>, [<span class="number">1</span>]);</span><br><span class="line">$container-&gt;call(<span class="string">'show_product'</span>, [<span class="string">'id'</span> =&gt; <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// show_product($cache, 1, 'spec')</span></span><br><span class="line">$container-&gt;call(<span class="string">'show_product'</span>, [<span class="number">1</span>, <span class="string">'spec'</span>]);</span><br><span class="line">$container-&gt;call(<span class="string">'show_product'</span>, [<span class="string">'id'</span> =&gt; <span class="number">1</span>, <span class="string">'tab'</span> =&gt; <span class="string">'spec'</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>除此之外，闭包：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$closure = <span class="function"><span class="keyword">function</span> <span class="params">(Cache $cache)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;;</span><br><span class="line">$container-&gt;call($closure);</span><br></pre></td></tr></table></figure>
+
+<p>静态方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">staticMethod</span><span class="params">(Cache $cache)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line">$container-&gt;call([<span class="string">'SomeClass'</span>, <span class="string">'staticMethod'</span>]);</span><br><span class="line"><span class="comment">// or:</span></span><br><span class="line">$container-&gt;call(<span class="string">'SomeClass::staticMethod'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>实例的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostController</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">(Cache $cache)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">(Cache $cache, $id)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line">$controller = $container-&gt;make(PostController::class);</span><br><span class="line"></span><br><span class="line">$container-&gt;call([$controller, <span class="string">'index'</span>]);</span><br><span class="line">$container-&gt;call([$controller, <span class="string">'show'</span>], [<span class="string">'id'</span> =&gt; <span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>都可以注入。</p>
+<h2 id="用法十-调用实例方法的快捷方式"><a href="#用法十-调用实例方法的快捷方式" class="headerlink" title="用法十: 调用实例方法的快捷方式"></a>用法十: 调用实例方法的快捷方式</h2><p>使用 <code>ClassName@methodName</code> 语法可以快捷调用实例中的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;call(<span class="string">'PostController@index'</span>);</span><br><span class="line">$container-&gt;call(<span class="string">'PostController@show'</span>, [<span class="string">'id'</span> =&gt; <span class="number">4</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>因为 Container 被用来实例化类。意味着：</p>
+<p>依赖 被注入进构造函数（或者方法）；<br>如果需要复用实例，可以定义为<code>单例</code>；<br>可以用接口或任何名称来代替具体类。<br>所以这样调用也可以生效：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostController</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Request $request)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span><span class="params">(Cache $cache)</span> </span>&#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line">$container-&gt;singleton(<span class="string">'post'</span>, PostController::class);</span><br><span class="line">$container-&gt;call(<span class="string">'post@index'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>最后，还可以传一个「默认方法」作为第三个参数。如果第一个参数是没有指定方法的类名称，则将调用默认方法。 <code>Laravel 用这种方式来处理 event handlers</code>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;call(MyEventHandler::class, $parameters, <span class="string">'handle'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于:</span></span><br><span class="line">$container-&gt;call(<span class="string">'MyEventHandler@handle'</span>, $parameters);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法十一：Method-Call-Bindings-方法调用绑定"><a href="#用法十一：Method-Call-Bindings-方法调用绑定" class="headerlink" title="用法十一：Method Call Bindings (方法调用绑定)"></a>用法十一：Method Call Bindings (方法调用绑定)</h2><p><code>bindMethod()</code> 方法可用来<code>覆盖方法</code>，例如用来传递其他参数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;bindMethod(<span class="string">'PostController@index'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($controller, $container)</span> </span>&#123;</span><br><span class="line">    $posts = get_posts(...);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $controller-&gt;index($posts);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>下面的方式都有效，调用闭包来代替调用原始的方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;call(<span class="string">'PostController@index'</span>);</span><br><span class="line">$container-&gt;call(<span class="string">'PostController'</span>, [], <span class="string">'index'</span>);</span><br><span class="line">$container-&gt;call([<span class="keyword">new</span> PostController, <span class="string">'index'</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>但是，<code>call()</code> 的任何其他参数都<code>不会传递</code>到<code>闭包</code>中，因此不能使用它们。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;call(<span class="string">'PostController@index'</span>, [<span class="string">'Not used :-('</span>]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法十二：Contextual-Bindings-上下文绑定"><a href="#用法十二：Contextual-Bindings-上下文绑定" class="headerlink" title="用法十二：Contextual Bindings (上下文绑定)"></a>用法十二：Contextual Bindings (上下文绑定)</h2><p>有时候你想在不同的地方给接口不同的实现。这里有 Laravel 文档 里的一个例子：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$container</span><br><span class="line">    -&gt;when(PhotoController::class)</span><br><span class="line">    -&gt;needs(Filesystem::class)</span><br><span class="line">    -&gt;give(LocalFilesystem::class);</span><br><span class="line"></span><br><span class="line">$container</span><br><span class="line">    -&gt;when(VideoController::class)</span><br><span class="line">    -&gt;needs(Filesystem::class)</span><br><span class="line">    -&gt;give(S3Filesystem::class);</span><br></pre></td></tr></table></figure>
+
+<p>现在 <code>PhotoController</code> 和 <code>VideoController</code> 都依赖了 <code>Filesystem 接口</code>，但是收到了<code>不同的实例</code>。</p>
+<p>可以像 bind() 那样，给 give() <code>传闭包</code>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-&gt;when(VideoController::class)</span><br><span class="line">-&gt;needs(Filesystem::class)</span><br><span class="line">-&gt;give(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Storage::disk(<span class="string">'s3'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>或者短名称：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;instance(<span class="string">'s3'</span>, $s3Filesystem);</span><br><span class="line"></span><br><span class="line">$container</span><br><span class="line">    -&gt;when(VideoController::class)</span><br><span class="line">    -&gt;needs(Filesystem::class)</span><br><span class="line">    -&gt;give(<span class="string">'s3'</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法十三：Binding-Parameters-to-Primitives-绑定初始数据"><a href="#用法十三：Binding-Parameters-to-Primitives-绑定初始数据" class="headerlink" title="用法十三：Binding Parameters to Primitives (绑定初始数据)"></a>用法十三：Binding Parameters to Primitives (绑定初始数据)</h2><p>当有一个类<code>不仅</code>需要接受一个<code>注入类</code>，<code>还需要</code>注入一个<code>基本值</code>（比如整数）。<br>还可以通过将变量名称 (而不是接口) 传递给 needs() 并将<code>值</code>传递给 <code>give()</code> 来注入需要的任何值 (字符串、整数等) ：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$container</span><br><span class="line">    -&gt;when(MySQLDatabase::class)</span><br><span class="line">    -&gt;needs(<span class="string">'$username'</span>)</span><br><span class="line">    -&gt;give(DB_USER);</span><br></pre></td></tr></table></figure>
+
+<p>还可以使用闭包实现延时加载，只在需要的时候取回这个 <code>值</code> 。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$container</span><br><span class="line">    -&gt;when(MySQLDatabase::class)</span><br><span class="line">    -&gt;needs(<span class="string">'$username'</span>)</span><br><span class="line">    -&gt;give(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> config(<span class="string">'database.user'</span>);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这种情况下，不能传递类或命名的依赖关系（例如，give(‘database.user’)），因为它将作为<code>字面值返回</code>。所以需要使用闭包：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$container</span><br><span class="line">    -&gt;when(MySQLDatabase::class)</span><br><span class="line">    -&gt;needs(<span class="string">'$username'</span>)</span><br><span class="line">    -&gt;give(<span class="function"><span class="keyword">function</span> <span class="params">(Container $container)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $container[<span class="string">'database.user'</span>];</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="用法十四-Tagging-标记"><a href="#用法十四-Tagging-标记" class="headerlink" title="用法十四: Tagging (标记)"></a>用法十四: Tagging (标记)</h2><p>Container 可以用来「标记」有关系的绑定：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;tag(MyPlugin::class, <span class="string">'plugin'</span>);</span><br><span class="line">$container-&gt;tag(AnotherPlugin::class, <span class="string">'plugin'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这样会以数组的形式取回所有「标记」的实例：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> ($container-&gt;tagged(<span class="string">'plugin'</span>) <span class="keyword">as</span> $plugin) &#123;</span><br><span class="line">    $plugin-&gt;init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>tag()</code> 方法的<code>两个参数</code>都可以<code>接受数组</code>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$container-&gt;tag([MyPlugin::class, AnotherPlugin::class], <span class="string">'plugin'</span>);</span><br><span class="line">$container-&gt;tag(MyPlugin::class, [<span class="string">'plugin'</span>, <span class="string">'plugin.admin'</span>]);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>apache-benchmark | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="apache-benchmark"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>apache-benchmark</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/12/apache-benchmark/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-12T06:38:06.000Z">
+          2017-01-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Apache Benchmark 其实就是我们平时所熟称的abtest，即ab压力测试，它是apache自带的一个很好用的压力测试工具，当安装完apache的时候，就可以在bin下面找到ab。</p>
+<p>但是如果我们用的http代理是nginx的时候就需要手动下载这个工具了。接下来就和大家讲讲abtest。</p>
+<hr>
+<a id="more"></a>
+
+
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>centos 7下安装ab，只需要一个命令就好了</p>
+<p><code>yum install httpd-tools</code></p>
+<hr>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><code>ab www.baidu.com/</code></p>
+<blockquote>
+<p>注意压力测试是测试某个目录的，后尾要加上<code>/</code></p>
+</blockquote>
+<p>这就是ab最简单的测试命令，这一命令显示了百度页面的相关数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">This is ApacheBench, Version 2.3 &lt;$Revision: 1430300 $&gt;</span><br><span class="line">Copyright 1996 Adam Twiss, Zeus Technology Ltd, http:&#x2F;&#x2F;www.zeustech.net&#x2F;</span><br><span class="line">Licensed to The Apache Software Foundation, http:&#x2F;&#x2F;www.apache.org&#x2F;</span><br><span class="line"></span><br><span class="line">Benchmarking www.baidu.com (be patient).....done</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Server Software:        BWS&#x2F;1.1</span><br><span class="line">Server Hostname:        www.baidu.com</span><br><span class="line">Server Port:            80</span><br><span class="line"></span><br><span class="line">Document Path:          &#x2F;</span><br><span class="line">Document Length:        102126 bytes</span><br><span class="line"></span><br><span class="line">Concurrency Level:      1</span><br><span class="line">Time taken for tests:   0.028 seconds</span><br><span class="line">Complete requests:      1</span><br><span class="line">Failed requests:        0</span><br><span class="line">Write errors:           0</span><br><span class="line">Total transferred:      103076 bytes</span><br><span class="line">HTML transferred:       102126 bytes</span><br><span class="line">Requests per second:    36.01 [#&#x2F;sec] (mean)</span><br><span class="line">Time per request:       27.773 [ms] (mean)</span><br><span class="line">Time per request:       27.773 [ms] (mean, across all concurrent requests)</span><br><span class="line">Transfer rate:          3624.39 [Kbytes&#x2F;sec] received</span><br><span class="line"></span><br><span class="line">Connection Times (ms)</span><br><span class="line">              min  mean[+&#x2F;-sd] median   max</span><br><span class="line">Connect:        8    8   0.0      8       8</span><br><span class="line">Processing:    20   20   0.0     20      20</span><br><span class="line">Waiting:       12   12   0.0     12      12</span><br><span class="line">Total:         28   28   0.0     28      28</span><br></pre></td></tr></table></figure>
+
+<p>上边的数据中，<strong>HTML transferred</strong>，<strong>Requests per second</strong>，<strong>Time per request</strong>是我们需要重点关注的，根据这些数据，我们能大概了解Web服务器的性能水平。</p>
+<h3 id="相关字段说明"><a href="#相关字段说明" class="headerlink" title="相关字段说明"></a>相关字段说明</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Server Software</td>
+<td>服务器系统</td>
+</tr>
+<tr>
+<td>Server Hostname</td>
+<td>服务器域名</td>
+</tr>
+<tr>
+<td>Server Port</td>
+<td>服务器端口</td>
+</tr>
+<tr>
+<td>Document Path</td>
+<td>访问的路径</td>
+</tr>
+<tr>
+<td>Document Length</td>
+<td>访问的文件大小</td>
+</tr>
+<tr>
+<td>Concurrency Level</td>
+<td>并发请求数，可以理解为同一时间的访问人数</td>
+</tr>
+<tr>
+<td>Time taken fortests</td>
+<td>响应时间</td>
+</tr>
+<tr>
+<td>Complete requests</td>
+<td>总共响应次数</td>
+</tr>
+<tr>
+<td>Failed requests</td>
+<td>失败的请求次数</td>
+</tr>
+<tr>
+<td>Write errors</td>
+<td>失败的写入次数</td>
+</tr>
+<tr>
+<td>Total transferred</td>
+<td>传输的总数据量</td>
+</tr>
+<tr>
+<td>HTML transferred</td>
+<td>HTML页面大小</td>
+</tr>
+<tr>
+<td>Requests per second</td>
+<td>每秒支持多少人访问</td>
+</tr>
+<tr>
+<td>Time per request</td>
+<td>满足一个请求花费的总时间</td>
+</tr>
+<tr>
+<td>Time per request</td>
+<td>满足所有并发请求中的一个请求花费的总时间</td>
+</tr>
+<tr>
+<td>Transfer rate</td>
+<td>平均每秒收到的字节</td>
+</tr>
+</tbody></table>
+<p>最后的数据包括 Connect , Processing , Waiting , Total 字段。这些数据能大致说明测试过程中所需要的时间。其实我们可以只看Total字段中的min，max两列数据值，这两个值分别显示了测试过程中，花费时间最短和最长的时间。</p>
+<h3 id="可选参数"><a href="#可选参数" class="headerlink" title="可选参数"></a>可选参数</h3><p>ab命令还有很多可选参数，但常用的其实就下边几个：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>功能解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-n</td>
+<td>设置ab命令模拟请求的总次数</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>设置ab命令模拟请求的并发数</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>设置ab命令模拟请求的时间</td>
+</tr>
+<tr>
+<td>-k</td>
+<td>设置ab命令允许1个http会话响应多个请求</td>
+</tr>
+</tbody></table>
+<p>这三个参数的用法如下：</p>
+<p>1）使用ab命令加上”-n”参数模拟1个用户访问百度总共5次</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -n 5 www.baidu.com&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>2）使用ab命令加上”-n”与”-c”参数模拟5个用户同时访问百度总共9次</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 5 -n 9 www.baidu.com&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+<p>3）使用ab命令加上”-c”与”-t”参数模拟5个用户同时访问百度总共9秒</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 5 -t 9 www.baidu.com&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>3）使用ab命令加上”-c”与”-t”附加”-k”参数模拟5个用户同时访问百度总共9秒,百度会打开5个并发连接，从而减少web服务器创建新链接所花费的时间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 5 -t 9 -k www.baidu.com&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>使用ab命令的时候，有几点点要说明：</p>
+<p>1）ab命令必须指定要访问的文件，如果没指定，那必须得在域名的结尾加上一个反斜杠，例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<p>得改写为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab www.baidu.com&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>2）ab命令可能会由于目标web服务器做了相应的过滤处理，导致在某些情况下收不到任何数据，这个时候可以使用”-H”参数，来模拟成浏览器发送请求。例如：</p>
+<p>模拟成Chrome浏览器向百度发送1个请求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -H &quot;Mozilla&#x2F;5.0 (Windows; U; Windows NT 5.1; en-Us) AppleWeb Kit&#x2F;534.2 (KHTML, like Gecko) Chrome&#x2F;6.0.447.0 Safari&#x2F;534.2&quot; www.baidu.com&#x2F;</span><br></pre></td></tr></table></figure>
+<p>3）最后，要注意的就是，在使用ab命令测试服务器时，千万要小心，并且要限制对服务器发出的请求数量，磨途歌希望大家理性使用这些压力测试工具，我们都不希望任何一台正常的服务器陷入不必要的麻烦。</p>
+<p>更多的可选参数如下：</p>
+<table>
+<thead>
+<tr>
+<th>更多参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-A</td>
+<td>采用base64编码向服务器提供身份验证信息，用法: -A 用户名:密码</td>
+</tr>
+<tr>
+<td>-C</td>
+<td>cookie信息，用法: -C mo2g=磨途歌</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>不显示pecentiles served table</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>保存基准测试结果为csv格式的文件</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>保存基准测试结果为gunplot或TSV格式的文件</td>
+</tr>
+<tr>
+<td>-h</td>
+<td>显示ab可选参数列表</td>
+</tr>
+<tr>
+<td>-H</td>
+<td>采用字段值的方式发送头信息和请求</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>发送HEAD请求，默认发送GET请求</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>通过POST发送数据，用法： -p blog=博客&amp;name=白菜</td>
+</tr>
+<tr>
+<td>-h</td>
+<td>显示ab可选参数列表</td>
+</tr>
+<tr>
+<td>-q</td>
+<td>执行多余100个请求时隐藏掉进度输出</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>使用Https协议发送请求，默认使用Http</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>隐藏中位数和标准偏差值</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>-v 2 及以上将打印警告和信息，-v 3 打印http响应码，-v 4 打印头信息</td>
+</tr>
+<tr>
+<td>-V</td>
+<td>显示ab工具的版本号</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>采用HTML表格打印结果</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>HTML标签属性，使用 -w 参数时，将放置在<code>&lt;table&gt;</code>标签中</td>
+</tr>
+<tr>
+<td>-X</td>
+<td>设置代理服务器，用法 -X 192.168.1.1:80</td>
+</tr>
+<tr>
+<td>-y</td>
+<td>HTML标签属性，使用 -w 参数时，将放置在<code>&lt;tr&gt;</code>标签中</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>HTML标签属性，使用 -w 参数时，将放置在<code>&lt;td&gt;</code>标签中</td>
+</tr>
+</tbody></table>
+<hr>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/测试/">测试</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/测试工具/">测试工具</a><a href="/tags/Linux/">Linux</a><a href="/tags/压力测试/">压力测试</a><a href="/tags/性能测试/">性能测试</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

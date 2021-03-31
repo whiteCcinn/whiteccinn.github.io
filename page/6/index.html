@@ -1,0 +1,785 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 6 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/04/02/rust-for-docker/"><span>rust-for-docker</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/04/02/rust-for-docker/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-02T12:49:59.000Z">
+          2019-04-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天，我们开始学习一下 Rust，希望将来在公司可以推广 Rust 语言，并且用 Rust 语言做更多的事情。</p>
+<p>在此， 进入我们的入学篇。</p>
+<h2 id="Rust-for-Docker"><a href="#Rust-for-Docker" class="headerlink" title="Rust for Docker"></a>Rust for Docker</h2><p>拉取最新版本的 Rust</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rust:latest</span><br></pre></td></tr></table></figure>
+
+<p>由于官方上的命令有点问题，并且我希望我有一个交互的终端环境，所以，经过修改后，进入 Rust 容器的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -e &quot;USER&#x3D;$(whoami)&quot; -e &quot;RUST_BACKTRACE&#x3D;1&quot; -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp -w &#x2F;usr&#x2F;src&#x2F;myapp rust:latest bash</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>USER: cargo 打包的时候会用这个命名</li>
+<li>RUST_BACKTRACE：终端调试的时候，会打印出错误栈</li>
+</ul>
+<p>进入到容器后，我们创建属于我们的第一个项目：Hello，World</p>
+<p>利用 Rust 的包管理工具：Cargo 进行开发和编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_world</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; car new --lib &lt;package_name&gt; 这个是创建类库的命令，暂时用不到，所以忽略先</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Rust/">Rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Rust/">Rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/11/15/linux-shell-huanhangbuchong/"><span>【工具】oh-my-zsh 换行补偿</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/11/15/linux-shell-huanhangbuchong/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-11-15T04:06:01.000Z">
+          2018-11-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="oh-my-zsh-换行补偿"><a href="#oh-my-zsh-换行补偿" class="headerlink" title="oh-my-zsh 换行补偿"></a>oh-my-zsh 换行补偿</h1><p>大家应该也是经常会用到 linux 或者 macOS，大家应该都有了解 macos 必备软件之间，oh-my-zsh，它可以为我们的终端提供丰富的主题，当然，这里就不详细介绍了。现在主要说一下其中一个问题就是，oh-my-zsh 的 <code>换行补偿机制</code>。</p>
+<p>一般情况下，我们在终端有时候会发现会存在 <code>%</code>，例如：</p>
+<blockquote>
+<p>root 账号的时候是 # 号<br>非 root 账号是 % 号</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/10/25/linux-shell-ed/"><span>【Linux命令】ed命令</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-ed/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T12:22:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>ed 是 linux 下原始的编辑器，类似于一个行为记录器</p>
+<p>ed 的所有操作都可以用一个文本来记录</p>
+<p>里面的内容是所有的操作，有点类似于 dockerfile 的形式</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/10/25/linux-shell-colordiff/"><span>【Linux命令】diff - colordiff</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-colordiff/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T11:44:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们经常用 git 的客户端来对比文件差异，或者用一下其他的对比文件的差异的软件，例如常用的 Beyond Compare，但是如果我们不想借助其他的工具，用 linux 自带的命令要如何实现呢。</p>
+<p>这里和大家说一下 <code>diff</code> 命令</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>diff 分析两个文件，并输出两个文件的不同的行。diff 的输出结果表明需要对一个文件做怎样的操作之后才能与第二个文件相匹配。diff 并不会改变文件的内容，但是 diff 可以输出一个 ed 脚本来应用这些改变。<br>现在让我们来看一下 diff 是如何工作的，假设有两个文件：</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/08/22/docker-python-httpruner/"><span>docker-python-httpruner</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/08/22/docker-python-httpruner/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-22T11:56:00.000Z">
+          2018-08-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="Httprunner"><a href="#Httprunner" class="headerlink" title="Httprunner"></a>Httprunner</h1><p>最近，由于某些原因，了解到了 httprunner。</p>
+<p>先贴上我的本次文章的主题：</p>
+<ul>
+<li><p>支持 docker 环境</p>
+</li>
+<li><p>支持 jsonschema</p>
+</li>
+<li><p>粗略封装成了应用型框架</p>
+</li>
+<li><p>import python-file 的时候，请写基于项目根目录的路径</p>
+</li>
+</ul>
+<p>目标：<br><a href="https://github.com/whiteCcinn/httprunner-docker" target="_blank" rel="noopener">[Github:httprunner-docker]</a></p>
+<p><a href="https://hub.docker.com/r/ccinn/httprunner-docker" target="_blank" rel="noopener">[HubDocker:httprunner-docker]</a></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>, <a href="/categories/Docker/Python/">Python</a>, <a href="/categories/Docker/Python/测试/">测试</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a><a href="/tags/Python/">Python</a><a href="/tags/测试/">测试</a><a href="/tags/jsonschema/">jsonschema</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/07/08/php-laravel-2/"><span>【Laravel】Service Providers 服务提供者</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/08/php-laravel-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-08T06:10:46.000Z">
+          2018-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>服务提供者和服务容器是两个不同的概念，在我看来，服务提供者是 Laravel 应用启动的中心，你自己的应用以及所有 Laravel 的核心服务都是通过服务提供者启动。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>里面有 2 个核心的方法，分别是</p>
+<ul>
+<li>register（一般用于将服务的对象绑定到服务容器中，不做其他事情。）</li>
+<li>boot （在 register 之后，将会调用这个 boot 方法，这个 boot 方法<code>允许依赖注入</code>。）</li>
+</ul>
+<p>里面 2 个核心的属性，分别是</p>
+<ul>
+<li>bindings</li>
+<li>singletons</li>
+</ul>
+<p>具体的用处就是用于服务器容器依赖注入用的。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/07/08/php-laravel/"><span>【Laravel】Service Container 服务容器用法</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/08/php-laravel/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-08T04:50:00.000Z">
+          2018-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Laravel 是一款 PHP 开源框架，最近学习了一下 Symfony，现在来了解一下 Laravel 的最新版本的一些东西。</p>
+<p>其实说到服务器容器，相信大家都会直接提到<code>依赖注入</code>的概念，其实服务容器的概念，就和我们设计模式中的对象池差不多，把所有的对象都放在一个池子里面去，而不必一个个去 new 了。而且支持每次都新建和单例，等等。</p>
+<p>在这些的基础之上，衍生出了 2 个概念<code>Ioc：控制反转</code>，<code>Di：依赖注入</code>，这些概念，在我的认知里，早起出自 java 框架之中。主要的目的就是实现对象依赖解耦。具体的设计模式的理念，可以参考我博客中的设计模式一系列的文章。</p>
+<p>下述主要参考了谋篇 laravel 服务容器介绍摘录+部分自我实践整理。对比了一下和官网的介绍差不多，更多的主要是例子的说明。</p>
+<h2 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h2><p>Laravel 中有一大堆访问 Container 实例的姿势，比如最简单的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container = app();</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/07/08/openresty-1/"><span>【OpenResty】 带你入门高性能http代理服务器应用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/08/openresty-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-07T16:23:00.000Z">
+          2018-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenResty® 是一个基于 Nginx 与 Lua 的高性能 Web 平台，其内部集成了大量精良的 Lua 库、第三方模块以及大多数的依赖项。用于方便地搭建能够处理超高并发、扩展性极高的动态 Web 应用、Web 服务和动态网关。</p>
+<p>OpenResty® 通过汇聚各种设计精良的 Nginx 模块（主要由 OpenResty 团队自主开发），从而将 Nginx 有效地变成一个强大的通用 Web 应用平台。这样，Web 开发人员和系统工程师可以使用 Lua 脚本语言调动 Nginx 支持的各种 C 以及 Lua 模块，快速构造出足以胜任 10K 乃至 1000K 以上单机并发连接的高性能 Web 应用系统。</p>
+<p>OpenResty® 的目标是让你的 Web 服务直接跑在 Nginx 服务内部，充分利用 Nginx 的非阻塞 I/O 模型，不仅仅对 HTTP 客户端请求,甚至于对远程后端诸如 MySQL、PostgreSQL、Memcached 以及 Redis 等都进行一致的高性能响应。</p>
+<blockquote>
+<p>以上都是官方说辞</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a><a href="/tags/Openresty/">Openresty</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/05/10/jinzhi-1/"><span>【进制】数据库应用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/05/10/jinzhi-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-05-10T15:05:00.000Z">
+          2018-05-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>概要</p>
+<p>最近加了一个月的班，很忙，博客已经有一段时间没有写了，心里很不是滋味，今晚决心，再晚，也要写一篇。</p>
+<p>我们平时各种系统最常打交道的系统就是数据库了，我们在数据库中，可能就是最直观，最直接的用法，很少用到一些进制相关的知识在里面，其实进制在我们的生活中处处都在渗透，今天我们重点整理一下数据库和进制相关的内容。</p>
+<h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><p>我们都知道，数据库的优化策略之一就是分库分表，但是这个分库分表需要怎么分才算好呢，这里我也没有打包票说有一个固定的模式，因为这种所谓的“最优”是要结合具体的需求来说明的。</p>
+<p>在这里我会列举其中的一些场景来具体说一下。大部分公司的订单号所以没有一个好的架构师或者比较资深的程序员，订单号一般都是最容易忽略的一个关键，一般毕业生或者初学者都会把订单号设置成简单的 int 并且 autoincrease，这样子的做法，简单粗暴有效，定义好了之后就可以撸起袖子干了。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/进制/">进制</a><a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/04/08/nginx-certbot-ssl/"><span>【SSL】使用certbot工具申请letsencrypt的ssl证书</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/04/08/nginx-certbot-ssl/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-04-08T02:55:00.000Z">
+          2018-04-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="申请-ssl-证书之前，先梳理几个要点："><a href="#申请-ssl-证书之前，先梳理几个要点：" class="headerlink" title="申请 ssl 证书之前，先梳理几个要点："></a>申请 ssl 证书之前，先梳理几个要点：</h2><p>1、确定好拟申请 ssl 证书的域名，这里为了便于说明假设申请 ssl 的域名为：a.baicai.com，<a href="http://www.baicai.com、account.baicai.com" target="_blank" rel="noopener">www.baicai.com、account.baicai.com</a> 等其他域名（和主机），没有本质上的区别，仅名称上的差异；</p>
+<p>2、确定拟申请 ssl 证书的域名正确解析到当前主机，本例也就是通过<a href="http://blog.crazylaw.com" target="_blank" rel="noopener">http://blog.crazylaw.com</a> 能够正确解析到当前主机（注意是正确解析，至于是不是能正确访问依据 certbot 的模式不同要求也不同）；</p>
+<p>3、确定好拟申请 ssl 证书域名解析到当前主机后的 web 根目录，假设为：/www/blog/</p>
+<h2 id="Github-上拉取-cerbot"><a href="#Github-上拉取-cerbot" class="headerlink" title="Github 上拉取 cerbot"></a>Github 上拉取 cerbot</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;certbot&#x2F;certbot</span><br></pre></td></tr></table></figure>
+
+<p>然后进入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd cerbot</span><br></pre></td></tr></table></figure>
+
+<p>接着看到<code>cerbot-auto</code>的可执行文件</p>
+<p>然后生成证书。</p>
+<p><font color="red">注意，如果你第一次使用 letsencrypy 的话，一般需要指定邮箱，并且 letsencrypy 会发送证书到你的邮箱，请确认订阅 letsencrypy，下面的命令是带上了邮箱信息的</font>！</p>
+<p><font color="red">注意，需要暂时停止 nginx</font>！</p>
+<h2 id="standalone-模式申请-ssl-证书"><a href="#standalone-模式申请-ssl-证书" class="headerlink" title="standalone 模式申请 ssl 证书"></a>standalone 模式申请 ssl 证书</h2><p>standalone 模式不需要上述梳理出的 3 个要点中的第三条，也就意味着如果你的主机需要关停 80 端口（或和 443 端口）的 web 服务，譬如正在运行的 nginx、Apache 需要关停。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">##standalone模式，其中-d参数指定拟申请ssl证书的域名 #可以通过多个-d参数指定多个域名，但你得确保这些指定的多个域名均能正常解析到当前主机</span><br><span class="line"></span><br><span class="line">.&#x2F;certbot-auto certonly --standalone --email you@email.com -d example.com -d www.example.com -d other.example.net</span><br></pre></td></tr></table></figure>
+
+<h2 id="非-standalone-模式申请-ssl-证书"><a href="#非-standalone-模式申请-ssl-证书" class="headerlink" title="非 standalone 模式申请 ssl 证书"></a>非 standalone 模式申请 ssl 证书</h2><p>这种模式需要使用-w 参数（或者–webroot-path 参数）指定当前正在运行的 web 服务器的根目录。–webroot-path 参数指定 web 根目录后，<code>certbot工具会自动在该目录下生成.well-known的隐藏目录</code>，以及用于效验域名所有者的特定文件，此文件 Let’s Encrypt 的服务器会主动发起 http 请求去读取从达到效验域名所有者或者管理者就是本次操作 certbot 工具的人；certbot 工具自动生成的完整目录为：-w 参数指定的根目录<code>/.well-known/acme-challenge</code>，对于 nginx 而言 web 根目录下的隐藏目录默认情况下是不允许访问的，所以 nginx 情况下再执行非 standalone 模式申请 ssl 证书之前，<code>需要将nginx网站根目录下的.well-known隐藏目录设置成允许访问</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">##nginx对应主机的配置文件中添加允许.well-known隐藏目录的访问</span><br><span class="line">#注意配置文件中禁止浏览隐藏文件的相关代码引起冲突</span><br><span class="line">location ~ &#x2F;.well-known &#123;</span><br><span class="line">    allow all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果熟悉 nginx，甚至可以为.well-known 隐藏目录指定单独的 root 入口；这就是 nginx 有关的合理利用了，不再补充。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##--webroot指定当前正在运行的web server的根目录</span><br><span class="line">certbot certonly --webroot -w &#x2F;var&#x2F;www&#x2F; -d c1c2.test.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="一般使用-standalone-模式，继续"><a href="#一般使用-standalone-模式，继续" class="headerlink" title="一般使用 standalone 模式，继续"></a>一般使用 standalone 模式，继续</h2><p>接着如果你没订阅过的话，会在邮箱收到邮件，然后你要选择订阅。接着你会看到如下信息，选择 <code>a</code> 和 <code>y</code> 之后。</p>
+<p>默认路径如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;fullchain.pem</span><br><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;privkey.pem</span><br></pre></td></tr></table></figure>
+
+<p>如何更新？这里截图写得很清楚了，再执行一次 <code>certbot-auto</code> 命令+参数即可，如果你想全部重新执行一边的话，可以使用 <code>certbot-auto renew</code>。</p>
+<h2 id="nginx-配置"><a href="#nginx-配置" class="headerlink" title="nginx 配置"></a>nginx 配置</h2><p>然后我们重启 nginx，即可。！</p>
+<h2 id="如何实现自动化？"><a href="#如何实现自动化？" class="headerlink" title="如何实现自动化？"></a>如何实现自动化？</h2><ul>
+<li>停止 nginx</li>
+<li>执行 certbot-auto</li>
+<li>重启 nginx</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a><a href="/tags/ssl/">ssl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/5/" class="pagination-prev">Prev</a>
+  
+  
+  <a href="/page/7/" class="pagination-next">Next</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

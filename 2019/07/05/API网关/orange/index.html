@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【API网关】- Orange | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【API网关】- Orange"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【API网关】- Orange</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/05/API网关/orange/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-05T10:15:00.000Z">
+          2019-07-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>版本：0.7</p>
+</blockquote>
+<p>API 网关/网关，充当的职责无非以下几点：</p>
+<ul>
+<li>鉴权</li>
+<li>限流</li>
+<li>分流</li>
+<li>负载均衡</li>
+</ul>
+<blockquote>
+<p>隐含的功能就是动态 upstream</p>
+</blockquote>
+<p>大多与的 API 网关都是用利用 lua 实现的 Openresty 来实现的，因为它可以很好的和 nginx 结合在一起，可以同时运行 lua 脚本和 C 库，并且由于 lua 在协程上实现得十分早，对于 IO 密集型的处理十分的高效。</p>
+<p>在给予 Openresty 实现的 API 网关中，有一些是比较出名的，例如 kong/orange</p>
+<ul>
+<li><p><a href="https://github.com/Kong/kong" target="_blank" rel="noopener">kong</a> 算是行业认为最强大成熟的一个组件的，但是过于复杂了。</p>
+</li>
+<li><p><a href="https://github.com/orlabs/orange" target="_blank" rel="noopener">orange</a> 利用插件的形式来处理请求，并且间接直接，易于二次开发和扩展</p>
+</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="Orange"><a href="#Orange" class="headerlink" title="Orange"></a>Orange</h2><p>由于 3 个部分构成：</p>
+<ul>
+<li>main-server: 一个 location 的表示格式</li>
+<li>api-server: orange 的 api 服务</li>
+<li>dashboard: 面板</li>
+</ul>
+<p>依赖的存储服务：</p>
+<ul>
+<li>mysql</li>
+</ul>
+<p>前端技栈：</p>
+<ul>
+<li>html</li>
+<li>css</li>
+<li>jquery</li>
+</ul>
+<h2 id="Orange-脑图"><a href="#Orange-脑图" class="headerlink" title="Orange 脑图"></a>Orange 脑图</h2><p><img src="/images/API%E7%BD%91%E5%85%B3/ORANGE.png" alt="Orange"></p>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><h3 id="BASE-AUTH"><a href="#BASE-AUTH" class="headerlink" title="BASE_AUTH"></a>BASE_AUTH</h3><p>基于 Basic Authorization 的插件</p>
+<p><img src="/images/API%E7%BD%91%E5%85%B3/BASE_AUTH.png" alt="BASE_AUTH"></p>
+<h2 id="DIVIDE"><a href="#DIVIDE" class="headerlink" title="DIVIDE"></a>DIVIDE</h2><p>分流插件</p>
+<p><img src="/images/API%E7%BD%91%E5%85%B3/DIVIDE.png" alt="DIVIDE"></p>
+<h2 id="DYNAMIC-UPSTREAM"><a href="#DYNAMIC-UPSTREAM" class="headerlink" title="DYNAMIC_UPSTREAM"></a>DYNAMIC_UPSTREAM</h2><p>动态 upstream 插件</p>
+<p><img src="/images/API%E7%BD%91%E5%85%B3/DYNAMIC_UPSTREAM.png" alt="DYNAMIC_UPSTREAM"></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/API网关/">API网关</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/API网关/">API网关</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>基于geohash算法-搜索附近的人 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="基于geohash算法-搜索附近的人"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>基于geohash算法-搜索附近的人</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/23/redis-geohash/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-23T03:45:00.000Z">
+          2018-01-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前空间索引的实现有 R 树和其变种 GIST 树、四叉树、网格索引等。 网格索引不再多提，使用普通的 hash 表存储地点和风格之间的映射来实现。今天要介绍的 GeoHash 算法实现的空间索引，虽然是以 B 树实现，但我认为它也借用网格索引的一部分思想。</p>
+<p><a href="https://github.com/whiteCcinn/geohash" target="_blank" rel="noopener">php-geohash</a></p>
+<h2 id="GeoHash"><a href="#GeoHash" class="headerlink" title="GeoHash"></a>GeoHash</h2><ol>
+<li>从横向上将整个方形纸分为左右两份，左侧部分为标记为 <code>0</code>， 右侧部分标记为 <code>1</code>；</li>
+<li>再将红点所在的部分划分为左右两块，再对红点位置做同样的标识，最后得出红点在横向上的标识为 <code>10</code>;</li>
+<li>在纵向上对方形纸做同样的划分，左侧标识为<code>0</code>，右侧标识为 <code>1</code>，得出红点位置在纵向上的标识为 <code>01</code>;</li>
+<li>将横向标识和纵向标识合并，规则为 纵向在奇数位，横向在偶数位 (也可纵横相反，但要在整个系统内保持一致)，得出红点在方形纸上的标识为 <code>1001</code>;</li>
+</ol>
+<a id="more"></a>
+
+<p>只标记一个方格显得看不出什么规律，如果我们把这些都空格都标识后会发现 被划分在角落里的四个方格会有同样的前缀.</p>
+<p>同样的前缀意味着可以使用 B 树 索引查找有相同前缀的点作为附近的点，GeoHash 算法便是这些同样的前缀上面做文章。</p>
+<blockquote>
+<ul>
+<li>墨卡托投影</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>墨卡托投影，是正轴等角圆柱投影。由荷兰地图学家墨卡托(G.Mercator)于 1569 年创立。假想一个与地轴方向一致的圆柱切或割于地球，按等角条件，将经纬网投影到圆柱面上，将圆柱面展为平面后，即得本投影。墨卡托投影在切圆柱投影与割圆柱投影中，最早也是最常用的是切圆柱投影。</p>
+</blockquote>
+<p>墨卡托投影简单地说，就是可以 <code>把整个地球平面作为一个正方形</code>来处理，当然地球平面不是严格的正方形，此投影在两极附近的点会有误差，本文专注于原理，纠偏就不多提了。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>按照墨卡托投影的平面，我们可以按照上面划分方格纸的方式来将整个地球表面划分为各个小方格。</p>
+<p>如(116.276349, 40.040875)这个点的经度划分：</p>
+<ol>
+<li>经度在 [-180,0) 范围内的标识为 0，经度范围在 [0, 180) 度的标识为 1;</li>
+<li>继续划分，经度范围在 [0,90) 的标识为 0，经度范围在 [90,180) 的标识为 1;</li>
+<li>这样，我们划分 20 次，方格的精度（见文末对照表）已达到 2m，得到经度的标识二进制串为<code>11010010101011110111</code>;</li>
+<li>对纬度同样划分，得到纬度的标识二进制串为<code>10111000111100100111</code>;</li>
+<li>我们对它组合，得到 40 位的二进制串<code>11011 01110 00010 01110 11100 10111 01001 11111</code>;</li>
+<li>我们将这个二进制串使用 base32 编码（原理同 base64，可以见我的另一篇文章：WEB 开发中的字符集和编码，位编码映射表见下），得到 GeoHash 编码为 <code>3OCO4XJ7</code>;</li>
+</ol>
+<p>那么 GeoHash 编码前缀为 <code>3OCO4XJ7</code>的地理点就是<code>离 (116.276349, 40.040875)两米内的点</code>。如果我们把地理位置点和其 GeoHash 编码存入数据库的话，我们要查找 附近两米点的点，只需要限定条件 <code>geo_code like &#39;3OCO4XJ7%&#39;</code>就行了;</p>
+<h2 id="边界值问题"><a href="#边界值问题" class="headerlink" title="边界值问题"></a>边界值问题</h2><p>边界点问题</p>
+<p>可是最简版的 GeoHash 还有一个弱点，如下图：</p>
+<p>如果每个方格的精度为 2km，那么我们直接按照前缀查询<code>红点</code>附近 2km 的点是查找不到离它很近的<code>黑点</code>的。</p>
+<p>要解决这个问题，我们就需要所其<code>周边八个方格</code>也考虑上，将自身方格和周边八个方格内的点都遍历一次，再返回符合要求的点。那么如何知道周边方格的前缀呢？</p>
+<p>仔细观察相邻方格，我们会发现两个小方格会在 <code>经度或纬度的二进制码上相差1</code>；我们通过 GeoHash 码反向解析出二进制码后，将其经度或纬度（或两者）的二进制码加一，再次组合为 GeoHash 码。</p>
+<h1 id="Redis-的-GEO-函数"><a href="#Redis-的-GEO-函数" class="headerlink" title="Redis 的 GEO 函数"></a>Redis 的 GEO 函数</h1><h3 id="版本限制："><a href="#版本限制：" class="headerlink" title="版本限制："></a>版本限制：</h3><p>Redis 的 Geo 系列函数需要&gt;3.2 版本才支持。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>我们常见的需求是查找 <code>n米</code> 范围内的点，那么 n 米 与 GeoHash 码位数之间的映射如何实现呢？由于 GeoHash 码是由<code>5位二进制码</code>组成，每少一位，精度就会损失 <code>2e(5/2)</code>。</p>
+<p>方法当然有的，我们将二进制 GeoHash 码直接索引就可以，但很长的索引长度会导致 B 树 索引查询效率会迅速下降。</p>
+<h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><p>于是我们接着寻找解决方案，既然使用 base32 转换为 32 进制码 会不好控制精度，保持二进制又导致索引长度过长，那么进制位数和索引长度有没有一个平衡呢？</p>
+<p>另外 Redis 的 sorted set 支持 64 位 的 double 类型的 score，我们把二进制的 GeoHash 码转为十进制放入 Redis 的 sorted set 中，不是可以实现 log(n)的查询效率了么。</p>
+<p>redis 的 geo 也有一个很致命的弱点，那就是单一的搜索附近的人，还不能带其他的连带条件，所以需要二次过滤才可以，增加了额外的开销。</p>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><h4 id="geoadd"><a href="#geoadd" class="headerlink" title="geoadd"></a>geoadd</h4><p>geoadd 用来增加地理位置的坐标，可以批量添加地理位置，命令格式为：</p>
+<p><code>GEOADD key longitude latitude member [longitude latitude member ...]</code></p>
+<p>key 标识一个地理位置的集合。longitude latitude member 标识了一个地理位置的坐标。longitude 是地理位置的经度，latitude 是地理位置的纬度。member 是该地理位置的名称。GEOADD 可以批量给集合添加一批地理位置。<br>geopos</p>
+<p>geopos 可以获取地理位置的坐标，可以批量获取多个地理位置的坐标，命令格式为：</p>
+<p><code>GEOPOS key member [member ...]</code></p>
+<h4 id="geodist"><a href="#geodist" class="headerlink" title="geodist"></a>geodist</h4><p>geodist 用来获取两个地理位置的距离，命令格式为：</p>
+<p><code>GEODIST key member1 member2 [m|km|ft|mi]</code></p>
+<p>单位可以指定为以下四种类型：</p>
+<ul>
+<li>m：米，距离单位默认为米，不传递该参数则单位为米。</li>
+<li>km：公里。</li>
+<li>mi：英里。</li>
+<li>ft：英尺。</li>
+</ul>
+<h4 id="georadius"><a href="#georadius" class="headerlink" title="georadius"></a>georadius</h4><p>georadius 可以根据给定地理位置坐标获取指定范围内的地理位置集合。命令格式为：</p>
+<p><code>GEORADIUS key longitude latitude radius [m|km|ft|mi] [WITHCOORD] [WITHDIST] [ASC|DESC] [WITHHASH] [COUNT count]</code></p>
+<p>longitude latitude 标识了地理位置的坐标，radius 表示范围距离，距离单位可以为 m|km|ft|mi，还有一些可选参数：</p>
+<ul>
+<li>WITHCOORD：传入 WITHCOORD 参数，则返回结果会带上匹配位置的经纬度。</li>
+<li>WITHDIST：传入 WITHDIST 参数，则返回结果会带上匹配位置与给定地理位置的距离。</li>
+<li>ASC|DESC：默认结果是未排序的，传入 ASC 为从近到远排序，传入 DESC 为从远到近排序。</li>
+<li>WITHHASH：传入 WITHHASH 参数，则返回结果会带上匹配位置的 hash 值。</li>
+<li>COUNT count：传入 COUNT 参数，可以返回指定数量的结果。</li>
+</ul>
+<h4 id="georadiusbymember"><a href="#georadiusbymember" class="headerlink" title="georadiusbymember"></a>georadiusbymember</h4><p>georadiusbymember 可以根据给定地理位置获取指定范围内的地理位置集合。georadius 命令传递的是坐标，georadiusbymember 传递的是地理位置。georadius 更为灵活，可以获取任何坐标点范围内的地理位置。但是大多数时候，只是想获取某个地理位置附近的其他地理位置，使用 georadiusbymember 则更为方便。georadiusbymember 命令格式为（命令可选参数与 georadius 含义一样）：</p>
+<p><code>GEORADIUSBYMEMBER key member radius [m|km|ft|mi] [WITHCOORD] [WITHDIST] [ASC|DESC] [WITHHASH] [COUNT count]</code></p>
+<h4 id="geohash"><a href="#geohash" class="headerlink" title="geohash"></a>geohash</h4><p>geohash 可以获取某个地理位置的 geohash 值。geohash 是将二维的经纬度转换成字符串 hash 值的算法，后面会具体介绍 geohash 原理。可以批量获取多个地理位置的 geohash 值。命令格式为：</p>
+<p><code>GEOHASH key member [member ...]</code></p>
+<p>参考文献：<a href="https://www.cnblogs.com/zhenbianshu/p/6863405.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhenbianshu/p/6863405.html</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/Redis/">Redis</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

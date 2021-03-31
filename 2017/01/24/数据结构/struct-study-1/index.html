@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>线性存储结构 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="线性存储结构"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>线性存储结构</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/24/数据结构/struct-study-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-24T03:29:00.000Z">
+          2017-01-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
+<li><p>线性结构是一个有序元素<strong>集合</strong></p>
+</li>
+<li><p>常用的线性结构有：线性表，栈，队列，双队列，数组，串</p>
+</li>
+<li><p>关于广义表，是一种非线性数据结构</p>
+</li>
+<li><p>常见的非线性结构有：二维数组，多维数组，树（二叉树等），广义表，图。</p>
+</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="线性表"><a href="#线性表" class="headerlink" title="线性表"></a>线性表</h3><ul>
+<li>顺序表</li>
+</ul>
+<p>顺序表将元素存储在一组连续的单元中，在物理内存上是连续的，就是说内存地址是连续的。</p>
+<p>顺序的密度比较大,节省空间。读取的时间复杂度为:O(1),查询的时间复杂度为 O((n-0)/2),插入或者删除的时间复杂度为 O((n-0)/2),删除的时间复杂度为 O((n-1)/2)</p>
+<ul>
+<li>链表</li>
+</ul>
+<p>链表拥有很多结点，每个结点前半部分是数据域，后半部分是指针域，指针域指针指向下一个结点；链表可分为单链表、循环链表和双链表。</p>
+<p><strong>单链表</strong></p>
+<p>从结构可以看出,单链表有一个头部节点,没有 data 域,直接指向第一个节点 p1,第一个节点分为两个部分,一个是 data 域,一个是指针域,指针域指向下一个节点 p2,最后一个节点的指针域为 NULL.</p>
+<p>链表的密度比较散列。读取的时间复杂度为 O((n+1)/2),查询的时间复杂度为 O(n/2)，插入的时间复杂度为 O(1),删除的时间复杂为 O(1)</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/数据结构/">数据结构</a><a href="/tags/线性存储结构/">线性存储结构</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

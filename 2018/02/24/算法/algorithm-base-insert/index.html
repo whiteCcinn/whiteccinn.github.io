@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【基础算法】- 排序 - 直接插入排序 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【基础算法】- 排序 - 直接插入排序"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【基础算法】- 排序 - 直接插入排序</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/24/算法/algorithm-base-insert/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-24T05:52:00.000Z">
+          2018-02-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>直接插入排序算法</p>
+<ul>
+<li>稳定排序</li>
+</ul>
+<h2 id="PHP-实现"><a href="#PHP-实现" class="headerlink" title="PHP 实现"></a>PHP 实现</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Insert</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">(array $args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $length = count($args);</span><br><span class="line">        <span class="keyword">for</span> ($i = <span class="number">1</span>; $i &lt; $length; $i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($args[$i] &lt; $args[$i - <span class="number">1</span>]) &#123;</span><br><span class="line">                $k = $args[$i];</span><br><span class="line">                <span class="keyword">for</span> ($j = $i - <span class="number">1</span>; $j &gt;= <span class="number">0</span> &amp;&amp; $args[$j] &gt; $k; $j--) &#123;</span><br><span class="line">                        $args[$j + <span class="number">1</span>] = $args[$j];</span><br><span class="line">                &#125;</span><br><span class="line">                $args[$j + <span class="number">1</span>] = $k;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $args;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$data = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>];</span><br><span class="line"></span><br><span class="line">$sort     = <span class="keyword">new</span> Insert();</span><br><span class="line">$sortData = $sort($data);</span><br><span class="line"></span><br><span class="line">print_r($sortData);</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>直接插入排序：<br>顾名思义，直接插入排序，是从前往后排出一个有序区间，最靠近区间的一个数在有序区间中从后往前不断比较，如果待插入的数小于当前的数，不断向后移动一个元素。直到待插入的数大于当前有序区间中的数</p>
+<p>我们现在有一批数字：[3, 5, 1, 2, 8, 6, 7, 9]</p>
+<p>有序区间为：</p>
+<p>[|3| , 5 , 1 , 2 , 8 , 6 , 7 , 9]</p>
+<p>然后拿到 5 去和|3|里面的数比较，发现 5&gt;3 所以无需动。</p>
+<p>[|3 ,5| , 1 , 2 , 8, 6 , 7 , 9]</p>
+<p>然后拿到 1 去和|3,5|比较，发现 5&gt;1，然后 5 向后移动一位，然后发现 3&gt;1，然后 3 向后移动一位，然后到了尽头了，所以有序区间固定了。</p>
+<p>[|1 , 3 , 5| , 2 , 8, 6 , 7 , 9]</p>
+<p>同理…<br>（时间有限，不写了，逃！）</p>
+<p>然后整个流程下来，就完成了排序了，可以看到我们有一个稳定的有序区间，所以我们把整个算法叫做稳定算法。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

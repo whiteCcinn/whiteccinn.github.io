@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【kubernetes】测试集群部署 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【kubernetes】测试集群部署"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【kubernetes】测试集群部署</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/28/k8s/k8s测试集群部署/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-28T03:28:30.000Z">
+          2019-05-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了在公司推广 docker 和 k8s，方便我们开发人员去更好的维护自己的对应的生产环境<br>目前用 k8s 构建我们自己的测试环境，用于接口测试和功能测试专用。<br>本文记录一下集群部署的情况</p>
+<a id="more"></a>
+
+<h2 id="机器准备"><a href="#机器准备" class="headerlink" title="机器准备"></a>机器准备</h2><p>最小化分布式集群安装，一台master，一台node。后续可以调整为多master，解决单点问题，node的话也可以增加以加入集群。</p>
+<table>
+<thead>
+<tr>
+<th>hostname</th>
+<th>IP</th>
+<th>配置</th>
+<th>操作系统</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>matser</td>
+<td>192.168.8.171</td>
+<td>4核8G</td>
+<td>CentOS Linux release 7.2.1511 (Core)，Linux version 3.10.0-327.el7.x86_64，gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC)</td>
+</tr>
+<tr>
+<td>node1</td>
+<td>192.168.8.174</td>
+<td>4核8G</td>
+<td>CentOS Linux release 7.2.1511 (Core) ，Linux version 3.10.0-327.el7.x86_64，gcc version 4.8.3 20140911 (Red Hat 4.8.3-9) (GCC)</td>
+</tr>
+</tbody></table>
+<h2 id="安装k8s集群"><a href="#安装k8s集群" class="headerlink" title="安装k8s集群"></a>安装k8s集群</h2><p>### 检查各机器防火墙状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-unit-files | grep firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>如果防火墙的状态是 <code>enabled</code> 的话，暂时先关闭防火墙，为了不影响我们的测试部署</p>
+<p>关闭防火墙 &amp;&amp; 禁止随开机启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld.service &amp;&amp; systemctl disable firewalld.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭各机器上的SELINUX"><a href="#关闭各机器上的SELINUX" class="headerlink" title="关闭各机器上的SELINUX"></a>关闭各机器上的SELINUX</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0 &amp;&amp; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config</span><br></pre></td></tr></table></figure>
+
+<h3 id="同步各机器时间差"><a href="#同步各机器时间差" class="headerlink" title="同步各机器时间差"></a>同步各机器时间差</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y ntpdate &amp;&amp; ntpdate -u ntp.api.bz</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改各个机器的hostname和hosts文件"><a href="#修改各个机器的hostname和hosts文件" class="headerlink" title="修改各个机器的hostname和hosts文件"></a>修改各个机器的hostname和hosts文件</h3><p>修改 <code>etc/hosts</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">master_ip=192.168.8.171;node1_ip=192.168.8.174;echo -e "\n$&#123;master_ip&#125; master\n$&#123;node1_ip&#125; node1" &gt;&gt; /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>master</code> 的 <code>hostname</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname master</span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>node1</code> 的 <code>hostname</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl set-hostname node1</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置相关的yum仓库"><a href="#配置相关的yum仓库" class="headerlink" title="配置相关的yum仓库"></a>配置相关的yum仓库</h3><h4 id="配置阿里云docker-ce仓库"><a href="#配置阿里云docker-ce仓库" class="headerlink" title="配置阿里云docker-ce仓库"></a>配置阿里云docker-ce仓库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O  /etc/yum.repos.d/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置阿里云k8s仓库"><a href="#配置阿里云k8s仓库" class="headerlink" title="配置阿里云k8s仓库"></a>配置阿里云k8s仓库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/yum.repos.d/kubernetes.repo &lt;&lt; EOF</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes Repo</span><br><span class="line">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br><span class="line">enable=1</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装docker-kubelet-kubeadm-kubectl"><a href="#安装docker-kubelet-kubeadm-kubectl" class="headerlink" title="安装docker kubelet kubeadm kubectl"></a>安装docker kubelet kubeadm kubectl</h3><p>当前最新版：<code>1.14.2</code></p>
+<p>为了稳定性考虑，目前暂时考虑最新版的前一个版本<code>1.14.1</code></p>
+<table>
+<thead>
+<tr>
+<th>kubeadm</th>
+<th>kubectl</th>
+<th>kubelet</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>kubeadm-1.14.1-0.x86_64</td>
+<td>kubectl-1.14.1-0.x86_64</td>
+<td>kubelet-1.14.1-0.x86_64</td>
+</tr>
+</tbody></table>
+<p>由于利用kubeadm部署集群，查看kubeadm所有版本，因为kuadm和kubectl和kubelet都要对应好版本，所以如果版本不对应的话，可能需要降级或者升级操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum list --showduplicates | grep kubeadm</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker kubelet-1.14.1-0 kubeadm-1.14.1-0 kubectl-1.14.1-0</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">```shell</span><br><span class="line">rpm -qa | grep kubeadm &amp;&amp; rpm -qa | grep kubelet &amp;&amp; rpm -qa | grep kubectl</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改系统内核参数"><a href="#修改系统内核参数" class="headerlink" title="修改系统内核参数"></a>修改系统内核参数</h3><p>由于docker随后会大量的操作iptables，所有nf-call的值要设置为1，尽量不使用swap</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; /etc/sysctl.d/k8s-sysctl.conf &lt;&lt;EOF</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">vm.swappiness = 0</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>刷新内核配置参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+
+<p>查看参数信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/net/bridge/bridge-nf-call-iptables</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置随开机启动"><a href="#设置随开机启动" class="headerlink" title="设置随开机启动"></a>设置随开机启动</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable docker &amp;&amp; systemctl enable kubelet</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置kubelet忽略swap"><a href="#设置kubelet忽略swap" class="headerlink" title="设置kubelet忽略swap"></a>设置kubelet忽略swap</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' &gt; /etc/sysconfig/kubelet</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭swap"><a href="#关闭swap" class="headerlink" title="关闭swap"></a>关闭swap</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动docker"><a href="#启动docker" class="headerlink" title="启动docker"></a>启动docker</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">确保docker已启动</span><br><span class="line"></span><br><span class="line">```shell</span><br><span class="line">systemctl status docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载k8s核心组件镜像"><a href="#下载k8s核心组件镜像" class="headerlink" title="下载k8s核心组件镜像"></a>下载k8s核心组件镜像</h3><p>由于k8s的镜像在谷歌云，所以我们需要在国内的镜像源中获取镜像，下面是为从国内镜像源中找到的镜像源，后续，我们可以做一个我们自己的私有仓库，保存这里镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; deploy.sh &lt;&lt;EOF</span><br><span class="line"><span class="meta">#</span><span class="bash">/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># k8s-core</span></span></span><br><span class="line">images=(</span><br><span class="line">    kube-proxy:v1.14.1</span><br><span class="line">    kube-apiserver:v1.14.1</span><br><span class="line">    kube-controller-manager:v1.14.1</span><br><span class="line">    kube-scheduler:v1.14.1</span><br><span class="line">    etcd:3.3.10</span><br><span class="line">    pause:3.1</span><br><span class="line">)</span><br><span class="line">for imageName in \$&#123;images[@]&#125;; do</span><br><span class="line">    docker pull mirrorgooglecontainers/\$&#123;imageName&#125;</span><br><span class="line">    docker tag mirrorgooglecontainers/\$&#123;imageName&#125; k8s.gcr.io/\$&#123;imageName&#125;</span><br><span class="line">    docker rmi mirrorgooglecontainers/\$&#123;imageName&#125;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># k8s-network-manager</span></span></span><br><span class="line">images=(</span><br><span class="line">    coredns:1.3.1</span><br><span class="line">)</span><br><span class="line">for imageName in \$&#123;images[@]&#125;; do</span><br><span class="line">  docker pull coredns/\$&#123;imageName&#125;</span><br><span class="line">  docker tag coredns/\$&#123;imageName&#125; k8s.gcr.io/\$&#123;imageName&#125;</span><br><span class="line">  docker rmi coredns/\$&#123;imageName&#125;</span><br><span class="line">done</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># k8s-web-ui</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># docker pull gcrxio/kubernetes-dashboard-amd64:v1.10.1 &amp;&amp; docker tag gcrxio/kubernetes-dashboard-amd64:v1.10.1 k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1 &amp;&amp; docker rmi gcrxio/kubernetes-dashboard-amd64:v1.10.1</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># nginx-ingress-controller</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># docker pull bitnami/nginx-ingress-controller:0.24.1 &amp;&amp; docker tag bitnami/nginx-ingress-controller:0.24.1 quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1 &amp;&amp; docker rmi bitnami/nginx-ingress-controller:0.24.1</span></span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x deploy.sh</span><br></pre></td></tr></table></figure>
+
+<p>执行 <code>deploy.sh</code> 脚本</p>
+<p>等待下载安装，完毕之后，查看一下镜像是否已经下载好了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# docker images</span><br><span class="line">REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">k8s.gcr.io/kube-proxy                v1.14.1             20a2d7035165        7 weeks ago         82.1 MB</span><br><span class="line">k8s.gcr.io/kube-apiserver            v1.14.1             cfaa4ad74c37        7 weeks ago         210 MB</span><br><span class="line">k8s.gcr.io/kube-scheduler            v1.14.1             8931473d5bdb        7 weeks ago         81.6 MB</span><br><span class="line">k8s.gcr.io/kube-controller-manager   v1.14.1             efb3887b411d        7 weeks ago         158 MB</span><br><span class="line">k8s.gcr.io/coredns                   1.3.1               eb516548c180        4 months ago        40.3 MB</span><br><span class="line">k8s.gcr.io/etcd                      3.3.10              2c4adeb21b4f        5 months ago        258 MB</span><br><span class="line">k8s.gcr.io/pause                     3.1                 da86e6ba6ca1        17 months ago       742 kB</span><br></pre></td></tr></table></figure>
+<p>下载好了之后，我们就开始部署我们的k8s集群</p>
+<h3 id="初始化k8s-matser"><a href="#初始化k8s-matser" class="headerlink" title="初始化k8s-matser"></a>初始化k8s-matser</h3><p>在 <code>master</code> 节点初始化操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --kubernetes-version=v1.14.1 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=Swap</span><br></pre></td></tr></table></figure>
+
+<p>过程如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">[init] Using Kubernetes version: v1.14.1</span><br><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">[preflight] Pulling images required for setting up a Kubernetes cluster</span><br><span class="line">[preflight] This might take a minute or two, depending on the speed of your internet connection</span><br><span class="line">[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'</span><br><span class="line">[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"</span><br><span class="line">[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"</span><br><span class="line">[kubelet-start] Activating the kubelet service</span><br><span class="line">[certs] Using certificateDir folder "/etc/kubernetes/pki"</span><br><span class="line">[certs] Generating "ca" certificate and key</span><br><span class="line">[certs] Generating "apiserver" certificate and key</span><br><span class="line">[certs] apiserver serving cert is signed for DNS names [master kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.8.171]</span><br><span class="line">[certs] Generating "apiserver-kubelet-client" certificate and key</span><br><span class="line">[certs] Generating "front-proxy-ca" certificate and key</span><br><span class="line">[certs] Generating "front-proxy-client" certificate and key</span><br><span class="line">[certs] Generating "etcd/ca" certificate and key</span><br><span class="line">[certs] Generating "etcd/server" certificate and key</span><br><span class="line">[certs] etcd/server serving cert is signed for DNS names [master localhost] and IPs [192.168.8.171 127.0.0.1 ::1]</span><br><span class="line">[certs] Generating "etcd/healthcheck-client" certificate and key</span><br><span class="line">[certs] Generating "etcd/peer" certificate and key</span><br><span class="line">[certs] etcd/peer serving cert is signed for DNS names [master localhost] and IPs [192.168.8.171 127.0.0.1 ::1]</span><br><span class="line">[certs] Generating "apiserver-etcd-client" certificate and key</span><br><span class="line">[certs] Generating "sa" key and public key</span><br><span class="line">[kubeconfig] Using kubeconfig folder "/etc/kubernetes"</span><br><span class="line">[kubeconfig] Writing "admin.conf" kubeconfig file</span><br><span class="line">[kubeconfig] Writing "kubelet.conf" kubeconfig file</span><br><span class="line">[kubeconfig] Writing "controller-manager.conf" kubeconfig file</span><br><span class="line">[kubeconfig] Writing "scheduler.conf" kubeconfig file</span><br><span class="line">[control-plane] Using manifest folder "/etc/kubernetes/manifests"</span><br><span class="line">[control-plane] Creating static Pod manifest for "kube-apiserver"</span><br><span class="line">[control-plane] Creating static Pod manifest for "kube-controller-manager"</span><br><span class="line">[control-plane] Creating static Pod manifest for "kube-scheduler"</span><br><span class="line">[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"</span><br><span class="line">[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s</span><br><span class="line">[apiclient] All control plane components are healthy after 25.053527 seconds</span><br><span class="line">[upload-config] storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace</span><br><span class="line">[kubelet] Creating a ConfigMap "kubelet-config-1.14" in namespace kube-system with the configuration for the kubelets in the cluster</span><br><span class="line">[upload-certs] Skipping phase. Please see --experimental-upload-certs</span><br><span class="line">[mark-control-plane] Marking the node master as control-plane by adding the label "node-role.kubernetes.io/master=''"</span><br><span class="line">[mark-control-plane] Marking the node master as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]</span><br><span class="line">[bootstrap-token] Using token: f1agmt.o01kvgt0slzlj7y6</span><br><span class="line">[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles</span><br><span class="line">[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials</span><br><span class="line">[bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token</span><br><span class="line">[bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster</span><br><span class="line">[bootstrap-token] creating the "cluster-info" ConfigMap in the "kube-public" namespace</span><br><span class="line">[addons] Applied essential addon: CoreDNS</span><br><span class="line">[addons] Applied essential addon: kube-proxy</span><br><span class="line"></span><br><span class="line">Your Kubernetes control-plane has initialized successfully!</span><br><span class="line"></span><br><span class="line">To start using your cluster, you need to run the following as a regular user:</span><br><span class="line"></span><br><span class="line">  mkdir -p $HOME/.kube</span><br><span class="line">  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">  sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line"></span><br><span class="line">You should now deploy a pod network to the cluster.</span><br><span class="line">Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:</span><br><span class="line">  https://kubernetes.io/docs/concepts/cluster-administration/addons/</span><br><span class="line"></span><br><span class="line">Then you can join any number of worker nodes by running the following on each as root:</span><br><span class="line"></span><br><span class="line">kubeadm join 192.168.8.171:6443 --token f1agmt.o01kvgt0slzlj7y6 \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:a6bc1cbed5084d136237f7bfb469f82c3dfbfbdef0f967602d015b5fb5a6447d</span><br></pre></td></tr></table></figure>
+
+<p>需要用到kubectl的用户都需要执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME/.kube &amp;&amp; sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config &amp;&amp; sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装网络组件-flannel"><a href="#安装网络组件-flannel" class="headerlink" title="安装网络组件-flannel"></a>安装网络组件-flannel</h3><p>这个时候可以看一下master节点的状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl get nodes</span><br><span class="line">NAME     STATUS     ROLES    AGE   VERSION</span><br><span class="line">master   NotReady   master   15h   v1.14.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl describe nodes master</span><br><span class="line">Name:               master</span><br><span class="line">Roles:              master</span><br><span class="line">Labels:             beta.kubernetes.io/arch=amd64</span><br><span class="line">                    beta.kubernetes.io/os=linux</span><br><span class="line">                    kubernetes.io/arch=amd64</span><br><span class="line">                    kubernetes.io/hostname=master</span><br><span class="line">                    kubernetes.io/os=linux</span><br><span class="line">                    node-role.kubernetes.io/master=</span><br><span class="line">Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock</span><br><span class="line">                    node.alpha.kubernetes.io/ttl: 0</span><br><span class="line">                    volumes.kubernetes.io/controller-managed-attach-detach: true</span><br><span class="line">CreationTimestamp:  Tue, 28 May 2019 18:14:37 +0800</span><br><span class="line">Taints:             node.kubernetes.io/not-ready:NoExecute</span><br><span class="line">                    node-role.kubernetes.io/master:NoSchedule</span><br><span class="line">                    node.kubernetes.io/not-ready:NoSchedule</span><br><span class="line">Unschedulable:      false</span><br><span class="line">Conditions:</span><br><span class="line">  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message</span><br><span class="line">  ----             ------  -----------------                 ------------------                ------                       -------</span><br><span class="line">  MemoryPressure   False   Wed, 29 May 2019 09:15:07 +0800   Tue, 28 May 2019 18:14:28 +0800   KubeletHasSufficientMemory   kubelet has sufficient memory available</span><br><span class="line">  DiskPressure     False   Wed, 29 May 2019 09:15:07 +0800   Tue, 28 May 2019 18:14:28 +0800   KubeletHasNoDiskPressure     kubelet has no disk pressure</span><br><span class="line">  PIDPressure      False   Wed, 29 May 2019 09:15:07 +0800   Tue, 28 May 2019 18:14:28 +0800   KubeletHasSufficientPID      kubelet has sufficient PID available</span><br><span class="line">  Ready            False   Wed, 29 May 2019 09:15:07 +0800   Tue, 28 May 2019 18:14:28 +0800   KubeletNotReady              runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized</span><br><span class="line">Addresses:</span><br><span class="line">  InternalIP:  192.168.8.171</span><br><span class="line">  Hostname:    master</span><br><span class="line">Capacity:</span><br><span class="line"> cpu:                4</span><br><span class="line"> ephemeral-storage:  51175Mi</span><br><span class="line"> hugepages-2Mi:      0</span><br><span class="line"> memory:             8009192Ki</span><br><span class="line"> pods:               110</span><br><span class="line">Allocatable:</span><br><span class="line"> cpu:                4</span><br><span class="line"> ephemeral-storage:  48294789041</span><br><span class="line"> hugepages-2Mi:      0</span><br><span class="line"> memory:             7906792Ki</span><br><span class="line"> pods:               110</span><br><span class="line">System Info:</span><br><span class="line"> Machine ID:                 fae837ec0d8a402ab8085d2e0ae4624f</span><br><span class="line"> System UUID:                421D57E8-3C84-52D4-17F1-7D87F3BF8FF8</span><br><span class="line"> Boot ID:                    b6c7d535-ad5f-41b1-9636-4e46e96adaf0</span><br><span class="line"> Kernel Version:             3.10.0-957.el7.x86_64</span><br><span class="line"> OS Image:                   CentOS Linux 7 (Core)</span><br><span class="line"> Operating System:           linux</span><br><span class="line"> Architecture:               amd64</span><br><span class="line"> Container Runtime Version:  docker://1.13.1</span><br><span class="line"> Kubelet Version:            v1.14.1</span><br><span class="line"> Kube-Proxy Version:         v1.14.1</span><br><span class="line">PodCIDR:                     10.244.0.0/24</span><br><span class="line">Non-terminated Pods:         (5 in total)</span><br><span class="line">  Namespace                  Name                              CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE</span><br><span class="line">  ---------                  ----                              ------------  ----------  ---------------  -------------  ---</span><br><span class="line">  kube-system                etcd-master                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         14h</span><br><span class="line">  kube-system                kube-apiserver-master             250m (6%)     0 (0%)      0 (0%)           0 (0%)         14h</span><br><span class="line">  kube-system                kube-controller-manager-master    200m (5%)     0 (0%)      0 (0%)           0 (0%)         14h</span><br><span class="line">  kube-system                kube-proxy-nz9h6                  0 (0%)        0 (0%)      0 (0%)           0 (0%)         15h</span><br><span class="line">  kube-system                kube-scheduler-master             100m (2%)     0 (0%)      0 (0%)           0 (0%)         14h</span><br><span class="line">Allocated resources:</span><br><span class="line">  (Total limits may be over 100 percent, i.e., overcommitted.)</span><br><span class="line">  Resource           Requests    Limits</span><br><span class="line">  --------           --------    ------</span><br><span class="line">  cpu                550m (13%)  0 (0%)</span><br><span class="line">  memory             0 (0%)      0 (0%)</span><br><span class="line">  ephemeral-storage  0 (0%)      0 (0%)</span><br><span class="line">Events:              &lt;none&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到这里告诉我们网络插件并没有准备好。所以我们接下来安装网络插件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</span><br></pre></td></tr></table></figure>
+
+<p>过一会儿我们再来看一下节点的信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl get nodes</span><br><span class="line">NAME     STATUS   ROLES    AGE   VERSION</span><br><span class="line">master   Ready    master   16h   v1.14.1</span><br></pre></td></tr></table></figure>
+
+<p>发现我们的 <code>master</code>节点已经是 <code>Ready</code> 状态了。</p>
+<h3 id="加入node工作节点"><a href="#加入node工作节点" class="headerlink" title="加入node工作节点"></a>加入node工作节点</h3><p>还记得我们再初始化master的时候有，有如下提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Then you can join any number of worker nodes by running the following on each as root:</span><br><span class="line"></span><br><span class="line">kubeadm join 192.168.8.171:6443 --token f1agmt.o01kvgt0slzlj7y6 \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:a6bc1cbed5084d136237f7bfb469f82c3dfbfbdef0f967602d015b5fb5a6447d</span><br></pre></td></tr></table></figure>
+
+<p>这个需要我们在<code>node</code> 节点执行的命令，一定要保存好，以后扩展node节点的时候，都要用这个 <code>token</code> 和 <code>discovery-token-ca-cert-hash</code></p>
+<p>在<code>node1</code>的机器上执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.8.171:6443 --token f1agmt.o01kvgt0slzlj7y6 \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:a6bc1cbed5084d136237f7bfb469f82c3dfbfbdef0f967602d015b5fb5a6447d</span><br></pre></td></tr></table></figure>
+
+<p>过程如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">[preflight] Reading configuration from the cluster...</span><br><span class="line">[preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'</span><br><span class="line">[kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.14" ConfigMap in the kube-system namespace</span><br><span class="line">[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"</span><br><span class="line">[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"</span><br><span class="line">[kubelet-start] Activating the kubelet service</span><br><span class="line">[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...</span><br><span class="line"></span><br><span class="line">This node has joined the cluster:</span><br><span class="line">* Certificate signing request was sent to apiserver and a response was received.</span><br><span class="line">* The Kubelet was informed of the new secure connection details.</span><br><span class="line"></span><br><span class="line">Run 'kubectl get nodes' on the control-plane to see this node join the cluster.</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>master</code> 的机器上执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl get nodes</span><br><span class="line">NAME     STATUS   ROLES    AGE     VERSION</span><br><span class="line">master   Ready    master   16h     v1.14.1</span><br><span class="line">node1    Ready    &lt;none&gt;   2m39s   v1.14.1</span><br></pre></td></tr></table></figure>
+
+<p>发现node1节点已经加入进来了，并且状态已经是 <code>Ready</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl get pods -n kube-system -o wide</span><br><span class="line">NAME                             READY   STATUS    RESTARTS   AGE     IP              NODE     NOMINATED NODE   READINESS GATES</span><br><span class="line">coredns-fb8b8dccf-cr7t4          1/1     Running   0          16h     10.244.0.2      master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">coredns-fb8b8dccf-hn5kh          1/1     Running   0          16h     10.244.0.3      master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">etcd-master                      1/1     Running   0          16h     192.168.8.171   master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-apiserver-master            1/1     Running   0          16h     192.168.8.171   master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-controller-manager-master   1/1     Running   0          16h     192.168.8.171   master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-flannel-ds-amd64-27cts      1/1     Running   0          3m29s   192.168.8.174   node1    &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-flannel-ds-amd64-wk4c9      1/1     Running   0          91m     192.168.8.171   master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-proxy-mfjlr                 1/1     Running   0          3m29s   192.168.8.174   node1    &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-proxy-nz9h6                 1/1     Running   0          16h     192.168.8.171   master   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-scheduler-master            1/1     Running   0          16h     192.168.8.171   master   &lt;none&gt;           &lt;none&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们可以看到所有的k8s组件pods都已经准备就绪，到此位置，一个<code>master</code>一个<code>node</code>的k8s已经部署完毕。</p>
+<h2 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h2><h3 id="SELinux-is-not-supported-with-the-overlay2-graph-driver-on-this-kernel"><a href="#SELinux-is-not-supported-with-the-overlay2-graph-driver-on-this-kernel" class="headerlink" title="SELinux is not supported with the overlay2 graph driver on this kernel"></a>SELinux is not supported with the overlay2 graph driver on this kernel</h3><p>意思是：</p>
+<p>此linux的内核中的SELinux不支持 overlay2 graph driver ，解决方法有两个，要么启动一个新内核，要么就在docker里禁用selinux，–selinux-enabled=false</p>
+<p>打开docker配置文件</p>
+<p><code>vim /etc/sysconfig/docker</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OPTIONS='--selinux-enabled --log-driver=journald --signature-verification=false'</span><br><span class="line">if [ -z "$&#123;DOCKER_CERT_PATH&#125;" ]; then</span><br><span class="line">    DOCKER_CERT_PATH=/etc/docker</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>改为如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OPTIONS='--selinux-enabled=false --log-driver=journald --signature-verification=false'</span><br><span class="line">if [ -z "$&#123;DOCKER_CERT_PATH&#125;" ]; then</span><br><span class="line">    DOCKER_CERT_PATH=/etc/docker</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p><br>改完之后再启动docker即可。</p>
+<h3 id="kubelet-check-connection-refused"><a href="#kubelet-check-connection-refused" class="headerlink" title="[kubelet-check] connection refused"></a>[kubelet-check] connection refused</h3><p>[kubelet-check] The HTTP call equal to ‘curl -sSL <a href="http://localhost:10255/healthz&#39;" target="_blank" rel="noopener">http://localhost:10255/healthz&#39;</a> failed with error: Get <a href="http://localhost:10255/healthz" target="_blank" rel="noopener">http://localhost:10255/healthz</a>: dial tcp [::1]:10255: connection refused</p>
+<p>初始化过程中，master初始化的过程中，发现总是在校验kubelet服务的时候失败，会报如上内容。</p>
+<p>查看<code>kubelet</code>服务是否启动了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status kubelet</span><br></pre></td></tr></table></figure>
+
+<p>发现服务是没有启动的。</p>
+<p>由于没有详细的信息，所以执行如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">journalctl -xeu kubelet</span><br></pre></td></tr></table></figure>
+
+<p>得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Failed to find subsystem mount for required subsystem: pid</span><br></pre></td></tr></table></figure>
+
+<p>我们的 <code>cgroup</code> 不支持 <code>pids</code>，所以运行不起来。</p>
+<p>查看当前系统支持哪些subsystem</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/cgroups</span><br><span class="line"><span class="meta">#</span><span class="bash">subsys_name    hierarchy       num_cgroups     enabled</span></span><br><span class="line">cpuset  5       11      1</span><br><span class="line">cpu     4       104     1</span><br><span class="line">cpuacct 4       104     1</span><br><span class="line">memory  6       104     1</span><br><span class="line">devices 3       104     1</span><br><span class="line">freezer 2       11      1</span><br><span class="line">net_cls 8       11      1</span><br><span class="line">blkio   9       104     1</span><br><span class="line">perf_event      10      11      1</span><br><span class="line">hugetlb 7       11      1</span><br></pre></td></tr></table></figure>
+
+<p>发现确实没有<code>pids</code>。查看当前系统内核。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br><span class="line">3.10.0-327.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+<p>这个内核正是开头所说的内核版本。那我们只能升级内核版本了。看一下有什么内核版本可以升级。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">yum list kernel.x86_64 --showduplicates | sort -r</span><br><span class="line">* updates: ap.stykers.moe</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">kernel.x86_64                   3.10.0-957.el7                         base     </span><br><span class="line">kernel.x86_64                   3.10.0-957.5.1.el7                     updates  </span><br><span class="line">kernel.x86_64                   3.10.0-957.1.3.el7                     updates  </span><br><span class="line">kernel.x86_64                   3.10.0-957.10.1.el7                    updates  </span><br><span class="line">kernel.x86_64                   3.10.0-327.el7                         @anaconda</span><br><span class="line">Installed Packages</span><br><span class="line"> * extras: mirrors.huaweicloud.com</span><br><span class="line"> * epel: mirrors.aliyun.com</span><br><span class="line"> * elrepo: mirrors.tuna.tsinghua.edu.cn</span><br><span class="line"> * base: ap.stykers.moe</span><br><span class="line">Available Packages</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install kernel-3.10.0-957.el7.x86_64 -y</span><br></pre></td></tr></table></figure>
+
+<p>CentOS 7使用grub2作为引导程序，查看有哪些内核选项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat /boot/grub2/grub.cfg |grep menuentry  ##查看有哪些内核选项</span><br><span class="line">if [ x"$&#123;feature_menuentry_id&#125;" = xy ]; then</span><br><span class="line">  menuentry_id_option="--id"</span><br><span class="line">  menuentry_id_option=""</span><br><span class="line">export menuentry_id_option</span><br><span class="line">menuentry 'CentOS Linux (3.10.0-957.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-327.el7.x86_64-advanced-7787952f-c2d4-4216-ae09-5188e7fd88b8' &#123;</span><br><span class="line">menuentry 'CentOS Linux (3.10.0-327.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-327.el7.x86_64-advanced-7787952f-c2d4-4216-ae09-5188e7fd88b8' &#123;</span><br><span class="line">menuentry 'CentOS Linux (0-rescue-d918a8d2df0e481a820b4e5554fed3b5) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-0-rescue-d918a8d2df0e481a820b4e5554fed3b5-advanced-7787952f-c2d4-4216-ae09-5188e7fd88b8' &#123;</span><br></pre></td></tr></table></figure>
+
+<p>查看默认启动内核</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub2-editenv list</span><br></pre></td></tr></table></figure>
+
+<p>重启系统，更换内核版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<p>重启后在查看内核版本换了没，subsystem中是否有pids</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/cgroups</span><br><span class="line"><span class="meta">#</span><span class="bash">subsys_name    hierarchy       num_cgroups     enabled</span></span><br><span class="line">cpuset  5       11      1</span><br><span class="line">cpu     4       110     1</span><br><span class="line">cpuacct 4       110     1</span><br><span class="line">memory  3       110     1</span><br><span class="line">devices 6       110     1</span><br><span class="line">freezer 7       11      1</span><br><span class="line">net_cls 2       11      1</span><br><span class="line">blkio   10      110     1</span><br><span class="line">perf_event      8       11      1</span><br><span class="line">hugetlb 9       11      1</span><br><span class="line">pids    11      110     1</span><br><span class="line">net_prio        2       11      1</span><br></pre></td></tr></table></figure>
+
+<p>ok，这个时候支持了pids，所以这个时候，这个问题就解决了。</p>
+<h3 id="每次重启都需要关闭swap"><a href="#每次重启都需要关闭swap" class="headerlink" title="每次重启都需要关闭swap"></a>每次重启都需要关闭swap</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>, <a href="/categories/kubernetes/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

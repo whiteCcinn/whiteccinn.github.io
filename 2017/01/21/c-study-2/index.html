@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>C 语言入门实录 二 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="C 语言入门实录 二"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>C 语言入门实录 二</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/21/c-study-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-21T03:29:00.000Z">
+          2017-01-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>C语言中的类型分为一下几种</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>类型和描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>基本类型：算术类型 ，整数类型和浮点类型</td>
+</tr>
+<tr>
+<td>2</td>
+<td>枚举类型：也是算术类型，但是是一些离散固定的整数类型</td>
+</tr>
+<tr>
+<td>3</td>
+<td>void类型：表明没有可用的值</td>
+</tr>
+<tr>
+<td>4</td>
+<td>派生类型：指针类型，数组类型，结构类型，函数类型以及共用体类型</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>存储大小（1个字节(bit)占8位[bits]）</th>
+<th>值的范围（由二进制得出）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>char</td>
+<td>1字节</td>
+<td>-128<del>127 或者 0</del>255</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>1字节</td>
+<td>0~255</td>
+</tr>
+<tr>
+<td>signed char</td>
+<td>1字节</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>int</td>
+<td>2字节(16位系统)或4字节(32/64位系统)</td>
+<td>-32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>2字节(16位系统)或4字节(32/64位系统)</td>
+<td>0 到 65,535 或 0 到 4,294,967,295</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2字节</td>
+<td>-32,768 到 32,767</td>
+</tr>
+<tr>
+<td>unsigned short</td>
+<td>2字节</td>
+<td>0 到 65,535</td>
+</tr>
+<tr>
+<td>long</td>
+<td>4字节</td>
+<td>-2,147,483,648 到 2,147,483,647</td>
+</tr>
+<tr>
+<td>unsigned long</td>
+<td>4字节</td>
+<td>0 到 4,294,967,295</td>
+</tr>
+</tbody></table>
+<hr>
+<a id="more"></a>
+
+<p>但是C语言的取值范围是如何计算的出来的呢？</p>
+<blockquote>
+<p>二进制数据在计算机中存储的是补码<br>正数的补码等于原码,负数补码需要在符号位之后取反+1</p>
+</blockquote>
+<p>如果以最高位为符号位，二进制原码最大为0111111111111111=2的15次方减1=32767<br>最小为1111111111111111=-2的15次方减1=-32767<br>此时0有两种表示方法，即正0和负0：0000000000000000=1000000000000000=0<br>所以，二进制原码表示时，范围是-32767～-0和0～32767，因为有两个零的存在，所以不同的数值个数一共只有2的16次方减1个，比16位二进制能够提供的2的16次方个编码少1个。<br>但是计算机中采用二进制补码存储数据，即正数编码不变，从0000000000000000到0111111111111111依旧表示0到32767，而负数需要把除符号位以后的部分取反加1，即-32767的补码为1000000000000001。<br>到此，再来看原码的正0和负0：0000000000000000和1000000000000000，补码表示中，前者的补码还是0000000000000000，后者经过非符号位取反加1后，同样变成了0000000000000000，也就是正0和负0在补码系统中的编码是一样的。但是，我们知道，16位二进制数可以表示2的16次方个编码，而在补码中零的编码只有一个，也就是补码中会比原码多一个编码出来，这个编码就是1000000000000000，因为任何一个原码都不可能在转成补码时变成1000000000000000。所以，人为规定1000000000000000这个补码编码为-32768。<br>所以，补码系统中，范围是-23768～32767。<br>因此，实际上，二进制的最小数确实是1111111111111111，只是二进制补码的最小值才是1000000000000000，而补码的1111111111111111是二进制值的-1</p>
+<p>当然，如果你不确定当前每个类型占的自己数的话，可以使用一下代码来打印一下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"int 存储的字节大小为: %lu \n"</span>,<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>存储大小（1个字节(bit)占8位[bits]）</th>
+<th>值的范围（由二进制得出）</th>
+<th>精度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>float</td>
+<td>4 字节</td>
+<td>1.2E-38 到 3.4E+38</td>
+<td>6 位小数</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8 字节</td>
+<td>2.3E-308 到 1.7E+308</td>
+<td>15 位小数</td>
+</tr>
+<tr>
+<td>long double</td>
+<td>16 字节</td>
+<td>3.4E-4932 到 1.1E+4932</td>
+<td>19 位小数</td>
+</tr>
+</tbody></table>
+<p>想要用float的函数和宏就需要引入float相关的函数定义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;float.h&gt; /** float头部 **/</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"float 最大存储的字节为 %lu \n"</span>,<span class="keyword">sizeof</span>(<span class="keyword">float</span>));</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"float 最小值为 %E\n"</span>,FLT_MIN);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"float 最大值为 %E\n"</span>,FLT_MAX);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"精确度 %d\n"</span>,FLT_DIG);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="void类型"><a href="#void类型" class="headerlink" title="void类型"></a>void类型</h2><p>指定没有可用的值</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>类型与描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>函数返回为空 C 中有各种函数都不返回值，或者您可以说它们返回空。不返回值的函数的返回类型为空。例如 void exit (int status);</td>
+</tr>
+<tr>
+<td>2</td>
+<td>函数参数为空 C 中有各种函数不接受任何参数。不带参数的函数可以接受一个 void。例如 int rand(void);</td>
+</tr>
+<tr>
+<td>3</td>
+<td>指针指向 void 类型为 void * 的指针代表对象的地址，而不是类型。例如，内存分配函数 void *malloc( size_t size ); 返回指向 void 的指针，可以转换为任何数据类型。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/C/">C</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C/">C</a><a href="/tags/学习记录/">学习记录</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

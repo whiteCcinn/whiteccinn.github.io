@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【大数据】- Glow 源码剖析 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【大数据】- Glow 源码剖析"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【大数据】- Glow 源码剖析</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/12/大数据/Glow源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-11T16:07:40.000Z">
+          2019-08-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>犹豫公司的流式计算，并没有用类似于 Hadoop 的 mapreduce 机制或者 storm 或者 flink，是我们自研基于 erlang 的单节点服务，其优点就是：部署和迁移都十分简单，并且犹豫 erlang 的天然的良好的利用了多核 CPU 的优势，可以实现效率较高的大数据流式计算。但是由于其单机性，导致对单台机器的要求过于苛刻，并且不能进行扩展机器提高计算能力是其致命的缺点，所以目前我规划利用 golang，写一个支持分布式并行计算的服务，在此之前，了解了各大流式计算的基本思想，并且结合 golang 语言的特性，找到了一个叫<code>glow</code>的服务，想要写好一个分布式流式计算的服务，我们先来看看 <code>glow</code> 有什么好的借鉴的思想和思路。</p>
+<a id="more"></a>
+
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>我们要记得这 5 个内容，这是构成整个 flow 的核心名词</p>
+<ol>
+<li>上下文 Context</li>
+<li>步进 Step</li>
+<li>任务 Task</li>
+<li>数据集 Dataset</li>
+<li>数据分片 DatasetShard</li>
+</ol>
+<h2 id="上下文（Context）"><a href="#上下文（Context）" class="headerlink" title="上下文（Context）"></a>上下文（Context）</h2><p>上下文有 4 个属性，其中 2 个问数组</p>
+<ol>
+<li>Id int</li>
+<li>Steps []flow.Step</li>
+<li>Datasets []flow.Dataset</li>
+<li>ChannelBufferSize int</li>
+</ol>
+<h2 id="步进（Step）-amp-任务（Task）"><a href="#步进（Step）-amp-任务（Task）" class="headerlink" title="步进（Step） &amp; 任务（Task）"></a>步进（Step） &amp; 任务（Task）</h2><h3 id="步进（Step）"><a href="#步进（Step）" class="headerlink" title="步进（Step）"></a>步进（Step）</h3><p>Step 有 6 个属性</p>
+<ol>
+<li>Id int</li>
+<li>Name string</li>
+<li>Inputs []flow.Dataset （每一步的来源结果集）</li>
+<li>Output flow.Dataset （每一个需要输出的结果集）</li>
+<li>Function function (每一步操作接口提供的用户自定义业务逻辑)</li>
+<li>Tasks []flow.Task （任务数基于上一步中的 Output 中 Task 中 Outputs 的数据分区数量）</li>
+</ol>
+<h3 id="任务（Task）"><a href="#任务（Task）" class="headerlink" title="任务（Task）"></a>任务（Task）</h3><p>Task 有 5 个属性</p>
+<ol>
+<li>Id int</li>
+<li>Inputs []flow.DatasetShard</li>
+<li>Outputs []flow.DatasetShard （输出结果集的分区，各个分区处于平等关系）</li>
+<li>Step flow.Step （所属哪一步的任务）</li>
+<li>InputChans []reflect.Value</li>
+</ol>
+<blockquote>
+<p>一个任务 Inputs 等于一个上一步中的 Output 中 Task 中的 Outputs 的数量</p>
+</blockquote>
+<h2 id="数据集（Dataset）-amp-数据粉分片（DatasetShard）"><a href="#数据集（Dataset）-amp-数据粉分片（DatasetShard）" class="headerlink" title="数据集（Dataset） &amp; 数据粉分片（DatasetShard）"></a>数据集（Dataset） &amp; 数据粉分片（DatasetShard）</h2><h3 id="数据集（Dataset）"><a href="#数据集（Dataset）" class="headerlink" title="数据集（Dataset）"></a>数据集（Dataset）</h3><p>Dataset 有 10 个属性</p>
+<ol>
+<li>Id int （Step 输出的数据结集）</li>
+<li>context flow.FlowContext</li>
+<li>Type reflect.Type | *reflect.rtype</li>
+<li>Shards []flow.DatasetShard （对应 Step 中 Tasks 中 Outputs 的数据分区）</li>
+<li>Step flow.Step （属于哪一个结果集）</li>
+<li>ReadingSteps []flow.Step （对应下一步的 Step）</li>
+<li>ExternalInputChans []reflect.Value</li>
+<li>ExternalOutputChans []reflect.Value</li>
+<li>IsKeyPartitioned bool</li>
+<li>isKeyLocalSorted bool</li>
+</ol>
+<h3 id="数据集分片（DatasetShard）"><a href="#数据集分片（DatasetShard）" class="headerlink" title="数据集分片（DatasetShard）"></a>数据集分片（DatasetShard）</h3><p>DatasetShard 有 9 个属性</p>
+<ol>
+<li>Id int</li>
+<li>Parent flow.Dataset （所属的结果集）</li>
+<li>WriteChan reflect.Value</li>
+<li>ReadingTasks []flow.Task （Step 上有几个 Tasks 就有几个）</li>
+<li>Counter int</li>
+<li>ReadyTime time.Time</li>
+<li>CloseTime time.Time</li>
+<li>lock sync.RWMutex</li>
+<li>readingChans []reflect.Value</li>
+</ol>
+<h2 id="word-count"><a href="#word-count" class="headerlink" title="word_count"></a>word_count</h2><p>和其他流式计算一样，提供了一个单词统计的例子。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">flow.New().TextFile(</span><br><span class="line">	<span class="string">"/etc/passwd"</span>, <span class="number">2</span>,</span><br><span class="line">).Filter(<span class="function"><span class="keyword">func</span><span class="params">(line <span class="keyword">string</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="comment">//println("filter:", line)</span></span><br><span class="line">	<span class="keyword">return</span> !strings.HasPrefix(line, <span class="string">"#"</span>)</span><br><span class="line">&#125;).Map(<span class="function"><span class="keyword">func</span><span class="params">(line <span class="keyword">string</span>, ch <span class="keyword">chan</span> <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> _, token := <span class="keyword">range</span> strings.Split(line, <span class="string">":"</span>) &#123;</span><br><span class="line">		ch &lt;- token</span><br><span class="line">	&#125;</span><br><span class="line">&#125;).Map(<span class="function"><span class="keyword">func</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="built_in">println</span>(<span class="string">"map:"</span>, key)</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">&#125;).Reduce(<span class="function"><span class="keyword">func</span><span class="params">(x <span class="keyword">int</span>, y <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="built_in">println</span>(<span class="string">"x:"</span>, x)</span><br><span class="line">	<span class="built_in">println</span>(<span class="string">"y:"</span>, y)</span><br><span class="line">	<span class="built_in">println</span>(<span class="string">"reduce:"</span>, x+y)</span><br><span class="line">	<span class="keyword">return</span> x + y</span><br><span class="line">&#125;).Map(<span class="function"><span class="keyword">func</span><span class="params">(x <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="built_in">println</span>(<span class="string">"count:"</span>, x)</span><br><span class="line">&#125;).Run()</span><br></pre></td></tr></table></figure>
+
+<p>我们看一下这个执行流程。</p>
+<ul>
+<li>flow.New() 生成 <code>flow.FlowContext</code></li>
+<li>TextFile(“/etc/passwd”, 2) 打开<code>/etc/passwd</code> 文件，并且数据分片数量为：2<ul>
+<li>这是第一个 Step</li>
+</ul>
+</li>
+<li>Filter(func) 将返回<code>true</code>的数据筛选出来<ul>
+<li>这是第二个 Step</li>
+</ul>
+</li>
+<li>Map(func(line string, ch chan string)) 需要运执行 map 运算，第一个参数为上一个 Step 的结果值，第二个参数说明需要通过一个可读可写的 chan 来写入传输数据，相当于二次拆分数据<ul>
+<li>这是第三个 Step</li>
+</ul>
+</li>
+<li>Map(func(key string)) 从上一步的 Step 中的 chan 中读取出来的数据，每次来一个 key，都返回一个整型：1</li>
+<li>Reduce(func(x int, y int)）进行<code>Reduce</code>的操作，将数据合并汇总，x 代表上一次 step 的总数，y 代表最近一次得到的值。但是这里比较特殊，在前面所有 step 都处理完毕之后，如果你是进行了数据分片的话，会把数据分片再合并一次。</li>
+<li>Map(func(x int)) 由于我们进行了 Reduce 了，所以在 Reduce 之后的 map 只会进行一次运行，这个时候 x 就代表我们 Reduce 的 API 的最终结果</li>
+<li>Run() 运行流式计算</li>
+</ul>
+<p>按照看源码的套路</p>
+<ol>
+<li>运行 demo，理解 demo</li>
+<li>找到 demo 的运行入口</li>
+<li>根据入口来查看运行方式</li>
+<li>再回过头来看 demo 的细节</li>
+</ol>
+<h3 id="运行逻辑"><a href="#运行逻辑" class="headerlink" title="运行逻辑"></a>运行逻辑</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d *Dataset)</span> <span class="title">Run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	d.context.Run()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(fc *FlowContext)</span> <span class="title">Run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> taskRunner != <span class="literal">nil</span> &amp;&amp; taskRunner.IsTaskMode() &#123;</span><br><span class="line">		taskRunner.Run(fc)</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> contextRunner != <span class="literal">nil</span> &amp;&amp; contextRunner.IsDriverMode() &#123;</span><br><span class="line">		contextRunner.Run(fc)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fc.runFlowContextInStandAloneMode()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(fc *FlowContext)</span> <span class="title">runFlowContextInStandAloneMode</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置一个用于等于协程全部运行完毕的计数`wg`</span></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 生成一个`map[int]bool`类型的类似于 HashTable 一样的 K/V 映射结构的 Map 类型</span></span><br><span class="line">	isDatasetStarted := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">bool</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置接收到中断信号的处理回调函数</span></span><br><span class="line">	OnInterrupt(fc.OnInterrupt, <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 启动所有的任务边界</span></span><br><span class="line">	<span class="comment">// start all task edges</span></span><br><span class="line">	<span class="keyword">for</span> _, step := <span class="keyword">range</span> fc.Steps &#123;                      <span class="comment">// 循环所有的Steps，每一个API就代表一个Step</span></span><br><span class="line">		<span class="keyword">for</span> _, input := <span class="keyword">range</span> step.Inputs &#123;                <span class="comment">// 循环每个step中的Inputs</span></span><br><span class="line">			<span class="keyword">if</span> _, ok := isDatasetStarted[input.Id]; !ok &#123;    <span class="comment">// 如果Dataset已经启动，那么就跳过，否则进行启动逻辑</span></span><br><span class="line">				wg.Add(<span class="number">1</span>)                                      <span class="comment">// 每一次需要运行input的时候，协程计数器+1</span></span><br><span class="line">				<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(input *Dataset)</span></span> &#123;                      <span class="comment">// 每一个input都启动一个协程运行主逻辑</span></span><br><span class="line">					<span class="keyword">defer</span> wg.Done()                              <span class="comment">// 每个协程结束的时候，协程计数器-1</span></span><br><span class="line">					input.RunDatasetInStandAloneMode()           <span class="comment">// 在协程环境下运行每个input启动自身逻辑</span></span><br><span class="line">				&#125;(input)</span><br><span class="line">				isDatasetStarted[input.Id] = <span class="literal">true</span>               <span class="comment">// 创建协程完毕之后设置这个input已经处理过了</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		wg.Add(<span class="number">1</span>)                                           <span class="comment">// 每一次需要运行step的时候，协程计数器+1</span></span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(step *Step)</span></span> &#123;                               <span class="comment">// 创建协程运行主逻辑</span></span><br><span class="line">			<span class="keyword">defer</span> wg.Done()                                   <span class="comment">// 每个协程结束的时候，协程计数器-1</span></span><br><span class="line">			step.RunStep()                                    <span class="comment">// 在协程环境下运行step的自身逻辑</span></span><br><span class="line">		&#125;(step)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> step.Output != <span class="literal">nil</span> &#123;                              <span class="comment">// 如果step的output不等于nil的话，进行逻辑</span></span><br><span class="line">			<span class="keyword">if</span> _, ok := isDatasetStarted[step.Output.Id]; !ok &#123;<span class="comment">// 如果没有运行过的话，就运行否则就跳出</span></span><br><span class="line">				wg.Add(<span class="number">1</span>)                                        <span class="comment">// 每一次需要运行Output的时候，协程计数器+1</span></span><br><span class="line">				<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(step *Step)</span></span> &#123;                            <span class="comment">// 创建协程运行主逻辑</span></span><br><span class="line">					<span class="keyword">defer</span> wg.Done()                                <span class="comment">// 每个协程结束的时候，协程计数器-1</span></span><br><span class="line">					step.Output.RunDatasetInStandAloneMode()       <span class="comment">// 在协程环境下运行Output的自身逻辑</span></span><br><span class="line">				&#125;(step)</span><br><span class="line">				isDatasetStarted[step.Output.Id] = <span class="literal">true</span>          <span class="comment">// 创建协程完毕之后设置这个Output已经处理过了</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	wg.Wait()                                              <span class="comment">// 当所有协程都执行完毕之后再退出主协程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> 总结：</span></span><br><span class="line"><span class="comment">  1. step.Inputs 和 step.Output 都是Dataset</span></span><br><span class="line"><span class="comment">  2. step.Inputs中所有input运行完逻辑之后，再运行step的逻辑，最后再运行step的Outpu逻辑，再接着下一个step</span></span><br><span class="line"><span class="comment">  3. 每个逻辑的运行都是在创建协程之后运行</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>看到这里的逻辑比较核心的有<code>func (fc *FlowContext) runFlowContextInStandAloneMode()</code>，<code>func (s *Step) RunStep()</code>我们就看到了最终的入口了，解释我写在代码中。</p>
+<p>接下来，我们看一下 input/Output 运行的主逻辑</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d *Dataset)</span> <span class="title">RunDatasetInStandAloneMode</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 设置一个用于等于协程全部运行完毕的计数`wg`</span></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(d.ExternalInputChans) &gt; <span class="number">0</span> &#123;                            <span class="comment">// 如果数据集存在外部chan的话</span></span><br><span class="line">		d.connectExternalInputChansToRead(&amp;wg)                      <span class="comment">// 连接外部chan进行处理，并且如果用到协程的话，需要同步更新协程计数器</span></span><br><span class="line">		<span class="keyword">for</span> _, shard := <span class="keyword">range</span> d.Shards &#123;                            <span class="comment">// 循环数据集的分片</span></span><br><span class="line">			shard.SetupReadingChans()                                 <span class="comment">// 数据集分片运行主要逻辑</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;                                                      <span class="comment">// 如果不存在外部chan的话</span></span><br><span class="line">		<span class="keyword">for</span> _, shard := <span class="keyword">range</span> d.Shards &#123;                            <span class="comment">// 循环数据集的分片</span></span><br><span class="line">			wg.Add(<span class="number">1</span>)                                                 <span class="comment">// 每一次需要运行数据分片的时候，协程计数器+1</span></span><br><span class="line">			<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(shard *DatasetShard)</span></span> &#123;                            <span class="comment">// 创建协程运行主逻辑</span></span><br><span class="line">				<span class="keyword">defer</span> wg.Done()                                         <span class="comment">// 每个协程结束的时候，协程计数器-1</span></span><br><span class="line">				<span class="comment">// println("setup shard reading chans", shard.Name())</span></span><br><span class="line">				shard.SetupReadingChans()                               <span class="comment">// 数据分片部署读取的数据的chan</span></span><br><span class="line"></span><br><span class="line">				<span class="comment">// start to run</span></span><br><span class="line">				<span class="keyword">var</span> t reflect.Value                                      <span class="comment">// 定义个reflect.Value的类型</span></span><br><span class="line">				<span class="keyword">for</span> ok := <span class="literal">true</span>; ok; &#123;                                    <span class="comment">// 死循环</span></span><br><span class="line">					<span class="keyword">if</span> t, ok = shard.WriteChan.Recv(); ok &#123;                <span class="comment">// 数据分片写chan阻塞接收数据，如果有数据来的话就执行下面的逻辑</span></span><br><span class="line">						shard.SendForRead(t)                                 <span class="comment">// 数据分片发送数据到Readchan，参数为reflect.Value类型</span></span><br><span class="line">						<span class="comment">// hookup output channels</span></span><br><span class="line">						d.sendToExternalOutputChans(t)                       <span class="comment">// 发送数据到外部OutputChan</span></span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// println("close shard reading", shard.Name())</span></span><br><span class="line">				shard.CloseRead() <span class="comment">// 数据分片关闭</span></span><br><span class="line">			&#125;(shard)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Wait()  <span class="comment">// 当所有协程都执行完毕之后再运行下面的逻辑</span></span><br><span class="line">	d.closeExternalOutputChans() <span class="comment">// 关闭外部Outputchan</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> 总结：</span></span><br><span class="line"><span class="comment">  1. 每个数据分片都需要关联Task中的input的chan</span></span><br><span class="line"><span class="comment">  2. 当数据分片的WriteChan可读取的时候，把数据传递给readingChans</span></span><br><span class="line"><span class="comment">  3. 发送完毕之后，还会记录关闭时间</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(shard *DatasetShard)</span> <span class="title">SetupReadingChans</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// get unique list of tasks since ReadingTasks can have duplicates</span></span><br><span class="line">  <span class="comment">// especially when one dataset is used twice in a task, e.g. selfJoin()</span></span><br><span class="line">  <span class="comment">// 获取唯一的任务列表，因为ReadingTasks可能有重复的任务</span></span><br><span class="line">  <span class="comment">// 特别是当一个数据集在一个任务中使用两次时，例如selfJoin()</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定义变量uniqTasks</span></span><br><span class="line">	<span class="keyword">var</span> uniqTasks []*Task</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 生成一个`map[*Task]bool`类型的类似于 HashTable 一样的 K/V 映射结构的 Map 类型</span></span><br><span class="line">  seenTasks := <span class="built_in">make</span>(<span class="keyword">map</span>[*Task]<span class="keyword">bool</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, task := <span class="keyword">range</span> shard.ReadingTasks &#123;    <span class="comment">// 循环数据分片中的ReadingTasks，读取任务</span></span><br><span class="line">		<span class="keyword">if</span> ok := seenTasks[task]; ok &#123;             <span class="comment">// 如果任务已经处理过了，就处理下一个任务</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		seenTasks[task] = <span class="literal">true</span>                     <span class="comment">// 开始处理任务，设置为true</span></span><br><span class="line">		uniqTasks = <span class="built_in">append</span>(uniqTasks, task)        <span class="comment">// 加入uniqTasks的list</span></span><br><span class="line">	&#125;</span><br><span class="line">	shard.lock.Lock()                            <span class="comment">// 数据分片上加上`RWMutex`，并且进行写锁</span></span><br><span class="line">	<span class="keyword">defer</span> shard.lock.Unlock()                    <span class="comment">// 函数结束的时候，进行写解锁</span></span><br><span class="line">	<span class="keyword">for</span> _, task := <span class="keyword">range</span> uniqTasks &#123;             <span class="comment">// 再写锁读情况下进行：循环唯一的Tasks</span></span><br><span class="line">		<span class="keyword">for</span> i, s := <span class="keyword">range</span> task.Inputs &#123;            <span class="comment">// 循环每个Task的Inputs</span></span><br><span class="line">			<span class="keyword">if</span> s == shard &#123;                          <span class="comment">// 找到对应的索引i</span></span><br><span class="line">				shard.readingChans = <span class="built_in">append</span>(shard.readingChans, task.InputChans[i]) <span class="comment">// 把输入任务上的inputchan加入到分区需要读取的chan去</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	shard.ReadyTime = time.Now()                 <span class="comment">// 数据分片准备就绪的时间</span></span><br><span class="line">	<span class="comment">// fmt.Printf("shard %s has reading tasks:%d channel:%d\n", shard.Name(), len(shard.ReadingTasks), len(shard.readingChans))</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *DatasetShard)</span> <span class="title">SendForRead</span><span class="params">(t reflect.Value)</span></span> &#123;</span><br><span class="line">	s.lock.RLock()  <span class="comment">// 数据分片进行读锁</span></span><br><span class="line">	<span class="keyword">defer</span> s.lock.RUnlock() <span class="comment">// 数结束的时候，进行读解锁</span></span><br><span class="line">	s.Counter++ <span class="comment">// 发送次数+1</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, c := <span class="keyword">range</span> s.readingChans &#123;  <span class="comment">// 往读chan发送数据</span></span><br><span class="line">		<span class="comment">// println(s.Name(), "send chan", i, "entry:", s.counter)</span></span><br><span class="line">		c &lt;- t</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *DatasetShard)</span> <span class="title">CloseRead</span><span class="params">()</span></span> &#123;</span><br><span class="line">	s.lock.RLock() <span class="comment">// 数据分片进行读锁</span></span><br><span class="line">	<span class="keyword">defer</span> s.lock.RUnlock() <span class="comment">// 数结束的时候，进行读解锁</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, c := <span class="keyword">range</span> s.readingChans &#123;</span><br><span class="line">		<span class="built_in">close</span>(c) <span class="comment">// 关闭所有读chan</span></span><br><span class="line">	&#125;</span><br><span class="line">	s.CloseTime = time.Now() <span class="comment">// 记录关闭时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们看一下 RunStep 的主逻辑：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Step)</span> <span class="title">RunStep</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">// 设置一个用于等于协程全部运行完毕的计数`wg`</span></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	<span class="keyword">for</span> i, t := <span class="keyword">range</span> s.Tasks &#123;     <span class="comment">// 循环所有Step的任务</span></span><br><span class="line">		wg.Add(<span class="number">1</span>)                     <span class="comment">// 每一次需要运行数据分片的时候，协程计数器+1</span></span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>, t *Task)</span></span> &#123;     <span class="comment">// 创建协程运行主逻辑</span></span><br><span class="line">			<span class="keyword">defer</span> wg.Done()             <span class="comment">// 每个协程结束的时候，协程计数器-1</span></span><br><span class="line">			t.RunTask()                 <span class="comment">// 运行任务的主逻辑</span></span><br><span class="line">		&#125;(i, t)</span><br><span class="line">	&#125;</span><br><span class="line">	wg.Wait() <span class="comment">// 当所有协程都执行完毕之后才算完毕</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// source -&gt;w:ds:r -&gt; task -&gt; w:ds:r</span></span><br><span class="line"><span class="comment">// source close next ds' w chan</span></span><br><span class="line"><span class="comment">// ds close its own r chan</span></span><br><span class="line"><span class="comment">// task closes its own channel to next ds' w:ds</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Task)</span> <span class="title">RunTask</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// println("start", t.Name())</span></span><br><span class="line">	t.Step.Function(t) <span class="comment">// 运行每一个Step自定义的处理逻辑函数</span></span><br><span class="line">	<span class="keyword">for</span> _, out := <span class="keyword">range</span> t.Outputs &#123;</span><br><span class="line">		<span class="comment">// println(t.Name(), "close WriteChan of", out.Name())</span></span><br><span class="line">		out.WriteChan.Close() <span class="comment">// 关闭每个output的chan，那个每个Step.Function中的协程将会结束</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// println("stop", t.Name())  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>回到我们的程序：</p>
+<ol>
+<li><p>=================</p>
+</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(fc *FlowContext)</span> <span class="title">TextFile</span><span class="params">(fname <span class="keyword">string</span>, shard <span class="keyword">int</span>)</span> <span class="params">(ret *Dataset)</span></span> &#123;</span><br><span class="line">	fn := <span class="function"><span class="keyword">func</span><span class="params">(out <span class="keyword">chan</span> <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">		file, err := os.Open(fname)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="comment">// FIXME collect errors</span></span><br><span class="line">			log.Panicf(<span class="string">"Can not open file %s: %v"</span>, fname, err)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">defer</span> file.Close()</span><br><span class="line"></span><br><span class="line">		scanner := bufio.NewScanner(file)</span><br><span class="line">		<span class="keyword">for</span> scanner.Scan() &#123;</span><br><span class="line">			out &lt;- scanner.Text()</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> err := scanner.Err(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Printf(<span class="string">"Scan file %s: %v"</span>, fname, err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> fc.Source(fn, shard)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们看到<code>func (fc *FlowContext) TextFile(fname string, shard int) (ret *Dataset)</code>，</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Source returns a new Dataset which evenly distributes the data items produced by f</span></span><br><span class="line"><span class="comment">// among multiple shards. f must be a function defined in the form func(chan &lt;some_type&gt;).</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(fc *FlowContext)</span> <span class="title">Source</span><span class="params">(f <span class="keyword">interface</span>&#123;&#125;, shard <span class="keyword">int</span>)</span> <span class="params">(ret *Dataset)</span></span> &#123;</span><br><span class="line">	ret = fc.newNextDataset(shard, guessFunctionOutputType(f))</span><br><span class="line">	step := fc.AddOneToAllStep(<span class="literal">nil</span>, ret)</span><br><span class="line">	step.Name = <span class="string">"Source"</span></span><br><span class="line">	step.Function = <span class="function"><span class="keyword">func</span><span class="params">(task *Task)</span></span> &#123;</span><br><span class="line">		ctype := reflect.ChanOf(reflect.BothDir, ret.Type)</span><br><span class="line">		outChan := reflect.MakeChan(ctype, <span class="number">0</span>)</span><br><span class="line">		fn := reflect.ValueOf(f)</span><br><span class="line">		<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			<span class="keyword">defer</span> wg.Done()</span><br><span class="line">			<span class="keyword">defer</span> outChan.Close()</span><br><span class="line">			fn.Call([]reflect.Value&#123;outChan&#125;)</span><br><span class="line">		&#125;()</span><br><span class="line"></span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			<span class="keyword">defer</span> wg.Done()</span><br><span class="line"></span><br><span class="line">			<span class="keyword">var</span> t reflect.Value</span><br><span class="line">			i := <span class="number">0</span></span><br><span class="line">			<span class="keyword">for</span> ok := <span class="literal">true</span>; ok; &#123;</span><br><span class="line">				<span class="keyword">if</span> t, ok = outChan.Recv(); ok &#123;</span><br><span class="line">					task.Outputs[i].WriteChan.Send(t)</span><br><span class="line">					i++</span><br><span class="line">					<span class="keyword">if</span> i == shard &#123;</span><br><span class="line">						i = <span class="number">0</span></span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line"></span><br><span class="line">		wg.Wait()</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>, <a href="/categories/大数据/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/大数据，流式计算/">大数据，流式计算</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

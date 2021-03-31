@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【协议】http协议1/2的区别 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【协议】http协议1/2的区别"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【协议】http协议1/2的区别</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/http-d/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T13:34:54.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>http 协议属于应用层的协议，是我们日常经常打交道的一种协议，属于一种<strong>文本协议</strong>，http 协议经历了 3 个比较大的版本改变。</p>
+<p>http 协议基于 tcp 协议实现（应用层协议基于传输层协议，这个是正常的嘛），为了数据的安全性，有时候可能建立在 tls 或者 ssl 协议之上。</p>
+<h2 id="http1-0"><a href="#http1-0" class="headerlink" title="http1.0"></a>http1.0</h2><p>http1.0 使用的是非持久化连接，就是每次请求，都是一个新的连接，网络 io 较高</p>
+<ul>
+<li><p>非持久化连接</p>
+</li>
+<li><p>每次请求都是一个独立的连接</p>
+</li>
+</ul>
+<h2 id="http1-1"><a href="#http1-1" class="headerlink" title="http1.1"></a>http1.1</h2><a id="more"></a>
+
+<p>http1.1 提供了 Keep-Alive 的参数来设置持久化连接，并且一个连接可以进行多次请求（一个页面加载的时候，css、js 等请求可以在同一个连接下完成），无须重新建立连接，降低了网络 io。并且还允许客户端不用等待上一次请求结果返回，就可以发出下一次请求（但服务器端必须按照接收到客户端请求的先后顺序依次回送响应结果，以保证客户端能够区分出每次请求的响应内容，这样也显著地减少了整个下载过程所需要的时间）。http1.1 开始允许设置 host 请求头字段（使得 web 浏览器可以通过发送 host 来明确服务器要请求的是哪个站点项目），还提供了身份认证，Cache 管理等请求头字段</p>
+<ul>
+<li><p>持久化连接（Keep-Alive）</p>
+</li>
+<li><p>每个连接可以接受多个请求（但是必须按照请求顺序返回内容）</p>
+</li>
+<li><p>设置了 host、cache、身份认证等请求头字段</p>
+</li>
+</ul>
+<h2 id="http2-0"><a href="#http2-0" class="headerlink" title="http2.0"></a>http2.0</h2><p>这是一个质的改变，由文本协议转变程了二进制协议，并且必须建立在 tls 或者 ssl 之上。</p>
+<p>二进制协议相对比文本协议来说，更加简洁，传输的成本降低了（带宽），对计算器更加友好，并且更加安全</p>
+<ul>
+<li><p>二进制协议</p>
+</li>
+<li><p>必须建立在 tls 或者 ssl 之上</p>
+</li>
+<li><p>IO 多路复用</p>
+</li>
+<li><p>请求划分优先级</p>
+</li>
+<li><p>用 HPACK 算法对请求头信息进行了压缩</p>
+</li>
+<li><p>服务端主动推送消息到客户端</p>
+</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络/">网络</a>, <a href="/categories/网络/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

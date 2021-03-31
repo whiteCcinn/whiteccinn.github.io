@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Centos7安装swoole2.x协程系列 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Centos7安装swoole2.x协程系列"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Centos7安装swoole2.x协程系列</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/09/08/linux-make-swoole2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-09-08T02:47:00.000Z">
+          2017-09-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>对于一个合格的 php 后端开发者而言，<code>swoole</code> 的知名度，估计是大家都知道的，swoole 分为 2 个系列，一个是<code>1.9.x</code>系列，一个是<code>2.x</code>系列，两个系列的区别在于<code>1.9</code>系列是原 swoole 成员研发的主分支，<code>2.x</code>系列是由腾讯成员研发的副分支。<code>1.9.x</code>系列底层原生不支持<code>协程</code>的概念，跟着 php 原生态走，但是<code>2.x</code>底层采用的是<code>协程</code>的概念进行研发，基本上需要用到网络 io 的地方在特定的情况下都会去触发<code>协程</code>，记住当前的<code>VM stack</code>的信息，然后通过<code>Eventloop</code>事件去处理别的请求，形成一个相对于原生态的阻塞的执行过程来说，这种非阻塞的处理方式，把 1+2 = 3 的 IO 时间变成了 max(1,2) =2。从而在高并发的请求下，可以更好的承载更多的请求。</p>
+<p>之前我有过一篇文章说的就是安装 v2.0.5 的。但是现在重新装一次，说明一下。</p>
+<h2 id="下载-git"><a href="#下载-git" class="headerlink" title="下载 git"></a>下载 git</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b v.2.0.9 https:&#x2F;&#x2F;github.com&#x2F;swoole&#x2F;swoole-src.git</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>进入目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd swoole-src</span><br></pre></td></tr></table></figure>
+
+<p>利用 phpize 提取出编译文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">phpize</span><br></pre></td></tr></table></figure>
+
+<p>开始编译，注意需要开启几项必须的东西</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --enable-coroutine --enable-openssl</span><br></pre></td></tr></table></figure>
+
+<p>这里我需要开启写协程和 ssl 证书</p>
+<p>然后编译完毕之后。</p>
+<p>添加到 php.ini 里面即可。</p>
+<p>开启 swoole 高性能开发之旅</p>
+<p>记住检查 swoole 是否安装了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -m | grep swoole</span><br></pre></td></tr></table></figure>
+
+<p>查看 swoole 版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php --ri swoole</span><br></pre></td></tr></table></figure>
+
+<h2 id="异步-redis-编译添加"><a href="#异步-redis-编译添加" class="headerlink" title="异步 redis 编译添加"></a>异步 redis 编译添加</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--enable-async-redis</span><br></pre></td></tr></table></figure>
+
+<p>需要安装依赖一个官方的 hredis 的动态 so 库</p>
+<p>hiredis 下载地址：<a href="https://github.com/redis/hiredis/releases" target="_blank" rel="noopener">https://github.com/redis/hiredis/releases</a></p>
+<p>安装完毕之后,如果 swoole 编译完成，之后，如果出现了如下问题，可以手动 ldconfig，添加搜索动态库目录</p>
+<p><code>libhiredis.so.0.13: cannot open shared object file: No such file or directory in Unknown on line 0，</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. vim &#x2F;etc&#x2F;ld.so.conf</span><br><span class="line">2. 添加 &#x2F;usr&#x2F;local&#x2F;lib</span><br><span class="line">3. sudo ldconfig</span><br></pre></td></tr></table></figure>
+
+<p>然后再重新编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make clean</span><br><span class="line">&#x2F;&#x2F; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/Swoole/">Swoole</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

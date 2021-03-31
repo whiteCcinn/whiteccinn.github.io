@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>大端和小端（Big endian and Little endian） | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="大端和小端（Big endian and Little endian）"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>大端和小端（Big endian and Little endian）</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/28/network-protocol-endian/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-28T06:43:00.000Z">
+          2017-06-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="大端和小端（Big-endian-and-Little-endian）"><a href="#大端和小端（Big-endian-and-Little-endian）" class="headerlink" title="大端和小端（Big endian and Little endian）"></a>大端和小端（Big endian and Little endian）</h1><h2 id="网络字节序"><a href="#网络字节序" class="headerlink" title="网络字节序"></a>网络字节序</h2><p>网络字节顺序是TCP/IP中规定好的一种数据表示格式，它与具体的CPU类型、操作系统等无关，从而可以保证数据在不同主机之间传输时能够被正确解释。网络字节顺序采用big endian排序方式。</p>
+<p>由此可知，网络字节序是大端序的。那么什么是Big endian呢？</p>
+<h2 id="一、大端和小端的问题"><a href="#一、大端和小端的问题" class="headerlink" title="一、大端和小端的问题"></a>一、大端和小端的问题</h2><p>对于整型、长整型等数据类型，Big endian 认为第一个字节是最高位字节（按照从低地址到高地址的顺序存放数据的高位字节到低位字节）；而 Little endian 则相反，它认为第一个字节是最低位字节（按照从低地址到高地址的顺序存放数据的低位字节到高位字节）。</p>
+<p><strong>例如，假设从内存地址 <code>0x0000</code> 开始有以下数据：</strong></p>
+<table>
+<thead>
+<tr>
+<th>0x0000</th>
+<th>0x0001</th>
+<th>0x0002</th>
+<th>0x0003</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x12</td>
+<td>0x34</td>
+<td>0xab</td>
+<td>0xcd</td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+
+
+<p>如果我们去读取一个地址为 0x0000 的四个字节变量，若字节序为big-endian，则读出结果为0x1234abcd；若字节序为little-endian，则读出结果为0xcdab3412。</p>
+<p>如果我们将0x1234abcd 写入到以 0x0000 开始的内存中，则Little endian 和 Big endian 模式的存放结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>0x0000</th>
+<th>0x0001</th>
+<th>0x0002</th>
+<th>0x0003</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>big-endian</td>
+<td>0x12</td>
+<td>0x34</td>
+<td>0xab</td>
+<td>0xcd</td>
+</tr>
+<tr>
+<td>little-endian</td>
+<td>0xcd</td>
+<td>0xab</td>
+<td>0x34</td>
+<td>0x12</td>
+</tr>
+</tbody></table>
+<p>一般来说，x86 系列 CPU 都是 little-endian 的字节序，PowerPC 通常是 big-endian，网络字节顺序也是 big-endian还有的CPU 能通过跳线来设置 CPU 工作于 Little endian 还是 Big endian 模式。</p>
+<p>对于0x12345678的存储：</p>
+<p>小端模式：（从低字节到高字节）<br>地位地址 0x78 0x56 0x34 0x12</p>
+<p>大端模式：（从高字节到低字节）<br>地位地址 0x12 0x34 0x56 0x78</p>
+<h2 id="二、C语言大端小端转换方法"><a href="#二、C语言大端小端转换方法" class="headerlink" title="二、C语言大端小端转换方法"></a>二、C语言大端小端转换方法</h2><ul>
+<li>Big-Endian转换成Little-Endian</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BigtoLittle16(A) ((((uint16)(A) &amp; 0xff00) &gt;&gt; 8) | (((uint16)(A) &amp; 0x00ff) &lt;&lt; 8))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BigtoLittle32(A) ((((uint32)(A) &amp; 0xff000000) &gt;&gt; 24) | (((uint32)(A) &amp; 0x00ff0000) &gt;&gt; 8) | \</span></span><br><span class="line">(((uint32)(A) &amp; <span class="number">0x0000ff00</span>) &lt;&lt; <span class="number">8</span>) | (((uint32)(A) &amp; <span class="number">0x000000ff</span>) &lt;&lt; <span class="number">24</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、C语言大端小端检测方法"><a href="#三、C语言大端小端检测方法" class="headerlink" title="三、C语言大端小端检测方法"></a>三、C语言大端小端检测方法</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;i;</span><br><span class="line"><span class="keyword">if</span>(*p == <span class="number">1</span>)</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"Little Endian"</span>);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"Big Endian"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>大小端存储问题，如果小端方式中（i占至少两个字节的长度）则i所分配的内存最小地址那个字节中就存着1，其他字节是0.大端的话则1在i的最高地址字节处存放，char是一个字节，所以强制将char型量p指向i则p指向的一定是i的最低地址，那么就可以判断p中的值是不是1来确定是不是小端。</p>
+<p>联合体union的存放顺序是所有成员都从低地址开始存放，利用该特性就可以轻松地获得了CPU对内存采用Little-endian还是Big-endian模式读写。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*return 1: little-endian, return 0: big-endian*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">checkCPUendian</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="keyword">union</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> a;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> b;</span><br><span class="line">  &#125;c;</span><br><span class="line">  c.a = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> (c.b == <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现同样的功能，来看看Linux 操作系统中相关的源代码是怎么做的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">union</span> &#123; <span class="keyword">char</span> c[<span class="number">4</span>]; <span class="keyword">unsigned</span> <span class="keyword">long</span> mylong; &#125; endian_test = &#123;&#123; <span class="string">'l'</span>, <span class="string">'?'</span>, <span class="string">'?'</span>, <span class="string">'b'</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ENDIANNESS ((char)endian_test.mylong)</span></span><br></pre></td></tr></table></figure>
+<p>Linux 的内核作者们仅仅用一个union 变量和一个简单的宏定义就实现了一大段代码同样的功能！（如果ENDIANNESS=’l’表示系统为little endian，为’b’表示big endian）</p>
+<h2 id="四、相关的一些问题"><a href="#四、相关的一些问题" class="headerlink" title="四、相关的一些问题"></a>四、相关的一些问题</h2><p>问题一：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *sz = <span class="string">"0123456789"</span>;</span><br><span class="line"><span class="keyword">int</span> *p = (<span class="keyword">int</span>*)sz;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%x\n"</span>,*++p);</span><br></pre></td></tr></table></figure>
+
+<p>问：字符’0’对应的十六进制是0x30，请问在x86环境下程序输出是多少？</p>
+<p>解答：</p>
+<p>假设 <code>字符串sz地址</code> 从 <code>$0</code> 开始，那么sz在<code>内存的存储</code>为</p>
+<table>
+<thead>
+<tr>
+<th>$0</th>
+<th>$1</th>
+<th>$2</th>
+<th>$3</th>
+<th>$4</th>
+<th>$5</th>
+<th>$6</th>
+<th>$7</th>
+<th>$8</th>
+<th>$9</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x30</td>
+<td>0x31</td>
+<td>0x32</td>
+<td>0x33</td>
+<td>0x34</td>
+<td>0x35</td>
+<td>0x36</td>
+<td>0x37</td>
+<td>0x38</td>
+<td>0x39</td>
+</tr>
+</tbody></table>
+<p>当你把char<em>强制类型转化成int</em>后，因为int占四个字节，那么p指向$0，并且<em>p占有的地址是*</em>$0$1$2$3<strong>，打印的时候 先进行++p操作，那么p指向$4，此时*p占有的地址是</strong>$4$5$6$7*<em>，根据上面地地址存地位，little endian，那么</em>p应该等于0x37363534</p>
+<p>问题二：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">0x12345678</span>;</span><br><span class="line"><span class="keyword">char</span> *p = (<span class="keyword">char</span>*)(&amp;a);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%x\n"</span>,*(p+<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<p>例如对于0x12345678，网络字节顺序是这样<strong>0x12,0x34,0x56,0x78</strong>存储的，这种方式称为big-endian<br>intel处理器是<strong>0x78 0x56 0x34 0x12</strong>这样来存储的，称为小尾little-endian<br>在x86环境下题目中的p指向<strong>0x78</strong>，加1后指向<strong>0x56</strong></p>
+<p>问题三：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">union</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">char</span> x[<span class="number">2</span>];</span><br><span class="line">&#125;a;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">a.x[<span class="number">0</span>] = <span class="number">10</span>;</span><br><span class="line">    a.x[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,a.i);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>x86下输出答案： 266 （x86下：i内存里存的值是Ox010A，十进制为266）</p>
+<p>问题四：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="keyword">union</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">          <span class="keyword">char</span> first;</span><br><span class="line">            <span class="keyword">char</span> second;</span><br><span class="line">        &#125;half;</span><br><span class="line">    &#125;number;</span><br><span class="line">    number.i=<span class="number">0x4241</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%c %c\n"</span>, number.half.first, number.half.second);</span><br><span class="line">    number.half.first=<span class="string">'a'</span>;</span><br><span class="line">    number.half.second=<span class="string">'b'</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%x\n"</span>, number.i);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>x86下输出答案：</p>
+<p>A B   (0x41对应’A’,是低位；Ox42对应’B’,是高位）<br>6261 (number.i和number.half共用一块地址空间0x6261）</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/进制/">进制</a><a href="/tags/网络/">网络</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

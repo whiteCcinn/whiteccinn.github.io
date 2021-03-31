@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>进制转换相关知识 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="进制转换相关知识"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>进制转换相关知识</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/28/bin-hex-oct/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-28T02:43:00.000Z">
+          2017-06-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h2><blockquote>
+<p>好久都没有好好整理过进制之间转换的关系了。最近在研究 RPC 的内容，有一些理论知识必须要重新整理一下。</p>
+</blockquote>
+<p>由于数据在计算机中的表示，最终以二进制的形式存在，所以有时候使用二进制，可以更直观地解决问题。</p>
+<p>但是有一些时候，二进制表示的数据实在的太长了，所以我们可能需要一些更高进制的数来表示数据，而我们从小学习的数学，就是以 10 进制来代表的。</p>
+<p><strong>进制数越大，所需要数长度就越短。</strong></p>
+<p>我们常用的进制有 2、8、16 进制，分别是 2 的 1 一次方，2 的 3 次方，2 的 4 次方。（至于为什么没有 3 进制，4 进制诸如此类的，各位百度一下吧）</p>
+<a id="more"></a>
+
+<p><strong>进制规则如下：</strong></p>
+<p>2 进制，用两个阿拉伯数字：0、1；</p>
+<p>8 进制，用八个阿拉伯数字：0、1、2、3、4、5、6、7；</p>
+<p>10 进制，用十个阿拉伯数字：0 到 9；</p>
+<p>16 进制，用十六个阿拉伯数字……等等，阿拉伯人或说是印度人，只发明了 10 个数字啊？</p>
+<p>16 进制就是逢 16 进 1，但我们只有 0~9 这十个数字，所以我们用 A，B，C，D，E，F 这六个字母来分别表示 10，11，12，13，14，15。字母不区分大小写。</p>
+<h3 id="十进制转二进制"><a href="#十进制转二进制" class="headerlink" title="十进制转二进制"></a>十进制转二进制</h3><p>如果我有一个数字 3，想要转成 2 进制。但是只有 0、1 两个数字，如何表示 3 的呢。所以，这个时候就需要逢二进一，从 2 开始计算。2 的进制是 10，3/2=1，所以就是 11，4 的进制呢，同理：4/2 = 2。所以就从 10 变成了 100。所以是 3 变成 4 的话，就是低位+1.进一位变成 100.</p>
+<h3 id="二进制转八进制（从低位起算，每三位二进制数代表一位-8-进制位）"><a href="#二进制转八进制（从低位起算，每三位二进制数代表一位-8-进制位）" class="headerlink" title="二进制转八进制（从低位起算，每三位二进制数代表一位 8 进制位）"></a>二进制转八进制（从低位起算，每三位二进制数代表一位 8 进制位）</h3><blockquote>
+<p>有人会问，为什么每三位二进制代表一个 8 进制位呢，那是因为 2 的三次方是 8 的关系。所以二进制的每 3 位，都要代表 8 进制的进一位。</p>
+</blockquote>
+<p>例如我有（十进制：10）00001010,要转成 8 进制就是 012。</p>
+<h3 id="二进制转十六进制（同理转八进制可得，每-4-位二进制数代表一个十六进制位）"><a href="#二进制转十六进制（同理转八进制可得，每-4-位二进制数代表一个十六进制位）" class="headerlink" title="二进制转十六进制（同理转八进制可得，每 4 位二进制数代表一个十六进制位）"></a>二进制转十六进制（同理转八进制可得，每 4 位二进制数代表一个十六进制位）</h3><p>例如我有（十进制：10）00001010，要转成 16 进制就是 0xA。</p>
+<h2 id="涉及-PHP"><a href="#涉及-PHP" class="headerlink" title="涉及 PHP"></a>涉及 PHP</h2><p>在 PHP 当中，需要表示八进制的时候，需要用 <code>0</code> 开头的整数，输出出来的数据会被解析转成十进制的数据。而表示十六进制的时候，需要用到的是 <code>0x</code> 开头</p>
+<ul>
+<li><p><code>十进制转二进制</code> =&gt; <code>decbin($decVar)</code></p>
+</li>
+<li><p><code>十进制转十六进制</code> =&gt; <code>dechex($decVar)</code></p>
+</li>
+<li><p><code>十六进制转十进制</code> =&gt; <code>hexdec($hexVar)</code></p>
+</li>
+<li><p><code>二进制转十进制</code> =&gt; <code>bindec($binVar)</code></p>
+</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/进制/">进制</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/进制/">进制</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

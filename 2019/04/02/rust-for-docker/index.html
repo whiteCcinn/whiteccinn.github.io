@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>rust-for-docker | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="rust-for-docker"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>rust-for-docker</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/04/02/rust-for-docker/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-02T12:49:59.000Z">
+          2019-04-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天，我们开始学习一下 Rust，希望将来在公司可以推广 Rust 语言，并且用 Rust 语言做更多的事情。</p>
+<p>在此， 进入我们的入学篇。</p>
+<h2 id="Rust-for-Docker"><a href="#Rust-for-Docker" class="headerlink" title="Rust for Docker"></a>Rust for Docker</h2><p>拉取最新版本的 Rust</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rust:latest</span><br></pre></td></tr></table></figure>
+
+<p>由于官方上的命令有点问题，并且我希望我有一个交互的终端环境，所以，经过修改后，进入 Rust 容器的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -e &quot;USER&#x3D;$(whoami)&quot; -e &quot;RUST_BACKTRACE&#x3D;1&quot; -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp -w &#x2F;usr&#x2F;src&#x2F;myapp rust:latest bash</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>USER: cargo 打包的时候会用这个命名</li>
+<li>RUST_BACKTRACE：终端调试的时候，会打印出错误栈</li>
+</ul>
+<p>进入到容器后，我们创建属于我们的第一个项目：Hello，World</p>
+<p>利用 Rust 的包管理工具：Cargo 进行开发和编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_world</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; car new --lib &lt;package_name&gt; 这个是创建类库的命令，暂时用不到，所以忽略先</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>然后创建好了之后。可以看到 目录结构如下：</p>
+<ul>
+<li>src：需要开发的源码目录</li>
+<li>target: 利用 <code>cargo build</code> 运行之后的结果</li>
+</ul>
+<p>tree 结构如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── Cargo.lock</span><br><span class="line">├── Cargo.toml</span><br><span class="line">├── src</span><br><span class="line">│   └── main.rs</span><br><span class="line">└── target</span><br><span class="line">    └── debug</span><br><span class="line">        ├── build</span><br><span class="line">        ├── deps</span><br><span class="line">        │   ├── hello_world-fe752e96abed129f</span><br><span class="line">        │   └── hello_world-fe752e96abed129f.d</span><br><span class="line">        ├── examples</span><br><span class="line">        ├── hello_world</span><br><span class="line">        ├── hello_world.d</span><br><span class="line">        ├── incremental</span><br><span class="line">        │   └── hello_world-a3apxnpw89q3</span><br><span class="line">        │       ├── s-fax5vd6s7z-mo2l8f-2iq1v3vohkxfu</span><br><span class="line">        │       │   ├── 1lpqxcu6kfhnj0ty.o</span><br><span class="line">        │       │   ├── 1z70i4nrjlg4y6gh.o</span><br><span class="line">        │       │   ├── 2qa4nktsifidbpri.o</span><br><span class="line">        │       │   ├── 3k2rwqf2cnq9zjxc.o</span><br><span class="line">        │       │   ├── 4is0vkl128fgpc6l.o</span><br><span class="line">        │       │   ├── dep-graph.bin</span><br><span class="line">        │       │   ├── g5tl0es1ce46vid.o</span><br><span class="line">        │       │   ├── query-cache.bin</span><br><span class="line">        │       │   └── work-products.bin</span><br><span class="line">        │       └── s-fax5vd6s7z-mo2l8f.lock</span><br><span class="line">        └── native</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们可以执行执行二进制文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;target&#x2F;debug&#x2F;hello_world</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@66c4794c7528:&#x2F;usr&#x2F;src&#x2F;myapp&#x2F;hello_world# .&#x2F;target&#x2F;debug&#x2F;hello_world</span><br><span class="line">Hello, world</span><br></pre></td></tr></table></figure>
+
+<p>或者利用 cargo 运行启动:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo run</span><br></pre></td></tr></table></figure>
+
+<p>结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@66c4794c7528:&#x2F;usr&#x2F;src&#x2F;myapp&#x2F;hello_world# cargo run</span><br><span class="line">    Finished dev [unoptimized + debuginfo] target(s) in 0.06s</span><br><span class="line">     Running &#96;target&#x2F;debug&#x2F;hello_world&#96;</span><br><span class="line">Hello, world!</span><br></pre></td></tr></table></figure>
+
+<p>到此为止，我们的第一章节 Hello World 完成了，接下来要积累点才可以了</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Rust/">Rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Rust/">Rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

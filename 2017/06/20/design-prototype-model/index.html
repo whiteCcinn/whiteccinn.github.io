@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>设计模式の创建型の原型模式 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="设计模式の创建型の原型模式"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>设计模式の创建型の原型模式</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/design-prototype-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T03:46:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="实质就是-对象的复制"><a href="#实质就是-对象的复制" class="headerlink" title="实质就是 对象的复制"></a>实质就是 对象的复制</h2><p>对一些大型对象，每次去 new，初始化开销很大，这个时候我们 先 new 一个模版对象，然后其他实例都去 clone 这个模版， 这样可以节约不少性能。<br>这个所谓的模版，就是原型（Prototype）；<br>当然，原型模式比单纯的 Clone 要稍微升级一下。</p>
+<h2 id="普通-clone"><a href="#普通-clone" class="headerlink" title="普通 clone"></a>普通 clone</h2><p>new 和 clone 都是用来创建对象的方法。<br>在 PHP 中， 对象间的赋值操作实际上是引用操作 （事实上，绝大部分的编程语言都是如此! 主要原因是内存及性能的问题) ，比如：</p>
+<a id="more"></a>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> $data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$obj1       = <span class="keyword">new</span> ProClass();</span><br><span class="line">$obj1-&gt;data = <span class="string">"aaa"</span>;</span><br><span class="line">$obj2       = $obj1;</span><br><span class="line">$obj2-&gt;data = <span class="string">"bbb"</span>;     <span class="comment">//$obj1-&gt;data的值也会变成"bbb"</span></span><br><span class="line"></span><br><span class="line">var_dump($obj1-&gt;data);</span><br></pre></td></tr></table></figure>
+
+<p>但是如果你不是直接引用，而是 clone，那么相当于做了一个独立的副本：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$obj2 = <span class="keyword">clone</span> $obj1;</span><br><span class="line">$obj2-&gt;data =<span class="string">"bbb"</span>;     <span class="comment">//$obj1-&gt;data的值还是"aaa"，不会关联</span></span><br></pre></td></tr></table></figure>
+
+<p>这样就得到一个和被复制对象完全没有纠葛的新对象，但两个对象长得是一模一样的。</p>
+<h2 id="浅复制和深复制"><a href="#浅复制和深复制" class="headerlink" title="浅复制和深复制"></a>浅复制和深复制</h2><p>如果你以为你已经把它俩彻底分开了，你错了，没那么容易, 我们再看一个复杂点例子。<br>继续接着上面的例子看:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> $data;</span><br><span class="line">  <span class="keyword">public</span> $item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$obj1       = <span class="keyword">new</span> ProClass();</span><br><span class="line">$obj1-&gt;data = <span class="string">"aaa"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">itemObject</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> $count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;count = ++<span class="keyword">$this</span>-&gt;count;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$item       = <span class="keyword">new</span> itemObject;</span><br><span class="line">$obj1-&gt;item = $item;</span><br><span class="line">$obj2       = <span class="keyword">clone</span> $obj1;</span><br><span class="line"></span><br><span class="line">$obj2-&gt;data = <span class="string">"bbb"</span>;</span><br><span class="line"></span><br><span class="line">var_dump($obj1-&gt;data);  <span class="comment">// aaa</span></span><br><span class="line">var_dump($obj2-&gt;data);  <span class="comment">// bbb</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 到目前为止,一切都没问题,已经隔离开了.</span></span><br><span class="line"><span class="comment">// 但是到这里之后，运行以下代码</span></span><br><span class="line">$obj2-&gt;item-&gt;add();</span><br><span class="line"></span><br><span class="line">print_r($item);   <span class="comment">// count = 1</span></span><br><span class="line">print_r($obj1);   <span class="comment">// count = 1</span></span><br><span class="line">print_r($obj2);   <span class="comment">// count = 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 发现$obj1,$obj2的count都变成了1,发现又依赖上了，并没有完全隔离开。这就是所谓的 浅复制</span></span><br></pre></td></tr></table></figure>
+
+<p>我们既然要 Clone，目的就是要把 两个对象 完全分离开。</p>
+<p>所以我们来聊一下 <code>深复制</code> 的方法：</p>
+<p>非常简单，在被复制对象中加一个魔术方法就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class ProClass</span><br><span class="line">&#123;</span><br><span class="line">  public $data;</span><br><span class="line">  public $item;</span><br><span class="line">  public function __clone() &#123;</span><br><span class="line">    $this-&gt;item &#x3D; clone $this-&gt;item;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="正解"><a href="#正解" class="headerlink" title="正解"></a>正解</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Prototype</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">copy</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConcretePrototype</span> <span class="keyword">implements</span> <span class="title">Prototype</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> $_name;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;_name = $name;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">copy</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">clone</span> <span class="keyword">$this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// client</span></span><br><span class="line">$demo    = <span class="keyword">new</span> Demo();</span><br><span class="line">$object1 = <span class="keyword">new</span> ConcretePrototype($demo);</span><br><span class="line">$object2 = $object1-&gt;copy();</span><br></pre></td></tr></table></figure>
+
+<p>从上面的例子不难看出，所谓原型模式就是不直接用 clone 这种关键字写法，而是创建一个原型类。</p>
+<p>把需要被复制的对象丢进 原型类里面，然后这个类就具有了 复制自己的能力（方法），并且可以继承原型的一些公共的属性和方法。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
