@@ -186,7 +186,7 @@
 <p>table的编码也类似</p>
 </blockquote>
 <p>如果对其他的<code>stmt</code>，例如<code>insert stmt/delete stmt</code>具体的逻辑感兴趣的话，可以查阅源码，但是类似差不多。</p>
-<p>todo : 画图</p>
+<p><img src="/images/%E6%95%B0%E6%8D%AE%E5%BA%93/indexed.png" alt=" indexed "></p>
 <h2 id="COUNTER计数器-发号器"><a href="#COUNTER计数器-发号器" class="headerlink" title="COUNTER计数器-发号器"></a>COUNTER计数器-发号器</h2><p>这里我们需要讲一下<code>counter</code>，因为我们所有的数据都会有<code>row_id</code>，并且我们在<code>create table</code>的时候也有<code>AUTO_INCREMENT</code>的列，这个时候，我们也是需要一个ID发号器。</p>
 <p>目前常见的发号器实现方案如下：</p>
 <ul>
