@@ -747,7 +747,7 @@ func (s *Store) createDatabaseHandle(result *Result, stmt *ast.CreateDatabaseStm
 
 如果对其他的`stmt`，例如`insert stmt/delete stmt`具体的逻辑感兴趣的话，可以查阅源码，但是类似差不多。
 
-todo : 画图
+![ indexed ](/images/数据库/indexed.png)
 
 ## COUNTER计数器-发号器
 
