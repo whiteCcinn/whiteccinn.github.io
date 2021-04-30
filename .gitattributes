@@ -1,3 +1,5 @@
 *.js linguist-language=Rust
 *.css linguist-language=Rust
 *.html linguist-language=Rust
+*.ml linguist-language=Rust
+*.json linguist-language=Rust
