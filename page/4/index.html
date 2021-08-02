@@ -69,6 +69,155 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/11/04/消息队列/kafka-swoole/"><span>【消息队列】- kafka-swoole</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/11/04/消息队列/kafka-swoole/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-11-04T02:37:40.000Z">
+          2019-11-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前 kafka 客户端在 php 中比较出名的仅有 2 个，这 2 个项目都有各自的利弊。在这里我选择几个来列一下</p>
+<ul>
+<li><a href="https://github.com/weiboad/kafka-php" target="_blank" rel="noopener">weiboad/kafka-php</a><ul>
+<li>协议非结构化封装，自定义性较强，不好维护</li>
+<li>目前的 API 在消费者中由于单例设计的原因，不允许在消费者中生产消息</li>
+<li>不支持多种压缩协议</li>
+<li>单进程“协程式”逻辑，数据未实现分离，容易堵塞消费</li>
+</ul>
+</li>
+<li><a href="https://github.com/arnaud-lb/php-rdkafka" target="_blank" rel="noopener">arnaud-lb/php-rdkafka</a><ul>
+<li>协议非结构化封装，自定义性较强，不好维护</li>
+<li>不支持多种压缩协议</li>
+<li>利用多线程，但是 PHP 对多线程对支持并不友好，相对于用 swoole 而言，劣势较为明显，容易出 bug，且维护性不高</li>
+</ul>
+</li>
+</ul>
+<p>基于以上几点，我们在基于<code>swoole-4.3</code>以上重新开发了<code>kafka-swoole</code>项目，优点如下：</p>
+<ul>
+<li>多进程多核处理</li>
+<li>支持 kafka 多个 sink 方式，实现拉取 kafka 数据和业务逻辑分离，从而不堵塞数据拉取</li>
+<li>首个支持多种压缩方式（normal(不压缩)/gzip/snappy）的 php 客户端，从而在大吞吐对情况下减少带宽占用，提高传输速率</li>
+<li>协议封装采用 OOP 的方式，结构化了协议的封装，利于维护和封装，对协议利用反射来统一封包和解包</li>
+<li>利用协程来实现单个进程中对异步逻辑处理</li>
+<li>提供了 runtime 的 rpc 命令，实时获取 kafka 成员进程对内部数据，实时查看消费情况</li>
+<li>提供了 kafka 命令，方便获取 kafka 服务相关信息和 kafka 相关操作</li>
+<li>在成员进程挂掉的情况下，记录错误信息，自动拉起。</li>
+<li>对于常驻进程，不排除业务逻辑写出了内存泄漏的情况，所以所有的子进程都带有内存临界值重启机制来释放内存</li>
+<li>主进程退出的情况下，发起了<code>离开消费者组</code>的请求，使得 kafka 能快速响应消费者组最新状态，从而更好平滑重新加入消费者</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/消息队列/">消息队列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Swoole/">Swoole</a><a href="/tags/消息队列，Kafka/">消息队列，Kafka</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/10/01/消息队列/kafka/"><span>【消息队列】- Kafka相关</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/10/01/消息队列/kafka/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-10-01T07:25:40.000Z">
+          2019-10-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前 kafka 客户端在 php 中比较出名的仅有 2 个，但是其各有利弊，在这里就不展开详细说明了。因此，我们实现了一个叫<code>kafka-swoole</code>的项目，项目由<code>swoole4.x</code>协程+多进程实现，实现在串行化协程的基础上实现并行操作。</p>
+<p>由于很多小伙伴对 kafka 并不是特别了解，所以在这里记录一下一些基础的 kafka 自带的命令使用方式</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/消息队列/">消息队列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/消息队列，Kafka/">消息队列，Kafka</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/08/12/大数据/Glow源码剖析/"><span>【大数据】- Glow 源码剖析</span></a></h3>
     
   
@@ -559,164 +708,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/C语言/">C语言</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/06/算法/leetcode/最长公共前缀/"><span>【LeeCode】- 最长公公前缀</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/06/算法/leetcode/最长公共前缀/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-06T02:11:09.000Z">
-          2019-07-06
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>编写一个函数来查找字符串数组中的最长公共前缀。</p>
-<p>如果不存在公共前缀，返回空字符串  “”。</p>
-<p>示例 1:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;]</span><br><span class="line">输出: &quot;fl&quot;</span><br></pre></td></tr></table></figure>
-
-<p>示例 2:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;dog&quot;,&quot;racecar&quot;,&quot;car&quot;]</span><br><span class="line">输出: &quot;&quot;</span><br><span class="line">解释: 输入不存在公共前缀。</span><br><span class="line">说明:</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>所有输入只包含小写字母  a-z 。</p>
-</blockquote>
-<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><h3 id="解法一：水平扫描法"><a href="#解法一：水平扫描法" class="headerlink" title="解法一：水平扫描法"></a>解法一：水平扫描法</h3><p>首先，我们将描述一种查询一组字符串的最长公共前缀 <code>LCP(S1...Sn)</code>，我们得到结论是：</p>
-<p><code>LCP(S1...Sn)=LCP(LCP(LCP(S1,S2),S3),...Sn)</code></p>
-<p>从公式可以看出，两两比较的字符串的公共字符串就是我们的运算过程。</p>
-<p><img src="/images/%E7%AE%97%E6%B3%95/%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%89%8D%E7%BC%80%E6%B0%B4%E5%B9%B3%E6%89%AB%E6%8F%8F%E6%B3%95.png" alt="水平扫描法"></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">longestCommonPrefix</span><span class="params">(<span class="keyword">char</span> **strs, <span class="keyword">int</span> strSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i, j;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (strSize == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> *str = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>) * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">strcpy</span>(str, strs[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; strSize; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (str[j] &amp;&amp; strs[i][j] &amp;&amp; str[j] == strs[i][j])</span><br><span class="line">    &#123;</span><br><span class="line">      j++;</span><br><span class="line">    &#125;</span><br><span class="line">    str[j] = <span class="string">'\0'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *strs[] = &#123;<span class="string">"lees"</span>, <span class="string">"leetcode"</span>, <span class="string">"leet"</span>, <span class="string">"leets"</span>&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> <span class="built_in">size</span> = <span class="keyword">sizeof</span>(strs) / <span class="keyword">sizeof</span>(<span class="keyword">char</span> *);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> *lcp;</span><br><span class="line"></span><br><span class="line">  lcp = longestCommonPrefix(strs, <span class="built_in">size</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, lcp);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>具体请查看我的 github 仓库项目</p>
-<p><a href="https://github.com/whiteCcinn/leetcode-practice" target="_blank" rel="noopener">leetcode-practice</a></p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/LeeCode/">LeeCode</a>, <a href="/categories/LeeCode/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a><a href="/tags/LeeCode/">LeeCode</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/05/API网关/orange/"><span>【API网关】- Orange</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/05/API网关/orange/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-05T10:15:00.000Z">
-          2019-07-05
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
-<p>版本：0.7</p>
-</blockquote>
-<p>API 网关/网关，充当的职责无非以下几点：</p>
-<ul>
-<li>鉴权</li>
-<li>限流</li>
-<li>分流</li>
-<li>负载均衡</li>
-</ul>
-<blockquote>
-<p>隐含的功能就是动态 upstream</p>
-</blockquote>
-<p>大多与的 API 网关都是用利用 lua 实现的 Openresty 来实现的，因为它可以很好的和 nginx 结合在一起，可以同时运行 lua 脚本和 C 库，并且由于 lua 在协程上实现得十分早，对于 IO 密集型的处理十分的高效。</p>
-<p>在给予 Openresty 实现的 API 网关中，有一些是比较出名的，例如 kong/orange</p>
-<ul>
-<li><p><a href="https://github.com/Kong/kong" target="_blank" rel="noopener">kong</a> 算是行业认为最强大成熟的一个组件的，但是过于复杂了。</p>
-</li>
-<li><p><a href="https://github.com/orlabs/orange" target="_blank" rel="noopener">orange</a> 利用插件的形式来处理请求，并且间接直接，易于二次开发和扩展</p>
-</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/API网关/">API网关</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/API网关/">API网关</a>
     </span>
     
 

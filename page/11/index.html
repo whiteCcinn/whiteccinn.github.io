@@ -69,6 +69,148 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/07/13/id-sender/"><span>64位分布式自增发号器</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/13/id-sender/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-13T09:30:00.000Z">
+          2017-07-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="IdCenterSender-—PHP-源码实现-64-位分布式自增发号器"><a href="#IdCenterSender-—PHP-源码实现-64-位分布式自增发号器" class="headerlink" title="IdCenterSender —PHP 源码实现-64 位分布式自增发号器"></a>IdCenterSender —PHP 源码实现-64 位分布式自增发号器</h2><p>PHP 实现 64 位分布式 ID 发号器, github 上也有 C 语言版本上的连接可以进去跳转</p>
+<p><a href="https://github.com/whiteCcinn/IdCenterSender" target="_blank" rel="noopener">github 地址 : IdCenterSender</a></p>
+<blockquote>
+<p>觉得好记的给个 Start 喔。</p>
+</blockquote>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>参考 Snowflake 算法,根据自身设计情况扩展了其中的细节</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C/">C</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/ID发号器/">ID发号器</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/11/rabbit-mq/"><span>RabbitMQの关键知识整理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/11/rabbit-mq/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-11T03:45:00.000Z">
+          2017-07-11
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>RabbitMQ 作为一个转发服务器，里面涉及了一些实体的东西，如下：</p>
+<ul>
+<li>生产者 (Producter)</li>
+<li>消息 (Message)</li>
+<li>交换机 (Exchange)</li>
+<li>队列 (Queue)</li>
+<li>消费者 (Consumer)</li>
+</ul>
+<p>在这些实体的东西的基础上，RabbitMQ 重点的是 <code>交换机</code>,<code>队列</code></p>
+<h3 id="交换机与队列"><a href="#交换机与队列" class="headerlink" title="交换机与队列"></a>交换机与队列</h3><p>说完实体的东西之后，在 <code>交换机</code> 和 <code>队列</code> 之间有许多的规则（玩法），我们增加了如下内容：</p>
+<ul>
+<li><p>队列名 (Queue_name)</p>
+</li>
+<li><p>交换机类型 (Exchange_type)</p>
+</li>
+<li><p>路由键 (Routing_key)</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/MQ/">MQ</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/MQ/">MQ</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/28/network-protocol-endian/"><span>大端和小端（Big endian and Little endian）</span></a></h3>
     
   
@@ -549,130 +691,6 @@
     <div class="entry">
       
         <h2 id="一个常见的非正统的设计模式"><a href="#一个常见的非正统的设计模式" class="headerlink" title="一个常见的非正统的设计模式"></a>一个常见的非正统的设计模式</h2><p>fluent interface（流利接口）有一个更广为人知的名字『链式操作』，可能大多数人大概都是从 Jquery 最先熟悉的，在 laravel 中，ORM 的一系列 sql 操作，也是链式操作，特点是每次都返回一个 Query Builder 对象。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-facade-model/"><span>设计模式の结构型の门面模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-facade-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T03:19:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>用过 Laravel 的朋友的应该熟悉，Laravel 给我们科普了一个概念 Facade，然而 Laravel 中的 Facade 并不是真正设计模式中定义的 Facade，那么为什么它们都叫一个名字呢？</p>
-<p>我们还是先来了解一下 Facade 这个单词的意思吧。<br>首先它的读音是[fəˈsɑːd]，源自法语 façade，法语这个词原意就是 frontage，意思是建筑的正面，门面，由于以前法国，意大利的建筑只注重修葺临街的一面，十分精美，而背后却比较简陋，所以这个词引申的意思是表象，假象。</p>
-<h2 id="先讲设计模式中的概念"><a href="#先讲设计模式中的概念" class="headerlink" title="先讲设计模式中的概念"></a>先讲设计模式中的概念</h2><p>在设计模式中，其实 Facade 这个概念十分简单。</p>
-<p>它主要讲的是设计一个接口来统领所有子系统的功能。看完下面这个例子就明白了：</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-dependency-injection-model/"><span>设计模式の结构型の依赖注入模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-dependency-injection-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T03:11:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="很简单的理解"><a href="#很简单的理解" class="headerlink" title="很简单的理解"></a>很简单的理解</h2><p>终于要讲到这个著名的设计原则，其实它比其他设计模式都简单。<br>依赖注入的实质就是把一个类不可能更换的部分 和 可更换的部分 分离开来，通过注入的方式来使用，从而达到解耦的目的。</p>
-<h2 id="一个数据库连接类"><a href="#一个数据库连接类" class="headerlink" title="一个数据库连接类"></a>一个数据库连接类</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mysql</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> $host;</span><br><span class="line">  <span class="keyword">private</span> $port;</span><br><span class="line">  <span class="keyword">private</span> $username;</span><br><span class="line">  <span class="keyword">private</span> $password;</span><br><span class="line">  <span class="keyword">private</span> $db_name;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;host     = <span class="string">'127.0.0.1'</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;port     = <span class="number">22</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;username = <span class="string">'root'</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;password = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;db_name  = <span class="string">'my_db'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mysqli_connect(<span class="keyword">$this</span>-&gt;host, <span class="keyword">$this</span>-&gt;username, <span class="keyword">$this</span>-&gt;password, <span class="keyword">$this</span>-&gt;db_name, <span class="keyword">$this</span>-&gt;port);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         
       
     </div>

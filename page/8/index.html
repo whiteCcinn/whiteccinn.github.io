@@ -69,6 +69,150 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/28/php7/"><span>【PHP】- php7的新特性</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/php7/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T15:58:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>php7 出来的时候，多了哪些特性呢，在这里总结一下</p>
+<p>为什么 PHP7 比 PHP5 性能提升了？</p>
+<ul>
+<li><p>变量存储字节减小，减少内存占用，提升变量操作速度</p>
+</li>
+<li><p>改善数组结构，数组元素和 hash 映射表被分配在同一块内存里，降低了内存占用、提升了 cpu 缓存命中率<br>（以往的 zval 是一个 24 字节的结构体，现在的固定是 16 个字节）</p>
+</li>
+<li><p>改进了函数的调用机制，通过优化参数传递的环节，减少了一些指令，提高执行效率</p>
+</li>
+</ul>
+<h2 id="太空船操作符"><a href="#太空船操作符" class="headerlink" title="太空船操作符"></a>太空船操作符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x3D;&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左边大于右边的时候，返回 1</li>
+<li>右边大于左边的时候，返回-1</li>
+<li>两边相等的时候，返回 0</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/28/php-cgi-fastcgi/"><span>CGI - php-cgi - Fastcgi - php-fpm - nginx的关系</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/php-cgi-fastcgi/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T14:03:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="CGI："><a href="#CGI：" class="headerlink" title="CGI："></a>CGI：</h2><p>CGI 的英文是（COMMON GATEWAY INTERFACE）公共网关接口，它的作用就是帮助服务器与语言通信，这里就是 nginx 和 php 进行通信，因为 nginx 和 php 的语言不通，因此需要一个沟通转换的过程，而 CGI 就是这个沟通的协议。</p>
+<p>nginx 服务器在接受到浏览器传递过来的数据后，如果请求的是静态的页面或者图片等无需动态处理的则会直接根据请求的 url 找到其位置然后返回给浏览器，这里无需 php 参与，但是如果是一个动态的页面请求，这个时候 nginx 就必须与 php 通信，这个时候就会需要用到 cgi 协议，将请求数据转换成 php 能理解的信息，然后 php 根据这些信息返回的信息也要通过 cgi 协议转换成 nginx 可以理解的信息，最后 nginx 接到这些信息再返回给浏览器。</p>
+<h2 id="fast-cgi："><a href="#fast-cgi：" class="headerlink" title="fast-cgi："></a>fast-cgi：</h2><p>传统的 cgi 协议在每次连接请求时，会开启一个进程进行处理，处理完毕会关闭该进程，因此下次连接，又要再次开启一个进程进行处理，因此有多少个连接就有多少个 cgi 进程，这也就是为什么传统的 cgi 会显得缓慢的原因，因此过多的进程会消耗资源和内存。</p>
+<p>而 fast-cgi 则是一个进程可以处理多个请求，和上面的 cgi 协议完全不一样，cgi 是一个进程只能处理一个请求，这样就会导致大量的 cgi 程序，因此会给服务器带来负担。</p>
+<h2 id="php-cgi："><a href="#php-cgi：" class="headerlink" title="php-cgi："></a>php-cgi：</h2><p>php-cgi 是 php 提供给 web serve 也就是 http 前端服务器的 cgi 协议接口程序，当每次接到 http 前端服务器的请求都会开启一个 php-cgi 进程进行处理，而且开启的 php-cgi 的过程中会先要重载配置，数据结构以及初始化运行环境，如果更新了 php 配置，那么就需要重启 php-cgi 才能生效，例如 phpstudy 就是这种情况。</p>
+<h2 id="php-fpm"><a href="#php-fpm" class="headerlink" title="php-fpm:"></a>php-fpm:</h2><p>php-fpm 是 php 提供给 web serve 也就是 http 前端服务器的 fastcgi 协议接口程序，它不会像 php-cgi 一样每次连接都会重新开启一个进程，处理完请求又关闭这个进程，而是允许一个进程对多个连接进行处理，而不会立即关闭这个进程，而是会接着处理下一个连接。它可以说是 php-cgi 的一个管理程序，是对 php-cgi 的改进。</p>
+<p>php-fpm 会开启多个 php-cgi 程序，并且 php-fpm 常驻内存，每次 web serve 服务器发送连接过来的时候，php-fpm 将连接信息分配给下面其中的一个子程序 php-cgi 进行处理，处理完毕这个 php-cgi 并不会关闭，而是继续等待下一个连接，这也是 fast-cgi 加速的原理，但是由于 php-fpm 是多进程的，而一个 php-cgi 基本消耗 7-25M 内存，因此如果连接过多就会导致内存消耗过大，引发一些问题，例如 nginx 里的 502 错误。</p>
+<p>同时 php-fpm 还附带一些其他的功能：</p>
+<p>例如平滑过渡配置更改，普通的 php-cgi 在每次更改配置后，需要重新启动才能初始化新的配置，而 php-fpm 是不需要，php-fpm 分将新的连接发送给新的子程序 php-cgi，这个时候加载的是新的配置，而原先正在运行的 php-cgi 还是使用的原先的配置，等到这个连接后下一次连接的时候会使用新的配置初始化，这就是平滑过渡。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>, <a href="/categories/PHP/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/28/http-d/"><span>【协议】http协议1/2的区别</span></a></h3>
     
   
@@ -663,131 +807,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/24/算法/algorithm-base-insert/"><span>【基础算法】- 排序 - 直接插入排序</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/24/算法/algorithm-base-insert/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-24T05:52:00.000Z">
-          2018-02-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>直接插入排序算法</p>
-<ul>
-<li>稳定排序</li>
-</ul>
-<h2 id="PHP-实现"><a href="#PHP-实现" class="headerlink" title="PHP 实现"></a>PHP 实现</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Insert</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">(array $args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $length = count($args);</span><br><span class="line">        <span class="keyword">for</span> ($i = <span class="number">1</span>; $i &lt; $length; $i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($args[$i] &lt; $args[$i - <span class="number">1</span>]) &#123;</span><br><span class="line">                $k = $args[$i];</span><br><span class="line">                <span class="keyword">for</span> ($j = $i - <span class="number">1</span>; $j &gt;= <span class="number">0</span> &amp;&amp; $args[$j] &gt; $k; $j--) &#123;</span><br><span class="line">                        $args[$j + <span class="number">1</span>] = $args[$j];</span><br><span class="line">                &#125;</span><br><span class="line">                $args[$j + <span class="number">1</span>] = $k;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $args;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$data = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>];</span><br><span class="line"></span><br><span class="line">$sort     = <span class="keyword">new</span> Insert();</span><br><span class="line">$sortData = $sort($data);</span><br><span class="line"></span><br><span class="line">print_r($sortData);</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/24/算法/algorithm-base-quick/"><span>【基础算法】- 排序 - 快排</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/24/算法/algorithm-base-quick/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-24T05:46:00.000Z">
-          2018-02-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>快排算法，比普通的冒泡排序要快，原因说明将在时间复杂度和空间复杂度的文章中说明。</p>
-<h2 id="PHP-实现"><a href="#PHP-实现" class="headerlink" title="PHP 实现"></a>PHP 实现</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by PhpStorm.</span></span><br><span class="line"><span class="comment"> * User: admin</span></span><br><span class="line"><span class="comment"> * Date: 2018/2/24</span></span><br><span class="line"><span class="comment"> * Time: 9:39</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Quick</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">(array $args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $length = count($args);</span><br><span class="line">        <span class="keyword">if</span> ($length &lt; <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;quickSort($args, <span class="number">0</span>, $length - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $args;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">quickSort</span><span class="params">(array &amp;$args, int $low, int $high)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ($low &gt; $high) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $frist = $low;</span><br><span class="line">        $last  = $high;</span><br><span class="line">        $k     = $args[$low];</span><br><span class="line"></span><br><span class="line"><span class="comment">//        $i = 0;</span></span><br><span class="line">        <span class="keyword">while</span> ($frist &lt; $last) &#123;</span><br><span class="line"><span class="comment">//            $i++;</span></span><br><span class="line">            <span class="keyword">while</span> ($frist &lt; $last &amp;&amp; $args[$last] &gt;= $k) &#123;</span><br><span class="line">                $last--;</span><br><span class="line">            &#125;</span><br><span class="line">            $args[$frist] = $args[$last];</span><br><span class="line"><span class="comment">//            echo '[' . $i . ']last -- : $frist ' . $frist . ' . $last ' . $last . PHP_EOL;</span></span><br><span class="line"><span class="comment">//            foreach ($args as $value)&#123;</span></span><br><span class="line"><span class="comment">//                echo $value . '  ';</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line">            <span class="keyword">echo</span> PHP_EOL;</span><br><span class="line">            <span class="keyword">while</span> ($frist &lt; $last &amp;&amp; $args[$frist] &lt;= $k) &#123;</span><br><span class="line">                $frist++;</span><br><span class="line">            &#125;</span><br><span class="line">            $args[$last] = $args[$frist];</span><br><span class="line"></span><br><span class="line"><span class="comment">//            echo '[' . $i . ']last -- : $frist ' . $frist . ' . $last ' . $last . PHP_EOL;</span></span><br><span class="line"><span class="comment">//            foreach ($args as $value)&#123;</span></span><br><span class="line"><span class="comment">//                echo $value . '  ';</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//            echo PHP_EOL;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $args[$frist] = $k;</span><br><span class="line"><span class="comment">//        print_r($args);</span></span><br><span class="line"><span class="comment">//        exit;</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;quickSort($args, $low, $frist - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;quickSort($args, $frist + <span class="number">1</span>, $high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$data = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>];</span><br><span class="line"></span><br><span class="line">$sort     = <span class="keyword">new</span> Quick();</span><br><span class="line">$sortData = $sort($data);</span><br><span class="line"></span><br><span class="line">print_r($sortData);</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a>
     </span>
     
 

@@ -69,6 +69,133 @@
 
   
     
+    <h3 class="article-title"><a href="/2021/08/02/DevOps/自定义git凭据存取器/"><span>【DevOps】自定义git凭据存取器</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/08/02/DevOps/自定义git凭据存取器/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-08-02T06:35:30.000Z">
+          2021-08-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，在处理公司到代码仓库，公司由<code>gitbucket</code>迁移到<code>gitlab</code>后，业务项目拉取私有<code>vcs</code>的代码依赖包的方式发生了改变。</p>
+<p>以前可能是一个“权限较大”的用户，拥有多个项目组的访问权限，所以可以访问私有的<code>vcs</code>的代码。</p>
+<p>但是迁移到gitlab之后，每个group下，owner都可以针对这个group生成对应都<code>deploy-key</code>，所以变成了一个group下一个deploy-key。</p>
+<p>这就意味着，我们都<code>go/php/node</code>项目，在拉取不同项目都依赖包都时候，需要把<code>git-credential</code>的账号信息切换。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/DevOps/">DevOps</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/DevOps/">DevOps</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2021/04/13/Rust语言/rust-序列化框架serde/"><span>【rust】序列化框架serde</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/04/13/Rust语言/rust-序列化框架serde/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-04-13T02:43:43.000Z">
+          2021-04-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Rust 中有一个 99%的程序员或许都会用到的组件，那就是序列化组件: serde。</p>
+<p>众所周知，rust的静态语言，所以这让我们在序列化上繁琐了很多，但是有了serde，它帮助我们更好的序列化结构体，生产对应的数据。它实现了各种<code>声明宏</code> 以及 <code>过程宏</code> 来协助我们序列化。</p>
+<p>围绕着<code>serde</code>，也有很多衍生的子组件，例如<code>serde-json</code>, <code>serde-yaml</code>, <code>serde-qs</code> 等等。</p>
+<p>由于我目前在开发 <code>gitlab-rs</code>，在生成对应的query_string 以及form的数据的时候，就比较棘手。</p>
+<p>所以我在<code>gitlab-rs</code> 生成的过程宏中，借助了 <code>seder</code> 出色的序列化生态来完成功能。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/rust/">rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/rust/">rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2021/03/27/数据库开发知识/msource/"><span>【数据库开发】msource</span></a></h3>
     
   
@@ -571,127 +698,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/08/24/爬虫/Tutorial/"><span>【爬虫】- scrapy</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/08/24/爬虫/Tutorial/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-24T01:46:51.000Z">
-          2020-08-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在和朋友写一个二手房的项目，需要用到爬虫，这里借助了scrapy来写。顺便整理了scrapy的用法.</p>
-<p><a href="https://github.com/four-seas/source" target="_blank" rel="noopener">fous_seas/sources</a></p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/爬虫/">爬虫</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/爬虫/">爬虫</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/08/14/Golang/pprof性能分析/"><span>【Golang】- pprof性能分析</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/08/14/Golang/pprof性能分析/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-14T08:35:51.000Z">
-          2020-08-14
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在开发一个golang的大数据服务，发现只要到了业务层性能就急剧下降，为了排查这个原因，使用pprof进行性能分析</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a>
     </span>
     
 

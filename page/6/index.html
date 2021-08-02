@@ -69,6 +69,152 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/05/21/php-cs-fixer配置项详细对比说明/"><span>PHP-CS-Fixer 配置详细对比</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/21/php-cs-fixer配置项详细对比说明/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-21T01:50:00.000Z">
+          2019-05-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们项目比较多，而且每个人的编写代码的风格也不太一致，我们希望尽可能在格式上得到统一，这样子的好处有如下几点：</p>
+<ul>
+<li>遵循 PSR2</li>
+<li>codereview 的时候可以免除格式差异所带来的干扰</li>
+<li>统一格式有利于大家在这个基础上写出更为优雅的代码格式</li>
+</ul>
+<p>因此，我们实现了用于的统一格式化配套的工具链：</p>
+<ul>
+<li><code>husky-php</code>：用于实现客户端 <code>githook 钩子</code>，用于执行触发我们的 husky 项目（默认支持自动格式化，冲突校验）</li>
+<li><code>composer-husky-plugin</code>：专门由 <code>husky-php</code> 定制的 composer 插件，用于自动部署<code>husky-php</code></li>
+<li><code>php-cs-fixer-config</code>：专门定义 <code>php-cs-fixer</code> 格式配置的组件</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/05/16/k8s知识点一/"><span>k8s の 基础知识</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/16/k8s知识点一/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-16T06:24:00.000Z">
+          2019-05-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="k8s-知识点一"><a href="#k8s-知识点一" class="headerlink" title="k8s 知识点一"></a>k8s 知识点一</h1><h2 id="k8s-总架构由于-2-个概念构成"><a href="#k8s-总架构由于-2-个概念构成" class="headerlink" title="k8s 总架构由于 2 个概念构成"></a>k8s 总架构由于 2 个概念构成</h2><ul>
+<li>Master</li>
+<li>Node</li>
+</ul>
+<p><code>Master</code> 和 <code>Node</code> 都是服务器物理机或者虚拟机, 都可以由于一台或者多台组成，如果 Master 不考虑<code>HA(高可用)</code>的情况下。一般都是 1 台 Master + N 台 Node。</p>
+<h2 id="Master-上所需要的服务"><a href="#Master-上所需要的服务" class="headerlink" title="Master 上所需要的服务"></a>Master 上所需要的服务</h2><ul>
+<li>etcd</li>
+<li>Api Server</li>
+<li>Controller Manager</li>
+<li>Scheduler</li>
+</ul>
+<p>后三个组件构成了 Kubernetes 的总控中心，这些进程实现了整个集群的资源管理、Pod 调度、弹性伸缩、安全控制、系统监控和纠错等管理功能，并且全都是自动完成。</p>
+<h2 id="Node-上所需要的服务"><a href="#Node-上所需要的服务" class="headerlink" title="Node 上所需要的服务"></a>Node 上所需要的服务</h2><ul>
+<li>kubelet</li>
+<li>proxy</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/k8s/">k8s</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/k8s/">k8s</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/04/02/rust-for-docker/"><span>rust-for-docker</span></a></h3>
     
   
@@ -591,161 +737,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Nginx/">Nginx</a><a href="/tags/Openresty/">Openresty</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/05/10/jinzhi-1/"><span>【进制】数据库应用</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/05/10/jinzhi-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-05-10T15:05:00.000Z">
-          2018-05-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>概要</p>
-<p>最近加了一个月的班，很忙，博客已经有一段时间没有写了，心里很不是滋味，今晚决心，再晚，也要写一篇。</p>
-<p>我们平时各种系统最常打交道的系统就是数据库了，我们在数据库中，可能就是最直观，最直接的用法，很少用到一些进制相关的知识在里面，其实进制在我们的生活中处处都在渗透，今天我们重点整理一下数据库和进制相关的内容。</p>
-<h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><p>我们都知道，数据库的优化策略之一就是分库分表，但是这个分库分表需要怎么分才算好呢，这里我也没有打包票说有一个固定的模式，因为这种所谓的“最优”是要结合具体的需求来说明的。</p>
-<p>在这里我会列举其中的一些场景来具体说一下。大部分公司的订单号所以没有一个好的架构师或者比较资深的程序员，订单号一般都是最容易忽略的一个关键，一般毕业生或者初学者都会把订单号设置成简单的 int 并且 autoincrease，这样子的做法，简单粗暴有效，定义好了之后就可以撸起袖子干了。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/进制/">进制</a><a href="/tags/算法/">算法</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/04/08/nginx-certbot-ssl/"><span>【SSL】使用certbot工具申请letsencrypt的ssl证书</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/04/08/nginx-certbot-ssl/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-04-08T02:55:00.000Z">
-          2018-04-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="申请-ssl-证书之前，先梳理几个要点："><a href="#申请-ssl-证书之前，先梳理几个要点：" class="headerlink" title="申请 ssl 证书之前，先梳理几个要点："></a>申请 ssl 证书之前，先梳理几个要点：</h2><p>1、确定好拟申请 ssl 证书的域名，这里为了便于说明假设申请 ssl 的域名为：a.baicai.com，<a href="http://www.baicai.com、account.baicai.com" target="_blank" rel="noopener">www.baicai.com、account.baicai.com</a> 等其他域名（和主机），没有本质上的区别，仅名称上的差异；</p>
-<p>2、确定拟申请 ssl 证书的域名正确解析到当前主机，本例也就是通过<a href="http://blog.crazylaw.com" target="_blank" rel="noopener">http://blog.crazylaw.com</a> 能够正确解析到当前主机（注意是正确解析，至于是不是能正确访问依据 certbot 的模式不同要求也不同）；</p>
-<p>3、确定好拟申请 ssl 证书域名解析到当前主机后的 web 根目录，假设为：/www/blog/</p>
-<h2 id="Github-上拉取-cerbot"><a href="#Github-上拉取-cerbot" class="headerlink" title="Github 上拉取 cerbot"></a>Github 上拉取 cerbot</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;certbot&#x2F;certbot</span><br></pre></td></tr></table></figure>
-
-<p>然后进入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd cerbot</span><br></pre></td></tr></table></figure>
-
-<p>接着看到<code>cerbot-auto</code>的可执行文件</p>
-<p>然后生成证书。</p>
-<p><font color="red">注意，如果你第一次使用 letsencrypy 的话，一般需要指定邮箱，并且 letsencrypy 会发送证书到你的邮箱，请确认订阅 letsencrypy，下面的命令是带上了邮箱信息的</font>！</p>
-<p><font color="red">注意，需要暂时停止 nginx</font>！</p>
-<h2 id="standalone-模式申请-ssl-证书"><a href="#standalone-模式申请-ssl-证书" class="headerlink" title="standalone 模式申请 ssl 证书"></a>standalone 模式申请 ssl 证书</h2><p>standalone 模式不需要上述梳理出的 3 个要点中的第三条，也就意味着如果你的主机需要关停 80 端口（或和 443 端口）的 web 服务，譬如正在运行的 nginx、Apache 需要关停。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">##standalone模式，其中-d参数指定拟申请ssl证书的域名 #可以通过多个-d参数指定多个域名，但你得确保这些指定的多个域名均能正常解析到当前主机</span><br><span class="line"></span><br><span class="line">.&#x2F;certbot-auto certonly --standalone --email you@email.com -d example.com -d www.example.com -d other.example.net</span><br></pre></td></tr></table></figure>
-
-<h2 id="非-standalone-模式申请-ssl-证书"><a href="#非-standalone-模式申请-ssl-证书" class="headerlink" title="非 standalone 模式申请 ssl 证书"></a>非 standalone 模式申请 ssl 证书</h2><p>这种模式需要使用-w 参数（或者–webroot-path 参数）指定当前正在运行的 web 服务器的根目录。–webroot-path 参数指定 web 根目录后，<code>certbot工具会自动在该目录下生成.well-known的隐藏目录</code>，以及用于效验域名所有者的特定文件，此文件 Let’s Encrypt 的服务器会主动发起 http 请求去读取从达到效验域名所有者或者管理者就是本次操作 certbot 工具的人；certbot 工具自动生成的完整目录为：-w 参数指定的根目录<code>/.well-known/acme-challenge</code>，对于 nginx 而言 web 根目录下的隐藏目录默认情况下是不允许访问的，所以 nginx 情况下再执行非 standalone 模式申请 ssl 证书之前，<code>需要将nginx网站根目录下的.well-known隐藏目录设置成允许访问</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">##nginx对应主机的配置文件中添加允许.well-known隐藏目录的访问</span><br><span class="line">#注意配置文件中禁止浏览隐藏文件的相关代码引起冲突</span><br><span class="line">location ~ &#x2F;.well-known &#123;</span><br><span class="line">    allow all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果熟悉 nginx，甚至可以为.well-known 隐藏目录指定单独的 root 入口；这就是 nginx 有关的合理利用了，不再补充。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##--webroot指定当前正在运行的web server的根目录</span><br><span class="line">certbot certonly --webroot -w &#x2F;var&#x2F;www&#x2F; -d c1c2.test.com</span><br></pre></td></tr></table></figure>
-
-<h2 id="一般使用-standalone-模式，继续"><a href="#一般使用-standalone-模式，继续" class="headerlink" title="一般使用 standalone 模式，继续"></a>一般使用 standalone 模式，继续</h2><p>接着如果你没订阅过的话，会在邮箱收到邮件，然后你要选择订阅。接着你会看到如下信息，选择 <code>a</code> 和 <code>y</code> 之后。</p>
-<p>默认路径如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;fullchain.pem</span><br><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;privkey.pem</span><br></pre></td></tr></table></figure>
-
-<p>如何更新？这里截图写得很清楚了，再执行一次 <code>certbot-auto</code> 命令+参数即可，如果你想全部重新执行一边的话，可以使用 <code>certbot-auto renew</code>。</p>
-<h2 id="nginx-配置"><a href="#nginx-配置" class="headerlink" title="nginx 配置"></a>nginx 配置</h2><p>然后我们重启 nginx，即可。！</p>
-<h2 id="如何实现自动化？"><a href="#如何实现自动化？" class="headerlink" title="如何实现自动化？"></a>如何实现自动化？</h2><ul>
-<li>停止 nginx</li>
-<li>执行 certbot-auto</li>
-<li>重启 nginx</li>
-</ul>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a><a href="/tags/ssl/">ssl</a>
     </span>
     
 

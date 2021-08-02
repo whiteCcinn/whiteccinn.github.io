@@ -69,6 +69,128 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/02/10/php-extend-1/"><span>PHP7扩展开发のHello Wold</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/02/10/php-extend-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-02-10T03:47:00.000Z">
+          2017-02-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>想要突破自我，必须深入了解 PHP，今天我们讲讲 PHP 扩展的开发，此路长长，需要多多积累 C 语言的知识，废话不多说，直入主题。</p>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>先去 github 上下载 PHP 的源码，搜索 php-src</p>
+<p><a href="https://github.com/php/php-src" target="_blank" rel="noopener">https://github.com/php/php-src</a></p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/PHP扩展/">PHP扩展</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/01/24/数据结构/struct-study-2/"><span>C语言数据结构の单链表</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/24/数据结构/struct-study-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-24T09:27:20.000Z">
+          2017-01-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt; // 声明exit函数</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 单节点的数据结构 16个字节 */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"> <span class="keyword">int</span> data;            <span class="comment">//数据域</span></span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span> * <span class="title">pNext</span>;</span> <span class="comment">//指针域</span></span><br><span class="line">&#125;NODE,*PNODE;</span><br><span class="line"></span><br><span class="line"><span class="comment">//函数声明</span></span><br><span class="line"><span class="function">PNODE <span class="title">createLinkList</span><span class="params">(<span class="keyword">void</span>)</span></span>;        <span class="comment">//创建链表的函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">traverseLinkList</span><span class="params">(PNODE pHead)</span></span>;      <span class="comment">//遍历链表的函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  主函数入口 main</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PNODE pHead = <span class="literal">NULL</span>;</span><br><span class="line">    pHead = createLinkList();</span><br><span class="line">    traverseLinkList(pHead);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  创建链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">PNODE <span class="title">createLinkList</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请内存空间,头结点</span></span><br><span class="line">    PNODE phead = (PNODE)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(NODE));</span><br><span class="line">     <span class="keyword">if</span>(<span class="literal">NULL</span> == phead)</span><br><span class="line">     &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"内存分配失败，程序退出！\n"</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尾节点</span></span><br><span class="line">    PNODE pend = phead; <span class="comment">// pend始终指向尾节点</span></span><br><span class="line">    pend-&gt;pNext = <span class="literal">NULL</span>; <span class="comment">// 单链表尾节点指针域为NULL</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"请输入链表的长度,len ="</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;length);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建链表长度</span></span><br><span class="line">    <span class="keyword">for</span>(i= <span class="number">0</span>;i&lt; length;i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"请输入第%d个节点的值 :"</span>,i);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;value);</span><br><span class="line">        PNODE pNew =(PNODE)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(NODE));</span><br><span class="line">        <span class="keyword">if</span>(<span class="literal">NULL</span> == pNew)</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">printf</span>(<span class="string">"内存分配失败，程序退出！\n"</span>);</span><br><span class="line">          <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pNew-&gt;data = value;  <span class="comment">// 把新值放入节点</span></span><br><span class="line">        pend-&gt;pNext = pNew;  <span class="comment">// 把尾节点指向新节点</span></span><br><span class="line">        pNew-&gt;pNext = <span class="literal">NULL</span>;  <span class="comment">// 尾节点指针域为NULL</span></span><br><span class="line">        pend = pNew;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> phead;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">traverseLinkList</span><span class="params">(PNODE pHead)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> PNODE p = pHead-&gt;pNext;</span><br><span class="line"> <span class="keyword">while</span>(<span class="literal">NULL</span> != p)</span><br><span class="line"> &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d  "</span>, p-&gt;data);</span><br><span class="line">  p = p-&gt;pNext;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C/">C</a><a href="/tags/数据结构/">数据结构</a><a href="/tags/单链表/">单链表</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/01/24/数据结构/struct-study-1/"><span>线性存储结构</span></a></h3>
     
   

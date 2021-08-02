@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【DevOps】自定义git凭据存取器 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【DevOps】自定义git凭据存取器"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【DevOps】自定义git凭据存取器</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/08/02/DevOps/自定义git凭据存取器/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-08-02T06:35:30.000Z">
+          2021-08-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，在处理公司到代码仓库，公司由<code>gitbucket</code>迁移到<code>gitlab</code>后，业务项目拉取私有<code>vcs</code>的代码依赖包的方式发生了改变。</p>
+<p>以前可能是一个“权限较大”的用户，拥有多个项目组的访问权限，所以可以访问私有的<code>vcs</code>的代码。</p>
+<p>但是迁移到gitlab之后，每个group下，owner都可以针对这个group生成对应都<code>deploy-key</code>，所以变成了一个group下一个deploy-key。</p>
+<p>这就意味着，我们都<code>go/php/node</code>项目，在拉取不同项目都依赖包都时候，需要把<code>git-credential</code>的账号信息切换。</p>
+<a id="more"></a>
+
+<h2 id="git-build-in"><a href="#git-build-in" class="headerlink" title="git-build-in"></a>git-build-in</h2><p>Git 有一个内部接口,用于存储和检索系统特定助手的证书,以及提示用户输入用户名和密码。<code>git-credential</code> 命令向脚本开放了这个接口,脚本可以像 Git 一样检索、存储或提示用户输入凭证。这个可脚本接口的设计与内部的 C API 一样,请参见 <code>credential.h</code> 以了解更多的概念背景。</p>
+<p>git-credential在命令行上使用“操作”选项（ fill ， approve 或 reject 之一），并在stdin上读取凭据描述（请参阅<code>INPUT / OUTPUT FORMAT</code>）。</p>
+<p>如果操作为 fill ，则git-credential将尝试通过读取配置文件，联系任何已配置的凭据帮助程序或提示用户来向描述中添加“用户名”和“密码”属性。然后将凭证描述的用户名和密码属性与已经提供的属性一起打印到stdout。</p>
+<p>如果操作被 <code>approve</code> ，则git-credential会将描述发送给任何已配置的凭据帮助器，该帮助器可以存储该凭据以供以后使用。</p>
+<p>如果该操作被 <code>reject</code> ，则git-credential会将描述发送给任何已配置的凭据帮助器，这些帮助器可能会删除所有与该描述匹配的存储凭据。</p>
+<p>如果操作是 <code>approve 或 reject</code> ，则不应发出任何输出。</p>
+<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>我们知道，在<code>window</code>和<code>mac</code>下，分别对应的多凭据管理器，分别是<code>git credential for window</code> 和 <code>oschinakey</code>，可以做到精确的记录下我们的所有凭据。但是在linux下就只有<br><code>build-in(内置)</code>的存取器，分别是 <code>cache</code>, <code>store</code> 。</p>
+<p>经过实现，在<code>.gitconfig</code>默认的配置的情况下，每次都会只读取 <code>.git-credential</code> 的第一行数据，如果不正确，则触发 git 的 <code>build-in</code> 的 <code>reject</code> 方法，清理掉这一行的凭据，这使得我们在多凭据下无法正常的工作。我们需要<code>.git-credentital</code>能根据<code>vcs</code>的地址特点，例如根据<code>group</code>来识别凭据。为了实现这一点，我们就需要借助<code>自定义存取器</code>。</p>
+<h2 id="自定义存储器"><a href="#自定义存储器" class="headerlink" title="自定义存储器"></a>自定义存储器</h2><p>要实现自定义存储器，就需要知道他是什么东西，和怎么实现。</p>
+<p><code>自定义存储器</code>允许你用<code>任何语言</code>来编写，你用<code>c/c++/python/php/java/go/rust/erlang</code>等等的语言写都是可以的，只需要程序能直接运行，并且符合<code>输入/输出格式</code>和在<code>PATH</code>的系统环境下能找到的情况下，都是可行的。我记得<code>git-scm</code>的例子采用的是ruby的写法，但是由于考虑到<code>python2</code>一般是每个系统都自带的，我们也采用了<code>python2</code>的写法来实现一个<code>根据组织来智能区分git账号和密码的自定义存取器</code></p>
+<p>这里，我们可以记住，把自定义存储器想像成一个<code>管道(pipe)</code>的概念，有<code>输入端</code>，也有<code>输出端</code>，他们都有自己对应的规则（协议/格式）。</p>
+<h3 id="输入-输出格式"><a href="#输入-输出格式" class="headerlink" title="输入/输出格式"></a>输入/输出格式</h3><p>git credential 在其<code>标准输入/输出</code>中读取或写入（取决于使用的操作）<code>凭证信息</code>。此信息可以对应于 <code>git credential</code> 将为其获取登录信息的密钥（例如主机，协议，路径），也可以<code>对应</code>于将要获取的实际凭证数据（用户名/密码）。</p>
+<p>凭证分为一组命名属性，<code>每行一个属性</code>。每个属性均由键值对指定，并以 <code>= （等号）分隔</code>，后跟<code>换行符</code>。</p>
+<p>密钥可以包含除 = ，换行符或NUL之外的任何字节。该值可以包含除换行符或NUL之外的任何字节。</p>
+<p>在这两种情况下,所有的字节都按原样处理(即没有引号,也不能传输带有换行或NUL的值)。属性列表以空行或文件末尾结束。</p>
+<p>Git了解以下属性。</p>
+<ul>
+<li><p>protocol 将使用凭证的协议（例如 https ）。</p>
+</li>
+<li><p>host 网络凭证的远程主机名,包括指定的端口号(如 “example.com:8088”)。如果指定了端口号,则包括端口号(例如 “example.com:8088”)。</p>
+</li>
+<li><p>path 凭据将使用的路径。例如，对于访问远程https资源库，这将是服务器上资源库的路径。(只有开启了<code>useHttpPath=true</code>的情况下，输入格式才会携带这个参数)</p>
+</li>
+<li><p>username 凭据的用户名（如果已经有）（例如，来自URL，配置，用户或先前运行的帮助程序）。</p>
+</li>
+<li><p>password 凭据的密码（如果我们要求将其存储）。</p>
+</li>
+<li><p>url 当 git credential 读取此特殊属性时，该值将解析为URL，并被视为已读取其组成部分（例如， url=<a href="https://example.com" target="_blank" rel="noopener">https://example.com</a> 的行为就好像 protocol=https 和 host=example.com 已提供）。这可以帮助呼叫者避免自己解析URL。</p>
+</li>
+</ul>
+<blockquote>
+<p>请注意，指定协议是强制性的，并且如果URL未指定主机名（例如，“ cert：/// path / to / file”），则凭证将包含其主机名属性，其值为空字符串。</p>
+</blockquote>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><p>了解了<code>输入/输出格式</code>后。我们通过实战例子来说明。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> git-credential.example</span></span><br><span class="line">https://caiwenhui:testpass@gitlab.mingchao.com/group1</span><br><span class="line">https://caiwenhui:testpass2@gitlab.mingchao.com/group2</span><br><span class="line">https://caiwenhui:testpass3@gitlab.mingchao.com/group3</span><br></pre></td></tr></table></figure>
+
+<p>以下文件，命名为 <code>git-credential-mc</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Date    : 2021-07-30 10:58:53</span></span><br><span class="line"><span class="comment"># @Author  : caiwenhui</span></span><br><span class="line"><span class="comment"># @Version : 1.0</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(description=<span class="string">"get credentials by https://gitlab.mimgchao.com/&#123;group&#125;"</span>,</span><br><span class="line">                                 prog=<span class="string">'git-credential-mc'</span>,</span><br><span class="line">                                 usage=<span class="string">'%(prog)s [options] &lt;action&gt;'</span>)</span><br><span class="line">parser.add_argument(<span class="string">'-f'</span>, <span class="string">'--file'</span>, help=<span class="string">'Specify path for backing store'</span>, required=<span class="literal">True</span>, default=<span class="string">"~/.git-credentials"</span>,</span><br><span class="line">                    type=str)</span><br><span class="line">parser.add_argument(<span class="string">'action'</span>, metavar=<span class="string">"action"</span>, help=<span class="string">'just support &lt;get&gt;'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CredentialsHelper</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, credential_file=<span class="string">''</span>)</span>:</span></span><br><span class="line">        self.inputs = dict()</span><br><span class="line">        self.file = credential_file</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_input</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            line = sys.stdin.readline()</span><br><span class="line">            <span class="keyword">if</span> line.strip() == <span class="string">''</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            k, v = line.strip().split(<span class="string">'='</span>, <span class="number">2</span>)</span><br><span class="line">            self.inputs[k] = v</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 需要开启useHttpPath = true</span></span><br><span class="line">        <span class="keyword">if</span> self.inputs[<span class="string">'path'</span>] <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            sys.exit(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 解析path参数</span></span><br><span class="line">        self.inputs[<span class="string">'group'</span>] = self.inputs[<span class="string">'path'</span>].split(<span class="string">'/'</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_output</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">with</span> open(self.file, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            lines = f.readlines()</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">                m = re.match(<span class="string">r'^(?P&lt;protocol&gt;.*?)://(?P&lt;username&gt;.*?):(?P&lt;password&gt;.*?)@(?P&lt;host&gt;.*)/(?P&lt;group&gt;.*)$'</span>,</span><br><span class="line">                             line)</span><br><span class="line">                gd = m.groupdict()</span><br><span class="line">                <span class="keyword">if</span> self.inputs[<span class="string">'protocol'</span>] == gd[<span class="string">'protocol'</span>] <span class="keyword">and</span> self.inputs[<span class="string">'host'</span>] == gd[<span class="string">'host'</span>] <span class="keyword">and</span> self.inputs[</span><br><span class="line">                    <span class="string">'group'</span>] == gd[<span class="string">'group'</span>]:</span><br><span class="line">                    sys.stdout.write(<span class="string">'protocol=&#123;protocol&#125;\n'</span>.format(protocol=gd[<span class="string">'protocol'</span>]))</span><br><span class="line">                    sys.stdout.write(<span class="string">'host=&#123;host&#125;\n'</span>.format(host=gd[<span class="string">'host'</span>]))</span><br><span class="line">                    sys.stdout.write(<span class="string">'username=&#123;username&#125;\n'</span>.format(username=gd[<span class="string">'username'</span>]))</span><br><span class="line">                    sys.stdout.write(<span class="string">'password=&#123;password&#125;\n'</span>.format(password=gd[<span class="string">'password'</span>]))</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            sys.stdout.flush()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">execute</span><span class="params">(self)</span>:</span></span><br><span class="line">        self._input()</span><br><span class="line">        self._output()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">if</span> len(sys.argv) &lt;= <span class="number">1</span>:</span><br><span class="line">        parser.print_help()</span><br><span class="line">        sys.exit(<span class="number">0</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    <span class="keyword">if</span> args.action != <span class="string">"get"</span>:</span><br><span class="line">        sys.exit(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(args.file):</span><br><span class="line">        sys.exit(<span class="number">0</span>)</span><br><span class="line">    credentialsHelper = CredentialsHelper(credential_file=args.file)</span><br><span class="line">    credentialsHelper.execute()</span><br></pre></td></tr></table></figure>
+
+<p>直接运行下，脚本输出如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  python git:(master) ./git-credential-mc</span><br><span class="line">usage: git-credential-mc [options] &lt;action&gt;</span><br><span class="line"></span><br><span class="line">get credentials by https://gitlab.mimgchao.com/&#123;group&#125;</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  action                just support &lt;get&gt;</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help            show this help message and exit</span><br><span class="line">  -f FILE, --file FILE  Specify path for backing store</span><br></pre></td></tr></table></figure>
+
+<p>我们来模拟git的一个输入过程，然后让自定义存储器输出正确的输出格式告诉git凭据要用的账号密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  python git-credential-mc -f git-credential.example  get</span><br><span class="line">protocol=https</span><br><span class="line">host=gitlab.mingchao.com</span><br><span class="line">path=group1/repo1.git</span><br><span class="line"></span><br><span class="line">protocol=https</span><br><span class="line">host=gitlab.mingchao.com</span><br><span class="line">username=caiwenhui</span><br><span class="line">password=testpass</span><br><span class="line"></span><br><span class="line">➜  python git-credential-mc -f git-credential.example  get</span><br><span class="line">protocol=https</span><br><span class="line">host=gitlab.mingchao.com</span><br><span class="line">path=group2/repo1.git</span><br><span class="line"></span><br><span class="line">protocol=https</span><br><span class="line">host=gitlab.mingchao.com</span><br><span class="line">username=caiwenhui</span><br><span class="line">password=testpass2</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们看到，我们根据不同的<code>group</code>，已经返回了不同的账号密码了。达到这个效果，我们的自定义读取器就算是完成了。但是系统化的整理起来，还需要把这个脚本，放在<code>PATH</code>路径下，并且，并且记得必须以<code>git-credential-*</code>来命令程序的文件名。因为git源码的credential模块中的源码读取自定义规则存储器就是这样子调用外部程序的。</p>
+<h3 id="配置git"><a href="#配置git" class="headerlink" title="配置git"></a>配置git</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.https:&#x2F;&#x2F;gitlab.mingchao.com.useHttpPath true</span><br><span class="line">git config --global credential.https:&#x2F;&#x2F;gitlab.mingchao.com.helper &quot;mc --file ~&#x2F;.git-credential.example&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这样子，git就可以针对<code>https://gitlab.mingchao.com</code>的时候，采用<code>git-credential-mc</code>的程序来读取凭据。达到我们的<code>多组/多凭据</code>的情况下<code>正确</code>的<code>读取账号和密码</code>。</p>
+<p>这里只是一个简单的用法，后续如果有复杂的用法，都可以扩展这个自定义存取器，十分的灵活。</p>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><ul>
+<li><a href="https://github.com/git/git" target="_blank" rel="noopener">https://github.com/git/git</a></li>
+<li><a href="https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%87%AD%E8%AF%81%E5%AD%98%E5%82%A8" target="_blank" rel="noopener">https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%87%AD%E8%AF%81%E5%AD%98%E5%82%A8</a></li>
+<li><a href="https://revs.runtime-revolution.com/extending-git-with-ruby-874fddffd069" target="_blank" rel="noopener">https://revs.runtime-revolution.com/extending-git-with-ruby-874fddffd069</a></li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/DevOps/">DevOps</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/DevOps/">DevOps</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
