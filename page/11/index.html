@@ -69,6 +69,73 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/07/27/ccp/"><span>PHP 实现 Promise+协程调用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/ccp/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T14:13:00.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <ul>
+<li>PHP 实现 Promise+协程调用</li>
+</ul>
+<p>github 地址：<a href="https://github.com/whiteCcinn/ccp" target="_blank" rel="noopener">ccp</a></p>
+<blockquote>
+<p>觉得好记的给个 Start 喔。</p>
+</blockquote>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>在 PHP 当中，我们或多或少会使用到异步编程的思想，但是异步编程难免给我们带来回调地狱的感觉，并且代码可读性十分之差，在 ES6 规范里面，或者更早就可以推出了一个做 Promise 的东西，利用 Promise，你可以用同步的做法来实现异步的操作，代码可读性上大大提高，不仅如此，由于异步编程和异步 IO 的混合使用，导致代码的准确性难以提高，不可否认的是，Promise 的推出，大大的提高了你们编写异步代码的可靠性，虽然这也是会损耗一些十分微小的性能，但是任何取舍都是相对的。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Promise/">Promise</a><a href="/tags/ES6/">ES6</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/07/13/id-sender/"><span>64位分布式自增发号器</span></a></h3>
     
   
@@ -631,66 +698,6 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Image</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWidth</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>现在我们有一个 Image 接口类，接口定义 getWidth 方法。现在我们需要一个具体类（实现类）来实现这个接口。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-link-model/"><span>设计模式の结构型の链式模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-link-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T03:36:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="一个常见的非正统的设计模式"><a href="#一个常见的非正统的设计模式" class="headerlink" title="一个常见的非正统的设计模式"></a>一个常见的非正统的设计模式</h2><p>fluent interface（流利接口）有一个更广为人知的名字『链式操作』，可能大多数人大概都是从 Jquery 最先熟悉的，在 laravel 中，ORM 的一系列 sql 操作，也是链式操作，特点是每次都返回一个 Query Builder 对象。</p>
         
       
     </div>

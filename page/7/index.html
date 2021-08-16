@@ -69,6 +69,71 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/07/08/openresty-1/"><span>【OpenResty】 带你入门高性能http代理服务器应用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/07/08/openresty-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-07-07T16:23:00.000Z">
+          2018-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenResty® 是一个基于 Nginx 与 Lua 的高性能 Web 平台，其内部集成了大量精良的 Lua 库、第三方模块以及大多数的依赖项。用于方便地搭建能够处理超高并发、扩展性极高的动态 Web 应用、Web 服务和动态网关。</p>
+<p>OpenResty® 通过汇聚各种设计精良的 Nginx 模块（主要由 OpenResty 团队自主开发），从而将 Nginx 有效地变成一个强大的通用 Web 应用平台。这样，Web 开发人员和系统工程师可以使用 Lua 脚本语言调动 Nginx 支持的各种 C 以及 Lua 模块，快速构造出足以胜任 10K 乃至 1000K 以上单机并发连接的高性能 Web 应用系统。</p>
+<p>OpenResty® 的目标是让你的 Web 服务直接跑在 Nginx 服务内部，充分利用 Nginx 的非阻塞 I/O 模型，不仅仅对 HTTP 客户端请求,甚至于对远程后端诸如 MySQL、PostgreSQL、Memcached 以及 Redis 等都进行一致的高性能响应。</p>
+<blockquote>
+<p>以上都是官方说辞</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a><a href="/tags/Openresty/">Openresty</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/05/10/jinzhi-1/"><span>【进制】数据库应用</span></a></h3>
     
   
@@ -676,67 +741,6 @@
     <div class="entry">
       
         <p>选择排序是一种不稳定的算法。基本思路是：他是将每次 2 个数据都比较完之后，记录一个最大值或者最小值，不急着交换，（这是和冒泡排序的差别，减少了交换的次数，所以效率会高），等一轮循环比较完毕之后，再把无序区最靠近有序区的那个数和当前记录的值交换，每次循环只交换一次。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/01/算法/algorithm-base-binary-sort/"><span>【基础算法】- 排序 - 二分插入排序</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/01/算法/algorithm-base-binary-sort/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-01T07:15:00.000Z">
-          2018-03-01
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>二分插入排序可以说是直接插入排序的升级版，对于数据量比较大的时候，二分插入排序可以有效的减少比较的次数，从而提高效率。</p>
-<p>这里借助了二分的思想，但是需要注意的是，这个只是二分思想，和二分搜索并非一致，如果需要用到二分查询的话，前提必须是有序数据，但是这里只是借助了这个思想，把最靠近有序区的一个通过二分查找需要插入的位置，并且一次性移动所有大于目标数的所有元素。</p>
         
       
     </div>

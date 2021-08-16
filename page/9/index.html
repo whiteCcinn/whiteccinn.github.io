@@ -69,6 +69,77 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/27/linux-shell-file-dir/"><span>【Linux命令】- 文件及目录管理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/27/linux-shell-file-dir/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-27T08:04:00.000Z">
+          2018-02-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="创建和删除"><a href="#创建和删除" class="headerlink" title="创建和删除"></a>创建和删除</h2><ul>
+<li>创建：<code>mkdir</code></li>
+<li>删除：<code>rm</code></li>
+<li>删除目录（递归+强制）：<code>rm -rf dir</code></li>
+<li>删除文件（强制） <code>rm -f file</code></li>
+<li>删除统一后缀 <code>rm *log</code>(等价于：<code>find ./ -name &quot;*log&quot; -exec rm -f {}</code>，<code>find ./ -name &quot;*.log&quot; -exec rm -f {} \;</code>)(注意，<code>\;</code>必须加，否则报错)</li>
+<li>移动：mv file</li>
+<li>复制（目录）：cp（-r） file[dir]</li>
+</ul>
+<p>查看当前目录下的文件个数</p>
+<p><code>find ./ | wc -l</code></p>
+<p>复制目录：</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/24/算法/algorithm-base-insert/"><span>【基础算法】- 排序 - 直接插入排序</span></a></h3>
     
   
@@ -831,83 +902,6 @@ epoll的优点：
 <td>请求的URI，带参数，比如：<code>http://localhost:8080/uuu</code></td>
 </tr>
 </tbody></table>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/23/nginx-rewrite/"><span>【Nginx】- Rewrite功能</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/23/nginx-rewrite/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-23T01:57:00.000Z">
-          2018-02-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Nginx 作为一个 http 服务器，其中最重要的一个特点就是 rewrite 功能，这个功能算是 nginx 必会内容了，接下来，我们详细说明一下 URL 重写配置以及信息详解</p>
-<p>Nginx-rewrite 依赖</p>
-<ul>
-<li>PCRE 软件的支持，支持 perl 兼容正则表达式语句进行规则匹配</li>
-</ul>
-<p>rewrite 是实现 URL 重写的关键指令，根据 regex（正则表达式）部分内容，重定向到 replacement，结尾是 flag 标记。</p>
-<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rewrite   &lt;regex&gt;    &lt;replacement&gt; [flag]</span><br><span class="line"></span><br><span class="line">关键字     正则表达式  替换内容       flag标记</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>关键字：固定 rewrite 开启的关键字</p>
-</li>
-<li><p>正则：perl 兼容正则表达式语句进行规则匹配</p>
-</li>
-<li><p>替代内容：将正则匹配的内容替换成 replacement</p>
-</li>
-<li><p>flag 标记：rewrite 支持的 flag 标记</p>
-</li>
-</ul>
         
       
     </div>
