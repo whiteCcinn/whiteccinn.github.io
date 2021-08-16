@@ -93,6 +93,8 @@
 <p>再者就是还有一种情况就是，我需要利用k8s部署一些基础服务，例如mysql，例如redis，这些基础数据都是需要持久化的，因此，和物理机器强行绑定在一起的话，下次数据在哪个数据卷都不清楚了，更没办法重新回复数据，这是一个很严重的问题。</p>
 <p>所以我们这里的pv，不能简单的使用<code>hostPath</code>或者<code>local</code>类型，根据服务器上用的比较多的或许是自己搭建一个<code>nfs</code> 服务器，因此，我们也希望在本地开发的时候定义资源文件<code>的yaml</code>也是用<code>nfs</code>来作为我们的<code>pv-type</code>。</p>
 <p>但是也因此，我们需要在mac上开启一个<code>nfs-server</code>。尝试过<a href="https://github.com/ehough/docker-nfs-server" target="_blank" rel="noopener">docker-nfs-server</a>，但是由于mac系统的架构问题，无法顺利的运行起来，需要处理modpre模块，处理那么多内核的东西不太合理。</p>
+<a id="more"></a>
+
 <h2 id="built-in-nfs"><a href="#built-in-nfs" class="headerlink" title="built-in-nfs"></a>built-in-nfs</h2><p>后来查阅资料，发现了原来我们的macos，内置了nfs，我们只需要添加对应的配置和开启服务即可，十分的方便。</p>
 <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>这个文件默认是不存在的，需要我们手动去创建和添加里面的内容，不熟悉nfs的朋友需要去看一下nfs的配置文件。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/exports</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 追加以下文件到文件中</span></span></span><br><span class="line">/Users/caiwenhui/nas_a -alldirs -maproot=caiwenhui:staff</span><br></pre></td></tr></table></figure>
