@@ -1,6 +1,6 @@
 ---
 title: 【kubernetes】k8s-pv-nfs-for-mac
-date: 2021-08-21 14:18:30
+date: 2021-08-16 14:18:30
 categories: [kubernetes]
 tags: [kubernetes]
 ---
