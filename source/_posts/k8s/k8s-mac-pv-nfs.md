@@ -17,6 +17,8 @@ docker-for-mac 现在已经内置了k8s，我们可以轻松的开启这个功�
 
 但是也因此，我们需要在mac上开启一个`nfs-server`。尝试过[docker-nfs-server](https://github.com/ehough/docker-nfs-server)，但是由于mac系统的架构问题，无法顺利的运行起来，需要处理modpre模块，处理那么多内核的东西不太合理。
 
+<!-- more -->
+
 ## built-in-nfs
 
 后来查阅资料，发现了原来我们的macos，内置了nfs，我们只需要添加对应的配置和开启服务即可，十分的方便。
