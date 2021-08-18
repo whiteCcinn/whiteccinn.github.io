@@ -69,6 +69,197 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/06/12/大数据/Hadoop基本概念/"><span>【大数据】- Hadoop 基本概念</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/12/大数据/Hadoop基本概念/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-12T01:56:40.000Z">
+          2019-06-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Hadoop 是一个由 Apache 基金会所开发的分布式系统基础架构，它可以使用户在不了解分布式底层细节的情況下开发分布式程序，充分利用集群的威力进行高速运算和存储。</p>
+<p>从其定义就可以发现，它解決了两大问题：大数据存储、大数据分析。也就是 Hadoop 的两大核心：HDFS 和 MapReduce。</p>
+<p>HDFS(Hadoop Distributed File System)是可扩展、容错、高性能的分布式文件系统，异步复制，一次写入多次读取，主要负责存储。</p>
+<p>MapReduce 为分布式计算框架，包含 map(映射)和 reduce(归约)过程，负责在 HDFS 上进行计算。</p>
+<p>但是由于目前我没有用到 MapReduce，并且 MapReduce 能效过于地下并且很占系统资料，所以一般数据分析都会用其他的来代替。</p>
+<p>所以这里介绍的 Hadoop，会重点讲解 HDFS 和其工作原理。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/06/04/k8s/k8s-nginx-ingress/"><span>【kubernetes】nginx-ingress</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/04/k8s/k8s-nginx-ingress/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-04T03:28:30.000Z">
+          2019-06-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Ingress 是一个负载均衡的东西，其主要用来解决使用 NodePort 暴露 Service 的端口时 Node IP 会漂移的问题。同时，若大量使用 NodePort 暴露主机端口，管理会非常混乱。</p>
+<p>好的解决方案就是让外界通过域名去访问 Service，而无需关心其 Node IP 及 Port。那为什么不直接使用 Nginx？这是因为在 K8S 集群中，如果每加入一个服务，我们都在 Nginx 中添加一个配置，其实是一个重复性的体力活，只要是重复性的体力活，我们都应该通过技术将它干掉。</p>
+<p>Ingress 就可以解决上面的问题，其包含两个组件 Ingress Controller 和 Ingress：</p>
+<ul>
+<li>Ingress （将 Nginx 的配置抽象成一个 Ingress 对象，每添加一个新的服务只需写一个新的 Ingress 的 yaml 文件即可）</li>
+<li>Ingress Controller （将新加入的 Ingress 转化成 Nginx 的配置文件并使之生效）</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/05/31/docker/搭建docker私有仓库/"><span>【Docker】搭建docker私有仓库</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/31/docker/搭建docker私有仓库/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-31T03:28:30.000Z">
+          2019-05-31
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了配合 k8s，需要搭建一个私有仓库，防止镜像泄漏出去。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/05/28/k8s/k8s测试集群部署/"><span>【kubernetes】测试集群部署</span></a></h3>
     
   
@@ -522,216 +713,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/08/22/docker-python-httpruner/"><span>docker-python-httpruner</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/08/22/docker-python-httpruner/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-08-22T11:56:00.000Z">
-          2018-08-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="Httprunner"><a href="#Httprunner" class="headerlink" title="Httprunner"></a>Httprunner</h1><p>最近，由于某些原因，了解到了 httprunner。</p>
-<p>先贴上我的本次文章的主题：</p>
-<ul>
-<li><p>支持 docker 环境</p>
-</li>
-<li><p>支持 jsonschema</p>
-</li>
-<li><p>粗略封装成了应用型框架</p>
-</li>
-<li><p>import python-file 的时候，请写基于项目根目录的路径</p>
-</li>
-</ul>
-<p>目标：<br><a href="https://github.com/whiteCcinn/httprunner-docker" target="_blank" rel="noopener">[Github:httprunner-docker]</a></p>
-<p><a href="https://hub.docker.com/r/ccinn/httprunner-docker" target="_blank" rel="noopener">[HubDocker:httprunner-docker]</a></p>
-<h2 id=""><a href="#" class="headerlink" title=""></a>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Docker/">Docker</a>, <a href="/categories/Docker/Python/">Python</a>, <a href="/categories/Docker/Python/测试/">测试</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Docker/">Docker</a><a href="/tags/Python/">Python</a><a href="/tags/测试/">测试</a><a href="/tags/jsonschema/">jsonschema</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/07/08/php-laravel-2/"><span>【Laravel】Service Providers 服务提供者</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/07/08/php-laravel-2/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-07-08T06:10:46.000Z">
-          2018-07-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>服务提供者和服务容器是两个不同的概念，在我看来，服务提供者是 Laravel 应用启动的中心，你自己的应用以及所有 Laravel 的核心服务都是通过服务提供者启动。</p>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>里面有 2 个核心的方法，分别是</p>
-<ul>
-<li>register（一般用于将服务的对象绑定到服务容器中，不做其他事情。）</li>
-<li>boot （在 register 之后，将会调用这个 boot 方法，这个 boot 方法<code>允许依赖注入</code>。）</li>
-</ul>
-<p>里面 2 个核心的属性，分别是</p>
-<ul>
-<li>bindings</li>
-<li>singletons</li>
-</ul>
-<p>具体的用处就是用于服务器容器依赖注入用的。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/07/08/php-laravel/"><span>【Laravel】Service Container 服务容器用法</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/07/08/php-laravel/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-07-08T04:50:00.000Z">
-          2018-07-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Laravel 是一款 PHP 开源框架，最近学习了一下 Symfony，现在来了解一下 Laravel 的最新版本的一些东西。</p>
-<p>其实说到服务器容器，相信大家都会直接提到<code>依赖注入</code>的概念，其实服务容器的概念，就和我们设计模式中的对象池差不多，把所有的对象都放在一个池子里面去，而不必一个个去 new 了。而且支持每次都新建和单例，等等。</p>
-<p>在这些的基础之上，衍生出了 2 个概念<code>Ioc：控制反转</code>，<code>Di：依赖注入</code>，这些概念，在我的认知里，早起出自 java 框架之中。主要的目的就是实现对象依赖解耦。具体的设计模式的理念，可以参考我博客中的设计模式一系列的文章。</p>
-<p>下述主要参考了谋篇 laravel 服务容器介绍摘录+部分自我实践整理。对比了一下和官网的介绍差不多，更多的主要是例子的说明。</p>
-<h2 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h2><p>Laravel 中有一大堆访问 Container 实例的姿势，比如最简单的：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container = app();</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
     </span>
     
 

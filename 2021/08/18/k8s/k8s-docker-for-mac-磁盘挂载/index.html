@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【kubernetes】k8s-docker-for-mac-磁盘挂载 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【kubernetes】k8s-docker-for-mac-磁盘挂载"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【kubernetes】k8s-docker-for-mac-磁盘挂载</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/08/18/k8s/k8s-docker-for-mac-磁盘挂载/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-08-18T09:47:30.000Z">
+          2021-08-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一次，我们说到了<code>docker-for-mac</code> 已经内置了最小化的k8s。我们在本地开发的时候，或多或少希望<code>yaml配置</code>是最接近线上环境的配置。</p>
+<p>因此，上一次，教会了大家，如何在mac上开启nfs,把我们的pv和本地mac的nfs进行一个通信。</p>
+<p>这一次，我们来聊聊<code>docker-for-mac</code>磁盘挂在的相关内容。</p>
+<a id="more"></a>
+
+<h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><p><code>Docker for Mac</code>是一个原生的苹果应用程序，被安装到 <code>/Application 目录</code>，安装时会创建 <code>/usr/local/bin</code> 目录下的 <code>docker、docker-compose</code> 符号链接。</p>
+<p><code>Docker for Mac</code> 使用通过 Hypervisor.framework 提供的轻量级的 xhyve 虚拟化技术<br><code>Docker for Mac</code> <code>不使用</code> <code>docker-machine</code> 管理虚拟机<br><code>Docker for Mac</code> <code>不通过 TCP 端口通信</code>，反而使用 <code>docker.sock</code> 套接字文件通信（实际上是将 /var/tmp 目录挂载到了虚拟机中，虚拟机在其中生成套接字文件）</p>
+<p>但是尽管如此，你可以理解为还是存在虚拟机的。这个虚拟机的作用就是允许在macos上运行docker。</p>
+<h2 id="docker-for-mac"><a href="#docker-for-mac" class="headerlink" title="docker for mac"></a>docker for mac</h2><p><img src="/images/k8s/docker-for-mac-1.png" alt="docker for mac 1"></p>
+<p>这个就是我们的<code>docker-for-mac</code>的桌面版客户端。</p>
+<p><img src="/images/k8s/docker-for-mac-2.png" alt="docker for mac 2"></p>
+<p>根据上面这个图，我们可以发现，所有的镜像都存储在。</p>
+<ul>
+<li><code>/Users/caiwenhui/Library/Containers/com.docker.docker/Data/vms/0/data</code> (记得修改为自己的路径，就是我这里的<code>caiwenhui</code>)</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ll /Users/caiwenhui/Library/Containers/com.docker.docker/Data/vms/0/data</span><br><span class="line">total 103652496</span><br><span class="line">-rw-r--r--  1 caiwenhui  staff    96G  8 18 20:21 Docker.raw</span><br><span class="line"></span><br><span class="line">➜  ~ head -n 10 /Users/caiwenhui/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw</span><br><span class="line">�D��?���</span><br><span class="line">        U�`�&amp;3�Ѻ`1O�� �ha�ha��S�J�#`</span><br><span class="line">                                     &lt;�kD*�&lt;O5K�VS�~~�/var/lib��B�uK����J�1�@</span><br><span class="line">                                                                             ]�#`</span><br><span class="line">���p��q  Z�]J,	)NL������w</span><br><span class="line">)��%�</span><br><span class="line">z?fw</span><br><span class="line">    G/�%|gCԬ?f�u</span><br><span class="line">                )</span><br><span class="line">)�% �.?f</span><br><span class="line">  �% |?f) �% ��?f)� (L � X %X i;�F!)D0 M %@�")� �� ֑	@#)� � �f�H$)" - :,�%)�</span><br><span class="line"> �e LE��()"h �a ��SnU&amp;43�%�C4k�?f �% &#123; �% �D WA T қ                            �� ��v&amp;)�" t� FW�D') &#125;</span><br><span class="line">�1 &amp;� � �</span><br><span class="line">       (A �� =�97 �; �&amp;N � _Z˭� � ��</span><br><span class="line"> �% F?f</span><br><span class="line">      �0 �V��</span><br><span class="line">           s</span><br><span class="line"> �% ԇ �% X� �% s�?f �RiDX0�m�&#125;�u �</span><br><span class="line">                                  �@$���w?�  �% ��?f  �% ��?f. � Շ�</span><br><span class="line"> �% MS?f</span><br><span class="line">         W s �w� � ! �o�</span><br><span class="line">  �% E�?f	  �% n�?f</span><br></pre></td></tr></table></figure>
+
+<p>我们这里可以看到，这个文件，占用了<code>96G</code>，就是我所分配的磁盘大小。并且这是一个经过了字节压缩的二进制文件。</p>
+<p><img src="/images/k8s/docker-for-mac-3.png" alt="docker for mac 3"></p>
+<p><img src="/images/k8s/docker-for-mac-4.png" alt="docker for mac 4"></p>
+<p>这张图，算得上是我们今天的重点。</p>
+<p>使用文件共享允许 Mac 上的本地目录与 Linux 容器共享。默认情况下<code>/Users</code>，<code>/Volume</code>、<code>/private</code>、<code>/tmp</code>和<code>/var/folders</code>目录是共享的。如果您的项目在此目录之外，则必须将其添加到列表中。否则，您可能会在运行时得到<code>Mounts denied</code>或<code>cannot start service</code>出错。</p>
+<p>因此，我们可以看到在默认情况下，有几个目录是已经被共享的了。我们重点需要关注的是<code>/Users</code>目录，因为我们常常把我们的所有个人用户相关的东西，都会放在对应用户下，就我而言，我会把所有的代码都在 <code>/Users/caiwenhui/www</code> 下，这也意味着，我的所有代码，都将会被<code>虚拟机</code>同步到<code>linux系统</code>中，也正是因此，当你在MAC系统下，执行<code>docker run -v $(PWD):/www xxx</code>之类的命令的时候，你可以成功的挂载到容器中。<strong>如果你把挂载的目录放在上述的几个目录之外</strong>，docker命令将会<code>挂载失败</code>。</p>
+<p>也是因为这个原因，你会发现，当你的代码，在下载大量依赖，或者在构建一堆索引的时候，或者你的<code>/Users</code>目录下有很多文件在变动的时候，你会发现你的<code>CPU</code>变成异常的高，而且会特别卡，可能你会觉得怎么那么卡。如果你不去查看哪个进程占用那么多cpu的话，你永远不会知道，其实大多数，显示出来都是docker的<code>虚拟机</code>占用的cpu为大头就是因为这个原因。</p>
+<h2 id="获取虚拟机shell"><a href="#获取虚拟机shell" class="headerlink" title="获取虚拟机shell"></a>获取虚拟机shell</h2><p>既然，我们知道了上述的共享文件了，那么我们就会想知道，我要怎么去看，怎么去调试，或者我有什么更深的理解呢？</p>
+<p>其实是有的，例如，我想看看，整个虚拟化技术，都挂载了什么数据卷构成我们的文件系统。</p>
+<p>我们知道<code>MacOS</code>上的<code>Docker Desktop for mac</code>实际上是在Linux虚拟机中运行的Docker容器，这对于macOS主机上使用Docker<code>多了一层虚拟化</code>。有些情况下，我们需要能够访问这个Linux虚拟机，以便实现一些<code>hack</code>操作。</p>
+<h3 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a>netcat</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ll ~/Library/Containers/com.docker.docker/Data/debug-shell.sock</span><br><span class="line">srwxr-xr-x  1 caiwenhui  staff     0B  8 16 21:31 /Users/caiwenhui/Library/Containers/com.docker.docker/Data/debug-shell.sock</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，这里有一个名字叫<code>debug-shell.sock</code>的文件，这是一个可执行的sock文件。</p>
+<p>使用 <code>nc</code> 命令连接Docker的<code>debug-shell socket</code>文件:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nc -U ~/Library/Containers/com.docker.docker/Data/debug-shell.sock</span><br><span class="line">/ # ^[[49;5R</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>显示的提示符比较奇怪，不过不影响使用</p>
+</blockquote>
+<p>我们使用 <code>df -h</code> 命令可以看到Docker虚拟机的存储挂载:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/ # ^[[49;5Rdf -h</span><br><span class="line">df -h</span><br><span class="line">Filesystem                Size      Used Available Use% Mounted on</span><br><span class="line">overlay                   3.9G      4.0K      3.9G   0% /</span><br><span class="line">tmpfs                     3.9G      8.0K      3.9G   0% /containers/onboot/000-dhcpcd/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/001-sysfs/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/002-sysctl/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/003-format/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/004-extend/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/005-mount/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/006-metadata/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/007-services0/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/008-services1/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/009-swap/tmp</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/010-mount-docker/tmp</span><br><span class="line">/dev/vda1                94.2G     48.2G     41.2G  54% /containers/services</span><br><span class="line">/dev/vda1                94.2G     48.2G     41.2G  54% /containers/services/docker</span><br><span class="line">tmpfs                     3.9G      4.0K      3.9G   0% /containers/services/acpid/tmp</span><br><span class="line">overlay                   3.9G      4.0K      3.9G   0% /containers/services/acpid/rootfs</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/services/binfmt/tmp</span><br><span class="line">overlay                   3.9G         0      3.9G   0% /containers/services/binfmt/rootfs</span><br><span class="line">tmpfs                     3.9G      8.0K      3.9G   0% /containers/services/dhcpcd/tmp</span><br><span class="line">overlay                   3.9G      8.0K      3.9G   0% /containers/services/dhcpcd/rootfs</span><br><span class="line">tmpfs                     3.9G      4.0K      3.9G   0% /containers/services/diagnose/tmp</span><br><span class="line">overlay                   3.9G      4.0K      3.9G   0% /containers/services/diagnose/rootfs</span><br><span class="line">overlay                   3.9G      4.0K      3.9G   0% /containers/services/diagnose/rootfs</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /containers/onboot/011-bridge/tmp</span><br><span class="line">tmpfs                    64.0M         0     64.0M   0% /dev</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /run/resolvconf/resolv.conf</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /run/config</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /run/containerd</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /run/guest-services</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /run/host-services</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /run/resolvconf/resolv.conf</span><br><span class="line">tmpfs                     3.9G         0      3.9G   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1                94.2G     48.2G     41.2G  54% /var/lib/containerd</span><br><span class="line">/dev/vda1                94.2G     48.2G     41.2G  54% /var/lib/docker</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /var/run</span><br><span class="line">tmpfs                   796.2M    528.0K    795.7M   0% /var/run/linuxkit-containerd/containerd.sock</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>使用命令 <code>exit</code> 或者<code>^C</code> 可以退出这个shell</p>
+<p>进入shell，可以执行 <code>. /etc/profile</code> 获得环境</p>
+<h3 id="nsenter"><a href="#nsenter" class="headerlink" title="nsenter"></a>nsenter</h3><p>使用nsenter从容器内部进入host主机的<code>名字空间(namespace)</code>，但是对文件系统是只读</p>
+<p>另外一种巧妙的方法是运行一个debian容器，然后在这个<code>debian</code>容器中执行 <code>nsenter</code> 通过 <code>pid=host</code> 来实现进入到运行 <code>Docker4Mac</code> 的<code>mini VM</code>的进程空间，这样就相当于进入了macOS的Docker虚拟机</p>
+<p>在这个运行的debian容器中通过 nsenter 进入到host主机，也就是Docker VM名字空间以后，就可以看到虚拟机的提示符:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker run -it --rm --privileged --pid=host debian nsenter -t 1 -m -u -n -i bash</span><br><span class="line">bash-5.0#</span><br></pre></td></tr></table></figure>
+
+<p>我们可以在这个Docker VM中执行网络检查</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">bash-5.0# ip addr</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 brd 127.255.255.255 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    link/ether 02:50:00:00:00:01 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.65.3/24 brd 192.168.65.255 scope global dynamic noprefixroute eth0</span><br><span class="line">       valid_lft 1576sec preferred_lft 136sec</span><br><span class="line">    inet6 fe80::50:ff:fe00:1/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: tunl0@NONE: &lt;NOARP&gt; mtu 1480 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/ipip 0.0.0.0 brd 0.0.0.0</span><br><span class="line">4: ip6tnl0@NONE: &lt;NOARP&gt; mtu 1452 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/tunnel6 :: brd ::</span><br><span class="line">5: services1@if6: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    link/ether 42:2f:8d:45:a3:03 brd ff:ff:ff:ff:ff:ff link-netns services</span><br><span class="line">    inet 192.168.65.4 peer 192.168.65.5/32 scope global services1</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::402f:8dff:fe45:a303/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">7: br-3a4b2ff7a5cb: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    link/ether 02:42:11:9a:3a:8f brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.7.1/24 brd 192.168.7.255 scope global br-3a4b2ff7a5cb</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">8: br-ef48d4809428: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    link/ether 02:42:10:cb:22:b6 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-ef48d4809428</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">9: br-f6b05f844262: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    link/ether 02:42:f4:ec:b5:c4 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.19.0.1/16 brd 172.19.255.255 scope global br-f6b05f844262</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">10: br-ff0c8e959ac0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default</span><br><span class="line">    link/ether 02:42:48:7f:f8:bb brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.110.1/24 brd 192.168.110.255 scope global br-ff0c8e959ac0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">11: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    link/ether 02:42:b9:db:7e:59 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:b9ff:fedb:7e59/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>因为信息比较多，我们重点关注几个网卡信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span><br><span class="line">    link/ether 02:50:00:00:00:01 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.65.3/24 brd 192.168.65.255 scope global dynamic noprefixroute eth0</span><br><span class="line">       valid_lft 1576sec preferred_lft 136sec</span><br><span class="line">    inet6 fe80::50:ff:fe00:1/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">11: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default</span><br><span class="line">    link/ether 02:42:b9:db:7e:59 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:b9ff:fedb:7e59/64 scope link</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/k8s/docker-for-mac-5.png" alt="docker for mac 5"></p>
+<p>上面的信息，结合来看，我们在<code>docker-for-mac</code>客户端设置了我们的虚拟机的网段 <code>192.168.65.0/24</code>，结合<code>eth0</code>和<code>docker0</code>这2个网卡信息，我们会发现，<code>eth0</code> 的 <code>192.168.65.3</code>, 就是我们这是的网段的信息，所以，这个虚拟机和macOS物理主机上对应的IP地址 <code>192.168.65.1</code> 对应，也就是说，如果我们使用 <code>NFS 方式</code>挂载物理主机上的NFS卷，访问的NFS服务器端地址就是这样获得的。</p>
+<p>这里还可以看到在<code>Docker VM</code>上运行的<code>Docker网络</code>是 <code>172.17.xx.xx/16</code> ，是一个<code>NAT网络</code>，我们可以看到在<code>Docker VM端</code>分配的IP地址是 <code>172.17.0.1</code> 。这也验证了我们的<code>Docker VM</code>上实际上有<code>2个网络</code>。</p>
+<ul>
+<li><code>192.168.65.x/24</code> =&gt; 和<code>物理主机macOS</code>连接的NAT网络，用于虚拟机</li>
+<li><code>172.17.x.x/16</code> =&gt; 和<code>Docker0</code>连接的NAT网络，用于容器</li>
+</ul>
+<p>在Docker容器中，通过两层NAT，依然可以访问外界Internet。不过，反过来，外部需要访问Docker容器就比较麻烦了，需要做<code>端口映射</code>。</p>
+<h2 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h2><p>我们前面说到了，当你通过 <code>docker run -v</code>的时候，你可以指定在<code>共享目录</code>下的所有文件下，进行挂载进去。那么我们反过来想一下，既然是共享目录的话，那么容器是如何做到查找这些目录的呢？</p>
+<p>通过<code>mount -l</code>，我们可以看到挂载点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">bash-5.0# mount -l</span><br><span class="line">rootfs on / type tmpfs (ro,relatime)</span><br><span class="line">proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">tmpfs on /run type tmpfs (rw,nosuid,nodev,noexec,relatime,size=815300k,mode=755)</span><br><span class="line">tmpfs on /tmp type tmpfs (rw,nosuid,nodev,noexec,relatime,size=815300k)</span><br><span class="line">tmpfs on /var type tmpfs (rw,nosuid,nodev,noexec,relatime,mode=755)</span><br><span class="line">dev on /dev type devtmpfs (rw,nosuid,noexec,relatime,size=4008488k,nr_inodes=1002122,mode=755)</span><br><span class="line">mqueue on /dev/mqueue type mqueue (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">shm on /dev/shm type tmpfs (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)</span><br><span class="line">sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">fusectl on /sys/fs/fuse/connections type fusectl (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">none on /sys/fs/bpf type bpf (rw,nodev,relatime)</span><br><span class="line">binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">cgroup_root on /sys/fs/cgroup type tmpfs (rw,nosuid,nodev,noexec,relatime,size=10240k,mode=755)</span><br><span class="line">cpuset on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,cpuset)</span><br><span class="line">cpu on /sys/fs/cgroup/cpu type cgroup (rw,nosuid,nodev,noexec,relatime,cpu)</span><br><span class="line">cpuacct on /sys/fs/cgroup/cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,cpuacct)</span><br><span class="line">blkio on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)</span><br><span class="line">memory on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,memory)</span><br><span class="line">devices on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,devices)</span><br><span class="line">freezer on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,freezer)</span><br><span class="line">net_cls on /sys/fs/cgroup/net_cls type cgroup (rw,nosuid,nodev,noexec,relatime,net_cls)</span><br><span class="line">perf_event on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,perf_event)</span><br><span class="line">net_prio on /sys/fs/cgroup/net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,net_prio)</span><br><span class="line">hugetlb on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,hugetlb)</span><br><span class="line">pids on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,pids)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们这里有大量的挂载点，这些挂载点，组合成了一个独立的文件系统，或者各种命名空间。</p>
+<p>现在有一个需求。例如，我们知道在使用k8s的时候，当我们用<code>pv</code>的<code>type</code>为<code>hostPath</code>的时候，是可以做到持久化数据磁盘的，那么我能不能做到，数据存放在<code>Docker VM 非共享目录</code>中呢？</p>
+<p>就是我的物理主机，并不希望同步这些数据。这些数据仅仅只需要存在<code>Docker VM</code>中就好了。</p>
+<p>当然，这个场景就是我们经常说，我们想要看一些容器的配置或者目录的时候，会发现输出的路径，在我们的宿主机上找不到，为什么会这样子？难道是出错了吗？其实只是这些文件都在<code>Docker VM</code>中，其实就是因为这个原因导致的。只要我们进入到 <code>Docker VM</code>就可以看到这些文件。</p>
+<p>例如，以我目前的例子为例子，我需要采集我本地所有<code>k8s-pods</code>的输出在终端的日志信息，我想通过<code>promtail</code>来进行日志采集，然后通过<code>loki</code>作为存储和查询服务器，再通过<code>grafna</code>来进行展示。我们的服务以前台的方式进行启动，所以我们那么首先我需要解决的第一个问题，就是pods的标准输出到哪里？后来发现<code>/var/log/pods/</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">bash-5.0# ls -l /var/log/pods/</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 18 09:05 default_dev-grafana-7cd4c89fd4-wdkpb_cf869741-be0d-44d2-b776-3239dd276069</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 18 09:05 default_dev-loki-statefulset-0_1d34dcac-a763-478a-b17b-addb082462ef</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 18 09:05 default_dev-loki-statefulset-1_c82d61e9-c66f-4b6a-960a-a8f7a1d5a8e2</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 18 09:05 default_dev-promtail-n6jgs_51afda31-be9c-4377-8167-8e29e991d9b0</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_coredns-558bd4d5db-g2m9h_67ec7c7f-2e48-4cd7-8298-86295073072b</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_coredns-558bd4d5db-jk9bp_b9d8b64f-dda8-426a-8f55-029298828333</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_etcd-docker-desktop_5d9d97b8d8daed31d6fd5c6d386c29c5</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_kube-apiserver-docker-desktop_6fcd2fd42808f86960df2a06a72d6dc0</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_kube-controller-manager-docker-desktop_bed77ee1871d9eabd1710836ad671f32</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_kube-proxy-4wbs6_8bece9c8-e5fb-41f5-8869-2d408e71ba31</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_kube-scheduler-docker-desktop_a52842863dff28cb2f7d4171a9f614a0</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_storage-provisioner_79a3e8e5-6a93-43c1-abf3-c916384a4018</span><br><span class="line">drwxr-xr-x    3 root     root            60 Aug 16 13:32 kube-system_vpnkit-controller_3742d607-ea8f-43df-aecf-4f925accbc3e</span><br></pre></td></tr></table></figure>
+
+<p>我们随便找一个pods，去查看日志。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bash-5.0# tail -n 10 /var/log/pods/default_dev-grafana-7cd4c89fd4-wdkpb_cf869741-be0d-44d2-b776-3239dd276069/grafana/0.log</span><br><span class="line">&#123;"log":"&#123;\"@level\":\"debug\",\"@message\":\"datasource: registering query type handler\",\"@timestamp\":\"2021-08-18T09:05:05.385825Z\",\"queryType\":\"node_graph\"&#125;\n","stream":"stderr","time":"2021-08-18T09:05:05.3860495Z"&#125;</span><br><span class="line">&#123;"log":"&#123;\"@level\":\"debug\",\"@message\":\"datasource: registering query type fallback handler\",\"@timestamp\":\"2021-08-18T09:05:05.385855Z\"&#125;\n","stream":"stderr","time":"2021-08-18T09:05:05.3860803Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:05:05+0000 lvl=info msg=\"HTTP Server Listen\" logger=http.server address=[::]:3000 protocol=http subUrl= socket=\n","stream":"stdout","time":"2021-08-18T09:05:05.3939314Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:07:52+0000 lvl=eror msg=\"Failed to look up user based on cookie\" logger=context error=\"user token not found\"\n","stream":"stdout","time":"2021-08-18T09:07:52.5402974Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:07:52+0000 lvl=info msg=\"Request Completed\" logger=context userId=0 orgId=0 uname= method=GET path=/dashboard/new status=302 remote_addr=192.168.65.3 time_ms=0 size=29 referer=\n","stream":"stdout","time":"2021-08-18T09:07:52.5403468Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:07:56+0000 lvl=info msg=\"Successful Login\" logger=http.server User=admin@localhost\n","stream":"stdout","time":"2021-08-18T09:07:56.6167821Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:08:00+0000 lvl=info msg=\"Request Completed\" logger=context userId=1 orgId=1 uname=admin method=GET path=/login status=302 remote_addr=192.168.65.3 time_ms=11 size=24 referer=\n","stream":"stdout","time":"2021-08-18T09:08:00.7292107Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:09:50+0000 lvl=info msg=\"Request Completed\" logger=context userId=1 orgId=1 uname=admin method=GET path=/api/datasources/proxy/1/loki/api/v1/query_range status=400 remote_addr=192.168.65.3 time_ms=2 size=57 referer=\"http://localhost:3000/dashboard/new?editPanel=2\u0026orgId=1\"\n","stream":"stdout","time":"2021-08-18T09:09:50.7530735Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:14:53+0000 lvl=eror msg=\"Data proxy error\" logger=data-proxy-log userId=1 orgId=1 uname=admin path=/api/datasources/proxy/1/loki/api/v1/label/filename/values remote_addr=192.168.65.3 referer=\"http://localhost:3000/d/UWO8RT7nk/new-dashboard-copy?editPanel=2\u0026viewPanel=2\u0026orgId=1\" error=\"http: proxy error: EOF\"\n","stream":"stdout","time":"2021-08-18T09:14:53.0497419Z"&#125;</span><br><span class="line">&#123;"log":"t=2021-08-18T09:14:53+0000 lvl=eror msg=\"Request Completed\" logger=context userId=1 orgId=1 uname=admin method=GET path=/api/datasources/proxy/1/loki/api/v1/label/filename/values status=502 remote_addr=192.168.65.3 time_ms=79695 size=0 referer=\"http://localhost:3000/d/UWO8RT7nk/new-dashboard-copy?editPanel=2\u0026viewPanel=2\u0026orgId=1\"\n","stream":"stdout","time":"2021-08-18T09:14:53.0502414Z"&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们知道了日志是存储在这里了，那么我们就可以知道，在<code>Docker VM</code>中，我们只需要挂载<code>/var/log/pods</code>到我们的容器<code>promtail</code>中，然后进行采集再推送到<code>loki</code>，就可以通过<code>grafna</code>查询了。</p>
+<p>这个思路是没问题的，那么我们再往深程度的角度想，那么这个时候，我们的<code>k8s-pv-type</code>应该填什么呢？刚才不是说了<code>hostPath</code>是可以持久化到本地吗？但是那是针对物理主机<code>macos</code>来说的，况且这个目录，我们并非在<code>Docker VM</code>之下，这就回到了我们上面说的，在<code>Docker VM</code>存在，在<code>物理主机</code>不存在的需求。</p>
+<p>那么我们这个时候，其实还是可以使用<code>hostPath</code>的，理由很简单，因为k8s会识别路径，如果是在共享目录下的话，那么他会从共享目录的数据卷中找到对应的磁盘路径，如果不在共享目录下的，则从<code>Docker VM</code>中查找，因此，这就是解开了我们这个疑惑了。可以大胆的放心使用<code>hostPath</code>来创建<code>pv</code>资源。</p>
+<p>最后，附上一张最终的效果图：</p>
+<p><img src="/images/k8s/docker-for-mac-6.png" alt="docker-for-mac-6"></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

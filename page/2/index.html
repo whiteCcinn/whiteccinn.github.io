@@ -69,6 +69,215 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/12/29/数据库开发知识/Rocksdb/"><span>【数据库开发知识】Rocksdb</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/12/29/数据库开发知识/Rocksdb/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-12-29T03:16:43.000Z">
+          2020-12-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>近日工作中使用了 RocksDB。RocksDB 的优点此处无需多说，它的一个 feature 是其有很多优化选项用于对 RocksDB 进行调优。欲熟悉这些参数，必须对其背后的原理有所了解，本文主要整理一些 RocksDB 的 wiki 文档，以备自己参考之用。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>, <a href="/categories/数据结构/数据库/">数据库</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/数据库开发知识/">数据库开发知识</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/12/17/Golang/使用golang重写tga服务/"><span>【Golang】- 使用golang重写tga服务</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/12/17/Golang/使用golang重写tga服务/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-12-17T01:46:51.000Z">
+          2020-12-17
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>早期，在我们的部门中后端的技术栈语言主要有三种语言，分别是<code>php/python/erlang</code>，其中用于做服务的是 <code>php/erlang</code>。</p>
+<p>在我们的体系中，日志采集服务体系目前都是用erlang写的，而php写的服务多是基于swoole写的一些基础服务。</p>
+<p>在tga服务中，我们需要从<code>kafka</code> -&gt; <code>服务</code> -&gt; <code>本地文件</code>的模式。</p>
+<p>业务据流图如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">+---------------------------------------------------------------+</span><br><span class="line">|                                                               |</span><br><span class="line">|                                                               |</span><br><span class="line">|       +---------------------------------------------+         |</span><br><span class="line">|       |                                             |         |</span><br><span class="line">|       |                                             |         |</span><br><span class="line">|       |                  kafka服务                   |         |</span><br><span class="line">|       |                                             |         |</span><br><span class="line">|       |                                             |         |</span><br><span class="line">|       |                                             |         |</span><br><span class="line">|       +----------------------+----------------------+         |</span><br><span class="line">|                              |                                |</span><br><span class="line">|                              |                                |</span><br><span class="line">|       +----------------------v-----------------------+        |                     +----------------------------+</span><br><span class="line">|       |                                              |        |                     |                            |</span><br><span class="line">|       |                                              |        |                     |                            |</span><br><span class="line">|       |                                              |        |                     |                            |</span><br><span class="line">|       |               mthinkingdata服务               |        &lt;---------------------+          logbus服务        |</span><br><span class="line">|       |                                              |        |                     |                            |</span><br><span class="line">|       |                                              |        |                     |                            |</span><br><span class="line">|       |                                              |        |                     |                            |</span><br><span class="line">|       +----------------------+-----------------------+        |                     +----------------------------+</span><br><span class="line">|                              |                                |</span><br><span class="line">|                              |                                |</span><br><span class="line">|       +----------------------v------------------------+       |</span><br><span class="line">|       |                                               |       |</span><br><span class="line">|       |                                               |       |</span><br><span class="line">|       |                                               |       |</span><br><span class="line">|       |                   本地文件                     +-------+</span><br><span class="line">|       |                                               |       |</span><br><span class="line">|       |                                               |       |</span><br><span class="line">|       |                                               |       |</span><br><span class="line">|       +-----------------------------------------------+       |</span><br><span class="line">|                                                               |</span><br><span class="line">+---------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+
+<p>于是我们试探性的自研基于swoole的kafka客户端，我们自己实现根据kafka协议的封包，解包，流程处理。(<code>swoole-kafka</code>)<br><code>mthinkingdata服务</code>就是我们基于<code>kafka-swoole</code>研发的业务服务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+------------+</span><br><span class="line">|            |</span><br><span class="line">|  message1  +------------+</span><br><span class="line">|            |            |</span><br><span class="line">+------------+            |</span><br><span class="line">                          |</span><br><span class="line">+------------+     +------+--------+</span><br><span class="line">|            |     |               |</span><br><span class="line">|  message2  +-----+   snappy压缩   |</span><br><span class="line">|            |     |               |</span><br><span class="line">+------------+     +------+--------+</span><br><span class="line">                           |</span><br><span class="line">+---------------+          |</span><br><span class="line">|               |          |</span><br><span class="line">| message[3..n] +----------+</span><br><span class="line">|               |</span><br><span class="line">+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>在这个过程中，我们发现php对于cpu密集型的处理存在瓶颈，因为我们在生产者一方如果发送多条协议的情况下，会经过 <code>snappy</code> 算法的压缩再推送以便减少network-io（增加cpu-io）。<br>消费者在接受消息的时候也是被压缩过的数据，所以我们需要解压，在这个解压的过程中，是个十分消费cpu的过程，即使我们当时是基于swoole4.3的协程版本来处理，<br>不行的是的抢占式协程当时并没有很好的完成，我们没办法达到快速的接受多个数据包的行为。消费速度也并不是特别理想。<br>在这个大环境下，我们还需要借助redis来作为中间的存储。而redis是单线程的，我们在这个过程中，试过使用<code>pipeline</code>等手段减少tcp中的响应包的带来的性能损耗。但是由于redis只能利用单核的缘故，批量处理一批指令后，最高的cpu利用率接近100%下无法再增长。<br>也因此，我们的服务注定无法达到很好的性能测试。</p>
+<p>我们得出结论，当时服务的瓶颈在于：</p>
+<ul>
+<li><ol>
+<li>php语言本身的性能</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>swoole协程不支持抢占式调度</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>未实现动态伸缩扩展worker数量（感兴趣可以去看看kafka-swoole的架构分享）</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>redis未能利用多核，cpu利用率达到峰值</li>
+</ol>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/11/10/DevOps/Jenkins在明朝的运用/"><span>【DevOps】Jenkins的share-libraries明朝的运用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/11/10/DevOps/Jenkins在明朝的运用/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-11-10T08:44:30.000Z">
+          2020-11-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本次我们不从Jenkins的部署架构和具体配置说明，我们主要围绕 <code>jenkinsfile</code> 的内部来讲解。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/DevOps/">DevOps</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/DevOps/">DevOps</a><a href="/tags/Jenkins/">Jenkins</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/08/25/k8s/pause容器/"><span>【kubernetes】pause容器</span></a></h3>
     
   
@@ -478,194 +687,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/06/12/大数据/hadoop基本操作/"><span>【大数据】- Hadoop 基本操作</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/06/12/大数据/hadoop基本操作/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-06-12T01:56:40.000Z">
-          2020-06-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于之前一直没有整理过hadoop的内容，或者说整理得比较少，所以觉得有必要</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/大数据/">大数据</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/06/10/docker/docker-零碎知识整理/"><span>【Docker】零碎知识整理</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/06/10/docker/docker-零碎知识整理/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-06-10T02:28:30.000Z">
-          2020-06-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>虽然自己对docker有了一定了解了，但是有一些比较零碎对知识点，一直没整理，所以现在用一篇文章来记录下一些零碎点知识点，方便自己查阅</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Docker/">Docker</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Docker/">Docker</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/06/02/Golang/sync-map/"><span>【Golang】- sync.map</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/06/02/Golang/sync-map/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-06-02T05:59:51.000Z">
-          2020-06-02
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于要造一些轮子，例如 像 laravel 一样的 <code>Event组件</code>，我参考了网上的几个库</p>
-<ul>
-<li><a href="https://github.com/sadlil/go-trigger" target="_blank" rel="noopener">go-trigger</a></li>
-<li><a href="https://github.com/kataras/go-events" target="_blank" rel="noopener">go-events</a></li>
-</ul>
-<p>这 2 个库，大同小异，只有一小部分差别，新打组件将会在这 2 个库的基础上再封装</p>
-<p>这 2 个库都是比较早期的库，所以在实现上用到了 map，但是由于考虑到 map 的线程安全性问题，所以他们都使用了 go1.9 之前实现的方式，就是在结构体嵌入一个读写锁来避免线程安全问题。</p>
-<p>在 Go 1.6 之前， 内置的 map 类型是部分 goroutine 安全的，并发的读没有问题，并发的写可能有问题。自 go 1.6 之后， 并发地读写 map 会报错，这在一些知名的开源库中都存在这个问题，所以 go 1.9 之前的解决方案是额外绑定一个锁，封装成一个新的 struct 或者单独使用锁都可以。</p>
-<p>本文带你深入到 sync.Map 的具体实现中，看看为了增加一个功能，代码是如何变的复杂的,以及作者在实现 sync.Map 的一些思想。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a>
     </span>
     
 

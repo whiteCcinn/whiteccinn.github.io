@@ -69,6 +69,209 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/28/linux-shell-processor/"><span>【Linux命令】- 进程管理工具</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/linux-shell-processor/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T06:50:53.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="查询进程"><a href="#查询进程" class="headerlink" title="查询进程"></a>查询进程</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ps -ef</span><br><span class="line"></span><br><span class="line">// 查看某用户的进程</span><br><span class="line"></span><br><span class="line">ps -u phper</span><br><span class="line"></span><br><span class="line">// 查看进程完整信息</span><br><span class="line"></span><br><span class="line">ps -ajx</span><br><span class="line"></span><br><span class="line">// 显示进程信息，并实时更新</span><br><span class="line">top</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/28/linux-shell-disk/"><span>【Linux命令】- 磁盘管理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/linux-shell-disk/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T06:15:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="df-查看磁盘空间"><a href="#df-查看磁盘空间" class="headerlink" title="df 查看磁盘空间"></a>df 查看磁盘空间</h2><ul>
+<li>-h 友好的方式显示（默认是 bytes）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
+
+<h2 id="du-查看目录所占空间大小"><a href="#du-查看目录所占空间大小" class="headerlink" title="du 查看目录所占空间大小"></a>du 查看目录所占空间大小</h2><ul>
+<li>-s 递归目录总和</li>
+<li>-h 友好的方式显示（默认是 bytes）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sh</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/27/linux-shell-text/"><span>【Linux命令】- 文本处理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/27/linux-shell-text/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-27T09:29:00.000Z">
+          2018-02-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="find-文件查找"><a href="#find-文件查找" class="headerlink" title="find 文件查找"></a>find 文件查找</h2><p>find 默认是会把所有目录和文件都一起输出，除非加了<code>type -f</code>，此时就只会输出文件，<code>type -d</code>，此时就只会输出目录</p>
+<p>查找 txt 和 pdf 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">find ./ \( -name "*.php" -o -name "*.p" \)</span><br><span class="line">find ./ \( -name "*.php" -or -name "*.p" \)</span><br><span class="line">// 同时包含命名</span><br><span class="line">find ./ \( -name "*.php" -and -name "*.p" \)</span><br></pre></td></tr></table></figure>
+
+<p>正则方式查找.txt 和.pdf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -regex ".*\(php\|p\)"</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>iregex：忽略大小写的正则</li>
+</ul>
+<p>否定参数，查找所有非 txt 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -name "*.txtx"</span><br></pre></td></tr></table></figure>
+
+<p>指定搜索深度,打印出当前目录的文件（深度为 1，默认为 1）:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ./ -maxdepth 1 -type f</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/27/linux-shell-file-dir/"><span>【Linux命令】- 文件及目录管理</span></a></h3>
     
   
@@ -652,280 +855,6 @@ epoll的优点：
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/网络，异步/">网络，异步</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/23/nginx-load-balan/"><span>【Nginx】- 负载均衡</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/23/nginx-load-balan/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-23T03:22:00.000Z">
-          2018-02-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在现在互联网爆发的时代，稳定性成为每个项目的首选，再次条件下，我们就要实现高可用的概念，实现高可用的最常用的一种手段就是负载均衡，分摊各个服务器的请求压力。</p>
-<h2 id="1-轮训（默认）"><a href="#1-轮训（默认）" class="headerlink" title="1.轮训（默认）"></a>1.轮训（默认）</h2><p>按照请求时间的循序，把请求逐一分配到对应的服务器。如果其中一台服务器 down 了，nginx 会自动剔除 down 掉的服务器。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14;</span><br><span class="line">    server 192.168.0.15;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-权重-weight"><a href="#2-权重-weight" class="headerlink" title="2.权重(weight)"></a>2.权重(weight)</h2><p>其实就是轮训的升级版，给特定的服务器一个指定的权重，nginx 会根据权重分配请求访问。一般用于服务器性能不一致的情况下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14 weight&#x3D;3;</span><br><span class="line">    server 192.168.0.15 weight&#x3D;7;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/23/nginx-example/"><span>【nginx】- 常用配置例子</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/23/nginx-example/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-23T02:53:30.000Z">
-          2018-02-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>以下整理一下一些 nginx 常用例子。</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><ul>
-<li>目录对换</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;123456&#x2F;xxxx -&gt; &#x2F;xxxx?id&#x3D;123456</span><br><span class="line"></span><br><span class="line">rewrite ^&#x2F;(\d+)&#x2F;(.+)&#x2F; &#x2F;$2?id&#x3D;$1 last;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>例如下面设定 nginx 在用户使用 ie 的使用重定向到/nginx-ie 目录下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ($http_user_agent ~ MSIE) &#123;</span><br><span class="line">  rewrite ^(.*)$ &#x2F;nginx-ie&#x2F;$1 break;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/23/nginx-var/"><span>【Nginx】 - 变量</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/23/nginx-var/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-23T02:26:00.000Z">
-          2018-02-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>Nginx配置文件管理者整个nginx服务的运作，有一些逻辑我们可以通过nginx内置变量或者自定义变量来选择性配置。</p>
-<h2 id="内置常见变量参见下表："><a href="#内置常见变量参见下表：" class="headerlink" title="内置常见变量参见下表："></a>内置常见变量参见下表：</h2><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>$arg_name</td>
-<td>请求中的name参数</td>
-</tr>
-<tr>
-<td>$args</td>
-<td>请求中的参数</td>
-</tr>
-<tr>
-<td>$content_length</td>
-<td>HTTP请求里面的”Content-Length”</td>
-</tr>
-<tr>
-<td>$content_type</td>
-<td>HTTP请求里面的”Content-Type”</td>
-</tr>
-<tr>
-<td>$document_root</td>
-<td>配置里面设置的 <code>root</code> 赋值</td>
-</tr>
-<tr>
-<td>$host</td>
-<td>请求信息种的”HOST”,如果请求头不存在<code>Host</code>的话，那么久等于<code>server_name</code> 赋值</td>
-</tr>
-<tr>
-<td>$http_cookie</td>
-<td>cookie信息</td>
-</tr>
-<tr>
-<td>$http_referer</td>
-<td>引用地址，就是前一个链接地址</td>
-</tr>
-<tr>
-<td>$http_user_agent</td>
-<td>客户端代理信息</td>
-</tr>
-<tr>
-<td>$is_args</td>
-<td>如果请求行带有参数，返回“？”，否则返回空字符串</td>
-</tr>
-<tr>
-<td>$limit_rate</td>
-<td>当前连接速率的限制</td>
-</tr>
-<tr>
-<td>$pid</td>
-<td>nginx当前worker进程的PID</td>
-</tr>
-<tr>
-<td>$query_string</td>
-<td>与$args基本一致</td>
-</tr>
-<tr>
-<td>$remote_addr</td>
-<td>客户端IP地址</td>
-</tr>
-<tr>
-<td>$remote_port</td>
-<td>客户端端口号</td>
-</tr>
-<tr>
-<td>$scheme</td>
-<td>当前所用的协议，比如http或者https</td>
-</tr>
-<tr>
-<td>$request_method</td>
-<td>请求方法，比如“GET”，“POST”等</td>
-</tr>
-<tr>
-<td>$request_uri</td>
-<td>请求的URI，带参数，比如：<code>http://localhost:8080/uuu</code></td>
-</tr>
-</tbody></table>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a>
     </span>
     
 
