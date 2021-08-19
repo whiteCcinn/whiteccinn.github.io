@@ -16,8 +16,52 @@ tags: [kubernetes]
 
 <!-- more -->
 
+## Kubernetes Logs
+
+![glp-1](/images/k8s/glp-1.webp)
+
+默认情况下，容器日志会存储在 `/var/log/pods` 路径下。
+
+每个文件夹对应一个 Pod，Pod 下级目录为容器名，再下级即为容器日志。
+
+```shell
+tree kube-system_kube-flannel-ds-amd64-9x66j_28e71490-d614-4cd8-9ea7-af23cc7b9bff/
+
+kube-system_kube-flannel-ds-amd64-9x66j_28e71490-d614-4cd8-9ea7-af23cc7b9bff/
+├── install-cni
+│   └── 3.log -> /data/docker/containers/6accaa2d6890df8ca05d1f40aaa9b8da69ea0a00a8e4b07a0949cdc067843e37/6accaa2d6890df8ca05d1f40aaa9b8da69ea0a00a8e4b07a0949cdc067843e37-json.log
+└── kube-flannel
+    ├── 2.log -> /data/docker/containers/9e8eea717cc3efd0804900a53244a32286d9e04767f76d9c8a8cc3701c83ece5/9e8eea717cc3efd0804900a53244a32286d9e04767f76d9c8a8cc3701c83ece5-json.log
+    └── 3.log -> /data/docker/containers/06389981d26cbe60328cd5a46af7b003c8d687d1c411704784aa12d4d82672b8/06389981d26cbe60328cd5a46af7b003c8d687d1c411704784aa12d4d82672b8-json.log
+```
+
+日志文件 `kube-flannel/3.log` 只是对 `/var/lib/docker/containers/***/***.log` 文件的`软链接`，本质上还是 Docker 维护日志， k8s 对其`引用`而已。
+
+日志是 JSON 格式的，每一行包含如下三个信息：
+
+- `log`：日志内容
+- `stream`：stderr(异常输出)、stdout(正常输出)
+- `time`：时间
+
+`/var/lib/docker/containers` 是通过 `/etc/docker/daemon.json` 配置的，并且也是默认路径。
+
+
 ## grafna
 
+由于k8s的网络架构的原因，我们访问的时候都是通过访问`service`的名字的，和docker-compose下的访问方式不太一样。
+
+例如.
+
+```shell
+➜  whiteccinn.github.io git:(master) ✗ kubectl get svc
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+dev-grafana    LoadBalancer   10.102.248.247   localhost     3000:32695/TCP   17h
+dev-loki       ClusterIP      10.106.32.224    <none>        3100/TCP         17h
+dev-promtail   ClusterIP      10.108.116.190   <none>        9080/TCP         17h
+kubernetes     ClusterIP      10.96.0.1        <none>        443/TCP          3d9h
+```
+
+那么，容器中的访问方式就是通过`dev-loki`, `dev-promtail`, `dev-grafna`来对pod进行访问，service的port再映射到对应的容器的port上
 
 ### depployment
 
@@ -348,6 +392,8 @@ spec:
           operator: Exists
           effect: NoSchedule
 ```
+
+**注意**：上述提到 `/var/log/pods` 下的日志只是对 `/var/lib/docker/containers` 下日志的`软链接`，所以 Promtail 部署时需要`同时挂载这两个目录`。
 
 ### service
 
@@ -785,6 +831,24 @@ spec:
 ```
 
 采用 `kustomize build overlays/dev | kubectl apply -f -` 来运行我们的`dev`环境的k8s所有的服务。
+
+grafna默认的账号密码就是`admin`。
+
+1.我们先来配置grafna的Dashboard。
+
+![数据源](/images/k8s/glp-3.png)
+
+2.对日志进行可视化配置。
+
+![log panel](/images/k8s/glp-2.png)
+
+3.配置搜索栏。
+
+![搜索栏](/images/k8s/glp-4.png)
+
+4.可以看到搜索栏了，并且需要更新一下查询的公式
+
+![公式](/images/k8s/glp-5.png)
 
 
 这里就是我希望利用k8s的`glp`来采集我的所有的pods在标准输出的所有的日志信息，做一个汇总和日志中心查询的web-ui。
