@@ -131,66 +131,6 @@
 
   
     
-    <h3 class="article-title"><a href="/2021/08/17/k8s/k8s-kustomize/"><span>【kubernetes】k8s-kustomize</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2021/08/17/k8s/k8s-kustomize/" rel="bookmark">
-        <time class="entry-date published" datetime="2021-08-16T16:00:30.000Z">
-          2021-08-17
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
     <h3 class="article-title"><a href="/2021/08/16/k8s/k8s-glp/"><span>【kubernetes】k8s-glp</span></a></h3>
     
   
@@ -211,7 +151,9 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们经常有一些日志采集的需求，采集完毕之后，希望有一个中心WebUi来方便的查看很多不同节点，不同服务的日志。</p>
+<p>按照传统的方式，一般都是会采用<code>ELK</code>,就是<code>elasticsearch+logstash+kibana</code>，但是由于<code>JVM</code>对资源的消耗太大，加上<code>ES</code>是通过全文搜索的方式需要进行倒排索引的分词，所以这些功能几乎是用不上，我们查询日志一般都可以通过定制常规的<code>label</code>信息，然后搜索即可，大可不必进行分词的行为。尽管后续又由于<code>logstash</code>的资源占用过大问题，作者又利用go语言开发出了<code>filebeat</code>，来辅助日志采集体系，后续加入了某公司之后，被集成到了<code>beats</code>的项目中，因为也可以交<code>efk/ebk</code>，都可以。</p>
+<p>鉴于这一点，随之而来的就是<code>GLP</code>，就是<code>grafna+loki+promtail</code>。这是一套完全基于go语言生态写的，更贴近云原生。一套体系都是经过<code>grafna lab</code>云原生孕育而生。资源占用少，效率高，能够解决痛点，天生支持k8s等等特性。都让他成为新的崛起之秀。</p>
         
       
     </div>
@@ -675,6 +617,66 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/大数据/">大数据</a><a href="/tags/flume/">flume</a><a href="/tags/kudu/">kudu</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/12/29/数据库开发知识/Rocksdb/"><span>【数据库开发知识】Rocksdb</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/12/29/数据库开发知识/Rocksdb/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-12-29T03:16:43.000Z">
+          2020-12-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>近日工作中使用了 RocksDB。RocksDB 的优点此处无需多说，它的一个 feature 是其有很多优化选项用于对 RocksDB 进行调优。欲熟悉这些参数，必须对其背后的原理有所了解，本文主要整理一些 RocksDB 的 wiki 文档，以备自己参考之用。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>, <a href="/categories/数据结构/数据库/">数据库</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/数据库开发知识/">数据库开发知识</a>
     </span>
     
 
