@@ -832,6 +832,39 @@ spec:
 
 采用 `kustomize build overlays/dev | kubectl apply -f -` 来运行我们的`dev`环境的k8s所有的服务。
 
+
+通过`kubectl port-forward deployment.apps/dev-grafana 3000:3000` 来做端口的转发。
+
+```shell
+➜  whiteccinn.github.io git:(master) ✗ kubectl port-forward deployment.apps/dev-grafana 3000:3000
+Forwarding from 127.0.0.1:3000 -> 3000
+Forwarding from [::1]:3000 -> 3000
+```
+
+通过 ` kubectl get svc` 查看端口转发情况。
+
+```shell
+➜  whiteccinn.github.io git:(master) ✗ kubectl get svc
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+dev-grafana    LoadBalancer   10.102.248.247   localhost     3000:32695/TCP   17h
+dev-loki       ClusterIP      10.106.32.224    <none>        3100/TCP         17h
+dev-promtail   ClusterIP      10.108.116.190   <none>        9080/TCP         17h
+kubernetes     ClusterIP      10.96.0.1        <none>        443/TCP          3d10h
+```
+
+最终通过命令 `kubectl get pods -o wide` 看到所有的pods都在正常运作了。
+
+```shell
+➜  whiteccinn.github.io git:(master) ✗ kubectl get pods -o wide
+NAME                           READY   STATUS    RESTARTS   AGE   IP          NODE             NOMINATED NODE   READINESS GATES
+dev-grafana-7cd4c89fd4-wdkpb   1/1     Running   0          17h   10.1.0.16   docker-desktop   <none>           <none>
+dev-loki-statefulset-0         1/1     Running   0          17h   10.1.0.18   docker-desktop   <none>           <none>
+dev-loki-statefulset-1         1/1     Running   0          17h   10.1.0.19   docker-desktop   <none>           <none>
+dev-promtail-n6jgs             1/1     Running   0          17h   10.1.0.17   docker-desktop   <none>           <none>
+```
+
+然后在浏览器打开`localhost:3000`，即可访问到`grafna`了。
+
 grafna默认的账号密码就是`admin`。
 
 1.我们先来配置grafna的Dashboard。
