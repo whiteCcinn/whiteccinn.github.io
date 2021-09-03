@@ -69,6 +69,131 @@
 
   
     
+    <h3 class="article-title"><a href="/2021/09/03/Golang/protobuf插件扩展开发/"><span>【Golang】- protobuf插件扩展开发详解</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/09/03/Golang/protobuf插件扩展开发/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-09-03T05:16:51.000Z">
+          2021-09-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，项目需要用到protobuf来定义消息，但是我们需要一个更灵活的代码片段，如何通过<code>proto</code>文件来创建自定义的代码呢？<br>可以通过proto的<code>plugin</code>对方式来自己是一个<code>proto-gen</code>。</p>
+<p>在网上看了一些教程，发现有一些教程已经过时了，而且过于片面，没有把整套思想很好的说明。并且也有一些功能点并没有完全实现。<br>这里总结一下相关的内容，并且说一下最近实现的一个插件。</p>
+<blockquote>
+<p>对于已经了解大概<code>proto</code>的人来说，相对简单，但是如果是<code>自定义option</code>呢？你又了解吗？</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2021/09/03/Golang/[]byte在结构体的友好可读性处理/"><span>【Golang】- []byte在结构体的友好可读性处理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/09/03/Golang/[]byte在结构体的友好可读性处理/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-09-03T03:16:51.000Z">
+          2021-09-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有些时候，我们会发现，<code>[]byte</code> 类型在 <code>struct</code> 中，是必不可少的结构体，因为用了<code>[]byte</code>代表可以存储字节数据，也可以叫做二进制安全的存储。代表可以存储任何数据。</p>
+<p>如何才能做到在序列化json的情况下，可以<code>Println</code>出一个可读性的在<code>struct</code>的<code>[]byte</code>呢？</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2021/08/18/k8s/k8s-docker-for-mac-磁盘挂载/"><span>【kubernetes】k8s-docker-for-mac-磁盘挂载</span></a></h3>
     
   
@@ -557,126 +682,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/大数据/">大数据</a><a href="/tags/flume/">flume</a><a href="/tags/kudu/">kudu</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2021/01/05/大数据/记一次华为云大数据服务对接问题记录/"><span>【大数据】- 记一次华为云大数据服务对接问题记录</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2021/01/05/大数据/记一次华为云大数据服务对接问题记录/" rel="bookmark">
-        <time class="entry-date published" datetime="2021-01-05T01:56:40.000Z">
-          2021-01-05
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们在调研是否让自建IDC大数据机房上云服务，所以华为云进行一下测试。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/大数据/">大数据</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/大数据/">大数据</a><a href="/tags/flume/">flume</a><a href="/tags/kudu/">kudu</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/12/29/数据库开发知识/Rocksdb/"><span>【数据库开发知识】Rocksdb</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/12/29/数据库开发知识/Rocksdb/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-12-29T03:16:43.000Z">
-          2020-12-29
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>近日工作中使用了 RocksDB。RocksDB 的优点此处无需多说，它的一个 feature 是其有很多优化选项用于对 RocksDB 进行调优。欲熟悉这些参数，必须对其背后的原理有所了解，本文主要整理一些 RocksDB 的 wiki 文档，以备自己参考之用。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/数据结构/">数据结构</a>, <a href="/categories/数据结构/数据库/">数据库</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/数据库开发知识/">数据库开发知识</a>
     </span>
     
 

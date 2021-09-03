@@ -69,6 +69,142 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/10/25/linux-shell-colordiff/"><span>【Linux命令】diff - colordiff</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-colordiff/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T11:44:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们经常用 git 的客户端来对比文件差异，或者用一下其他的对比文件的差异的软件，例如常用的 Beyond Compare，但是如果我们不想借助其他的工具，用 linux 自带的命令要如何实现呢。</p>
+<p>这里和大家说一下 <code>diff</code> 命令</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>diff 分析两个文件，并输出两个文件的不同的行。diff 的输出结果表明需要对一个文件做怎样的操作之后才能与第二个文件相匹配。diff 并不会改变文件的内容，但是 diff 可以输出一个 ed 脚本来应用这些改变。<br>现在让我们来看一下 diff 是如何工作的，假设有两个文件：</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/08/22/docker-python-httpruner/"><span>docker-python-httpruner</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/08/22/docker-python-httpruner/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-22T11:56:00.000Z">
+          2018-08-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="Httprunner"><a href="#Httprunner" class="headerlink" title="Httprunner"></a>Httprunner</h1><p>最近，由于某些原因，了解到了 httprunner。</p>
+<p>先贴上我的本次文章的主题：</p>
+<ul>
+<li><p>支持 docker 环境</p>
+</li>
+<li><p>支持 jsonschema</p>
+</li>
+<li><p>粗略封装成了应用型框架</p>
+</li>
+<li><p>import python-file 的时候，请写基于项目根目录的路径</p>
+</li>
+</ul>
+<p>目标：<br><a href="https://github.com/whiteCcinn/httprunner-docker" target="_blank" rel="noopener">[Github:httprunner-docker]</a></p>
+<p><a href="https://hub.docker.com/r/ccinn/httprunner-docker" target="_blank" rel="noopener">[HubDocker:httprunner-docker]</a></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>, <a href="/categories/Docker/Python/">Python</a>, <a href="/categories/Docker/Python/测试/">测试</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a><a href="/tags/Python/">Python</a><a href="/tags/测试/">测试</a><a href="/tags/jsonschema/">jsonschema</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/07/08/php-laravel-2/"><span>【Laravel】Service Providers 服务提供者</span></a></h3>
     
   
@@ -627,160 +763,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/git-auto-deploy/"><span>【Git】- 利用git-hook实现自动化部署</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/git-auto-deploy/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T03:03:37.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>实现 git push 直接完成代码部署到服务器的目录<br>实现方式</p>
-<p>利用 git 的 hooks 中的<code>post-receiv</code>e 来实现代码提交完成之后的动作。将仓库指定一个<code>--work-tree</code>然后进行检出操作<code>checkout --force</code><br>目录结构</p>
-<p>我自己的项目结构是这样的，每一个仓库对应一个项目，例如 public/wx 项目对应 repo/wx.git 仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── public</span><br><span class="line">│   └── wx &#x2F;&#x2F; 这是我们的web代码部署目录</span><br><span class="line">│       ├── index.php</span><br><span class="line">│       ├── test2.php</span><br><span class="line">│       ├── test3.php</span><br><span class="line">│       └── test.php</span><br><span class="line">└── repo &#x2F;&#x2F; 这个是我们的仓库目录</span><br><span class="line">    └── wx.git &#x2F;&#x2F; 这个对应wx项目的仓库</span><br><span class="line">        ├── branches</span><br><span class="line">        ├── config</span><br><span class="line">        ├── description</span><br><span class="line">        ├── HEAD</span><br><span class="line">        ├── hooks &#x2F;&#x2F; post-receive钩子代码写在这里面</span><br><span class="line">        ├── index</span><br><span class="line">        ├── info</span><br><span class="line">        ├── objects</span><br><span class="line">        └── refs</span><br></pre></td></tr></table></figure>
-
-<p>再看下 hooks 文件目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── post-commit.sample</span><br><span class="line">├── post-receive</span><br><span class="line">├── post-receive.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">└── update.sample</span><br></pre></td></tr></table></figure>
-
-<p>我们将 post-receive.sample 复制一份 post-receive，并且编写代码如下</p>
-<h2 id="指定我的代码检出目录"><a href="#指定我的代码检出目录" class="headerlink" title="指定我的代码检出目录"></a>指定我的代码检出目录</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DIR=/www/public/wx</span><br><span class="line">git --work-tree=$&#123;DIR&#125; clean -fd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 直接强制检出</span></span><br><span class="line">git --work-tree=$&#123;DIR&#125; checkout --force</span><br></pre></td></tr></table></figure>
-
-<h2 id="如何生成目录"><a href="#如何生成目录" class="headerlink" title="如何生成目录"></a>如何生成目录</h2><p>上面看到的 repo 目录中的 wx.git 实际上是一个裸仓库，我们用下面的命令来生成这样一个仓库。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;www&#x2F;repo</span><br><span class="line">git init --bare wx.git</span><br></pre></td></tr></table></figure>
-
-<p>对于代码部署目录和仓库我们已经通过 post-receive 进行了关联了，因为我们一旦将代码 push 到仓库，那么会自动检出到 publish/wx 目录下。</p>
-<h2 id="远程部署"><a href="#远程部署" class="headerlink" title="远程部署"></a>远程部署</h2><p>在本地电脑上，我们添加远程仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git remote add origin root@xxx.xxx.xxx.xxx:&#x2F;www&#x2F;repo&#x2F;wx.git</span><br></pre></td></tr></table></figure>
-
-<p>这个时候我们添加了远程仓库，那么我们来测试下 push 操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">touch index.php</span><br><span class="line">git add .</span><br><span class="line">git commit -m &#39;test&#39;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-<p>可能会提示一个–set-upstream，直接执行下就好了。执行完之后我们登陆服务器，会发现文件已经出现在 public/wx/index.php</p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ul>
-<li>如果我们没有配置 ssh 免密码登陆的话，我们需要在 push 代码的时候输入密码</li>
-<li>如果我们添加的远程仓库不是 <a href="mailto:root@xxx.xxx.xx.xx">root@xxx.xxx.xx.xx</a>，例如是 <a href="mailto:abc@xx.xx.xx.xx">abc@xx.xx.xx.xx</a>，那么我们要确保 abc 用户对 wx.git 目录下的文件有 777 权限。</li>
-</ul>
-<h3 id="新增仓库"><a href="#新增仓库" class="headerlink" title="新增仓库"></a>新增仓库</h3><ul>
-<li>需要登陆远程服务器进行初始化 repo_name.git 仓库</li>
-<li>需要手动创建 public/repo_name 文件夹，并且修改权限为 777</li>
-<li>需要重新编写 hooks/post-recieve 文件，修改里面的 DIR 路径为 public/repo_name</li>
-</ul>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Git/">Git</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Git/">Git</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/09/算法/leetcode/leecode-1/"><span>【LeeCode】- Add digital</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/09/算法/leetcode/leecode-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-09T10:13:43.000Z">
-          2018-03-09
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>给定一个非负整数 num，重复添加其所有数字，直到结果只有一个数字。</p>
-<p>例如：</p>
-<p>鉴于 num = 38，这个过程就像：3 + 8 = 11，1 + 1 = 2。由于 2 只有一位数字，请将其返回。</p>
-<p>后续工作：<br>你可以在 O（1）运行时没有任何循环/递归吗？</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">digital</span><span class="params">($num)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> ($num - <span class="number">1</span>) % <span class="number">9</span> +<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/LeeCode/">LeeCode</a>, <a href="/categories/LeeCode/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a><a href="/tags/LeeCode/">LeeCode</a>
     </span>
     
 

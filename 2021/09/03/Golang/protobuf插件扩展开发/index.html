@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- protobuf插件扩展开发详解 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- protobuf插件扩展开发详解"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- protobuf插件扩展开发详解</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/09/03/Golang/protobuf插件扩展开发/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-09-03T05:16:51.000Z">
+          2021-09-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近，项目需要用到protobuf来定义消息，但是我们需要一个更灵活的代码片段，如何通过<code>proto</code>文件来创建自定义的代码呢？<br>可以通过proto的<code>plugin</code>对方式来自己是一个<code>proto-gen</code>。</p>
+<p>在网上看了一些教程，发现有一些教程已经过时了，而且过于片面，没有把整套思想很好的说明。并且也有一些功能点并没有完全实现。<br>这里总结一下相关的内容，并且说一下最近实现的一个插件。</p>
+<blockquote>
+<p>对于已经了解大概<code>proto</code>的人来说，相对简单，但是如果是<code>自定义option</code>呢？你又了解吗？</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; test.proto</span><br><span class="line"></span><br><span class="line">syntax &#x3D; &quot;proto3&quot;;</span><br><span class="line">package pb;</span><br><span class="line">option go_package &#x3D; &quot;&#x2F;;pb&quot;;</span><br><span class="line"></span><br><span class="line">import &quot;unknow.proto&quot;;</span><br><span class="line"></span><br><span class="line">service ApiIMService &#123;</span><br><span class="line">    rpc RegisterDevice (ApiIMRegisterDeviceReq) returns (ApiIMRegisterDeviceResp) &#123;</span><br><span class="line">        option (unknow.api.http) &#x3D; &#123;</span><br><span class="line">            method: &quot;post&quot;</span><br><span class="line">            url: &quot;&#x2F;v1&#x2F;im&#x2F;register_device&quot;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 设备类型</span><br><span class="line">enum ApiIMDeviceType &#123;</span><br><span class="line">    API_IM_UNKNOWN &#x3D; 0;</span><br><span class="line">    API_IM_Android &#x3D; 1;</span><br><span class="line">    API_IM_IOS &#x3D; 2;</span><br><span class="line">    API_IM_Window &#x3D; 3;</span><br><span class="line">    API_IM_MacOS &#x3D; 4;</span><br><span class="line">    API_IM_Web &#x3D; 5;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message ApiIMRegisterDeviceReq &#123;</span><br><span class="line">    ApiIMDeviceType type &#x3D; 1; &#x2F;&#x2F; 设备类型</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message ApiIMRegisterDeviceResp &#123;</span><br><span class="line">    int64 device_id &#x3D; 1; &#x2F;&#x2F; 设备id</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到这一个<code>proto</code>文件，常规的我就不说了。主要是看到<code>import &quot;unknow.proto&quot;</code>, <code>option (unknow.api.http)</code></p>
+<p>可以看到，我这里引入一个<code>unknow.proto</code>的文件。</p>
+<p>我希望最终生成一个<code>api.unknow.go</code>的文件。里面的内容期待如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Copyright (c) 2021, whiteCcinn Inc.</span></span><br><span class="line"><span class="comment">// Code generated by protoc-gen-unknow. DO NOT EDIT.</span></span><br><span class="line"><span class="comment">// source: test.proto</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> pb</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Api <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name   <span class="keyword">string</span></span><br><span class="line">	Method <span class="keyword">string</span></span><br><span class="line">	Url    <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newApi</span><span class="params">(name, method, url <span class="keyword">string</span>)</span> *<span class="title">Api</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;Api&#123;</span><br><span class="line">		name, method, url,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	RegisterDeviceApi = newApi(<span class="string">"RegisterDevice"</span>, <span class="string">"post"</span>, <span class="string">"/v1/im/register_device"</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>生成的文件，我可以在项目通过<code>pb.RegisterDeviceApi</code>拿到在<code>proto</code>定义好的API内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; unknow.proto</span><br><span class="line"></span><br><span class="line">syntax &#x3D; &quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">package unknow.api;</span><br><span class="line"></span><br><span class="line">option go_package &#x3D; &quot;&#x2F;;pb&quot;;</span><br><span class="line"></span><br><span class="line">import &quot;google&#x2F;protobuf&#x2F;descriptor.proto&quot;;</span><br><span class="line"></span><br><span class="line">extend google.protobuf.MethodOptions &#123;</span><br><span class="line">    &#x2F;&#x2F; See &#96;HttpRule&#96;.</span><br><span class="line">    HttpRule http &#x3D; 72295728;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message HttpRule &#123;</span><br><span class="line">    string url &#x3D; 1;</span><br><span class="line">    string method &#x3D; 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><a href="https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto" target="_blank" rel="noopener">google/api/annotations.proto</a></li>
+<li><a href="https://github.com/googleapis/googleapis/blob/master/google/api/http.proto" target="_blank" rel="noopener">google/api/http.proto</a></li>
+<li><a href="https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/descriptor.proto" target="_blank" rel="noopener">google/protobuf/descriptor.proto</a></li>
+</ul>
+<p>如果有了解过<code>google/api/annotations.proto</code> 和 <code>google/api/http.proto</code>的人应该不会陌生，当你需要用到<code>grpc-gateway</code>或者<code>proto-gen-swaager</code>的时候，都会有介绍到<code>option(goggle.api.http)</code>的用法。</p>
+<p>这里我们看到<code>unknow.proto</code>的结构体，这就是一个简化版本。用于实现<code>自定义的option</code>用的。</p>
+<h3 id="unknow-proto"><a href="#unknow-proto" class="headerlink" title="unknow.proto"></a>unknow.proto</h3><p>对于基础的语法规则来说，我们来看剖析一下<code>unknow.proto</code>，常规的就不说了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package unknow.api;</span><br><span class="line"></span><br><span class="line">extend google.protobuf.MethodOptions &#123;</span><br><span class="line">    &#x2F;&#x2F; See &#96;HttpRule&#96;.</span><br><span class="line">    HttpRule http &#x3D; 72295728;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message HttpRule &#123;</span><br><span class="line">    string url &#x3D; 1;</span><br><span class="line">    string method &#x3D; 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于<code>extend</code>的用法，我这里列一下官方的链接。</p>
+<ul>
+<li><a href="https://developers.google.com/protocol-buffers/docs/overview#customoptions" target="_blank" rel="noopener">Custom Options</a></li>
+</ul>
+<p>我们看到这里，<code>extend google.protobuf.MethodOptions</code>。</p>
+<p>代表着，我这里自定义个作用于<code>Method</code>的<code>option</code>。所以在真正的<code>proto</code>文件中，我就可以使用<code>unknow.api.option</code>的标签。也就是<code>option (unknow.api.http)</code>。</p>
+<p>接着我们看到，这个option我们定义了一个元素，类型是<code>Message HttpRule</code>，命名为<code>http</code>，并且给它定义一个唯一的<code>Number</code>。</p>
+<p>接着我们看到<code>HttpRule</code>，内部存在2个元素，一个是<code>string url</code> 和 <code>string method</code>，这意味着我们可以使用<code>独立行写法</code>：<code>option (unknow.api.http).url = &quot;/v1/im/register_device&quot;</code>，然后再下一行使用 <code>option (unknow.api.http).method = &quot;post&quot;</code>，一个完整的例如如下：</p>
+<p>刚才说到，这是一个<code>method</code>的<code>option</code>，也就是我们这里定义的<code>rpc</code>下的 <code>option</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">service ApiIMService &#123;</span><br><span class="line">    rpc RegisterDevice (ApiIMRegisterDeviceReq) returns (ApiIMRegisterDeviceResp) &#123;</span><br><span class="line">        option (unknow.api.http).method &#x3D; &quot;post&quot;</span><br><span class="line">        option (unknow.api.http).url &#x3D; &quot;&#x2F;v1&#x2F;im&#x2F;register_device&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了这个写法，我更推荐如下更简洁的写法，用<code>map</code>的写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">service ApiIMService &#123;</span><br><span class="line">    rpc RegisterDevice (ApiIMRegisterDeviceReq) returns (ApiIMRegisterDeviceResp) &#123;</span><br><span class="line">        option (unknow.api.http) &#x3D; &#123;</span><br><span class="line">            method: &quot;post&quot;</span><br><span class="line">            url: &quot;&#x2F;v1&#x2F;im&#x2F;register_device&quot;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样子，我们就看懂了<code>test.proto</code>的内容了对吧。连贯起来，那么我们的这个<code>unknow.proto</code>就是用于实现<code>option(unknow.api.http)</code>。而<code>option(unknow.api.http)</code>的使用则在<code>test.proto</code>进行采用。</p>
+<p>好了，有了定义的文件，那么接下来就是我们的重点了，如何编写一个实现<code>自定义代码的protobuf插件扩展</code></p>
+<h3 id="扩展实现"><a href="#扩展实现" class="headerlink" title="扩展实现"></a>扩展实现</h3><p>首先，我们需要知道一点，我们在采用<code>protoc</code>对<code>proto</code>文件进行编译的时候，经常是执行类似如下代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">protoc -I.:$&#123;GOGO_PROTOBUF&#125; \</span><br><span class="line">--gofast_out=plugins=grpc:./go-pb</span><br></pre></td></tr></table></figure>
+<p><br>由于这里我用的是<code>gogoprotobuf</code>，所以你会看到我这里的是<code>--gofast_out=plugins=grpc:./go-pb</code>，如果你是<code>protobuf</code>的官方的<code>proto-gen</code>的话，那么你这里应该是<code>--go_out=plugins=grpc:./go-pb</code></p>
+<p>这里我们需要注意的是什么呢，就是<code>插件二进制文件名</code>，这是有一定规则的，这是我之前在自定义git凭据文章中说明的一样，这二进制文件需要在你的环境变量中，否则你就需要通过<code>-I</code>来指定文件路径。然后命名规则为<code>proto-gen-xxx</code>，而这个<code>xxx</code>就是你的自定义的名字。在本例子中，我的扩展名字就是<code>proto-gen-unknow</code>。</p>
+<p>因此，最终如果我要执行的话，那么就是执行如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">protoc -I.:$&#123;GOGO_PROTOBUF&#125; \</span><br><span class="line">--unknow_out=./go-pb</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
