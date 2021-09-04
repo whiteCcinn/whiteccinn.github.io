@@ -516,5 +516,5 @@ go install . && protoc --proto_path proto/ -I=. test.proto  test2.proto --unknow
 
 最后推荐几个扩展库写得不错的扩展插件: 
 - [protoc-gen-grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway/tree/master/protoc-gen-grpc-gateway)
-- [protoc-gen-grpc-openapiv2](hhttps://github.com/grpc-ecosystem/grpc-gateway/tree/master/protoc-gen-openapiv2)
+- [protoc-gen-grpc-openapiv2](https://github.com/grpc-ecosystem/grpc-gateway/tree/master/protoc-gen-openapiv2)
 - [protoc-gen-grpc-gohttp](https://github.com/nametake/protoc-gen-gohttp)
