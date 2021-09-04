@@ -254,13 +254,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/06/20/design-object-pool-model/"><span>设计模式の创建型の原型模式</span></a></h3>
+    <h3 class="article-title"><a href="/2017/06/20/design-prototype-model/"><span>设计模式の创建型の原型模式</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2017/06/20/design-object-pool-model/" rel="bookmark">
+      <a href="/2017/06/20/design-prototype-model/" rel="bookmark">
         <time class="entry-date published" datetime="2017-06-20T03:46:00.000Z">
           2017-06-20
         </time>
@@ -274,10 +274,8 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>简介</p>
-<p>对象池（也称为资源池）被用来管理对象缓存。对象池是一组已经初始化过且可以直接使用的对象集合，用户在使用对象时可以从对象池中获取对象，对其进行操作处理，并在不需要时归还给对象池而非销毁它。</p>
-<p>若对象初始化、实例化的代价高，且需要经常实例化，但每次实例化的数量较少的情况下，使用对象池可以获得显著的性能提升。常见的使用对象池模式的技术包括线程池、数据库连接池、任务队列池、图片资源对象池等。</p>
-<p>当然，如果要实例化的对象较小，不需要多少资源开销，就没有必要使用对象池模式了，这非但不会提升性能，反而浪费内存空间，甚至降低性能。</p>
+        <h2 id="实质就是-对象的复制"><a href="#实质就是-对象的复制" class="headerlink" title="实质就是 对象的复制"></a>实质就是 对象的复制</h2><p>对一些大型对象，每次去 new，初始化开销很大，这个时候我们 先 new 一个模版对象，然后其他实例都去 clone 这个模版， 这样可以节约不少性能。<br>这个所谓的模版，就是原型（Prototype）；<br>当然，原型模式比单纯的 Clone 要稍微升级一下。</p>
+<h2 id="普通-clone"><a href="#普通-clone" class="headerlink" title="普通 clone"></a>普通 clone</h2><p>new 和 clone 都是用来创建对象的方法。<br>在 PHP 中， 对象间的赋值操作实际上是引用操作 （事实上，绝大部分的编程语言都是如此! 主要原因是内存及性能的问题) ，比如：</p>
         
       
     </div>
@@ -317,13 +315,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/06/20/design-prototype-model/"><span>设计模式の创建型の原型模式</span></a></h3>
+    <h3 class="article-title"><a href="/2017/06/20/design-object-pool-model/"><span>设计模式の创建型の原型模式</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2017/06/20/design-prototype-model/" rel="bookmark">
+      <a href="/2017/06/20/design-object-pool-model/" rel="bookmark">
         <time class="entry-date published" datetime="2017-06-20T03:46:00.000Z">
           2017-06-20
         </time>
@@ -337,8 +335,10 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="实质就是-对象的复制"><a href="#实质就是-对象的复制" class="headerlink" title="实质就是 对象的复制"></a>实质就是 对象的复制</h2><p>对一些大型对象，每次去 new，初始化开销很大，这个时候我们 先 new 一个模版对象，然后其他实例都去 clone 这个模版， 这样可以节约不少性能。<br>这个所谓的模版，就是原型（Prototype）；<br>当然，原型模式比单纯的 Clone 要稍微升级一下。</p>
-<h2 id="普通-clone"><a href="#普通-clone" class="headerlink" title="普通 clone"></a>普通 clone</h2><p>new 和 clone 都是用来创建对象的方法。<br>在 PHP 中， 对象间的赋值操作实际上是引用操作 （事实上，绝大部分的编程语言都是如此! 主要原因是内存及性能的问题) ，比如：</p>
+        <p>简介</p>
+<p>对象池（也称为资源池）被用来管理对象缓存。对象池是一组已经初始化过且可以直接使用的对象集合，用户在使用对象时可以从对象池中获取对象，对其进行操作处理，并在不需要时归还给对象池而非销毁它。</p>
+<p>若对象初始化、实例化的代价高，且需要经常实例化，但每次实例化的数量较少的情况下，使用对象池可以获得显著的性能提升。常见的使用对象池模式的技术包括线程池、数据库连接池、任务队列池、图片资源对象池等。</p>
+<p>当然，如果要实例化的对象较小，不需要多少资源开销，就没有必要使用对象池模式了，这非但不会提升性能，反而浪费内存空间，甚至降低性能。</p>
         
       
     </div>
