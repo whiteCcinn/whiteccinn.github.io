@@ -74,9 +74,9 @@
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2021/09/03/Golang/protobuf插件扩展开发/" rel="bookmark">
-        <time class="entry-date published" datetime="2021-09-03T05:16:51.000Z">
-          2021-09-03
+      <a href="/2021/09/04/Golang/protobuf插件扩展开发/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-09-04T06:16:51.000Z">
+          2021-09-04
         </time>
       </a>
     </span>
@@ -155,7 +155,7 @@
 <p>一个简陋的<code>AST</code>定义如下（哈哈，略显简陋，但是了解AST是啥的应该多少能看懂一些）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FileDescriptor -&gt; ServiceDescriptor</span><br><span class="line">					-&gt; ServiceOptionDescriptor</span><br><span class="line">					-&gt; MethodDescriptor</span><br><span class="line">						-&gt; MethodOptionDescriptor</span><br><span class="line">					    -&gt; [MessageDescriptor]</span><br><span class="line">               -&gt; MessageDescriptor</span><br><span class="line">					-&gt; MessageOptionDescriptor</span><br><span class="line">					-&gt; FieldDescriptor</span><br><span class="line">						-&gt; FieldOptionDescriptor</span><br><span class="line">			   -&gt; FieldOptionDescriptor</span><br></pre></td></tr></table></figure>
 
-<p>知道怎么执行了，和<code>AST</code>, 我们就来看看怎么编写代码, </p>
+<p>知道怎么执行了，和<code>AST</code>, 我们就来看看怎么编写代码。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">➜  protoc-gen-unknow git:(main) tree</span><br><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── go.mod</span><br><span class="line">├── go.sum</span><br><span class="line">├── internal</span><br><span class="line">│   └── unknow.go</span><br><span class="line">├── main.go</span><br><span class="line">├── out</span><br><span class="line">│   └── unknow.pb.go</span><br><span class="line">└── proto</span><br><span class="line">    ├── descriptor.proto</span><br><span class="line">    └── unknow.proto</span><br></pre></td></tr></table></figure>
 
 <p>可以看到，这是我的一个代码结构目录</p>
