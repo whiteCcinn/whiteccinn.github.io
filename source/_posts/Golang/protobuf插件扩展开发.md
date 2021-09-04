@@ -476,7 +476,10 @@ func (u Unknow) genMethodHTTPRule(g *protogen.GeneratedFile, method *protogen.Me
 
 > 请跟着说明中注释一步步查看详解
 
-查看这段代码逻辑，也是非常简单，因为没有特别复杂的逻辑，因为这里的demo生成的代码比较简单。最终，我们生成的代码就是：
+
+查看这段代码逻辑，也是非常简单，因为没有特别复杂的逻辑，尽量不要跳过，因为里面涉及到如何读取自定义的Option的问题。代码大致定位在 `proto.GetExtension`方法附近。
+
+因为这里的demo生成的代码比较简单。最终，我们生成的代码就是：
 
 ```go
 // Copyright (c) 2021, Unknow-x Inc.
