@@ -181,11 +181,11 @@ service ApiIMService {
 
 ![protobuf解析流程图](/images/Go/protobuf.png)
 
-> protobuf解析流程图，便于我们理解
+> protobuf解析旧版的流程图，便于我们理解。新版的后续我抽空再画画
 
 ### 不科学的例子
 
-第一个例子，已golang旧版`proto-gen-go`为例。
+第一个例子，以golang旧版`proto-gen-go`为例。
 
 ```
 package main
@@ -282,7 +282,24 @@ protoc -I.:${GOGO_PROTOBUF} \
 --unknow_out=./go-pb
 ```
 
-知道怎么执行了，我们就来看看怎么编写代码。
+其实如果有接触过`thrift` 或者 `Rust`的`元编程` 甚至是 `Python`的 `lark-parser`自定义抽象语法树，或者其他经由`AST`抽象语法树写代码的同学应该都知道，这其实抽象出来就是一个`AST`的解析处理而已。所以我首先需要了解他的部署。
+
+一个简陋的`AST`定义如下（哈哈，略显简陋，但是了解AST是啥的应该多少能看懂一些）：
+
+```sell
+FileDescriptor -> ServiceDescriptor
+					-> ServiceOptionDescriptor
+					-> MethodDescriptor
+						-> MethodOptionDescriptor
+					    -> [MessageDescriptor]
+               -> MessageDescriptor
+					-> MessageOptionDescriptor
+					-> FieldDescriptor
+						-> FieldOptionDescriptor
+			   -> FieldOptionDescriptor
+```
+
+知道怎么执行了，和`AST`, 我们就来看看怎么编写代码, 
 
 ```shell
 ➜  protoc-gen-unknow git:(main) tree
