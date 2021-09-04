@@ -1,6 +1,6 @@
 ---
 title: 【Golang】- protobuf插件扩展开发
-date: 2021-09-03 13:16:51
+date: 2021-09-04 14:16:51
 categories: [Golang]
 tags: [Golang]
 ---
@@ -299,7 +299,7 @@ FileDescriptor -> ServiceDescriptor
 			   -> FieldOptionDescriptor
 ```
 
-知道怎么执行了，和`AST`, 我们就来看看怎么编写代码, 
+知道怎么执行了，和`AST`, 我们就来看看怎么编写代码。
 
 ```shell
 ➜  protoc-gen-unknow git:(main) tree
