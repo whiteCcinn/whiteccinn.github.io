@@ -69,6 +69,66 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/20/算法/algorithm-hash-bkrd/"><span>HASH算法のBKDRHash</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/算法/algorithm-hash-bkrd/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T09:39:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天和别人说一下 hash 算法，起源是因为字符串在数据库做索引的问题，我的想法是字符串通过 hash 算法，得到的 int 类型的数据，在 int 类型的数据库上做索引，但是 hash 算法有很多选择，就 PHP 而言，有人说 10 万数据内的话，用 PHP 内置的 CRC32 算法(abs(crc32($str)))就可以，但是我发现 hash 算法有很多种，其中一种就是 bkdrhash 算法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/Hash函数/">Hash函数</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/20/design-combination-model/"><span>设计模式の结构型の组合模式</span></a></h3>
     
   
@@ -618,75 +678,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/协议/">协议</a><a href="/tags/Ascii/">Ascii</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/03/15/ip-to-long/"><span>ip_to_long</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/03/15/ip-to-long/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-03-15T06:20:00.000Z">
-          2017-03-15
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>字符串 ip 转长整形原理和实现</p>
-<p>php 内置方法：ip2long</p>
-<p>但是这个方法存在 bug，就是 010.0.3.198 的时候，计算的长整形并非正确的长整形。并且掌握实现原理，其实并不困难。</p>
-<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p><code>IPv4</code> 地址我们知道的是这样子的形式： <code>192.168.2.10</code></p>
-<p>这种形式我们称之为 <code>点分十进制</code>，当然还有我们的<code>冒分十六进制</code>，但是这个是适用于 <code>IPv6</code> 的</p>
-<p>回到主题，<strong>点分十进制</strong>的写法其实是一个 4 个字节，32 位的整型组成的。</p>
-<p>例如 : <code>10.0.3.198</code></p>
-<p>二进制形式 ：<code>00001010.00000000.00000011.11000001</code></p>
-<p>说到这里，大家可能都知道了，为什么是 32 位了吧。那么二进制的 32 位转成十进制的时候，就是我们的长整形了。</p>
-<p>转换结果为 ：<code>167773121</code></p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/协议/">协议</a>, <a href="/categories/协议/网络/">网络</a>, <a href="/categories/协议/网络/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/网络/">网络</a><a href="/tags/IP/">IP</a>
     </span>
     
 

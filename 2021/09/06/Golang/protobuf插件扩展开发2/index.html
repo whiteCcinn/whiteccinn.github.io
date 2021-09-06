@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- protobuf插件扩展开发2 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- protobuf插件扩展开发2"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- protobuf插件扩展开发2</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/09/06/Golang/protobuf插件扩展开发2/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-09-06T01:16:51.000Z">
+          2021-09-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>上一片，我们讲到了<code>protobuf扩展开发</code>的大体流程和思路，这一篇，我们来继续总结一下相关的API细节。</p>
+<a id="more"></a>
+
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><h3 id="第一点"><a href="#第一点" class="headerlink" title="第一点"></a>第一点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">option go_package &#x3D; &quot;github.com&#x2F;xxxx&#x2F;pb&#x2F;go-pb&#x2F;api;pb&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>我们经常可以看到这种定义，分好前面的<code>github.com/xxxx/pb/go-pb/api</code>，我们在写代码的时候会被加载到：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源码</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(gen *Plugin)</span> <span class="title">NewGeneratedFile</span><span class="params">(filename <span class="keyword">string</span>, goImportPath GoImportPath)</span> *<span class="title">GeneratedFile</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们自己的代码</span></span><br><span class="line">filename := f.GeneratedFilenamePrefix + <span class="string">".api.go"</span></span><br><span class="line">g := plugin.NewGeneratedFile(strings.TrimPrefix(filename, strings.Trim(pbPkg.String(), <span class="string">"\""</span>)), f.GoImportPath)</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们可以看到<code>Plugin.NewGeneratedFile</code>有2个参数，第一个是<code>filename</code>,另外一个是<code>goImportPath</code>，分别的含义是：</p>
+<p>生成的文件名和这个文件被import的时候，应该要怎么import。</p>
+<ul>
+<li>这个文件名需要注意的是，这是一个全路径文件名，如果你的文件名种存在<code>/</code>，那么前面的都是<code>目录</code>，直到最后一个，才是文件名。</li>
+<li>例如我这里的是<code>github.com/xxxx/pb/go-pb/api</code>，那么生成的文件被引用的时候，就会<code>import &quot;github.com/xxxx/pb/go-pb/api&quot;</code>。</li>
+</ul>
+<p>看到这里，我们再来看看分号后面的<code>pb</code>，这个在外面写代码的时候到体现是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 我们自己的代码</span></span><br><span class="line">g.P(<span class="string">"package "</span> + f.GoPackageName)</span><br></pre></td></tr></table></figure>
+
+<p>看到其实这个<code>pb</code>会被加载进文件的<code>GoPackageName</code>种，所以分号前面的意义是不同的，前面的对应<code>filename</code>和<code>GoImportPath</code>,后面对应的就是<code>GoPackageName</code></p>
+<h3 id="第二点"><a href="#第二点" class="headerlink" title="第二点"></a>第二点</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	pbPkg = protogen.GoImportPath(<span class="string">"github.com/xxx/pb/go-pb"</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>在代码中，我们会定义一些这样子的xxxPkg的变量，他们由<code>protogen.GoImportPath</code>来包装起来，在使用上就是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g.P(<span class="string">"     "</span>, method.GoName, <span class="string">"Api = "</span>, pbPkg.Ident(<span class="string">"NewApi"</span>), <span class="string">"(\""</span>, method.GoName, <span class="string">"\", \""</span>, m, <span class="string">"\", \""</span>, url, <span class="string">"\")"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>看到这里的<code>pbPkg.Ident(&quot;NewApi&quot;)</code>，意思就是这个要调用<code>pbPkg</code>包下的<code>NewApi</code>的方法。</p>
+<p>值得注意的是，这里用到的<code>Ident()</code>API，顾名思义就是<code>.</code>的意思。</p>
+<h3 id="第三点"><a href="#第三点" class="headerlink" title="第三点"></a>第三点</h3><p>有时候，我们调用<code>Plugin.NewGeneratedFile</code>，创建了生成文件实例并且已经预写入了一些内容，但是实际代码中，并<code>没有任何有意义</code>有价值的代码，那么这个时候我希望这个文件<code>不要生成</code>，我就可以调用<code>Skip()</code>的API。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 我们自己的代码</span></span><br><span class="line">g := plugin.NewGeneratedFile(strings.TrimPrefix(filename, strings.Trim(pbPkg.String(), <span class="string">"\""</span>)), f.GoImportPath)</span><br><span class="line">g.Skip()</span><br></pre></td></tr></table></figure>
+
+<p>那么这个文件在最终将不会被生成。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2021 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

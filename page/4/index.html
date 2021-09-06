@@ -69,6 +69,67 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/03/13/Rust语言/rust-包和模块/"><span>【rust】包和模块</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/03/13/Rust语言/rust-包和模块/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-03-13T02:43:43.000Z">
+          2020-03-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Rust 中，crate 是一个独立的可编译单元。具体说来，就是一个或一批文件（如果是一批文件，那么有一个文件是这个 crate 的入口）。它编译后，会对应着生成一个可执行文件或一个库。</p>
+<p>Rust 提供了一个关键字 mod，它可以在一个文件中定义一个模块，或者引用另外一个文件中的模块。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/rust/">rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/rust/">rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/02/27/消息队列/kafka-migrants/"><span>【消息队列】- Kafka数据动态迁移</span></a></h3>
     
   
@@ -605,67 +666,6 @@
     <div class="entry">
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们在服务器上编程或者调试的时候，都不可能是各种抓包客户端，所以我们需要学会运用 tcpdump 来对网络的数据进行抓包。<br>用简单的话来定义 tcpdump，就是：dump the traffic on a network，根据使用者的定义对网络上的数据包进行截获的包分析工具。 tcpdump 可以将网络中传送的数据包的“头”完全截获下来提供分析。它支持针对网络层、协议、主机、网络或端口的过滤，并提供 and、or、not 等逻辑语句来帮助你去掉无用的信息。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/网络协议/">网络协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/TCP/">TCP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/08/07/网络协议/TCP-重传机制/"><span>【网络协议】TCP - 重传机制</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/08/07/网络协议/TCP-重传机制/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-08-07T03:33:40.000Z">
-          2019-08-07
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>TCP 要保证所有的数据包都可以到达，所以，必需要有重传机制。</p>
-<p>其中涉及 ACK 包比较关键，因为在窗口的这篇文章中，已经说过了，ACK 机制起始就是类似于一种反馈机制。</p>
         
       
     </div>

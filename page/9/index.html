@@ -69,6 +69,69 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/28/linux-shell-performance-2/"><span>【Linux命令】- 性能优化</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/linux-shell-performance-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T07:10:06.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>contents:: 目录</p>
+<p>性能优化的核心是找出系统的瓶颈点，问题找到了，优化的工作也就完成了大半；<br>这里介绍的性能优化主要从两个层面来介绍：系统层面和程序层面；</p>
+<h2 id="分析系统瓶颈"><a href="#分析系统瓶颈" class="headerlink" title="分析系统瓶颈"></a>分析系统瓶颈</h2><p>系统响应变慢，首先得定位大致的问题出在哪里，是 IO 瓶颈、CPU 瓶颈、内存瓶颈还是程序导致的系统问题；</p>
+<p>使用 top 工具能够比较全面的查看我们关注的点::</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/28/linux-shell-performance/"><span>【Linux命令】- 性能监控</span></a></h3>
     
   
@@ -649,78 +712,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/MongoDb/">MongoDb</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/23/redis-config/"><span>【Redis】- 配置管理</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/23/redis-config/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-23T07:28:00.000Z">
-          2018-02-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>redis 的常用知识就不详细说了。记录一下我认为值得记录的知识点</p>
-<h2 id="基本常用的配置参数、命令"><a href="#基本常用的配置参数、命令" class="headerlink" title="基本常用的配置参数、命令"></a>基本常用的配置参数、命令</h2><ol>
-<li><p><strong>daemonize no</strong><br>配置 redis 是否以守护进程的方式运行，默认 no<br>pidfile /var/run/redis.pid</p>
-</li>
-<li><p>Redis 以守护进程方式运行时，pid 的写入文件。默认为/var/run/redis.pid</p>
-</li>
-<li><p>port 6379<br>监听端口,默认为 6379</p>
-</li>
-<li><p>bind 127.0.0.1<br>绑定的主机地址</p>
-</li>
-<li><p>timeout 300<br>客户端限制多长时间后关闭连接</p>
-</li>
-<li><p>loglevel verbose<br>日志级别，支持 debug/verbos/notice/warning，默认为 verbose</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Redis/">Redis</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Redis/">Redis</a>
     </span>
     
 

@@ -69,6 +69,66 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/22/design-strategy-model/"><span>设计模式の行为型の策略模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-strategy-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T07:23:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>策略模式是一个非常常用，且非常有用的设计模式。<br>简单的说，它是当你使用大量 if else 逻辑时的救星。<br>if else 就是一种判断上下文的环境所作出的策略，如果你把 if else 写死，那么在复杂逻辑的时候你会发现代码超级长，而且最蛋疼的是，当你以后要新增策略时，再写一个 elseif？<br>万一这个逻辑要修改 20 个地方呢？<br>一口老血吐在屏幕上…<br>策略模式就是来解决这个问题的。<br>举一个场景，商城的首页，男的进来看男性商品，女的进来看女性商品，不男不女…以此类推，各种条件下用不同策略展示不同商品。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式，PHP/">设计模式，PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/22/design-chain-of-responsibility-model/"><span>设计模式の行为型の责任链模式</span></a></h3>
     
   
@@ -615,66 +675,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/动态规划/">动态规划</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/20/算法/algorithm-hash-bkrd/"><span>HASH算法のBKDRHash</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/20/算法/algorithm-hash-bkrd/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-20T09:39:00.000Z">
-          2017-06-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天和别人说一下 hash 算法，起源是因为字符串在数据库做索引的问题，我的想法是字符串通过 hash 算法，得到的 int 类型的数据，在 int 类型的数据库上做索引，但是 hash 算法有很多选择，就 PHP 而言，有人说 10 万数据内的话，用 PHP 内置的 CRC32 算法(abs(crc32($str)))就可以，但是我发现 hash 算法有很多种，其中一种就是 bkdrhash 算法。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a><a href="/tags/Hash函数/">Hash函数</a>
     </span>
     
 
