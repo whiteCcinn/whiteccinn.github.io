@@ -196,8 +196,11 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  my-flink-jdk11 ll target/my-flink-jdk11-1.0-SNAPSHOT.jar </span><br><span class="line">-rw-r--r--  1 caiwenhui  staff   6.6K Sep 28 16:30 target/my-flink-jdk11-1.0-SNAPSHOT.jar</span><br></pre></td></tr></table></figure>
 
 <p>同样把代码目录挂载进flink容器，然后构建flink容器（此步骤只要是拿到target目录下的jar包，如果你指定了其他路径换个挂载目录也可以）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --name flinkc --privileged  -w /www -v$(PWD):/www flink:1.12-scala_2.11-java8 bash</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --name flinkc --privileged  -w /www -v$(PWD):/www -p 8081:8081 flink:1.12-scala_2.11-java8 bash</span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>8081是flink webui的服务，具体的内容后面再说</p>
+</blockquote>
 <p>进到容器后，启动单机版flink集群</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flink@ed5e7ea28514:/www$ start-cluster.sh</span><br><span class="line">Starting cluster.</span><br><span class="line">Starting standalonesession daemon on host ed5e7ea28514.</span><br><span class="line">Starting taskexecutor daemon on host ed5e7ea28514</span><br></pre></td></tr></table></figure>
 
