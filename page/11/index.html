@@ -69,6 +69,74 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/11/02/docker-php-nginx/"><span>docker安装php7+nginx事例</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/11/02/docker-php-nginx/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-11-02T01:34:00.000Z">
+          2017-11-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>docker 是由 go 语言开发的的一个虚拟机容器，通过层的概念，把 fs(filesysytem)连接起来，形成一个可以独立的系统。其中涉及到了宿主机的概念，在这里，由于我所用的环境基本都是 centos7，所以这篇文章讲诉的就是 centos7 中使用 docker 安装 php7+nginx 的事例。后续我会发布一些镜像以及 dockerFile 提供大家学习参考。</p>
+<blockquote>
+<p>需要注意的是：docker 运动的服务都需要以前台的模式运行</p>
+</blockquote>
+<h1 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker</span><br></pre></td></tr></table></figure>
+
+<p>由于我们学习如何使用 docker，所以这里就选择了的直接采用 yum 安装了。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="创建-docker-容器操作用户"><a href="#创建-docker-容器操作用户" class="headerlink" title="创建 docker 容器操作用户"></a>创建 docker 容器操作用户</h2><p>由于 docker 容器基于宿主机，所以我们可以在宿主机中创建好对容器操作的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; -g -u 参数分别指的的是gid，和uid</span><br><span class="line">groupadd -g 2017 docker-group</span><br><span class="line">adduser -g 2017 -u 2017 docker-user</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Docker/">Docker</a><a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/09/08/linux-make-swoole2/"><span>Centos7安装swoole2.x协程系列</span></a></h3>
     
   
@@ -181,7 +249,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
+        <a href="/tags/协议/">协议</a><a href="/tags/Linux/">Linux</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
     </span>
     
 
@@ -731,72 +799,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/协议/">协议</a><a href="/tags/进制/">进制</a><a href="/tags/网络/">网络</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/28/bin-hex-oct/"><span>进制转换相关知识</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/28/bin-hex-oct/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-28T02:43:00.000Z">
-          2017-06-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h2><blockquote>
-<p>好久都没有好好整理过进制之间转换的关系了。最近在研究 RPC 的内容，有一些理论知识必须要重新整理一下。</p>
-</blockquote>
-<p>由于数据在计算机中的表示，最终以二进制的形式存在，所以有时候使用二进制，可以更直观地解决问题。</p>
-<p>但是有一些时候，二进制表示的数据实在的太长了，所以我们可能需要一些更高进制的数来表示数据，而我们从小学习的数学，就是以 10 进制来代表的。</p>
-<p><strong>进制数越大，所需要数长度就越短。</strong></p>
-<p>我们常用的进制有 2、8、16 进制，分别是 2 的 1 一次方，2 的 3 次方，2 的 4 次方。（至于为什么没有 3 进制，4 进制诸如此类的，各位百度一下吧）</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/进制/">进制</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/进制/">进制</a>
     </span>
     
 

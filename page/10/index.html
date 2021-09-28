@@ -69,6 +69,77 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/23/mogodb-info/"><span>【Mongodb】- 知识整理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/mogodb-info/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T09:07:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Mongodb 作为 nosql 数据库的代表，和传统的 mysql 的关系型数据库不同，他的数据结构只有一种，那就是 BSON，没有固定的 schema，所以他是 no schema 的数据存储方式。</p>
+<p>需要注意的是，Mongodb 只支持单文档事务，所以用到的业务中不应该有事务性强的数据源。</p>
+<p>这么说比较直白。具体举例几个应用场景：</p>
+<ul>
+<li><p>游戏场景，使用 MongoDB 存储游戏用户信息，用户的装备、积分等直接以内嵌文档的形式存储，方便查询、更新</p>
+</li>
+<li><p>物流场景，使用 MongoDB 存储订单信息，订单状态在运送过程中会不断更新，以 MongoDB 内嵌数组的形式来存储，一次查询就能将订单所有的变更读取出来。</p>
+</li>
+<li><p>社交场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能</p>
+</li>
+</ul>
+<p>等等</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/MongoDb/">MongoDb</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/MongoDb/">MongoDb</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/23/redis-config/"><span>【Redis】- 配置管理</span></a></h3>
     
   
@@ -867,74 +938,6 @@ epoll的优点：
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/算法/">算法</a><a href="/tags/Redis/">Redis</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/11/02/docker-php-nginx/"><span>docker安装php7+nginx事例</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/11/02/docker-php-nginx/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-11-02T01:34:00.000Z">
-          2017-11-02
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>docker 是由 go 语言开发的的一个虚拟机容器，通过层的概念，把 fs(filesysytem)连接起来，形成一个可以独立的系统。其中涉及到了宿主机的概念，在这里，由于我所用的环境基本都是 centos7，所以这篇文章讲诉的就是 centos7 中使用 docker 安装 php7+nginx 的事例。后续我会发布一些镜像以及 dockerFile 提供大家学习参考。</p>
-<blockquote>
-<p>需要注意的是：docker 运动的服务都需要以前台的模式运行</p>
-</blockquote>
-<h1 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker</span><br></pre></td></tr></table></figure>
-
-<p>由于我们学习如何使用 docker，所以这里就选择了的直接采用 yum 安装了。</p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="创建-docker-容器操作用户"><a href="#创建-docker-容器操作用户" class="headerlink" title="创建 docker 容器操作用户"></a>创建 docker 容器操作用户</h2><p>由于 docker 容器基于宿主机，所以我们可以在宿主机中创建好对容器操作的用户</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; -g -u 参数分别指的的是gid，和uid</span><br><span class="line">groupadd -g 2017 docker-group</span><br><span class="line">adduser -g 2017 -u 2017 docker-user</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Docker/">Docker</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/Docker/">Docker</a><a href="/tags/Nginx/">Nginx</a>
     </span>
     
 

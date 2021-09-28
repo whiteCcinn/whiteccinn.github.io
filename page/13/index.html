@@ -69,6 +69,66 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/21/算法/algorithm-dynatic/"><span>动态规划算法の爬楼梯</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/21/算法/algorithm-dynatic/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-21T08:04:00.000Z">
+          2017-06-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>有一座高度是 10 级台阶的楼梯，从下往上走，每跨一步只能向上 1 级或者 2 级台阶。要求用程序来求出一共有多少种走法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/动态规划/">动态规划</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/20/算法/algorithm-hash-bkrd/"><span>HASH算法のBKDRHash</span></a></h3>
     
   
@@ -314,13 +374,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/06/20/design-object-pool-model/"><span>设计模式の创建型の原型模式</span></a></h3>
+    <h3 class="article-title"><a href="/2017/06/20/design-prototype-model/"><span>设计模式の创建型の原型模式</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2017/06/20/design-object-pool-model/" rel="bookmark">
+      <a href="/2017/06/20/design-prototype-model/" rel="bookmark">
         <time class="entry-date published" datetime="2017-06-20T03:46:00.000Z">
           2017-06-20
         </time>
@@ -334,10 +394,8 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>简介</p>
-<p>对象池（也称为资源池）被用来管理对象缓存。对象池是一组已经初始化过且可以直接使用的对象集合，用户在使用对象时可以从对象池中获取对象，对其进行操作处理，并在不需要时归还给对象池而非销毁它。</p>
-<p>若对象初始化、实例化的代价高，且需要经常实例化，但每次实例化的数量较少的情况下，使用对象池可以获得显著的性能提升。常见的使用对象池模式的技术包括线程池、数据库连接池、任务队列池、图片资源对象池等。</p>
-<p>当然，如果要实例化的对象较小，不需要多少资源开销，就没有必要使用对象池模式了，这非但不会提升性能，反而浪费内存空间，甚至降低性能。</p>
+        <h2 id="实质就是-对象的复制"><a href="#实质就是-对象的复制" class="headerlink" title="实质就是 对象的复制"></a>实质就是 对象的复制</h2><p>对一些大型对象，每次去 new，初始化开销很大，这个时候我们 先 new 一个模版对象，然后其他实例都去 clone 这个模版， 这样可以节约不少性能。<br>这个所谓的模版，就是原型（Prototype）；<br>当然，原型模式比单纯的 Clone 要稍微升级一下。</p>
+<h2 id="普通-clone"><a href="#普通-clone" class="headerlink" title="普通 clone"></a>普通 clone</h2><p>new 和 clone 都是用来创建对象的方法。<br>在 PHP 中， 对象间的赋值操作实际上是引用操作 （事实上，绝大部分的编程语言都是如此! 主要原因是内存及性能的问题) ，比如：</p>
         
       
     </div>
@@ -377,13 +435,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/06/20/design-prototype-model/"><span>设计模式の创建型の原型模式</span></a></h3>
+    <h3 class="article-title"><a href="/2017/06/20/design-object-pool-model/"><span>设计模式の创建型の原型模式</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2017/06/20/design-prototype-model/" rel="bookmark">
+      <a href="/2017/06/20/design-object-pool-model/" rel="bookmark">
         <time class="entry-date published" datetime="2017-06-20T03:46:00.000Z">
           2017-06-20
         </time>
@@ -397,8 +455,10 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="实质就是-对象的复制"><a href="#实质就是-对象的复制" class="headerlink" title="实质就是 对象的复制"></a>实质就是 对象的复制</h2><p>对一些大型对象，每次去 new，初始化开销很大，这个时候我们 先 new 一个模版对象，然后其他实例都去 clone 这个模版， 这样可以节约不少性能。<br>这个所谓的模版，就是原型（Prototype）；<br>当然，原型模式比单纯的 Clone 要稍微升级一下。</p>
-<h2 id="普通-clone"><a href="#普通-clone" class="headerlink" title="普通 clone"></a>普通 clone</h2><p>new 和 clone 都是用来创建对象的方法。<br>在 PHP 中， 对象间的赋值操作实际上是引用操作 （事实上，绝大部分的编程语言都是如此! 主要原因是内存及性能的问题) ，比如：</p>
+        <p>简介</p>
+<p>对象池（也称为资源池）被用来管理对象缓存。对象池是一组已经初始化过且可以直接使用的对象集合，用户在使用对象时可以从对象池中获取对象，对其进行操作处理，并在不需要时归还给对象池而非销毁它。</p>
+<p>若对象初始化、实例化的代价高，且需要经常实例化，但每次实例化的数量较少的情况下，使用对象池可以获得显著的性能提升。常见的使用对象池模式的技术包括线程池、数据库连接池、任务队列池、图片资源对象池等。</p>
+<p>当然，如果要实例化的对象较小，不需要多少资源开销，就没有必要使用对象池模式了，这非但不会提升性能，反而浪费内存空间，甚至降低性能。</p>
         
       
     </div>
@@ -617,67 +677,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Linux/">Linux</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/05/27/ascii-code-1/"><span>Ascii码和字节字符的关系</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/05/27/ascii-code-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-05-27T10:20:00.000Z">
-          2017-05-27
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>##关于 Ascii 码的整理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- 0 &lt; ascii &lt; 128 单字节字符 &#x3D;&#x3D; 1xxx xxxx</span><br><span class="line"></span><br><span class="line">向右移动 7 位等于 0.符合范围内</span><br><span class="line"></span><br><span class="line">- 240 &lt;&#x3D; ascii 四字节字符 &#x3D;&#x3D; 1111 xxxx</span><br><span class="line"></span><br><span class="line">向右移动 4 位&#x3D;15，符合范围内</span><br><span class="line"></span><br><span class="line">- 224 &lt;&#x3D; ascii &lt; 240 3 字节字符 &#x3D;&#x3D; 111x xxxx</span><br><span class="line"></span><br><span class="line">向右移动 5 位&#x3D;7，符合范围内</span><br><span class="line"></span><br><span class="line">- 192 &lt;&#x3D; ascii &lt; 224 2 字节字符 11xx xxxx</span><br><span class="line"></span><br><span class="line">向右移动 6 位&#x3D;3，符合范围内</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/协议/">协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/Ascii/">Ascii</a>
     </span>
     
 
