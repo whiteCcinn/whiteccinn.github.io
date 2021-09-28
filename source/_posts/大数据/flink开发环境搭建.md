@@ -512,8 +512,10 @@ docker pull maven:3.6.3
 同样把代码目录挂载进flink容器，然后构建flink容器（此步骤只要是拿到target目录下的jar包，如果你指定了其他路径换个挂载目录也可以）
 
 ```shell
-docker run -it --name flinkc --privileged  -w /www -v$(PWD):/www flink:1.12-scala_2.11-java8 bash
+docker run -it --name flinkc --privileged  -w /www -v$(PWD):/www -p 8081:8081 flink:1.12-scala_2.11-java8 bash
 ```
+
+> 8081是flink webui的服务，具体的内容后面再说
 
 进到容器后，启动单机版flink集群
 
