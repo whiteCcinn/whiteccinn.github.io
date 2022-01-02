@@ -69,6 +69,72 @@
 
   
     
+    <h3 class="article-title"><a href="/2021/03/27/数据库开发知识/msource/"><span>【数据库开发】msource</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/03/27/数据库开发知识/msource/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-03-26T17:16:43.000Z">
+          2021-03-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>CAP</code>原则又称CAP定理，指的是在一个分布式系统中，<code>一致性（Consistency）</code>、<code>可用性（Availability）</code>、<code>分区容错性（Partition tolerance）</code>。CAP 原则指的是，这三个要素最多只能同时实现两点，不可能三者兼顾。</p>
+<p><code>msource</code> 是我们的一个 <code>数据源组件</code>，我们所有的大数据ETL服务都构建在此之上，所以我们msource可以说是所有业务系统的核心。他维护着一个稳定，可靠，高性能的数据传输机制。让我们 <code>业务层</code> 中可以做各种操作，同步，异步等等。</p>
+<p>msource 的角色我大体分为了2种：</p>
+<ul>
+<li>spout （数据推送组件)</li>
+<li>db （数据存储组件）</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>, <a href="/categories/数据结构/数据库/">数据库</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Kafka/">Kafka</a><a href="/tags/TiDB/">TiDB</a><a href="/tags/RocketDB/">RocketDB</a><a href="/tags/SQL/">SQL</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2021/01/14/Golang/unsafe-Pointer/"><span>【Golang】- unsafe Pointer</span></a></h3>
     
   
@@ -637,66 +703,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/08/14/Golang/dlv在线调试/"><span>【Golang】- devle</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/08/14/Golang/dlv在线调试/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-14T01:46:51.000Z">
-          2020-08-14
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们可能断点调试程序，所以我们需要debug工具，对于golang来说，delve比gdb对go程序更友好。所以，我们今天来看看devle怎么debug程序</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -714,7 +720,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

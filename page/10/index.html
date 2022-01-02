@@ -69,6 +69,68 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/24/算法/algorithm-base-bubble/"><span>【基础算法】- 排序 - 冒泡</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/24/算法/algorithm-base-bubble/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-24T04:13:00.000Z">
+          2018-02-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>感觉一些基础的排序算法，貌似我的博客并没有说明，虽然我也很多了，但是还会记录一下，和大家分享一下，并且终结一下我每次的写排序算法的心得。</p>
+<p>先贴代码，再讲原理。</p>
+<h2 id="PHP-实现"><a href="#PHP-实现" class="headerlink" title="PHP 实现"></a>PHP 实现</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bubble</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">(array $args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $length = count($args);</span><br><span class="line">        <span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; $length - <span class="number">1</span>; $i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> ($j = <span class="number">0</span>; $j &lt; $length - <span class="number">1</span> - $i; $j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> ($args[$j] &gt; $args[$j + <span class="number">1</span>]) &#123;</span><br><span class="line">                    $tmp          = $args[$j];</span><br><span class="line">                    $args[$j]     = $args[$j + <span class="number">1</span>];</span><br><span class="line">                    $args[$j + <span class="number">1</span>] = $tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $args;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$data = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>];</span><br><span class="line"></span><br><span class="line">$sort   = <span class="keyword">new</span> Bubble();</span><br><span class="line">$sortData = $sort($data);</span><br><span class="line"></span><br><span class="line">print_r($sortData);</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/23/mogodb-info/"><span>【Mongodb】- 知识整理</span></a></h3>
     
   
@@ -882,73 +944,6 @@ epoll的优点：
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/01/23/redis-geohash/"><span>基于geohash算法-搜索附近的人</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/01/23/redis-geohash/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-01-23T03:45:00.000Z">
-          2018-01-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前空间索引的实现有 R 树和其变种 GIST 树、四叉树、网格索引等。 网格索引不再多提，使用普通的 hash 表存储地点和风格之间的映射来实现。今天要介绍的 GeoHash 算法实现的空间索引，虽然是以 B 树实现，但我认为它也借用网格索引的一部分思想。</p>
-<p><a href="https://github.com/whiteCcinn/geohash" target="_blank" rel="noopener">php-geohash</a></p>
-<h2 id="GeoHash"><a href="#GeoHash" class="headerlink" title="GeoHash"></a>GeoHash</h2><ol>
-<li>从横向上将整个方形纸分为左右两份，左侧部分为标记为 <code>0</code>， 右侧部分标记为 <code>1</code>；</li>
-<li>再将红点所在的部分划分为左右两块，再对红点位置做同样的标识，最后得出红点在横向上的标识为 <code>10</code>;</li>
-<li>在纵向上对方形纸做同样的划分，左侧标识为<code>0</code>，右侧标识为 <code>1</code>，得出红点位置在纵向上的标识为 <code>01</code>;</li>
-<li>将横向标识和纵向标识合并，规则为 纵向在奇数位，横向在偶数位 (也可纵横相反，但要在整个系统内保持一致)，得出红点在方形纸上的标识为 <code>1001</code>;</li>
-</ol>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a><a href="/tags/Redis/">Redis</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -966,7 +961,7 @@ epoll的优点：
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

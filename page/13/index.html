@@ -69,6 +69,69 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/22/design-decorator-model/"><span>设计模式の结构型の装饰器模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-decorator-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T01:57:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="大概的意思"><a href="#大概的意思" class="headerlink" title="大概的意思"></a>大概的意思</h1><p>一个类中有一个方法，我需要经常改它，而且会反反复复，改完了又改回去。 一般要么我们直接改原来的类中的方法，要么继承一下类覆盖这个方法。 有没有一个办法可以不用继承，只需要增加一个类进去，就可以改掉那个方法。 有，装饰器模式。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">plainCoffee</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">makeCoffee</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;addCoffee();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addCoffee</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个煮咖啡的程序，现在我还想加点糖，一般做法：</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/21/算法/algorithm-dynatic/"><span>动态规划算法の爬楼梯</span></a></h3>
     
   
@@ -236,7 +299,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -297,7 +360,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -358,7 +421,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -421,7 +484,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -482,7 +545,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -624,70 +687,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/19/ldconfig/"><span>linux の动态库</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/19/ldconfig/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-19T06:24:00.000Z">
-          2017-06-19
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="1-lib-和-usr-lib-的区别"><a href="#1-lib-和-usr-lib-的区别" class="headerlink" title="1. /lib 和 /usr/lib 的区别"></a>1. /lib 和 /usr/lib 的区别</h2><p>/lib 里面给的是 root 和内核所需<code>so(动态库)</code>或者<code>a(静态)</code>之类的库文件，而/usr/lib 是普通用户能够使用的。</p>
-<p>Linux 的程序有两种模式，这个你应该知道，是<code>用户模式</code>和<code>内核模式</code>，和这个也是有关系的，不再冗述。</p>
-<p>简单说,/lib 是内核级的,/usr/lib 是系统级的,/usr/local/lib 是用户级的.</p>
-<p>/lib/ — 包含许多被 /bin/ 和 /sbin/ 中的程序使用的库文件。目录 /usr/lib/ 中含有更多用于用户程序的库文件。/lib 目录下放置的是/bin 和/sbin 目录下程序所需的库文件。/lib 目录下的文件的名称遵循下面的格式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">libc.so.*</span><br><span class="line">ld*</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -705,7 +704,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

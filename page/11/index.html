@@ -69,6 +69,73 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/01/23/redis-geohash/"><span>基于geohash算法-搜索附近的人</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/23/redis-geohash/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-23T03:45:00.000Z">
+          2018-01-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前空间索引的实现有 R 树和其变种 GIST 树、四叉树、网格索引等。 网格索引不再多提，使用普通的 hash 表存储地点和风格之间的映射来实现。今天要介绍的 GeoHash 算法实现的空间索引，虽然是以 B 树实现，但我认为它也借用网格索引的一部分思想。</p>
+<p><a href="https://github.com/whiteCcinn/geohash" target="_blank" rel="noopener">php-geohash</a></p>
+<h2 id="GeoHash"><a href="#GeoHash" class="headerlink" title="GeoHash"></a>GeoHash</h2><ol>
+<li>从横向上将整个方形纸分为左右两份，左侧部分为标记为 <code>0</code>， 右侧部分标记为 <code>1</code>；</li>
+<li>再将红点所在的部分划分为左右两块，再对红点位置做同样的标识，最后得出红点在横向上的标识为 <code>10</code>;</li>
+<li>在纵向上对方形纸做同样的划分，左侧标识为<code>0</code>，右侧标识为 <code>1</code>，得出红点位置在纵向上的标识为 <code>01</code>;</li>
+<li>将横向标识和纵向标识合并，规则为 纵向在奇数位，横向在偶数位 (也可纵横相反，但要在整个系统内保持一致)，得出红点在方形纸上的标识为 <code>1001</code>;</li>
+</ol>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/Redis/">Redis</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/11/02/docker-php-nginx/"><span>docker安装php7+nginx事例</span></a></h3>
     
   
@@ -642,7 +709,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/C/">C</a><a href="/tags/算法/">算法</a><a href="/tags/ID发号器/">ID发号器</a>
+        <a href="/tags/C/">C</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/ID发号器/">ID发号器</a>
     </span>
     
 
@@ -731,85 +798,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/28/network-protocol-endian/"><span>大端和小端（Big endian and Little endian）</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/28/network-protocol-endian/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-28T06:43:00.000Z">
-          2017-06-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="大端和小端（Big-endian-and-Little-endian）"><a href="#大端和小端（Big-endian-and-Little-endian）" class="headerlink" title="大端和小端（Big endian and Little endian）"></a>大端和小端（Big endian and Little endian）</h1><h2 id="网络字节序"><a href="#网络字节序" class="headerlink" title="网络字节序"></a>网络字节序</h2><p>网络字节顺序是TCP/IP中规定好的一种数据表示格式，它与具体的CPU类型、操作系统等无关，从而可以保证数据在不同主机之间传输时能够被正确解释。网络字节顺序采用big endian排序方式。</p>
-<p>由此可知，网络字节序是大端序的。那么什么是Big endian呢？</p>
-<h2 id="一、大端和小端的问题"><a href="#一、大端和小端的问题" class="headerlink" title="一、大端和小端的问题"></a>一、大端和小端的问题</h2><p>对于整型、长整型等数据类型，Big endian 认为第一个字节是最高位字节（按照从低地址到高地址的顺序存放数据的高位字节到低位字节）；而 Little endian 则相反，它认为第一个字节是最低位字节（按照从低地址到高地址的顺序存放数据的低位字节到高位字节）。</p>
-<p><strong>例如，假设从内存地址 <code>0x0000</code> 开始有以下数据：</strong></p>
-<table>
-<thead>
-<tr>
-<th>0x0000</th>
-<th>0x0001</th>
-<th>0x0002</th>
-<th>0x0003</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0x12</td>
-<td>0x34</td>
-<td>0xab</td>
-<td>0xcd</td>
-</tr>
-</tbody></table>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/协议/">协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/进制/">进制</a><a href="/tags/网络/">网络</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -827,7 +815,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

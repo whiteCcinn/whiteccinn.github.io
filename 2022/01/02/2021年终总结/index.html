@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【2021】 2021年终总结 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【2021】 2021年终总结"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【2021】 2021年终总结</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/01/02/2021年终总结/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-01-02T15:54:00.000Z">
+          2022-01-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>2021已经过去了，在这里回忆一下，我的2021的年终总结。</p>
+<a id="more"></a>
+
+<h2 id="困难与挑战"><a href="#困难与挑战" class="headerlink" title="困难与挑战"></a>困难与挑战</h2><p>工作中，在过去的一年里，迎接了不少的挑战，在公司中落地大数据相关的服务了从<code>erlang</code>到<code>golang</code>的转换。我们整套新的体系称为：<code>mfeilog</code></p>
+<ol>
+<li><p>在公司中，积累了许多go语言的组件，并且不断的完善修复相关的bug，例如，mfeilog的核心数据源：<code>msource</code>，mfeilog的基础组件：<code>daemon组件</code>/<code>no-named-pipe组件</code>，<code>logbdev组件</code>，<code>sink_mysql</code>/<code>sink_kafka</code>等组件。</p>
+</li>
+<li><p>说到这个<code>msource</code>服务，这是一个基于<code>rocksdb</code>实现的支持<code>sql</code>语法的轻量级小型定制<code>数据库服务</code>，可以说是经过了不断优化，升级，修复内部各种内置功能，才得以现在的稳定和高效。给应用层提供了一个高可靠，稳定，的数据源功能。其中有一个bug，印象特别深刻，也是我始料未及的一个bug，因为<code>发号器</code>是附属在<code>Table</code>当中的，我需要<code>自定义序列化</code>后存储在底层的<code>rocksdb</code>中，所以在我<code>反序列化</code>出来的时候，启动了多个发号器，导致每个<code>field-colunm</code>都实例化了一个新的对象，而非同一个对象，引发了发号器错乱，从而导致数据丢失的问题(内存被覆盖，错误ack掉了数据)。这个问题排查也是十分不易！！！所以可以说是血的教训。</p>
+</li>
+<li><p>并且也为公司推广 “服务器日志查询方案” 中，确定了以<code>GPL（grafna+protomal+loki）</code>的日志查询架构，统一了日志查询的入口，大大提高了日志查询的效率。</p>
+</li>
+<li><p>在 <code>go服务流量录制和回放方案和实现</code> 中，为了实现流量闭环，特意去调研查看了 滴滴的 <code>《写轮眼》</code>项目，并且知道了通过类似注入的方式，可以在用户层编解码上替换到原来的函数指针，从而实现在用户层替换go底层源码的方式，但是由于性价比问题，在公司中最后并未推广，也没有进行研发。该需求后面被搁置了。</p>
+</li>
+<li><p>在 <code>配置服务方案</code> 中，这个需求在以往其实已经试过才用<code>consule</code>来做配置服务中心，原因是早期我们想要对服务做一个<code>服务注册和发现</code>，在 <code>php</code> 这种<code>fastcgi</code>的方式来说，consule的主动发现服务，就比很多类似<code>etcd</code>被动发现注册服务好用。但是由于最终因为我们的服务目前来说比较零散，并且需求的任务不是着急，这件事后面也被搁置了，后面今天再次提了一个这样子的类似的需求，实现了通过 go语言写的的工具，类似于<code>k8s</code>的<code>kubectl</code>的工具，进行配置的同步和管理，分别分为了2个模式，一个是C端的工具，一个是S端的同步服务，中间的枢纽，最终选择了以<code>etcd</code>为配置分布式存储服务。我们服务的部署特点，利用<code>jenkins</code>的<code>多阶段自定义编译</code>的<code>jenkins-shared-library</code>实现了灵活编译，根据现有的服务灵活部署，从而达到非嵌入式的配置同步方式。</p>
+</li>
+<li><p>因为公司成立得比较早，代码仓库一直从未进行变更，所以其中一个需求就是 <code>gitbucket</code> 到 <code>gitlab</code> 的代码仓库迁移，写了一个小工具，从而实现了从 gitbucket到 gitlab一键自动化无缝迁移代码，包括项目组，项目的历史<code>commit</code>，<code>tag</code>，<code>branch</code>等等都自动化完成，大大减轻了项目迁移的负担。</p>
+</li>
+<li><p>对 <code>jenkins</code> 的<code>shard-library</code> 模块进行优化升级，编写了一个<code>python的支持多凭据认证的脚本</code>，并且支持自定义编译代码。</p>
+</li>
+<li><p>集成了一套，<code>本地的大数据docker环境</code>，我们都知道大数据环境十分的繁杂，并且还需要多台机器才能处理，这对我们本地开发来说十分的不友好，但是网上又没有那些很好的开箱即用的<code>docker-compose</code>环境，因此整理了一套本地的大数据docker环境(非CDH版本)</p>
+</li>
+<li><p>优化升级部分 <code>mproxy</code> 的代码，从而让测试人员更友好的在该项目中完成<code>自动化测试</code>的脚本功能。</p>
+</li>
+<li><p>推动<code>flink</code>的落地，由于我们早期的流计算，是单机的，并且存在严重的外部依赖属性，所以，我们推动了flink的落地，探究了几种开发方式，分别是用纯<code>java</code> 写的<code>datastream-api</code>方式，这个方式有一个好处就是，所有的上层的api都是基于<code>datastream</code>的，一些上层的api无法满足我们的需求，我们通过datastream可以很轻松的实现各类需求。在这个过程中，我踩了不少的坑，主要是来自于<code>watermark</code>和<code>window</code>的概念，咋一看其实都是一些比较好理解的概念，但是其实在配合大数据专用的<code>kafka</code>消息队列中间件，一切就变得复杂起来，由于<code>kafka</code>的<code>partition</code>只能有一个client去消费的原因，加上flink自身的概念<code>并行度</code>，这一切结合在一起，就会出现一些让你疑惑的点。经过了大量反复的摸索和钻研，最终才掌握了在多partition下flink的watermark和window-trigger机制方式，但是由于该方式不够直观，也不管灵活，所以我们最终推广了<code>sql-api</code>。好家伙，你以为这就完了吗，并没有，由于flink自身带有<code>sql-client</code>的原因，我一开始尝试了用<code>sql-client</code>来编写流计算的模型，但是发现这个工具有太多问题了，不同的版本有不用的调用方式，不同版本下，对于<code>SET</code>支持的粒度也是不一致的，这让我很头疼。所以最终选择了，基于flink编写了一个自研的<code>flink-sql-client</code>，通过<code>flink run flink-sql-client.jar</code>的方式，我们就可以轻松的提交sql任务或者做其他的需求（例如查看hive的cataglog等等）。然而到了这里还没有结束，由于<code>sql</code>的部分，我们没办法控制，是由<code>flink-core</code>自身标准化了流程，所以有一些bug我们没办法解决，例如在 <code>flink-1.12.0</code> 种，就会因为<code>watermark</code>在<code>idle</code>的情况下，无法推进watermark，从而导致窗口在少量数据情况下，根本不能及时的统计和计算（这和号称实时分析的流计算违背），所以我们只能想了一些版本做了一些迂回的操作。从而最终解决类似这种由于底层bug所带来的问题。</p>
+</li>
+</ol>
+<h2 id="自己的学习上"><a href="#自己的学习上" class="headerlink" title="自己的学习上"></a>自己的学习上</h2><ol>
+<li><p>对<code>golang</code>的<code>protobuf</code>服务有一些的了解，并且学会了<code>protobuf</code>的插件开发。了解了protobuf的协议。</p>
+</li>
+<li><p>对<code>rust</code>上的生态更为清晰了，利用了其中的一些<code>actor</code>模型，<code>async-io</code>等分别实现了一些基础的工具。</p>
+</li>
+<li><p>对<code>flutter</code>也有了一定的了解，利用<code>dart</code>编写了一个可以用于自定义通信的库。s</p>
+</li>
+<li><p>对<code>linux</code> 种的一些磁盘io，网络io，已经shell命令的灵活运用更加深刻。</p>
+</li>
+</ol>
+<blockquote>
+<p>未完待续！！</p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/年终总结/">年终总结</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/年终总结/">年终总结</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

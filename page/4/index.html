@@ -69,6 +69,66 @@
 
   
     
+    <h3 class="article-title"><a href="/2020/05/12/大数据/impala函数总结文档/"><span>【大数据】- Impala函数使用文档</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/05/12/大数据/impala函数总结文档/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-05-12T01:56:40.000Z">
+          2020-05-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前一些传统的公司比较早期使用大数据计算引擎的，都会选择使用imapla做为计算引擎，所以对impala对一些sql使用还是需要熟悉的。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/大数据/">大数据</a><a href="/tags/Impala/">Impala</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/05/08/消息队列/rabbitmq/"><span>【消息队列】- Rabbitmq安装与配置</span></a></h3>
     
   
@@ -372,13 +432,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/"><span>【数据库开发知识】基于B+树实现一个高并发数据库</span></a></h3>
+    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/B+树/"><span>【数据库开发知识】B+树</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/" rel="bookmark">
+      <a href="/2019/12/05/数据库开发知识/B+树/" rel="bookmark">
         <time class="entry-date published" datetime="2019-12-05T09:43:43.000Z">
           2019-12-05
         </time>
@@ -392,11 +452,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <h1 id="开发笔记"><a href="#开发笔记" class="headerlink" title="开发笔记"></a>开发笔记</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M (3) <span class="comment">// B+树的阶数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIMIT_M_2 (M &gt;&gt; 1) <span class="comment">// M的中点</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> True (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> False (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INDEX_NAME (<span class="meta-string">"index"</span>) <span class="comment">// 索引文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SUCCESS (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR (-1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OPEN_MODE (O_RDWR | O_CREAT | O_TRUNC) <span class="comment">// 打开文件的模式：可读可写打开 | 若此文件不存在则创建它 | 如果文件已存在，并且以只写或可读可写方式打开，则将其长度截断（Truncate）为0字节</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) <span class="comment">// 文件的权限：660</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> KeyType; <span class="comment">// 关键字的数据类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">off_t</span> Record; <span class="comment">// 索引所对应的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span>&#123;</span></span><br><span class="line">	<span class="keyword">int</span> isLeaf;                <span class="comment">// 是否是叶子节点</span></span><br><span class="line">	<span class="keyword">int</span> keynum;                <span class="comment">// 关键字个数</span></span><br><span class="line">	KeyType key[M + <span class="number">1</span>];        <span class="comment">// 存放的关键字的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">ptr</span>[<span class="title">M</span> + 1];</span><span class="comment">// 关键字子树的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	Record value[M + <span class="number">1</span>];       <span class="comment">// 关键字对应的value，当节点为叶子节点的时候才有效</span></span><br><span class="line">&#125;BPTNode, *BPTree;</span><br></pre></td></tr></table></figure>
-
-<p>我们看到 <code>BPTNode</code> 是我们的节点结构体，这个结构体占用的内存大小我们计算一下：</p>
-<p>记住内存对齐的原则，并且指针占用 8 个字节，off_t 一般是 64 位，占用 8 个字节</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(int)+4(int)+4(KeyType)*4(M+1)+4(*pts)*4(M+1)+4(*next)+8(Record)*4(M+1) &#x3D; 4+4+16+32+8+32 &#x3D; 96bytes</span><br></pre></td></tr></table></figure>
+        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>B/B+树在数据存储上一直都是最高效的数据结构。B 树的概念比较清晰，但是 B+树的概念却有不同的解释。</p>
         
       
     </div>
@@ -436,13 +492,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/B+树/"><span>【数据库开发知识】B+树</span></a></h3>
+    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/"><span>【数据库开发知识】基于B+树实现一个高并发数据库</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2019/12/05/数据库开发知识/B+树/" rel="bookmark">
+      <a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/" rel="bookmark">
         <time class="entry-date published" datetime="2019-12-05T09:43:43.000Z">
           2019-12-05
         </time>
@@ -456,7 +512,11 @@
   <div class="article-content">
     <div class="entry">
       
-        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>B/B+树在数据存储上一直都是最高效的数据结构。B 树的概念比较清晰，但是 B+树的概念却有不同的解释。</p>
+        <h1 id="开发笔记"><a href="#开发笔记" class="headerlink" title="开发笔记"></a>开发笔记</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M (3) <span class="comment">// B+树的阶数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIMIT_M_2 (M &gt;&gt; 1) <span class="comment">// M的中点</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> True (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> False (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INDEX_NAME (<span class="meta-string">"index"</span>) <span class="comment">// 索引文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SUCCESS (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR (-1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OPEN_MODE (O_RDWR | O_CREAT | O_TRUNC) <span class="comment">// 打开文件的模式：可读可写打开 | 若此文件不存在则创建它 | 如果文件已存在，并且以只写或可读可写方式打开，则将其长度截断（Truncate）为0字节</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) <span class="comment">// 文件的权限：660</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> KeyType; <span class="comment">// 关键字的数据类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">off_t</span> Record; <span class="comment">// 索引所对应的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span>&#123;</span></span><br><span class="line">	<span class="keyword">int</span> isLeaf;                <span class="comment">// 是否是叶子节点</span></span><br><span class="line">	<span class="keyword">int</span> keynum;                <span class="comment">// 关键字个数</span></span><br><span class="line">	KeyType key[M + <span class="number">1</span>];        <span class="comment">// 存放的关键字的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">ptr</span>[<span class="title">M</span> + 1];</span><span class="comment">// 关键字子树的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	Record value[M + <span class="number">1</span>];       <span class="comment">// 关键字对应的value，当节点为叶子节点的时候才有效</span></span><br><span class="line">&#125;BPTNode, *BPTree;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到 <code>BPTNode</code> 是我们的节点结构体，这个结构体占用的内存大小我们计算一下：</p>
+<p>记住内存对齐的原则，并且指针占用 8 个字节，off_t 一般是 64 位，占用 8 个字节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(int)+4(int)+4(KeyType)*4(M+1)+4(*pts)*4(M+1)+4(*next)+8(Record)*4(M+1) &#x3D; 4+4+16+32+8+32 &#x3D; 96bytes</span><br></pre></td></tr></table></figure>
         
       
     </div>
@@ -641,66 +701,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/08/12/大数据/Glow源码剖析/"><span>【大数据】- Glow 源码剖析</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/08/12/大数据/Glow源码剖析/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-08-11T16:07:40.000Z">
-          2019-08-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>犹豫公司的流式计算，并没有用类似于 Hadoop 的 mapreduce 机制或者 storm 或者 flink，是我们自研基于 erlang 的单节点服务，其优点就是：部署和迁移都十分简单，并且犹豫 erlang 的天然的良好的利用了多核 CPU 的优势，可以实现效率较高的大数据流式计算。但是由于其单机性，导致对单台机器的要求过于苛刻，并且不能进行扩展机器提高计算能力是其致命的缺点，所以目前我规划利用 golang，写一个支持分布式并行计算的服务，在此之前，了解了各大流式计算的基本思想，并且结合 golang 语言的特性，找到了一个叫<code>glow</code>的服务，想要写好一个分布式流式计算的服务，我们先来看看 <code>glow</code> 有什么好的借鉴的思想和思路。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/大数据/">大数据</a>, <a href="/categories/大数据/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a><a href="/tags/大数据，流式计算/">大数据，流式计算</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -718,7 +718,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

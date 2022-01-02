@@ -69,6 +69,70 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/19/ldconfig/"><span>linux の动态库</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/19/ldconfig/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-19T06:24:00.000Z">
+          2017-06-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="1-lib-和-usr-lib-的区别"><a href="#1-lib-和-usr-lib-的区别" class="headerlink" title="1. /lib 和 /usr/lib 的区别"></a>1. /lib 和 /usr/lib 的区别</h2><p>/lib 里面给的是 root 和内核所需<code>so(动态库)</code>或者<code>a(静态)</code>之类的库文件，而/usr/lib 是普通用户能够使用的。</p>
+<p>Linux 的程序有两种模式，这个你应该知道，是<code>用户模式</code>和<code>内核模式</code>，和这个也是有关系的，不再冗述。</p>
+<p>简单说,/lib 是内核级的,/usr/lib 是系统级的,/usr/local/lib 是用户级的.</p>
+<p>/lib/ — 包含许多被 /bin/ 和 /sbin/ 中的程序使用的库文件。目录 /usr/lib/ 中含有更多用于用户程序的库文件。/lib 目录下放置的是/bin 和/sbin 目录下程序所需的库文件。/lib 目录下的文件的名称遵循下面的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">libc.so.*</span><br><span class="line">ld*</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/05/27/ascii-code-1/"><span>Ascii码和字节字符的关系</span></a></h3>
     
   
@@ -626,75 +690,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/24/数据结构/struct-study-1/"><span>线性存储结构</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/24/数据结构/struct-study-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-24T03:29:00.000Z">
-          2017-01-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
-<li><p>线性结构是一个有序元素<strong>集合</strong></p>
-</li>
-<li><p>常用的线性结构有：线性表，栈，队列，双队列，数组，串</p>
-</li>
-<li><p>关于广义表，是一种非线性数据结构</p>
-</li>
-<li><p>常见的非线性结构有：二维数组，多维数组，树（二叉树等），广义表，图。</p>
-</li>
-</ol>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/数据结构/">数据结构</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/数据结构/">数据结构</a><a href="/tags/线性存储结构/">线性存储结构</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -712,7 +707,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

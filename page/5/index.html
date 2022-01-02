@@ -69,6 +69,66 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/08/12/大数据/Glow源码剖析/"><span>【大数据】- Glow 源码剖析</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/12/大数据/Glow源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-11T16:07:40.000Z">
+          2019-08-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>犹豫公司的流式计算，并没有用类似于 Hadoop 的 mapreduce 机制或者 storm 或者 flink，是我们自研基于 erlang 的单节点服务，其优点就是：部署和迁移都十分简单，并且犹豫 erlang 的天然的良好的利用了多核 CPU 的优势，可以实现效率较高的大数据流式计算。但是由于其单机性，导致对单台机器的要求过于苛刻，并且不能进行扩展机器提高计算能力是其致命的缺点，所以目前我规划利用 golang，写一个支持分布式并行计算的服务，在此之前，了解了各大流式计算的基本思想，并且结合 golang 语言的特性，找到了一个叫<code>glow</code>的服务，想要写好一个分布式流式计算的服务，我们先来看看 <code>glow</code> 有什么好的借鉴的思想和思路。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>, <a href="/categories/大数据/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/大数据，流式计算/">大数据，流式计算</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/08/07/网络协议/TCP-tcpdump/"><span>【网络协议】TCP - tcpdump用法</span></a></h3>
     
   
@@ -668,70 +728,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/05/服务注册和发现/etcd/"><span>【服务注册和发现】- Etcd</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/05/服务注册和发现/etcd/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-05T03:15:00.000Z">
-          2019-07-05
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>Etcd is a distributed, consistent <strong>key-value</strong> store for <strong>shared configuration</strong> and <strong>service discovery</strong></p>
-<blockquote>
-<p>是一个分布式的，一致的 key-value 存储，主要用途是共享配置和服务发现</p>
-</blockquote>
-<p>服务注册与服务发现是在分布式服务架构中常常会涉及到的东西，业界常用的服务注册与服务发现工具有 <a href="https://zookeeper.apache.org/" target="_blank" rel="noopener">ZooKeeper</a>、<a href="https://etcd.io/" target="_blank" rel="noopener">etcd</a>、<a href="https://www.consul.io/" target="_blank" rel="noopener">Consul</a> 和 <a href="https://github.com/Netflix/eureka" target="_blank" rel="noopener">Eureka</a>。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/服务注册和发现/">服务注册和发现</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/服务注册和发现/">服务注册和发现</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -749,7 +745,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

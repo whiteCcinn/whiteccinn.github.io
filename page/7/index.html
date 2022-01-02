@@ -69,6 +69,80 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/04/02/rust-for-docker/"><span>rust-for-docker</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/04/02/rust-for-docker/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-02T12:49:59.000Z">
+          2019-04-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天，我们开始学习一下 Rust，希望将来在公司可以推广 Rust 语言，并且用 Rust 语言做更多的事情。</p>
+<p>在此， 进入我们的入学篇。</p>
+<h2 id="Rust-for-Docker"><a href="#Rust-for-Docker" class="headerlink" title="Rust for Docker"></a>Rust for Docker</h2><p>拉取最新版本的 Rust</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rust:latest</span><br></pre></td></tr></table></figure>
+
+<p>由于官方上的命令有点问题，并且我希望我有一个交互的终端环境，所以，经过修改后，进入 Rust 容器的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -e &quot;USER&#x3D;$(whoami)&quot; -e &quot;RUST_BACKTRACE&#x3D;1&quot; -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp -w &#x2F;usr&#x2F;src&#x2F;myapp rust:latest bash</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>USER: cargo 打包的时候会用这个命名</li>
+<li>RUST_BACKTRACE：终端调试的时候，会打印出错误栈</li>
+</ul>
+<p>进入到容器后，我们创建属于我们的第一个项目：Hello，World</p>
+<p>利用 Rust 的包管理工具：Cargo 进行开发和编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_world</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; car new --lib &lt;package_name&gt; 这个是创建类库的命令，暂时用不到，所以忽略先</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Rust/">Rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Rust/">Rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/11/15/linux-shell-huanhangbuchong/"><span>【工具】oh-my-zsh 换行补偿</span></a></h3>
     
   
@@ -683,83 +757,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/regular-3/"><span>【正则表达式】- 贪婪和非贪婪模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/regular-3/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T06:11:56.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="模式："><a href="#模式：" class="headerlink" title="模式："></a>模式：</h2><p>在使用修饰匹配次数的特殊符号时，有几种表示方法可以使同一个表达式能够匹配不同的次数，比如：”{m,n}”, “{m,}”, “?”, “*”, “+”，具体匹配的次数随被匹配的字符串而定。这种重复匹配不定次数的表达式在匹配过程中，总是尽可能多的匹配。比如，针对文本 “dxxxdxxxd”，举例如下：</p>
-<h2 id="贪婪模式："><a href="#贪婪模式：" class="headerlink" title="贪婪模式："></a>贪婪模式：</h2><table>
-<thead>
-<tr>
-<th>表达式</th>
-<th>匹配结果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(d)(\w+)</td>
-<td>“\w+” 将匹配第一个 “d” 之后的所有字符 “xxxdxxxd”</td>
-</tr>
-<tr>
-<td>(d)(\w+)(d)</td>
-<td>“\w+” 将匹配第一个 “d” 和最后一个 “d” 之间的所有字符 “xxxdxxx”。</td>
-</tr>
-</tbody></table>
-<p>虽然 “\w+” 也能够匹配上最后一个 “d”，但是为了使整个表达式匹配成功，<br>“\w+” 可以 “让出” 它本来能够匹配的最后一个 “d”</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/正则/">正则</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -777,7 +774,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>

@@ -69,6 +69,83 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/03/12/regular-3/"><span>【正则表达式】- 贪婪和非贪婪模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/12/regular-3/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-12T06:11:56.000Z">
+          2018-03-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="模式："><a href="#模式：" class="headerlink" title="模式："></a>模式：</h2><p>在使用修饰匹配次数的特殊符号时，有几种表示方法可以使同一个表达式能够匹配不同的次数，比如：”{m,n}”, “{m,}”, “?”, “*”, “+”，具体匹配的次数随被匹配的字符串而定。这种重复匹配不定次数的表达式在匹配过程中，总是尽可能多的匹配。比如，针对文本 “dxxxdxxxd”，举例如下：</p>
+<h2 id="贪婪模式："><a href="#贪婪模式：" class="headerlink" title="贪婪模式："></a>贪婪模式：</h2><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>匹配结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(d)(\w+)</td>
+<td>“\w+” 将匹配第一个 “d” 之后的所有字符 “xxxdxxxd”</td>
+</tr>
+<tr>
+<td>(d)(\w+)(d)</td>
+<td>“\w+” 将匹配第一个 “d” 和最后一个 “d” 之间的所有字符 “xxxdxxx”。</td>
+</tr>
+</tbody></table>
+<p>虽然 “\w+” 也能够匹配上最后一个 “d”，但是为了使整个表达式匹配成功，<br>“\w+” 可以 “让出” 它本来能够匹配的最后一个 “d”</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/正则/">正则</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/正则/">正则</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/03/12/regular-2/"><span>【正则表达式】 - 超简单练习题</span></a></h3>
     
   
@@ -684,75 +761,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/28/http-d/"><span>【协议】http协议1/2的区别</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/28/http-d/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-28T13:34:54.000Z">
-          2018-02-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>http 协议属于应用层的协议，是我们日常经常打交道的一种协议，属于一种<strong>文本协议</strong>，http 协议经历了 3 个比较大的版本改变。</p>
-<p>http 协议基于 tcp 协议实现（应用层协议基于传输层协议，这个是正常的嘛），为了数据的安全性，有时候可能建立在 tls 或者 ssl 协议之上。</p>
-<h2 id="http1-0"><a href="#http1-0" class="headerlink" title="http1.0"></a>http1.0</h2><p>http1.0 使用的是非持久化连接，就是每次请求，都是一个新的连接，网络 io 较高</p>
-<ul>
-<li><p>非持久化连接</p>
-</li>
-<li><p>每次请求都是一个独立的连接</p>
-</li>
-</ul>
-<h2 id="http1-1"><a href="#http1-1" class="headerlink" title="http1.1"></a>http1.1</h2>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/网络/">网络</a>, <a href="/categories/网络/协议/">协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -770,7 +778,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2021 白菜(whiteCcinn)
+    &copy; 2022 白菜(whiteCcinn)
     
   </p>
 </footer>
