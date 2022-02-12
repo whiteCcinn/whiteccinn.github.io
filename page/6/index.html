@@ -69,6 +69,227 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/07/08/C语言/Makefile/"><span>【C语言】- Makefile</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/08/C语言/Makefile/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-08T02:11:09.000Z">
+          2019-07-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>什么是 makefile？或许很多 Winodws 的程序员都不知道这个东西，因为那些 Windows 的 IDE 都为你做了这个工作，但我觉得要作一个好的和 professional 的程序员，makefile 还是要懂。这就好像现在有这么多的 HTML 的编辑器，但如果你想成为一个专业人士，你还是要了解 HTML 的标识的含义。特别在 Unix 下的软件编译，你就不能不自己写 makefile 了，<code>会不会写 makefile，从一个侧面说明了一个人是否具备完成大型工程的能力</code>。因为，makefile 关系到了整个工程的编译规则。一个工程中的源文件不计数，其按类型、功能、模块分别放在若干个目录中，makefile 定义了一系列的规则来指定，哪些文件需要先编译，哪些文件需要后编译，哪些文件需要重新编译，甚至于进行更复杂的功能操作，因为 makefile 就像一个 Shell 脚本一样，其中也可以执行操作系统的命令。<code>makefile 带来的好处就是——“自动化编译”</code>，一旦写好，只需要一个 make 命令，整个工程完全自动编译，极大的提高了软件开发的效率。make 是一个命令工具，是一个解释 makefile 中指令的命令工具，一般来说，大多数的 IDE 都有这个命令，比如：Delphi 的 make，Visual C++的 nmake，Linux 下 GNU 的 make。可见，makefile 都成为了一种在工程方面的编译方法。</p>
+<blockquote>
+<p>其实在我眼中，感觉 makefile 文件其实就是等于一个 shell 文件，用于处理“自动化”的内容，只不过它是由 C 语言程序本身解析的。</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/C语言/">C语言</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/C语言/">C语言</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/06/算法/leetcode/最长公共前缀/"><span>【LeeCode】- 最长公公前缀</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/06/算法/leetcode/最长公共前缀/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-06T02:11:09.000Z">
+          2019-07-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>编写一个函数来查找字符串数组中的最长公共前缀。</p>
+<p>如果不存在公共前缀，返回空字符串  “”。</p>
+<p>示例 1:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;]</span><br><span class="line">输出: &quot;fl&quot;</span><br></pre></td></tr></table></figure>
+
+<p>示例 2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [&quot;dog&quot;,&quot;racecar&quot;,&quot;car&quot;]</span><br><span class="line">输出: &quot;&quot;</span><br><span class="line">解释: 输入不存在公共前缀。</span><br><span class="line">说明:</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>所有输入只包含小写字母  a-z 。</p>
+</blockquote>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><h3 id="解法一：水平扫描法"><a href="#解法一：水平扫描法" class="headerlink" title="解法一：水平扫描法"></a>解法一：水平扫描法</h3><p>首先，我们将描述一种查询一组字符串的最长公共前缀 <code>LCP(S1...Sn)</code>，我们得到结论是：</p>
+<p><code>LCP(S1...Sn)=LCP(LCP(LCP(S1,S2),S3),...Sn)</code></p>
+<p>从公式可以看出，两两比较的字符串的公共字符串就是我们的运算过程。</p>
+<p><img src="/images/%E7%AE%97%E6%B3%95/%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%89%8D%E7%BC%80%E6%B0%B4%E5%B9%B3%E6%89%AB%E6%8F%8F%E6%B3%95.png" alt="水平扫描法"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">longestCommonPrefix</span><span class="params">(<span class="keyword">char</span> **strs, <span class="keyword">int</span> strSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i, j;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (strSize == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> *str = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>) * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">strcpy</span>(str, strs[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; strSize; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (str[j] &amp;&amp; strs[i][j] &amp;&amp; str[j] == strs[i][j])</span><br><span class="line">    &#123;</span><br><span class="line">      j++;</span><br><span class="line">    &#125;</span><br><span class="line">    str[j] = <span class="string">'\0'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *strs[] = &#123;<span class="string">"lees"</span>, <span class="string">"leetcode"</span>, <span class="string">"leet"</span>, <span class="string">"leets"</span>&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> <span class="built_in">size</span> = <span class="keyword">sizeof</span>(strs) / <span class="keyword">sizeof</span>(<span class="keyword">char</span> *);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">char</span> *lcp;</span><br><span class="line"></span><br><span class="line">  lcp = longestCommonPrefix(strs, <span class="built_in">size</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, lcp);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体请查看我的 github 仓库项目</p>
+<p><a href="https://github.com/whiteCcinn/leetcode-practice" target="_blank" rel="noopener">leetcode-practice</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/LeeCode/">LeeCode</a>, <a href="/categories/LeeCode/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/LeeCode/">LeeCode</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/05/API网关/orange/"><span>【API网关】- Orange</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/05/API网关/orange/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-05T10:15:00.000Z">
+          2019-07-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>版本：0.7</p>
+</blockquote>
+<p>API 网关/网关，充当的职责无非以下几点：</p>
+<ul>
+<li>鉴权</li>
+<li>限流</li>
+<li>分流</li>
+<li>负载均衡</li>
+</ul>
+<blockquote>
+<p>隐含的功能就是动态 upstream</p>
+</blockquote>
+<p>大多与的 API 网关都是用利用 lua 实现的 Openresty 来实现的，因为它可以很好的和 nginx 结合在一起，可以同时运行 lua 脚本和 C 库，并且由于 lua 在协程上实现得十分早，对于 IO 密集型的处理十分的高效。</p>
+<p>在给予 Openresty 实现的 API 网关中，有一些是比较出名的，例如 kong/orange</p>
+<ul>
+<li><p><a href="https://github.com/Kong/kong" target="_blank" rel="noopener">kong</a> 算是行业认为最强大成熟的一个组件的，但是过于复杂了。</p>
+</li>
+<li><p><a href="https://github.com/orlabs/orange" target="_blank" rel="noopener">orange</a> 利用插件的形式来处理请求，并且间接直接，易于二次开发和扩展</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/API网关/">API网关</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/API网关/">API网关</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/07/05/服务注册和发现/etcd/"><span>【服务注册和发现】- Etcd</span></a></h3>
     
   
@@ -492,212 +713,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Docker/">Docker</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/05/28/k8s/k8s测试集群部署/"><span>【kubernetes】测试集群部署</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/05/28/k8s/k8s测试集群部署/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-05-28T03:28:30.000Z">
-          2019-05-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了在公司推广 docker 和 k8s，方便我们开发人员去更好的维护自己的对应的生产环境<br>目前用 k8s 构建我们自己的测试环境，用于接口测试和功能测试专用。<br>本文记录一下集群部署的情况</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/kubernetes/">kubernetes</a>, <a href="/categories/kubernetes/Docker/">Docker</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/05/21/php-cs-fixer配置项详细对比说明/"><span>PHP-CS-Fixer 配置详细对比</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/05/21/php-cs-fixer配置项详细对比说明/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-05-21T01:50:00.000Z">
-          2019-05-21
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们项目比较多，而且每个人的编写代码的风格也不太一致，我们希望尽可能在格式上得到统一，这样子的好处有如下几点：</p>
-<ul>
-<li>遵循 PSR2</li>
-<li>codereview 的时候可以免除格式差异所带来的干扰</li>
-<li>统一格式有利于大家在这个基础上写出更为优雅的代码格式</li>
-</ul>
-<p>因此，我们实现了用于的统一格式化配套的工具链：</p>
-<ul>
-<li><code>husky-php</code>：用于实现客户端 <code>githook 钩子</code>，用于执行触发我们的 husky 项目（默认支持自动格式化，冲突校验）</li>
-<li><code>composer-husky-plugin</code>：专门由 <code>husky-php</code> 定制的 composer 插件，用于自动部署<code>husky-php</code></li>
-<li><code>php-cs-fixer-config</code>：专门定义 <code>php-cs-fixer</code> 格式配置的组件</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/05/16/k8s知识点一/"><span>k8s の 基础知识</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/05/16/k8s知识点一/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-05-16T06:24:00.000Z">
-          2019-05-16
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="k8s-知识点一"><a href="#k8s-知识点一" class="headerlink" title="k8s 知识点一"></a>k8s 知识点一</h1><h2 id="k8s-总架构由于-2-个概念构成"><a href="#k8s-总架构由于-2-个概念构成" class="headerlink" title="k8s 总架构由于 2 个概念构成"></a>k8s 总架构由于 2 个概念构成</h2><ul>
-<li>Master</li>
-<li>Node</li>
-</ul>
-<p><code>Master</code> 和 <code>Node</code> 都是服务器物理机或者虚拟机, 都可以由于一台或者多台组成，如果 Master 不考虑<code>HA(高可用)</code>的情况下。一般都是 1 台 Master + N 台 Node。</p>
-<h2 id="Master-上所需要的服务"><a href="#Master-上所需要的服务" class="headerlink" title="Master 上所需要的服务"></a>Master 上所需要的服务</h2><ul>
-<li>etcd</li>
-<li>Api Server</li>
-<li>Controller Manager</li>
-<li>Scheduler</li>
-</ul>
-<p>后三个组件构成了 Kubernetes 的总控中心，这些进程实现了整个集群的资源管理、Pod 调度、弹性伸缩、安全控制、系统监控和纠错等管理功能，并且全都是自动完成。</p>
-<h2 id="Node-上所需要的服务"><a href="#Node-上所需要的服务" class="headerlink" title="Node 上所需要的服务"></a>Node 上所需要的服务</h2><ul>
-<li>kubelet</li>
-<li>proxy</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/k8s/">k8s</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/k8s/">k8s</a>
     </span>
     
 

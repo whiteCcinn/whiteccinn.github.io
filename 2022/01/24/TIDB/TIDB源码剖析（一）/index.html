@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>TIDB源码剖析（一） | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="TIDB源码剖析（一）"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>TIDB源码剖析（一）</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/01/24/TIDB/TIDB源码剖析（一）/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-01-24T02:28:33.000Z">
+          2022-01-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>这一章，作为我们的起始章节，跟着源码，我们一步步来熟悉TIDB的整体代码结构</p>
+<hr>
+<a id="more"></a>
+
+
+<h2 id="Select"><a href="#Select" class="headerlink" title="Select"></a>Select</h2><p>当我们有一条基本的sql如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> mysql.user;</span><br></pre></td></tr></table></figure>
+
+<p>我们从接收到客户端连接开始，<code>执行</code>，<code>解析</code>，<code>逻辑优化器</code>，<code>物理优化器</code>，到<code>最终结果</code>开始分析。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;planner.optimize at optimize.go:335</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;planner.Optimize at optimize.go:211</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;executor.(*Compiler).Compile at compiler.go:77</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;session.(*session).ExecuteStmt at session.go:1696</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*TiDBContext).ExecuteStmt at driver_tidb.go:220</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*clientConn).handleStmt at conn.go:1977</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*clientConn).handleQuery at conn.go:1846</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*clientConn).dispatch at conn.go:1341</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*clientConn).Run at conn.go:1091</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*Server).onConn at server.go:556</span><br><span class="line">runtime.goexit at asm_amd64.s:1371</span><br><span class="line"> - Async stack trace</span><br><span class="line">github.com&#x2F;pingcap&#x2F;tidb&#x2F;server.(*Server).startNetworkListener at server.go:453</span><br></pre></td></tr></table></figure>
+
+<p>上面这是一个基本的执行流程，我们跟着这一段堆栈来进行分析。</p>
+<h2 id="github-com-pingcap-tidb-server-Server-onConn-at-server-go-连接处理逻辑"><a href="#github-com-pingcap-tidb-server-Server-onConn-at-server-go-连接处理逻辑" class="headerlink" title="github.com/pingcap/tidb/server.(*Server).onConn at server.go (连接处理逻辑)"></a>github.com/pingcap/tidb/server.(*Server).onConn at server.go (连接处理逻辑)</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conn.Run(ctx)</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们看到了这是进入到了一个<code>clientConn</code>的 <code>Run</code> 方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Run reads client query and writes query result to client in for loop, if there is a panic during query handling,</span></span><br><span class="line"><span class="comment">// it will be recovered and log the panic error.</span></span><br><span class="line"><span class="comment">// This function returns and the connection is closed if there is an IO error or there is a panic.</span></span><br><span class="line"><span class="comment">// 在for循环中，执行读取客户端查询，并将查询结果写入客户端，如果在处理查询时出现panic，</span></span><br><span class="line"><span class="comment">// 它将被恢复并记录panic错误。</span></span><br><span class="line"><span class="comment">// 如果出现IO错误或panic，该函数返回并关闭连接。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *clientConn)</span> <span class="title">Run</span><span class="params">(ctx context.Context)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这里我们看到了有一段文字帮助我们理解注意事项。</p>
+<p>我们按照过程式的顺序来从上往下看源码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">const</span> size = <span class="number">4096</span></span><br><span class="line"><span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	r := <span class="built_in">recover</span>()</span><br><span class="line">	<span class="keyword">if</span> r != <span class="literal">nil</span> &#123;</span><br><span class="line">		buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, size)</span><br><span class="line">		stackSize := runtime.Stack(buf, <span class="literal">false</span>)</span><br><span class="line">		buf = buf[:stackSize]</span><br><span class="line">		logutil.Logger(ctx).Error(<span class="string">"connection running loop panic"</span>,</span><br><span class="line">			zap.Stringer(<span class="string">"lastSQL"</span>, getLastStmtInConn&#123;cc&#125;),</span><br><span class="line">			zap.String(<span class="string">"err"</span>, fmt.Sprintf(<span class="string">"%v"</span>, r)),</span><br><span class="line">			zap.String(<span class="string">"stack"</span>, <span class="keyword">string</span>(buf)),</span><br><span class="line">		)</span><br><span class="line">		err := cc.writeError(ctx, errors.New(fmt.Sprintf(<span class="string">"%v"</span>, r)))</span><br><span class="line">		terror.Log(err)</span><br><span class="line">		metrics.PanicCounter.WithLabelValues(metrics.LabelSession).Inc()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> atomic.LoadInt32(&amp;cc.status) != connStatusShutdown &#123;</span><br><span class="line">		err := cc.Close()</span><br><span class="line">		terror.Log(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+
+<p>这段代码，我们看到了几点。</p>
+<ul>
+<li>通过 <code>recover()</code> 方法来阻止<code>panic</code>引起的程序异常崩溃，如果是panic的话，那么将会有一段特殊的逻辑处理<br>  1.1 通过 <code>runtime.Stack(buf,false)</code> 的第二个参数来控制只获取当前协程下的堆栈信息，并且写入到<code>buf</code>变量中<br>  1.2 由于 <code>const size = 4096</code> 的原因，我们拿到的buf未必是那么多，因此，通过 <code>buf[:stackSize]</code> 来进行切片处理，把变量的指针重新指向新的数据区域<br>  1.3 通过日志组件来记录详细信息， 有意思的是，这里通过了<code>getLastStmtInConn结构体</code>里面的<code>String()</code>方法来进行序列化自己想要的内容信息，其他的就是基本的<code>err</code>, <code>stack</code>的信息了<br>  1.4 我们不单单需要在服务器上记录信息，还要把对应的用户错误信息也记录下来并且发送给客户端。所以通过了 <code>err := cc.writeError(ctx, errors.New(fmt.Sprintf(&quot;%v&quot;, r)))</code> 来实现这一点。<br>  1.5 然后就是记录相关的<code>metrics</code>，因为发生了一次 <code>panic</code>，所以需要通过<code>PanicCounter</code>记录下来，用于统计由于<code>session</code>引起的<code>panic</code>总共有多少次</li>
+<li>如果是非panic引起的函数析构，那么还要通过原子性草走来判断状态是否为关闭状态，如果是关闭状态，那么在这里就需要把连接断开，并且记录下错误信息</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Usually, client connection status changes between [dispatching] &lt;=&gt; [reading].</span></span><br><span class="line"><span class="comment">// When some event happens, server may notify this client connection by setting</span></span><br><span class="line"><span class="comment">// the status to special values, for example: kill or graceful shutdown.</span></span><br><span class="line"><span class="comment">// The client connection would detect the events when it fails to change status</span></span><br><span class="line"><span class="comment">// by CAS operation, it would then take some actions accordingly.</span></span><br><span class="line"><span class="comment">// 通常情况下，客户端连接状态在[dispatching] &lt;=&gt; [reading]之间变化。</span></span><br><span class="line"><span class="comment">// 当某个事件发生时，服务器可以通过设置来通知这个客户端连接</span></span><br><span class="line"><span class="comment">// 将状态设置为特殊值，例如:kill或graceful shutdown。</span></span><br><span class="line"><span class="comment">// 当CAS操作改变状态失败时，客户端连接将检测到事件，然后采取相应的动作。</span></span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> !atomic.CompareAndSwapInt32(&amp;cc.status, connStatusDispatching, connStatusReading) ||</span><br><span class="line">		<span class="comment">// The judge below will not be hit by all means,</span></span><br><span class="line">		<span class="comment">// But keep it stayed as a reminder and for the code reference for connStatusWaitShutdown.</span></span><br><span class="line">		atomic.LoadInt32(&amp;cc.status) == connStatusWaitShutdown &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>我们看到这是一个循环操作，并且通过原子性操作<code>atomic.CompareAndSwapInt32</code>（比较然后再交换，所以符合CAS原则，乐观锁）来判断session连接是否能是否能切换到<code>connStatusDispatching</code> =&gt; <code>connStatusReading</code> 状态</li>
+<li>如果不可以切换，那么则结束该方法</li>
+<li>如果连接状态为等待关闭状态，那么也结束该方法</li>
+</ul>
+<p>对于其中的 <code>...</code>，现在会在下面进一步说明。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">cc.alloc.Reset()</span><br><span class="line"><span class="comment">// close connection when idle time is more than wait_timeout</span></span><br><span class="line">waitTimeout := cc.getSessionVarsWaitTimeout(ctx)</span><br><span class="line">cc.pkt.setReadTimeout(time.Duration(waitTimeout) * time.Second)</span><br><span class="line">start := time.Now()</span><br><span class="line">data, err := cc.readPacket()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> terror.ErrorNotEqual(err, io.EOF) &#123;</span><br><span class="line">		<span class="keyword">if</span> netErr, isNetErr := errors.Cause(err).(net.Error); isNetErr &amp;&amp; netErr.Timeout() &#123;</span><br><span class="line">			idleTime := time.Since(start)</span><br><span class="line">			logutil.Logger(ctx).Info(<span class="string">"read packet timeout, close this connection"</span>,</span><br><span class="line">				zap.Duration(<span class="string">"idle"</span>, idleTime),</span><br><span class="line">				zap.Uint64(<span class="string">"waitTimeout"</span>, waitTimeout),</span><br><span class="line">				zap.Error(err),</span><br><span class="line">			)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			errStack := errors.ErrorStack(err)</span><br><span class="line">			<span class="keyword">if</span> !strings.Contains(errStack, <span class="string">"use of closed network connection"</span>) &#123;</span><br><span class="line">				logutil.Logger(ctx).Warn(<span class="string">"read packet failed, close this connection"</span>,</span><br><span class="line">					zap.Error(errors.SuspendStack(err)))</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	disconnectByClientWithError.Inc()</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>cc.alloc.Reset()</code>重置内存池大小</li>
+<li>当空闲时间大于等待超时时间的话那么将会关闭丽连接。<code>cc.pkt.setReadTimeout(time.Duration(waitTimeout) * time.Second)</code></li>
+<li>从客户端读取数据，如果存在错误，那么将会记录下来相关信息，例如从读取数据到最后的时间，来统计idletime，通过<code>metrics.DisconnectionCounter.WithLabelValues(metrics.LblError)</code>来记录因为err导致连接断开的次数</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> !atomic.CompareAndSwapInt32(&amp;cc.status, connStatusReading, connStatusDispatching) &#123;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同理，经过cas乐观锁，把状态从 <code>connStatusReading</code> =&gt; <code>connStatusDispatching</code>如果，交换设置失败，那么就结束函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">startTime := time.Now()</span><br><span class="line">err = cc.dispatch(ctx, data)</span><br></pre></td></tr></table></figure>
+
+<h2 id="github-com-pingcap-tidb-server-clientConn-dispatch-（分发逻辑）"><a href="#github-com-pingcap-tidb-server-clientConn-dispatch-（分发逻辑）" class="headerlink" title="github.com/pingcap/tidb/server.(*clientConn).dispatch （分发逻辑）"></a>github.com/pingcap/tidb/server.(*clientConn).dispatch （分发逻辑）</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dispatch handles client request based on command which is the first byte of the data.</span></span><br><span class="line"><span class="comment">// It also gets a token from server which is used to limit the concurrently handling clients.</span></span><br><span class="line"><span class="comment">// The most frequently used command is ComQuery.</span></span><br><span class="line"><span class="comment">// dispatch根据命令处理客户端请求，命令是数据的第一个字节。</span></span><br><span class="line"><span class="comment">// 它也从服务器获取一个令牌，用于限制并发处理客户端。</span></span><br><span class="line"><span class="comment">// 最常用的命令是ComQuery。</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *clientConn)</span> <span class="title">dispatch</span><span class="params">(ctx context.Context, data []<span class="keyword">byte</span>)</span> <span class="title">error</span></span></span><br></pre></td></tr></table></figure>
+
+<p>下面的方法都是dispatch的过程顺序逻辑</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// reset killed for each request</span></span><br><span class="line">	atomic.StoreUint32(&amp;cc.ctx.GetSessionVars().Killed, <span class="number">0</span>)</span><br><span class="line">&#125;()</span><br><span class="line">t := time.Now()</span><br><span class="line"><span class="keyword">if</span> (cc.ctx.Status() &amp; mysql.ServerStatusInTrans) &gt; <span class="number">0</span> &#123;</span><br><span class="line">	connIdleDurationHistogramInTxn.Observe(t.Sub(cc.lastActive).Seconds())</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	connIdleDurationHistogramNotInTxn.Observe(t.Sub(cc.lastActive).Seconds())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里可以看到这里有一个defer，当函数结束的时候，会重置session的Killed次数</li>
+<li><code>cc.ctx.Status() &amp; mysql.ServerStatusInTrans</code> 这里因为兼容了mysql的无状态协议，所以通过第一个<code>位运算</code>来判断当前状态<ol>
+<li>如果当前链接处于一个<code>事务</code>状态下的话，那么通过<code>connIdleDurationHistogramInTxn.Observe(t.Sub(cc.lastActive).Seconds())</code> 用直方图监控从最后一次活跃时间到当前分发时间</li>
+<li>否则则用另一个<code>metrics</code>来记录</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">span := opentracing.StartSpan(<span class="string">"server.dispatch"</span>)</span><br><span class="line">cfg := config.GetGlobalConfig()</span><br><span class="line"><span class="keyword">if</span> cfg.OpenTracing.Enable &#123;</span><br><span class="line">	ctx = opentracing.ContextWithSpan(ctx, span)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> cancelFunc context.CancelFunc</span><br><span class="line">ctx, cancelFunc = context.WithCancel(ctx)</span><br><span class="line">cc.mu.Lock()</span><br><span class="line">cc.mu.cancelFunc = cancelFunc</span><br><span class="line">cc.mu.Unlock()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过<code>opentracing</code>来开始进行<code>分布式追踪</code>，<code>cc.mu</code> 主要是用来在<code>事务</code>中取消事务用的。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cc.lastPacket = data</span><br><span class="line">cmd := data[<span class="number">0</span>]</span><br><span class="line">data = data[<span class="number">1</span>:]</span><br><span class="line"><span class="keyword">if</span> topsqlstate.TopSQLEnabled() &#123;</span><br><span class="line">	<span class="keyword">defer</span> pprof.SetGoroutineLabels(ctx)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> variable.EnablePProfSQLCPU.Load() &#123;</span><br><span class="line">	label := getLastStmtInConn&#123;cc&#125;.PProfLabel()</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(label) &gt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> pprof.SetGoroutineLabels(ctx)</span><br><span class="line">		ctx = pprof.WithLabels(ctx, pprof.Labels(<span class="string">"sql"</span>, label))</span><br><span class="line">		pprof.SetGoroutineLabels(ctx)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把当前session接收到的数据记录在<code>lastPakcet</code>中</li>
+<li><code>第一个字节</code>代表<code>命令</code></li>
+<li><code>后面的字节</code>代表<code>数据</code></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">token := cc.server.getToken()</span><br><span class="line"><span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// if handleChangeUser failed, cc.ctx may be nil</span></span><br><span class="line">	<span class="keyword">if</span> cc.ctx != <span class="literal">nil</span> &#123;</span><br><span class="line">		cc.ctx.SetProcessInfo(<span class="string">""</span>, t, mysql.ComSleep, <span class="number">0</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	cc.server.releaseToken(token)</span><br><span class="line">	span.Finish()</span><br><span class="line">	cc.lastActive = time.Now()</span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+
+<p>这里需要关注一下<code>defer</code>里面的内容</p>
+<ul>
+<li>根据mysql协议，当命令为<code>mysql.ComSleep</code>的时候，代表execute已经完成了。所以当结束的时候，需要设置一下这个<code>ProcessInfo</code></li>
+<li>然后释放本次token，并且span也需要标记为完成</li>
+<li>更新最后一次活跃时间</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vars := cc.ctx.GetSessionVars()</span><br><span class="line"><span class="comment">// reset killed for each request</span></span><br><span class="line">atomic.StoreUint32(&amp;vars.Killed, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">if</span> cmd &lt; mysql.ComEnd &#123;</span><br><span class="line">	cc.ctx.SetCommandValue(cmd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取当前session的变量</li>
+<li>重置其中的killed属性</li>
+<li>如果<code>cmd</code>在范围内的，更新当前命令的值</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dataStr := <span class="keyword">string</span>(hack.String(data))</span><br><span class="line"><span class="keyword">switch</span> cmd &#123;</span><br><span class="line"><span class="keyword">case</span> mysql.ComPing, mysql.ComStmtClose, mysql.ComStmtSendLongData, mysql.ComStmtReset,</span><br><span class="line">	mysql.ComSetOption, mysql.ComChangeUser:</span><br><span class="line">	cc.ctx.SetProcessInfo(<span class="string">""</span>, t, cmd, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">case</span> mysql.ComInitDB:</span><br><span class="line">	cc.ctx.SetProcessInfo(<span class="string">"use "</span>+dataStr, t, cmd, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里利用了golang种的<code>hack（黑科技）</code>的方式来把<code>byte</code>转换成<code>string</code>，其实主要就是因为底层用的都有一样的结构体，所以可以直接通过<code>unsafe.pointer</code>来直接操作内容指针，进行<code>zero-copy</code></li>
+<li>对cmd进行<code>processinfo</code>的处理，如果是<code>use db</code>的命令的话，则需要传递数据库</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> cmd &#123;</span><br><span class="line">	<span class="keyword">case</span> mysql.ComSleep:</span><br><span class="line">		<span class="comment">// <span class="doctag">TODO:</span> According to mysql document, this command is supposed to be used only internally.</span></span><br><span class="line">		<span class="comment">// So it's just a temp fix, not sure if it's done right.</span></span><br><span class="line">		<span class="comment">// Investigate this command and write test case later.</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	<span class="keyword">case</span> mysql.ComQuit:</span><br><span class="line">		<span class="keyword">return</span> io.EOF</span><br><span class="line">	<span class="keyword">case</span> mysql.ComInitDB:</span><br><span class="line">		<span class="keyword">if</span> err := cc.useDB(ctx, dataStr); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> cc.writeOK(ctx)</span><br><span class="line">	<span class="keyword">case</span> mysql.ComQuery: <span class="comment">// Most frequently used command.</span></span><br><span class="line">		<span class="comment">// For issue 1989</span></span><br><span class="line">		<span class="comment">// Input payload may end with byte '\0', we didn't find related mysql document about it, but mysql</span></span><br><span class="line">		<span class="comment">// implementation accept that case. So trim the last '\0' here as if the payload an EOF string.</span></span><br><span class="line">		<span class="comment">// See http://dev.mysql.com/doc/internals/en/com-query.html</span></span><br><span class="line">		<span class="keyword">if</span> <span class="built_in">len</span>(data) &gt; <span class="number">0</span> &amp;&amp; data[<span class="built_in">len</span>(data)<span class="number">-1</span>] == <span class="number">0</span> &#123;</span><br><span class="line">			data = data[:<span class="built_in">len</span>(data)<span class="number">-1</span>]</span><br><span class="line">			dataStr = <span class="keyword">string</span>(hack.String(data))</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> cc.handleQuery(ctx, dataStr)</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我复制了一部分，因为我们重点关注<code>mysql.ComQuery</code>命令。</p>
+<ul>
+<li>根据提示，我们发现因为mysql协议说明了输入载体可能以<code>\0</code>作为最后字节，所以这里一定要减去client发送的多余的最后一个字节。所以长度进行了-1操作</li>
+<li>然后进入到<code>cc.handleQuery(ctx, dataStr)</code></li>
+</ul>
+<h2 id="github-com-pingcap-tidb-server-clientConn-handleQuery"><a href="#github-com-pingcap-tidb-server-clientConn-handleQuery" class="headerlink" title="github.com/pingcap/tidb/server.(*clientConn).handleQuery"></a>github.com/pingcap/tidb/server.(*clientConn).handleQuery</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// handleQuery executes the sql query string and writes result set or result ok to the client.</span></span><br><span class="line"><span class="comment">// As the execution time of this function represents the performance of TiDB, we do time log and metrics here.</span></span><br><span class="line"><span class="comment">// There is a special query `load data` that does not return result, which is handled differently.</span></span><br><span class="line"><span class="comment">// Query `load stats` does not return result either.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *clientConn)</span> <span class="title">handleQuery</span><span class="params">(ctx context.Context, sql <span class="keyword">string</span>)</span> <span class="params">(err error)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这个方法，终于开始正式进入我们的主题了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">defer</span> trace.StartRegion(ctx, <span class="string">"handleQuery"</span>).End()</span><br><span class="line">sc := cc.ctx.GetSessionVars().StmtCtx</span><br><span class="line">prevWarns := sc.GetWarnings()</span><br><span class="line">stmts, err := cc.ctx.Parse(ctx, sql)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(stmts) == <span class="number">0</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> cc.writeOK(ctx)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>defer进行了当函数结束的时候，标记<code>handleQuery</code>结束</li>
+<li>拿到<code>statement</code>的上下文环境</li>
+<li>从上下文中拿到所有的<code>warinning</code>警告</li>
+<li>通过<code>cc.ctx.Parse(ctx, sql)</code>来进行解析sql，这里属于一个大的篇章，暂时不张开讲，主要涉及到的内容有<code>编译原理</code>,<code>AST-Tree</code>，<code>Yacc</code>。我们通过这里可以拿到一棵抽象语法树，实质是<code>SelectStmt</code>，内部包含了如下内容：<ol>
+<li>dmlNode（因为select语句属于dml语句）</li>
+<li>其他的都是常规的例如<code>FROM</code>, <code>WHERE</code>, <code>FIELDS</code>, <code>DISTINCT</code> 等等</li>
+</ol>
+</li>
+<li>如果没有一个完成的抽象语法书，则直接返回响应协议和对应的内容</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pointPlans []plannercore.Plan</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(stmts) &gt; <span class="number">1</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The client gets to choose if it allows multi-statements, and</span></span><br><span class="line">	<span class="comment">// probably defaults OFF. This helps prevent against SQL injection attacks</span></span><br><span class="line">	<span class="comment">// by early terminating the first statement, and then running an entirely</span></span><br><span class="line">	<span class="comment">// new statement.</span></span><br><span class="line"></span><br><span class="line">	capabilities := cc.ctx.GetSessionVars().ClientCapability</span><br><span class="line">	<span class="keyword">if</span> capabilities&amp;mysql.ClientMultiStatements &lt; <span class="number">1</span> &#123;</span><br><span class="line">		<span class="comment">// The client does not have multi-statement enabled. We now need to determine</span></span><br><span class="line">		<span class="comment">// how to handle an unsafe situation based on the multiStmt sysvar.</span></span><br><span class="line">		<span class="keyword">switch</span> cc.ctx.GetSessionVars().MultiStatementMode &#123;</span><br><span class="line">		<span class="keyword">case</span> variable.OffInt:</span><br><span class="line">			err = errMultiStatementDisabled</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		<span class="keyword">case</span> variable.OnInt:</span><br><span class="line">			<span class="comment">// multi statement is fully permitted, do nothing</span></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			warn := stmtctx.SQLWarn&#123;Level: stmtctx.WarnLevelWarning, Err: errMultiStatementDisabled&#125;</span><br><span class="line">			parserWarns = <span class="built_in">append</span>(parserWarns, warn)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Only pre-build point plans for multi-statement query</span></span><br><span class="line">	pointPlans, err = cc.prefetchPointPlanKeys(ctx, stmts)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过Session中的var中的<code>ClientCapability</code>的<code>位运算</code>来判断是否支持<code>mysql.ClientMultiStatements</code>（多sql语句）</li>
+<li>如果<code>sysvar</code>也不支持<code>MultiStatementMode</code>,也就是<code>variable.OffInt</code>，那么就直接返回err</li>
+<li>如果没有能力支持client多statement的话，但是var又开启了的话，目前啥事也没做</li>
+<li>默认就是不支持，但是会通过warn来展示给客户端</li>
+<li>只有在多statement的场景下预取目标计划关键字</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, stmt := <span class="keyword">range</span> stmts &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(pointPlans) &gt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="comment">// Save the point plan in Session, so we don't need to build the point plan again.</span></span><br><span class="line">		cc.ctx.SetValue(plannercore.PointPlanKey, plannercore.PointPlanVal&#123;Plan: pointPlans[i]&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">	retryable, err = cc.handleStmt(ctx, stmt, parserWarns, i == <span class="built_in">len</span>(stmts)<span class="number">-1</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> !retryable || !errors.ErrorEqual(err, storeerr.ErrTiFlashServerTimeout) &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		_, allowTiFlashFallback := cc.ctx.GetSessionVars().AllowFallbackToTiKV[kv.TiFlash]</span><br><span class="line">		<span class="keyword">if</span> !allowTiFlashFallback &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// When the TiFlash server seems down, we append a warning to remind the user to check the status of the TiFlash</span></span><br><span class="line">		<span class="comment">// server and fallback to TiKV.</span></span><br><span class="line">		warns := <span class="built_in">append</span>(parserWarns, stmtctx.SQLWarn&#123;Level: stmtctx.WarnLevelError, Err: err&#125;)</span><br><span class="line">		<span class="built_in">delete</span>(cc.ctx.GetSessionVars().IsolationReadEngines, kv.TiFlash)</span><br><span class="line">		_, err = cc.handleStmt(ctx, stmt, warns, i == <span class="built_in">len</span>(stmts)<span class="number">-1</span>)</span><br><span class="line">		cc.ctx.GetSessionVars().IsolationReadEngines[kv.TiFlash] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果有目标计划的话，那么只需要在上下文中设置value即可，不需要再次构建目标计划</li>
+<li><code>cc.handleStmt(ctx, stmt, parserWarns, i == len(stmts)-1)</code> 这是我们的核心中的核心，这里面就是处理<code>抽象语法树</code>的逻辑，包含了<code>逻辑优化</code>, <code>物理优化</code>, <code>执行器</code>，<code>tikv</code>交互等等</li>
+<li>todo：留着回来分析</li>
+</ul>
+<h2 id="github-com-pingcap-tidb-server-clientConn-handleStmt"><a href="#github-com-pingcap-tidb-server-clientConn-handleStmt" class="headerlink" title="github.com/pingcap/tidb/server.(*clientConn).handleStmt"></a>github.com/pingcap/tidb/server.(*clientConn).handleStmt</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The first return value indicates whether the call of handleStmt has no side effect and can be retried.</span></span><br><span class="line"><span class="comment">// Currently, the first return value is used to fall back to TiKV when TiFlash is down.</span></span><br><span class="line"><span class="comment">// 第一个返回值表示调用handleStmt是否没有副作用，是否可以重试</span></span><br><span class="line"><span class="comment">// 当前，第一个返回值用于在TiFlash down时回落到TiKV</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *clientConn)</span> <span class="title">handleStmt</span><span class="params">(ctx context.Context, stmt ast.StmtNode, warns []stmtctx.SQLWarn, lastStmt <span class="keyword">bool</span>)</span> <span class="params">(<span class="keyword">bool</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ctx = context.WithValue(ctx, execdetails.StmtExecDetailKey, &amp;execdetails.StmtExecDetails&#123;&#125;)</span><br><span class="line">ctx = context.WithValue(ctx, util.ExecDetailsKey, &amp;util.ExecDetails&#123;&#125;)</span><br><span class="line">reg := trace.StartRegion(ctx, <span class="string">"ExecuteStmt"</span>)</span><br><span class="line">cc.audit(plugin.Starting)</span><br><span class="line">rs, err := cc.ctx.ExecuteStmt(ctx, stmt)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>上下文带上value，设置主要是<code>StmtExecDetails</code>，里面记录了写入sql到响应的时间</li>
+<li>上下文带上value，设置主要是<code>ExecDetails</code>，里面记录了<code>execution</code>的详情信息，分别有</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/TIDB/">TIDB</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TIDB/">TIDB</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
