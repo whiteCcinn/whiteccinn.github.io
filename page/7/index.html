@@ -69,6 +69,66 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/05/31/docker/搭建docker私有仓库/"><span>【Docker】搭建docker私有仓库</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/31/docker/搭建docker私有仓库/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-31T03:28:30.000Z">
+          2019-05-31
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了配合 k8s，需要搭建一个私有仓库，防止镜像泄漏出去。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Docker/">Docker</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/05/28/k8s/k8s测试集群部署/"><span>【kubernetes】测试集群部署</span></a></h3>
     
   
@@ -643,71 +703,6 @@
 <li>singletons</li>
 </ul>
 <p>具体的用处就是用于服务器容器依赖注入用的。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/07/08/php-laravel/"><span>【Laravel】Service Container 服务容器用法</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/07/08/php-laravel/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-07-08T04:50:00.000Z">
-          2018-07-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Laravel 是一款 PHP 开源框架，最近学习了一下 Symfony，现在来了解一下 Laravel 的最新版本的一些东西。</p>
-<p>其实说到服务器容器，相信大家都会直接提到<code>依赖注入</code>的概念，其实服务容器的概念，就和我们设计模式中的对象池差不多，把所有的对象都放在一个池子里面去，而不必一个个去 new 了。而且支持每次都新建和单例，等等。</p>
-<p>在这些的基础之上，衍生出了 2 个概念<code>Ioc：控制反转</code>，<code>Di：依赖注入</code>，这些概念，在我的认知里，早起出自 java 框架之中。主要的目的就是实现对象依赖解耦。具体的设计模式的理念，可以参考我博客中的设计模式一系列的文章。</p>
-<p>下述主要参考了谋篇 laravel 服务容器介绍摘录+部分自我实践整理。对比了一下和官网的介绍差不多，更多的主要是例子的说明。</p>
-<h2 id="正题"><a href="#正题" class="headerlink" title="正题"></a>正题</h2><p>Laravel 中有一大堆访问 Container 实例的姿势，比如最简单的：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$container = app();</span><br></pre></td></tr></table></figure>
         
       
     </div>
