@@ -1191,10 +1191,10 @@ for i in $(find /data/flink-stream/mstream_alarm/ -type f -name "*.sql");do /dat
 
 ![detail-0](/images/FLINK/detail-0.png)
 
-![detail-1](/images/FLINK/detail-0.png)
+![detail-1](/images/FLINK/detail-1.png)
 
-![detail-2](/images/FLINK/detail-0.png)
+![detail-2](/images/FLINK/detail-2.png)
 
-![detail-3](/images/FLINK/detail-0.png)
+![detail-3](/images/FLINK/detail-3.png)
 
 到此为止，我们的flink相关的流计算应用，从0到1的过程暂时画上一个里程碑。
