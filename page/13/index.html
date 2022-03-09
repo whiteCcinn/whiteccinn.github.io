@@ -69,6 +69,133 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/22/design-observer-model/"><span>设计模式の行为型の观察者模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-observer-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T06:26:45.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="大概说明"><a href="#大概说明" class="headerlink" title="大概说明"></a>大概说明</h1><p>如果我希望一个动作在发生的时候，希望订阅他这个动作的所有人都知道了有这么一件事的话，那么就采用观察者模式。</p>
+<h2 id="没用观察者模式的情况下"><a href="#没用观察者模式的情况下" class="headerlink" title="没用观察者模式的情况下"></a>没用观察者模式的情况下</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Event</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trigger</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Event update!&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//具体更新逻辑</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"update1&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"update2&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用</span></span><br><span class="line">$event = <span class="keyword">new</span> Event;</span><br><span class="line"></span><br><span class="line">$event-&gt;trigger();</span><br></pre></td></tr></table></figure>
+
+<p>这个事件的触发可以看到如果我不断的有新的人需要订阅的话，那么这个 <code>trigger</code> 方法不断的就是要添加新的逻辑和业务。违反了设计模式-开闭原则，就是对修改关闭，对扩展开放的原则。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/22/design-d-p-d-model/"><span>设计模式の装饰器模式和观察者模式的区别</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-d-p-d-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T06:18:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>观察者模式完美的将观察者和被观察对象分开，系统中的每个类将重点放在某一个功能上，而不是其他的方面（对象之间的交互），很好的体现了单一职责原则。观察者将自己注册到被观察者的容器中，被观察者不应该过问观察者的具体类型，而是使用观察者的接口。这样的优点是：假定程序中还有别的观察者，那么这个观察者是相同的接口即可，基于接口而不是具体的实现，这一点为程序提供了更大的灵活性。</p>
+<p>现实生活中像移动的就业信息推送系统，希望得到业务的人（观察者）先到移动注册，然后如果有具体的信息，移动会主动的推送到预订业务的人，不需要预订业务的人去主动询问。</p>
+<h2 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h2><p>装饰者模式不在不改变原类文件的情况下动态的扩展一个对象的功能。它是通过创建一个包装对象，也就是装饰来包裹真实的对象。当我们需要为某个对象动态地增加一个功能的或职责的时候，可以考虑使用装饰者模式；当某个对象的职责经常发生变化或者经常需要动态的增加职责，避免为了适应变化而增加爱继承子类扩展的方式，因为这种扩展可能会造成子类膨胀的速度过快，难以控制，此时可以使用装饰着模式。</p>
+<p>对于这中模式的实现，会有被装饰的具体对象，被装饰的抽象，装饰者的抽象，和若干个装饰着，这若干个装饰者并不是创建各种不同的对象（所以装饰者模式为结构型模式而不是创建型模式），而是每个装饰者都会有一个真实的对象的引用，然后在这个具体对象方法的前后添加一些新的功能，起到装饰的作用。例如有两个装饰 1，和装饰 2，那么可以把装饰 1 当作装饰 2 的具体对象作为参数传进去，这个时候就会产生另外一种新的装饰了，而且没有新的子类。</p>
+<p>现实生活着的例子例如包饺子，步骤分为和陷，和面，杆皮，包饺子，煮饺子，可以在和陷这个方法的前面多加点配菜，也可以在和面这个方法的前面在面里面加个鸡蛋，也可以同时用这两个装饰先加菜后和面加鸡蛋，这样就可以用两个已经存在的装饰产生一个新的装饰了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/22/design-proxy-model/"><span>设计模式の结构型の代理模式</span></a></h3>
     
   
@@ -119,7 +246,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -179,7 +306,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -242,7 +369,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -303,7 +430,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -366,7 +493,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -549,129 +676,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/20/design-bridge-model/"><span>设计模式の结构型の桥接模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/20/design-bridge-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-20T07:45:00.000Z">
-          2017-06-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>我们知道一个类可以实现多个接口，一个接口对应多个实现。 在不同的实现类中，它实现接口方法的逻辑是不一样的。 有时候我们需要对这些抽象方法进行一些组合，修改，但是又能适用于所有实现类。 这时候我们需要做一个桥，连接不同的实现类并统一标准。</p>
-<h3 id="一个接口多个实现"><a href="#一个接口多个实现" class="headerlink" title="一个接口多个实现"></a>一个接口多个实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 格式化接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文本格式化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PlainTextFormatter</span> <span class="keyword">implements</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $text;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML格式化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtmlFormatter</span> <span class="keyword">implements</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sprintf(<span class="string">'&lt;p&gt;%s&lt;/p&gt;'</span>, $text);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/20/design-adapter-model/"><span>设计模式の结构型の适配器模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/20/design-adapter-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-20T03:54:00.000Z">
-          2017-06-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>我们先来看看下面的代码。先来看看接口的作用。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目标角色(对外一致的接口)</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Database</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">query</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">close</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mysql</span> <span class="keyword">implements</span> <span class="title">Database</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">//mysql 的逻辑</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">query</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">//mysql 的逻辑</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">close</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">//mysql 的逻辑</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pdo</span> <span class="keyword">implements</span> <span class="title">Database</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">//Pdo 的逻辑</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">query</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">//Pdo 的逻辑</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">close</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="comment">//Pdo 的逻辑</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用</span></span><br><span class="line">$database = <span class="keyword">new</span> Mysql(); <span class="comment">//切换数据库只要改这一行就行了，因为后面的都是标准接口方法，不管哪个数据库都一样。</span></span><br><span class="line">$database-&gt;connect();</span><br><span class="line">$database-&gt;query();</span><br><span class="line">$database-&gt;close();</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 

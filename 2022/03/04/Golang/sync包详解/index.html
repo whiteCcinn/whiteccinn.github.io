@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- Sync包详解 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- Sync包详解"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- Sync包详解</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/03/04/Golang/sync包详解/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-03-03T16:43:51.000Z">
+          2022-03-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们直到sync包给我们提供了一系列并发安全的数据结构。之前有见过一次sync-map，但是这一次刚好复习整理一下sync包的知识点。</p>
+<a id="more"></a>
+
+<h2 id="Sync"><a href="#Sync" class="headerlink" title="Sync"></a>Sync</h2><ul>
+<li>Sync.Map</li>
+<li>Sync.Once</li>
+<li>Sync.Pool</li>
+<li>Sync.Cond</li>
+<li>Sync.WaitGroup</li>
+</ul>
+<h2 id="sync-Map"><a href="#sync-Map" class="headerlink" title="sync.Map"></a>sync.Map</h2><ul>
+<li>sync.Map主要针对于Map对于并发读写不支持的场景下提出实现的，其原理是通过对map的写操作进行加锁：Sync.RWMutex</li>
+<li>同时sync.Map实现了读写分离，当对map进行读操作时，通过读read Map, 当read Map中不存在是去dirty map中读取</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Map <span class="keyword">struct</span> &#123;</span><br><span class="line">	me Mutex</span><br><span class="line">	read atomic.Value  <span class="comment">// readOnly,读数据</span></span><br><span class="line">	dirty <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]*entry <span class="comment">// 包含最新的写入数据，当missed达到一定的值时，将值赋给read</span></span><br><span class="line">	misses <span class="keyword">int</span>  <span class="comment">// 计数作用，每次从read中读失败，则missed加一</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// readOnly的数据结构</span></span><br><span class="line"><span class="keyword">type</span> readOnly <span class="keyword">struct</span>&#123;</span><br><span class="line">	m <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]*entry</span><br><span class="line">	amended <span class="keyword">bool</span>  <span class="comment">// Map.dirty中的数据和这里的m中的数据不同时值为true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// entry的数据结构：</span></span><br><span class="line"><span class="keyword">type</span> entry <span class="keyword">struct</span> &#123;</span><br><span class="line">	p unsafe.Pointer <span class="comment">// *interface&#123;&#125;</span></span><br><span class="line">	<span class="comment">// 可见value是一个指针值，虽然read和dirty存在冗余情况，但由于是指针类型，存储空间不会太多</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>sync.Map相关问题</p>
+<ul>
+<li>sync.Map的核心实现：两个map,一个用于写，一个用于读，这样的设计思想可以类比于缓存与数据库</li>
+<li>sync.Map的局限性：如果写远高于读，dirty -&gt; readOnly这个类似于刷新数据的频率较高，不如直接使用mutex + map的效率高</li>
+<li>sync.Map的设计思想：保证高频率读的无锁结构，空间换时间的思想</li>
+</ul>
+<h2 id="sync-WaitGroup"><a href="#sync-WaitGroup" class="headerlink" title="sync.WaitGroup"></a>sync.WaitGroup</h2><ul>
+<li>sync.WaitGroup常用于针对goroutine的并发执行，通过WaitGroup可以等待所有的go程序执行结束之后再执行之后的逻辑</li>
+<li>WaitGroup对象内部有一个计数器，最初重0开始，提供了三个方法：Add(),Done(),Wait()用来控制计数器的数量。Add(n)把计数器设置为n,Done()每次把计数器减一，Wait()会阻塞代码的执行，直到计数器的值减到0为止。</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

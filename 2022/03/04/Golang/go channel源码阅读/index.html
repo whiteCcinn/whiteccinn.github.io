@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- go channel源码阅读 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- go channel源码阅读"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- go channel源码阅读</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/03/04/Golang/go channel源码阅读/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-03-03T16:43:51.000Z">
+          2022-03-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>channel 是 Golang 中一个非常重要的特性，也是 <code>Golang CSP</code> 并发模型的一个重要体现。简单来说就是，goroutine 之间可以通过 channel 进行通信。</p>
+<p>channel 在 Golang 如此重要，在代码中使用频率非常高，以至于不得不好奇其内部实现。本文将基于 <code>go 1.17</code> 的源码，分析 channel 的内部实现原理。</p>
+<a id="more"></a>
+
+<h2 id="channel-的基本使用"><a href="#channel-的基本使用" class="headerlink" title="channel 的基本使用"></a>channel 的基本使用</h2><p>在正式分析 channel 的实现之前，我们先看下 channel 的最基本用法，代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    c := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        c &lt;- <span class="number">1</span> <span class="comment">// send to channel</span></span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    x := &lt;-c <span class="comment">// recv from channel</span></span><br><span class="line"></span><br><span class="line">    fmt.Println(x)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在以上代码中，我们通过 <code>make(chan int)</code> 来创建了一个类型为 int 的 channel。<br>在一个 goroutine 中使用 <code>c &lt;- 1</code> 将数据发送到 channel 中。在主 goroutine 中通过 <code>x := &lt;- c</code> 从 channel 中读取数据并赋值给 x。</p>
+<p>以上代码对应了 channel 的两种基本操作：</p>
+<ul>
+<li>send 操作 <code>c &lt;- 1</code> 表示发送数据到 channel</li>
+<li>recv 操作 <code>x := &lt;- c</code> 表示从 channel 中接收数据。</li>
+</ul>
+<p>此外，channel 还分为<code>有缓存 channel</code> 和<code>无缓存 channel</code>。上述代码中，我们使用的是无缓冲的 channel。对于无缓冲的 channel，如果当前没有其他 goroutine 正在接收 channel 数据，则发送方会阻塞在发送语句处。</p>
+<p>我们可以在 channel 初始化时指定缓冲区大小。例如，<code>make(chan int, 2)</code> 则指定缓冲区大小为 2。在缓冲区未满之前，发送方无阻塞地可以往 channel 发送数据，无需等待接收方准备好。而如果缓冲区已满，则发送方依然会阻塞。</p>
+<h2 id="channel-对应的底层实现函数"><a href="#channel-对应的底层实现函数" class="headerlink" title="channel 对应的底层实现函数"></a>channel 对应的底层实现函数</h2><p>在探究 channel 源码之前，我们肯定首先需要先找到 channel 在 Golang 的具体实现在哪。因为我们在使用 channel 时，用的是 <code>&lt;- 符号</code>，并不能直接在 go 源码中找到其实现。但是 Golang 编译器必然会将 <code>&lt;-</code> 符号翻译成底层对应的实现。</p>
+<p>我们可以使用 Go 自带的命令: <code>go tool compile -N -l -S hello.go</code>, 将代码翻译成对应的汇编指令。</p>
+<p>或者，直接可以使用 <code>Compiler Explorer</code> 这个在线工具。对于上述示例代码可以直接在这个链接看其汇编结果: <a href="go.godbolt.org/z/3xw5Cj">go.godbolt.org/z/3xw5Cj</a>。如下图：</p>
+<p><img src="/images/Go/%E6%BA%90%E7%A0%81/chansend1.png" alt="chansend1"></p>
+<blockquote>
+<p>chansend1</p>
+</blockquote>
+<p><img src="/images/Go/%E6%BA%90%E7%A0%81/chanrevc1.png" alt="chanrevc1"></p>
+<blockquote>
+<p>chanrevc1</p>
+</blockquote>
+<p>通过仔细查看以上示例代码对应的汇编指令，可以发现以下的对应关系：</p>
+<p>channel 的构造语句 <code>make(chan int)</code>, 对应的是 <code>runtime.makechan</code> 函数<br>发送语句 <code>c &lt;- 1</code>, 对应的是 <code>runtime.chansend1</code> 函数<br>接收语句 <code>x := &lt;- c</code>, 对应的是 <code>runtime.chanrecv1</code> 函数<br>以上几个函数的实现都位于 go 源码中的 <code>runtime/chan.go</code> 代码文件中。我们接下来针对这几个函数，探究下 channel 的实现。</p>
+<h2 id="channel-的构造"><a href="#channel-的构造" class="headerlink" title="channel 的构造"></a>channel 的构造</h2><p>channel 的构造语句 <code>make(chan int)</code>，将会被 golang 编译器翻译为 <code>runtime.makechan</code> 函数, 其函数签名如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">makechan</span><span class="params">(t *chantype, size <span class="keyword">int</span>)</span> *<span class="title">hchan</span></span></span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>t *chantype</code> 即构造 channel 时传入的元素类型。<code>size int</code> 即用户指定的 channel 缓冲区大小，不指定则为 0。该函数的返回值是 <code>*hchan</code>。hchan 则是 channel 在 golang 中的内部实现。其定义如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> hchan <span class="keyword">struct</span> &#123;</span><br><span class="line">	qcount   <span class="keyword">uint</span>           <span class="comment">// buffer 中已放入的元素个数</span></span><br><span class="line">	dataqsiz <span class="keyword">uint</span>           <span class="comment">// 用户构造 channel 时指定的 buf 大小</span></span><br><span class="line">	buf      unsafe.Pointer <span class="comment">// buffer</span></span><br><span class="line">	elemsize <span class="keyword">uint16</span>         <span class="comment">// buffer 中每个元素的大小</span></span><br><span class="line">	closed   <span class="keyword">uint32</span>         <span class="comment">// channel 是否关闭，== 0 代表未 closed</span></span><br><span class="line">	elemtype *_type         <span class="comment">// channel 元素的类型信息</span></span><br><span class="line">	sendx    <span class="keyword">uint</span>           <span class="comment">// buffer 中已发送的索引位置 send index</span></span><br><span class="line">	recvx    <span class="keyword">uint</span>           <span class="comment">// buffer 中已接收的索引位置 receive index</span></span><br><span class="line">	recvq    waitq          <span class="comment">// 等待接收的 goroutine  list of recv waiters</span></span><br><span class="line">	sendq    waitq          <span class="comment">// 等待发送的 goroutine list of send waiters</span></span><br><span class="line"></span><br><span class="line">	lock mutex</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>hchan 中的所有属性大致可以分为三类：</p>
+<ul>
+<li>buffer 相关的属性。例如 <code>buf</code>、<code>dataqsiz</code>、<code>qcount</code> 等。 当 channel 的缓冲区大小不为 0 时，buffer 中存放了待接收的数据。使用 <code>ring buffer</code> 实现。</li>
+<li>waitq 相关的属性，可以理解为是一个 FIFO 的标准队列。其中 <code>recvq</code> 中是正在等待接收数据的 goroutine，<code>sendq</code> 中是等待发送数据的 goroutine。waitq 使用<code>双向链表</code>实现。</li>
+<li>其他属性，例如 lock、elemtype、closed。</li>
+</ul>
+<p>通过简单分析 hchan 的属性，我们可以知道其中有两个重要的组件，<code>buffer</code> 和 <code>waitq</code>。hchan 所有行为和实现都是围绕这两个组件进行的。</p>
+<h2 id="向-channel-中发送数据"><a href="#向-channel-中发送数据" class="headerlink" title="向 channel 中发送数据"></a>向 channel 中发送数据</h2><p>channel 的发送和接收流程很相似，我们先分析下 channel 的发送过程 (如 <code>c &lt;- 1</code>), 对应于 <code>runtime.chansend</code> 函数的实现。</p>
+<p>在尝试向 channel 中发送数据时，如果 <code>recvq</code> 队列不为空，则首先会从 <code>recvq</code> 中头部取出一个等待接收数据的 goroutine 出来。并将数据直接发送给该 goroutine。代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lock(&amp;c.lock)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> c.closed != <span class="number">0</span> &#123;</span><br><span class="line">	unlock(&amp;c.lock)</span><br><span class="line">	<span class="built_in">panic</span>(plainError(<span class="string">"send on closed channel"</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> sg := c.recvq.dequeue(); sg != <span class="literal">nil</span> &#123;</span><br><span class="line">	send(c, sg, ep, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; unlock(&amp;c.lock) &#125;, <span class="number">3</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们看到当我们整个send的过程是需要加锁处理的，并且也可以看到我们老生常谈的一个问题，当向cloesd的channel数据的时候，会导致panic产生</p>
+</blockquote>
+<p>recvq 中是正在等待接收数据的 goroutine。当某个 goroutine 使用 recv 操作 (例如，<code>x := &lt;- c</code>)，如果此时 channel 的缓存中没有数据，且没有其他 goroutine 正在等待发送数据 (即 <code>sendq</code> 为空)，会将该 goroutine 以及要接收的数据地址打包成 <code>sudog</code> 对象，并放入到 recvq 中。</p>
+<p>继续接着讲上面的代码，如果此时 <code>recvq</code> 不为空，则调用 <code>send 函数</code>将数据拷贝到对应的 goroutine 的堆栈上。</p>
+<p>这个时候<code>不经过</code>我们的<code>环形缓存！！！</code></p>
+<p>send 函数的实现主要包含两点：</p>
+<ol>
+<li><code>memmove(dst, src, t.size)</code> 进行数据的转移，本质上就是一个内存拷贝。</li>
+<li><code>goready(gp, skip+1)</code> goready 的作用是唤醒对应的 goroutine。</li>
+</ol>
+<p>而如果 <code>recvq</code> 队列为空，则说明此时<code>没有等待接收</code>数据的 goroutine，那么此时 channel 会尝试把数据放到缓存中。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> c.qcount &lt; c.dataqsiz &#123;</span><br><span class="line">	<span class="comment">// Space is available in the channel buffer. Enqueue the element to send.</span></span><br><span class="line">	qp := chanbuf(c, c.sendx)</span><br><span class="line">	<span class="keyword">if</span> raceenabled &#123;</span><br><span class="line">		racenotify(c, c.sendx, <span class="literal">nil</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	typedmemmove(c.elemtype, qp, ep)</span><br><span class="line">	c.sendx++</span><br><span class="line">	<span class="keyword">if</span> c.sendx == c.dataqsiz &#123;</span><br><span class="line">		c.sendx = <span class="number">0</span></span><br><span class="line">	&#125;</span><br><span class="line">	c.qcount++</span><br><span class="line">	unlock(&amp;c.lock)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码的作用其实非常简单，就是把数据放到 buffer 中而已。此过程涉及了 <code>ring buffer</code> 的操作，其中 <code>dataqsiz</code> 代表用户指定的 channel 的 buffer 大小，如果不指定则默认为 0。</p>
+<p>如果用户使用的是无缓冲 channel 或者此时 buffer 已满，则 <code>c.qcount &lt; c.dataqsiz</code> 条件不会满足, 以上流程也并不会执行到。此时会将当前的 goroutine 以及要发送的数据放入到 <code>sendq</code> 队列中，同时会切出该 goroutine</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Block on the channel. Some receiver will complete our operation for us.</span></span><br><span class="line">gp := getg()</span><br><span class="line">mysg := acquireSudog()</span><br><span class="line">mysg.releasetime = <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> t0 != <span class="number">0</span> &#123;</span><br><span class="line">	mysg.releasetime = <span class="number">-1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// No stack splits between assigning elem and enqueuing mysg</span></span><br><span class="line"><span class="comment">// on gp.waiting where copystack can find it.</span></span><br><span class="line">mysg.elem = ep</span><br><span class="line">mysg.waitlink = <span class="literal">nil</span></span><br><span class="line">mysg.g = gp</span><br><span class="line">mysg.isSelect = <span class="literal">false</span></span><br><span class="line">mysg.c = c</span><br><span class="line">gp.waiting = mysg</span><br><span class="line">gp.param = <span class="literal">nil</span></span><br><span class="line">c.sendq.enqueue(mysg)</span><br><span class="line"><span class="comment">// Signal to anyone trying to shrink our stack that we're about</span></span><br><span class="line"><span class="comment">// to park on a channel. The window between when this G's status</span></span><br><span class="line"><span class="comment">// changes and when we set gp.activeStackChans is not safe for</span></span><br><span class="line"><span class="comment">// stack shrinking.</span></span><br><span class="line">atomic.Store8(&amp;gp.parkingOnChan, <span class="number">1</span>)</span><br><span class="line"><span class="comment">// 将 goroutine 转入 waiting 状态</span></span><br><span class="line">gopark(chanparkcommit, unsafe.Pointer(&amp;c.lock), waitReasonChanSend, traceEvGoBlockSend, <span class="number">2</span>)</span><br><span class="line"><span class="comment">// Ensure the value being sent is kept alive until the</span></span><br><span class="line"><span class="comment">// receiver copies it out. The sudog has a pointer to the</span></span><br><span class="line"><span class="comment">// stack object, but sudogs aren't considered as roots of the</span></span><br><span class="line"><span class="comment">// stack tracer.</span></span><br><span class="line">KeepAlive(ep)</span><br><span class="line"><span class="comment">// 确保正在发送的值保持活动状态，直到接收者将其复制出来。sudog有一个指向堆栈对象的指针，但是sudog不被认为是堆栈跟踪程序的根。</span></span><br><span class="line"><span class="comment">// 总而言之：防止被GC</span></span><br></pre></td></tr></table></figure>
+
+<p>调用 gopark 后，对于用户侧来看，该向 channel 发送数据的代码语句会进行阻塞。</p>
+<p>以上过程就是 channel 的发送语句 (如，<code>c &lt;- 1</code>) 的内部工作流程，同时整个发送过程都使用 <code>c.lock</code> 进行加锁，保证并发安全。</p>
+<p>简单来说，整个流程如下：</p>
+<ol>
+<li>检查 recvq 是否为空，如果不为空，则从 recvq 头部<code>取一个 goroutine</code>，将数据发送过去，并<code>唤醒对应的 goroutine</code> 即可</li>
+<li>如果 recvq 为空，则将数据放入到 buffer 中</li>
+<li>如果 buffer 已满，则将要发送的数据和当前 goroutine 打包成 <code>sudog</code> 对象放入到 <code>sendq</code> 中。并将当前 goroutine 置为 waiting 状态。</li>
+</ol>
+<p>从 channel 中接收数据的过程基本与发送过程类似，此处不再赘述了。</p>
+<p>这里需要注意的是，channel 的<code>整个发送过程</code>和<code>接收过程</code>都使用 <code>runtime.mutex</code> 进行加锁。<code>runtime.mutex</code> 是 runtime 相关源码中常用到的一个<code>轻量级锁</code>。整个过程并不是最高效的 <code>lockfree</code> 的做法。</p>
+<p>golang 在这里有个 <a href="https://github.com/golang/go/issues/8899" target="_blank" rel="noopener">issue:go/issues#8899</a>，给出了 <code>lockfree</code> 的 <code>channel</code> 的方案。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Go源码剖析系列/">Go源码剖析系列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/Go源码剖析/">Go源码剖析</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
