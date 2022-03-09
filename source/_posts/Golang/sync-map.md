@@ -134,7 +134,7 @@ type Map struct {
 
 它的数据结构很简单，值包含四个字段：`read`、`mu`、`dirty`、`misses`。
 
-它使用了冗余的数据结构 `read`、`dirty`。`dirty` 中会包含 `read 中为删除的 entries`，新增加的 `entries 会加入到 dirty` 中。
+它使用了冗余的数据结构 `read`、`dirty`。`dirty` 中会包含 `read 中未删除的 entries`，新增加的 `entries 会加入到 dirty` 中。
 
 `read` 的数据结构是：
 
