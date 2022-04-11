@@ -37,7 +37,7 @@ tags: [公司]
 
 当下部门的业务主要包含几个模块，分别为:
 
-- `ADX`         核心广告B2B竞价服务（Waterfalls）
+- `ADX`         核心广告B2B竞价服务
 - `直投`         直投竞价服务
 - `EMR`         阿里云数仓
 - `GP（DGP）`    deep greenplum(ap+tp非主流分支)
