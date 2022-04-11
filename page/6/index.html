@@ -69,6 +69,309 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/10/01/消息队列/kafka/"><span>【消息队列】- Kafka相关</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/10/01/消息队列/kafka/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-10-01T07:25:40.000Z">
+          2019-10-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前 kafka 客户端在 php 中比较出名的仅有 2 个，但是其各有利弊，在这里就不展开详细说明了。因此，我们实现了一个叫<code>kafka-swoole</code>的项目，项目由<code>swoole4.x</code>协程+多进程实现，实现在串行化协程的基础上实现并行操作。</p>
+<p>由于很多小伙伴对 kafka 并不是特别了解，所以在这里记录一下一些基础的 kafka 自带的命令使用方式</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/消息队列/">消息队列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/消息队列，Kafka/">消息队列，Kafka</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/12/大数据/Glow源码剖析/"><span>【大数据】- Glow 源码剖析</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/12/大数据/Glow源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-11T16:07:40.000Z">
+          2019-08-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>犹豫公司的流式计算，并没有用类似于 Hadoop 的 mapreduce 机制或者 storm 或者 flink，是我们自研基于 erlang 的单节点服务，其优点就是：部署和迁移都十分简单，并且犹豫 erlang 的天然的良好的利用了多核 CPU 的优势，可以实现效率较高的大数据流式计算。但是由于其单机性，导致对单台机器的要求过于苛刻，并且不能进行扩展机器提高计算能力是其致命的缺点，所以目前我规划利用 golang，写一个支持分布式并行计算的服务，在此之前，了解了各大流式计算的基本思想，并且结合 golang 语言的特性，找到了一个叫<code>glow</code>的服务，想要写好一个分布式流式计算的服务，我们先来看看 <code>glow</code> 有什么好的借鉴的思想和思路。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>, <a href="/categories/大数据/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/大数据，流式计算/">大数据，流式计算</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/07/网络协议/TCP-tcpdump/"><span>【网络协议】TCP - tcpdump用法</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/07/网络协议/TCP-tcpdump/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-07T07:57:13.000Z">
+          2019-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们在服务器上编程或者调试的时候，都不可能是各种抓包客户端，所以我们需要学会运用 tcpdump 来对网络的数据进行抓包。<br>用简单的话来定义 tcpdump，就是：dump the traffic on a network，根据使用者的定义对网络上的数据包进行截获的包分析工具。 tcpdump 可以将网络中传送的数据包的“头”完全截获下来提供分析。它支持针对网络层、协议、主机、网络或端口的过滤，并提供 and、or、not 等逻辑语句来帮助你去掉无用的信息。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/07/网络协议/TCP-重传机制/"><span>【网络协议】TCP - 重传机制</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/07/网络协议/TCP-重传机制/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-07T03:33:40.000Z">
+          2019-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>TCP 要保证所有的数据包都可以到达，所以，必需要有重传机制。</p>
+<p>其中涉及 ACK 包比较关键，因为在窗口的这篇文章中，已经说过了，ACK 机制起始就是类似于一种反馈机制。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-窗口/"><span>【网络协议】TCP 窗口</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/06/网络协议/TCP-窗口/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-06T09:43:43.000Z">
+          2019-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近写了一篇关于 TCP 协议的文章，所以一些更加细节的内容，更偏向 TCP 独立协议的，拿出来独立记录。</p>
+<p>为了获得最优的连接速率，使用 TCP 窗口来控制流速率（flow control），滑动窗口就是一种主要的机制。这个窗口允许源端在给定连接传送数据分段而不用等待目标端返回 ACK，一句话描述：窗口的大小决定在不需要对端响应（acknowledgement）情况下传送数据的数量。​ 官方定义：“The amount of octets that can be transmitted without receiving an acknowledgement from the other side”。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-IP/"><span>【网络协议】TCP/IP协议</span></a></h3>
     
   
@@ -395,333 +698,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/算法/">算法</a><a href="/tags/LeeCode/">LeeCode</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/05/API网关/orange/"><span>【API网关】- Orange</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/05/API网关/orange/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-05T10:15:00.000Z">
-          2019-07-05
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
-<p>版本：0.7</p>
-</blockquote>
-<p>API 网关/网关，充当的职责无非以下几点：</p>
-<ul>
-<li>鉴权</li>
-<li>限流</li>
-<li>分流</li>
-<li>负载均衡</li>
-</ul>
-<blockquote>
-<p>隐含的功能就是动态 upstream</p>
-</blockquote>
-<p>大多与的 API 网关都是用利用 lua 实现的 Openresty 来实现的，因为它可以很好的和 nginx 结合在一起，可以同时运行 lua 脚本和 C 库，并且由于 lua 在协程上实现得十分早，对于 IO 密集型的处理十分的高效。</p>
-<p>在给予 Openresty 实现的 API 网关中，有一些是比较出名的，例如 kong/orange</p>
-<ul>
-<li><p><a href="https://github.com/Kong/kong" target="_blank" rel="noopener">kong</a> 算是行业认为最强大成熟的一个组件的，但是过于复杂了。</p>
-</li>
-<li><p><a href="https://github.com/orlabs/orange" target="_blank" rel="noopener">orange</a> 利用插件的形式来处理请求，并且间接直接，易于二次开发和扩展</p>
-</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/API网关/">API网关</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/API网关/">API网关</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/05/服务注册和发现/etcd/"><span>【服务注册和发现】- Etcd</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/05/服务注册和发现/etcd/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-05T03:15:00.000Z">
-          2019-07-05
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>Etcd is a distributed, consistent <strong>key-value</strong> store for <strong>shared configuration</strong> and <strong>service discovery</strong></p>
-<blockquote>
-<p>是一个分布式的，一致的 key-value 存储，主要用途是共享配置和服务发现</p>
-</blockquote>
-<p>服务注册与服务发现是在分布式服务架构中常常会涉及到的东西，业界常用的服务注册与服务发现工具有 <a href="https://zookeeper.apache.org/" target="_blank" rel="noopener">ZooKeeper</a>、<a href="https://etcd.io/" target="_blank" rel="noopener">etcd</a>、<a href="https://www.consul.io/" target="_blank" rel="noopener">Consul</a> 和 <a href="https://github.com/Netflix/eureka" target="_blank" rel="noopener">Eureka</a>。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/服务注册和发现/">服务注册和发现</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/服务注册和发现/">服务注册和发现</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/04/服务注册和发现/consul/"><span>【服务注册和发现】- Consul</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/04/服务注册和发现/consul/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-04T03:15:00.000Z">
-          2019-07-04
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>服务注册与服务发现是在分布式服务架构中常常会涉及到的东西，业界常用的服务注册与服务发现工具有 <a href="https://zookeeper.apache.org/" target="_blank" rel="noopener">ZooKeeper</a>、<a href="https://etcd.io/" target="_blank" rel="noopener">etcd</a>、<a href="https://www.consul.io/" target="_blank" rel="noopener">Consul</a> 和 <a href="https://github.com/Netflix/eureka" target="_blank" rel="noopener">Eureka</a>。Consul 的主要功能有服务发现、健康检查、KV 存储、安全服务沟通和多数据中心。Consul 与其他几个工具的区别可以在这里查看 <a href="https://www.consul.io/intro/vs/index.html" target="_blank" rel="noopener">Consul vs. Other Software。</a></p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/服务注册和发现/">服务注册和发现</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/服务注册和发现/">服务注册和发现</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/06/13/nginx/【Nginx】map-详解/"><span>【Nginx】map-详解</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/06/13/nginx/【Nginx】map-详解/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-06-13T03:13:30.000Z">
-          2019-06-13
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>map 指令是由 ngx_http_map_module 模块提供的，默认情况下安装 nginx 都会安装该模块。</p>
-<p>map 的主要作用是创建自定义变量，通过使用 nginx 的内置变量，去匹配某些特定规则，如果匹配成功则设置某个值给自定义变量。 而这个自定义变量又可以作于他用。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/nginx/">nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/nginx/">nginx</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/06/12/k8s/k8s-dashboard/"><span>【kubernetes】dashboard</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/06/12/k8s/k8s-dashboard/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-06-12T09:00:30.000Z">
-          2019-06-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/kubernetes/dashboard" target="_blank" rel="noopener">dashboard</a></p>
-<p>dashboard 是一款基于容器的监控 k8s 集群情况的一个仪表盘项目</p>
-<p>本文中使用的版本为：v1.10.1</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/kubernetes/">kubernetes</a>
     </span>
     
 

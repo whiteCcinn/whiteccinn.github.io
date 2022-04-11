@@ -69,6 +69,318 @@
 
   
     
+    <h3 class="article-title"><a href="/2021/04/13/Rust语言/rust-序列化框架serde/"><span>【rust】序列化框架serde</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/04/13/Rust语言/rust-序列化框架serde/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-04-13T02:43:43.000Z">
+          2021-04-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Rust 中有一个 99%的程序员或许都会用到的组件，那就是序列化组件: serde。</p>
+<p>众所周知，rust的静态语言，所以这让我们在序列化上繁琐了很多，但是有了serde，它帮助我们更好的序列化结构体，生产对应的数据。它实现了各种<code>声明宏</code> 以及 <code>过程宏</code> 来协助我们序列化。</p>
+<p>围绕着<code>serde</code>，也有很多衍生的子组件，例如<code>serde-json</code>, <code>serde-yaml</code>, <code>serde-qs</code> 等等。</p>
+<p>由于我目前在开发 <code>gitlab-rs</code>，在生成对应的query_string 以及form的数据的时候，就比较棘手。</p>
+<p>所以我在<code>gitlab-rs</code> 生成的过程宏中，借助了 <code>seder</code> 出色的序列化生态来完成功能。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/rust/">rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/rust/">rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2021/03/27/数据库开发知识/msource/"><span>【数据库开发】msource</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/03/27/数据库开发知识/msource/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-03-26T17:16:43.000Z">
+          2021-03-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>CAP</code>原则又称CAP定理，指的是在一个分布式系统中，<code>一致性（Consistency）</code>、<code>可用性（Availability）</code>、<code>分区容错性（Partition tolerance）</code>。CAP 原则指的是，这三个要素最多只能同时实现两点，不可能三者兼顾。</p>
+<p><code>msource</code> 是我们的一个 <code>数据源组件</code>，我们所有的大数据ETL服务都构建在此之上，所以我们msource可以说是所有业务系统的核心。他维护着一个稳定，可靠，高性能的数据传输机制。让我们 <code>业务层</code> 中可以做各种操作，同步，异步等等。</p>
+<p>msource 的角色我大体分为了2种：</p>
+<ul>
+<li>spout （数据推送组件)</li>
+<li>db （数据存储组件）</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>, <a href="/categories/数据结构/数据库/">数据库</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Kafka/">Kafka</a><a href="/tags/TiDB/">TiDB</a><a href="/tags/RocketDB/">RocketDB</a><a href="/tags/SQL/">SQL</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2021/01/14/Golang/unsafe-Pointer/"><span>【Golang】- unsafe Pointer</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/01/14/Golang/unsafe-Pointer/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-01-14T03:37:12.000Z">
+          2021-01-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于目前在使用使用一些go写的odbc库，里面涉及到一些cgo的内容，那就避不开内存和指针等问题，在这边文章中记录一下<code>unsafe Pointer</code> 和 <code>uintptr</code> 的相关内容。</p>
+<p>Go语言在设计的时候，为了编写方便、效率高以及降低复杂度，被设计成为一门强类型的静态语言。强类型意味着一旦定义了，它的类型就不能改变了；静态意味着类型检查在运行前就做了。</p>
+<p>同时为了安全的考虑，Go语言是不允许两个指针类型进行转换的。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2021/01/05/大数据/flume+kudu/"><span>【大数据】- flume + kudu 操作指南</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/01/05/大数据/flume+kudu/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-01-05T01:56:40.000Z">
+          2021-01-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们要尝试使用kudu，架构是由flume-&gt;kudu</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/大数据/">大数据</a><a href="/tags/flume/">flume</a><a href="/tags/kudu/">kudu</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2021/01/05/大数据/记一次华为云大数据服务对接问题记录/"><span>【大数据】- 记一次华为云大数据服务对接问题记录</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2021/01/05/大数据/记一次华为云大数据服务对接问题记录/" rel="bookmark">
+        <time class="entry-date published" datetime="2021-01-05T01:56:40.000Z">
+          2021-01-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们在调研是否让自建IDC大数据机房上云服务，所以华为云进行一下测试。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/大数据/">大数据</a><a href="/tags/flume/">flume</a><a href="/tags/kudu/">kudu</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2020/12/29/数据库开发知识/Rocksdb/"><span>【数据库开发知识】Rocksdb</span></a></h3>
     
   
@@ -384,309 +696,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/爬虫/">爬虫</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/08/14/Golang/pprof性能分析/"><span>【Golang】- pprof性能分析</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/08/14/Golang/pprof性能分析/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-14T08:35:51.000Z">
-          2020-08-14
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在开发一个golang的大数据服务，发现只要到了业务层性能就急剧下降，为了排查这个原因，使用pprof进行性能分析</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/08/14/Golang/dlv在线调试/"><span>【Golang】- devle</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/08/14/Golang/dlv在线调试/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-14T01:46:51.000Z">
-          2020-08-14
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们可能断点调试程序，所以我们需要debug工具，对于golang来说，delve比gdb对go程序更友好。所以，我们今天来看看devle怎么debug程序</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/07/10/DevOps/Jenkins-shared-library/"><span>【DevOps】Jenkins-shared-library 实战</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/07/10/DevOps/Jenkins-shared-library/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-07-10T09:35:30.000Z">
-          2020-07-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近公司用了 <code>jenkins</code> 做为 <code>CI/CD</code> 的工具，<code>jenkins</code>是什么，我就不和大家详细说明了。</p>
-<p>今天主要讲的是 <code>jenkins</code> 的 <code>pipeline</code>，旧版的 jenkins 我不太了解，但是听说这个 pipeline 是新出的。</p>
-<p>今天要讲的也不单单是<code>pipeline</code>，更是有强力干货<code>share-library</code>相关的内容。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/DevOps/">DevOps</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/DevOps/">DevOps</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/06/18/docker/docker-apline的问题/"><span>【Docker】docker-apline的问题</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/06/18/docker/docker-apline的问题/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-06-18T12:28:30.000Z">
-          2020-06-18
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天领导发现了一个docker的问题，他在用apline作为基础镜像的时候，在公司的服务器上无法<code>ping baidu.com</code></p>
-<p>但是我们却是能在nslookup中解析到域名。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Docker/">Docker</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Docker/">Docker</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/06/16/大数据/docker构建基于Hadoop的大数据生态/"><span>【大数据】- docker构建基于Hadoop的大数据生态</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/06/16/大数据/docker构建基于Hadoop的大数据生态/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-06-16T10:07:40.000Z">
-          2020-06-16
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>众所周知，hadoop的大数据生态的组件版本对依赖十分的繁杂，对此我们在如果需要用apache开源库来一点点堆起积木，有点繁琐<br>我们这个项目的目的只是为了更快更方便的构建大数据生态环境。<br>所以我们这里选择采用cdh的方式来构建大数据生态，但是由于我们希望在终端就部署好服务，而不需要客户端，所以这里就不选择用cmf</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/大数据/">大数据</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
     </span>
     
 

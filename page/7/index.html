@@ -69,6 +69,333 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/07/05/API网关/orange/"><span>【API网关】- Orange</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/05/API网关/orange/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-05T10:15:00.000Z">
+          2019-07-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>版本：0.7</p>
+</blockquote>
+<p>API 网关/网关，充当的职责无非以下几点：</p>
+<ul>
+<li>鉴权</li>
+<li>限流</li>
+<li>分流</li>
+<li>负载均衡</li>
+</ul>
+<blockquote>
+<p>隐含的功能就是动态 upstream</p>
+</blockquote>
+<p>大多与的 API 网关都是用利用 lua 实现的 Openresty 来实现的，因为它可以很好的和 nginx 结合在一起，可以同时运行 lua 脚本和 C 库，并且由于 lua 在协程上实现得十分早，对于 IO 密集型的处理十分的高效。</p>
+<p>在给予 Openresty 实现的 API 网关中，有一些是比较出名的，例如 kong/orange</p>
+<ul>
+<li><p><a href="https://github.com/Kong/kong" target="_blank" rel="noopener">kong</a> 算是行业认为最强大成熟的一个组件的，但是过于复杂了。</p>
+</li>
+<li><p><a href="https://github.com/orlabs/orange" target="_blank" rel="noopener">orange</a> 利用插件的形式来处理请求，并且间接直接，易于二次开发和扩展</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/API网关/">API网关</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/API网关/">API网关</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/05/服务注册和发现/etcd/"><span>【服务注册和发现】- Etcd</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/05/服务注册和发现/etcd/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-05T03:15:00.000Z">
+          2019-07-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Etcd is a distributed, consistent <strong>key-value</strong> store for <strong>shared configuration</strong> and <strong>service discovery</strong></p>
+<blockquote>
+<p>是一个分布式的，一致的 key-value 存储，主要用途是共享配置和服务发现</p>
+</blockquote>
+<p>服务注册与服务发现是在分布式服务架构中常常会涉及到的东西，业界常用的服务注册与服务发现工具有 <a href="https://zookeeper.apache.org/" target="_blank" rel="noopener">ZooKeeper</a>、<a href="https://etcd.io/" target="_blank" rel="noopener">etcd</a>、<a href="https://www.consul.io/" target="_blank" rel="noopener">Consul</a> 和 <a href="https://github.com/Netflix/eureka" target="_blank" rel="noopener">Eureka</a>。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/服务注册和发现/">服务注册和发现</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/服务注册和发现/">服务注册和发现</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/04/服务注册和发现/consul/"><span>【服务注册和发现】- Consul</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/04/服务注册和发现/consul/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-04T03:15:00.000Z">
+          2019-07-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>服务注册与服务发现是在分布式服务架构中常常会涉及到的东西，业界常用的服务注册与服务发现工具有 <a href="https://zookeeper.apache.org/" target="_blank" rel="noopener">ZooKeeper</a>、<a href="https://etcd.io/" target="_blank" rel="noopener">etcd</a>、<a href="https://www.consul.io/" target="_blank" rel="noopener">Consul</a> 和 <a href="https://github.com/Netflix/eureka" target="_blank" rel="noopener">Eureka</a>。Consul 的主要功能有服务发现、健康检查、KV 存储、安全服务沟通和多数据中心。Consul 与其他几个工具的区别可以在这里查看 <a href="https://www.consul.io/intro/vs/index.html" target="_blank" rel="noopener">Consul vs. Other Software。</a></p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/服务注册和发现/">服务注册和发现</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/服务注册和发现/">服务注册和发现</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/06/13/nginx/【Nginx】map-详解/"><span>【Nginx】map-详解</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/13/nginx/【Nginx】map-详解/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-13T03:13:30.000Z">
+          2019-06-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>map 指令是由 ngx_http_map_module 模块提供的，默认情况下安装 nginx 都会安装该模块。</p>
+<p>map 的主要作用是创建自定义变量，通过使用 nginx 的内置变量，去匹配某些特定规则，如果匹配成功则设置某个值给自定义变量。 而这个自定义变量又可以作于他用。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/nginx/">nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/nginx/">nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/06/12/k8s/k8s-dashboard/"><span>【kubernetes】dashboard</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/12/k8s/k8s-dashboard/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-12T09:00:30.000Z">
+          2019-06-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/kubernetes/dashboard" target="_blank" rel="noopener">dashboard</a></p>
+<p>dashboard 是一款基于容器的监控 k8s 集群情况的一个仪表盘项目</p>
+<p>本文中使用的版本为：v1.10.1</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/06/12/大数据/Hadoop基本概念/"><span>【大数据】- Hadoop 基本概念</span></a></h3>
     
   
@@ -376,343 +703,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/05/16/k8s知识点一/"><span>k8s の 基础知识</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/05/16/k8s知识点一/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-05-16T06:24:00.000Z">
-          2019-05-16
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="k8s-知识点一"><a href="#k8s-知识点一" class="headerlink" title="k8s 知识点一"></a>k8s 知识点一</h1><h2 id="k8s-总架构由于-2-个概念构成"><a href="#k8s-总架构由于-2-个概念构成" class="headerlink" title="k8s 总架构由于 2 个概念构成"></a>k8s 总架构由于 2 个概念构成</h2><ul>
-<li>Master</li>
-<li>Node</li>
-</ul>
-<p><code>Master</code> 和 <code>Node</code> 都是服务器物理机或者虚拟机, 都可以由于一台或者多台组成，如果 Master 不考虑<code>HA(高可用)</code>的情况下。一般都是 1 台 Master + N 台 Node。</p>
-<h2 id="Master-上所需要的服务"><a href="#Master-上所需要的服务" class="headerlink" title="Master 上所需要的服务"></a>Master 上所需要的服务</h2><ul>
-<li>etcd</li>
-<li>Api Server</li>
-<li>Controller Manager</li>
-<li>Scheduler</li>
-</ul>
-<p>后三个组件构成了 Kubernetes 的总控中心，这些进程实现了整个集群的资源管理、Pod 调度、弹性伸缩、安全控制、系统监控和纠错等管理功能，并且全都是自动完成。</p>
-<h2 id="Node-上所需要的服务"><a href="#Node-上所需要的服务" class="headerlink" title="Node 上所需要的服务"></a>Node 上所需要的服务</h2><ul>
-<li>kubelet</li>
-<li>proxy</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/k8s/">k8s</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/k8s/">k8s</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/04/02/rust-for-docker/"><span>rust-for-docker</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/04/02/rust-for-docker/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-04-02T12:49:59.000Z">
-          2019-04-02
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天，我们开始学习一下 Rust，希望将来在公司可以推广 Rust 语言，并且用 Rust 语言做更多的事情。</p>
-<p>在此， 进入我们的入学篇。</p>
-<h2 id="Rust-for-Docker"><a href="#Rust-for-Docker" class="headerlink" title="Rust for Docker"></a>Rust for Docker</h2><p>拉取最新版本的 Rust</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rust:latest</span><br></pre></td></tr></table></figure>
-
-<p>由于官方上的命令有点问题，并且我希望我有一个交互的终端环境，所以，经过修改后，进入 Rust 容器的命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -e &quot;USER&#x3D;$(whoami)&quot; -e &quot;RUST_BACKTRACE&#x3D;1&quot; -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp -w &#x2F;usr&#x2F;src&#x2F;myapp rust:latest bash</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>USER: cargo 打包的时候会用这个命名</li>
-<li>RUST_BACKTRACE：终端调试的时候，会打印出错误栈</li>
-</ul>
-<p>进入到容器后，我们创建属于我们的第一个项目：Hello，World</p>
-<p>利用 Rust 的包管理工具：Cargo 进行开发和编译</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_world</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; car new --lib &lt;package_name&gt; 这个是创建类库的命令，暂时用不到，所以忽略先</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Rust/">Rust</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Rust/">Rust</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/11/15/linux-shell-huanhangbuchong/"><span>【工具】oh-my-zsh 换行补偿</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/11/15/linux-shell-huanhangbuchong/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-11-15T04:06:01.000Z">
-          2018-11-15
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="oh-my-zsh-换行补偿"><a href="#oh-my-zsh-换行补偿" class="headerlink" title="oh-my-zsh 换行补偿"></a>oh-my-zsh 换行补偿</h1><p>大家应该也是经常会用到 linux 或者 macOS，大家应该都有了解 macos 必备软件之间，oh-my-zsh，它可以为我们的终端提供丰富的主题，当然，这里就不详细介绍了。现在主要说一下其中一个问题就是，oh-my-zsh 的 <code>换行补偿机制</code>。</p>
-<p>一般情况下，我们在终端有时候会发现会存在 <code>%</code>，例如：</p>
-<blockquote>
-<p>root 账号的时候是 # 号<br>非 root 账号是 % 号</p>
-</blockquote>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/10/25/linux-shell-ed/"><span>【Linux命令】ed命令</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/10/25/linux-shell-ed/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-10-25T12:22:00.000Z">
-          2018-10-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>ed 是 linux 下原始的编辑器，类似于一个行为记录器</p>
-<p>ed 的所有操作都可以用一个文本来记录</p>
-<p>里面的内容是所有的操作，有点类似于 dockerfile 的形式</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/10/25/linux-shell-colordiff/"><span>【Linux命令】diff - colordiff</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/10/25/linux-shell-colordiff/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-10-25T11:44:00.000Z">
-          2018-10-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们经常用 git 的客户端来对比文件差异，或者用一下其他的对比文件的差异的软件，例如常用的 Beyond Compare，但是如果我们不想借助其他的工具，用 linux 自带的命令要如何实现呢。</p>
-<p>这里和大家说一下 <code>diff</code> 命令</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>diff 分析两个文件，并输出两个文件的不同的行。diff 的输出结果表明需要对一个文件做怎样的操作之后才能与第二个文件相匹配。diff 并不会改变文件的内容，但是 diff 可以输出一个 ed 脚本来应用这些改变。<br>现在让我们来看一下 diff 是如何工作的，假设有两个文件：</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
     </span>
     
 

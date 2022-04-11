@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>【Golang】- go map源码阅读 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="【Golang】- go map源码阅读"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>【Golang】- go map源码阅读</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/03/10/Golang/go map源码阅读/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-03-10T07:55:51.000Z">
+          2022-03-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近发现同事去面试，发现很多时候会被问到<code>go map</code>的底层结构。今天我们来记录一下map的底层实现。</p>
+<a id="more"></a>
+
+<p>当下的源码阅读基于1.17</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A header for a Go map.</span></span><br><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Note: the format of the hmap is also encoded in cmd/compile/internal/gc/reflect.go.</span></span><br><span class="line">	<span class="comment">// Make sure this stays in sync with the compiler's definition.</span></span><br><span class="line">	count     <span class="keyword">int</span> <span class="comment">// # live cells == size of map.  Must be first (used by len() builtin)</span></span><br><span class="line">	flags     <span class="keyword">uint8</span></span><br><span class="line">	B         <span class="keyword">uint8</span>  <span class="comment">// log_2 of # of buckets (can hold up to loadFactor * 2^B items)</span></span><br><span class="line">	noverflow <span class="keyword">uint16</span> <span class="comment">// approximate number of overflow buckets; see incrnoverflow for details</span></span><br><span class="line">	hash0     <span class="keyword">uint32</span> <span class="comment">// hash seed</span></span><br><span class="line"></span><br><span class="line">	buckets    unsafe.Pointer <span class="comment">// array of 2^B Buckets. may be nil if count==0.</span></span><br><span class="line">	oldbuckets unsafe.Pointer <span class="comment">// previous bucket array of half the size, non-nil only when growing</span></span><br><span class="line">	nevacuate  <span class="keyword">uintptr</span>        <span class="comment">// progress counter for evacuation (buckets less than this have been evacuated)</span></span><br><span class="line"></span><br><span class="line">	extra *mapextra <span class="comment">// optional fields</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这是一个map的头部结构，其中有几个关键结构，分别是</p>
+<ul>
+<li><code>count</code> 当前map的元素个数</li>
+<li><code>buckets</code> 桶的数量，一般是2^B个</li>
+<li><code>oldbuckets</code> 扩容前的buckets</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mapextra holds fields that are not present on all maps.</span></span><br><span class="line"><span class="keyword">type</span> mapextra <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// If both key and elem do not contain pointers and are inline, then we mark bucket</span></span><br><span class="line">	<span class="comment">// type as containing no pointers. This avoids scanning such maps.</span></span><br><span class="line">	<span class="comment">// However, bmap.overflow is a pointer. In order to keep overflow buckets</span></span><br><span class="line">	<span class="comment">// alive, we store pointers to all overflow buckets in hmap.extra.overflow and hmap.extra.oldoverflow.</span></span><br><span class="line">	<span class="comment">// overflow and oldoverflow are only used if key and elem do not contain pointers.</span></span><br><span class="line">	<span class="comment">// overflow contains overflow buckets for hmap.buckets.</span></span><br><span class="line">	<span class="comment">// oldoverflow contains overflow buckets for hmap.oldbuckets.</span></span><br><span class="line">	<span class="comment">// The indirection allows to store a pointer to the slice in hiter.</span></span><br><span class="line">	overflow    *[]*bmap</span><br><span class="line">	oldoverflow *[]*bmap</span><br><span class="line"></span><br><span class="line">	<span class="comment">// nextOverflow holds a pointer to a free overflow bucket.</span></span><br><span class="line">	nextOverflow *bmap</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>简单来说，这个可以忽略。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A bucket for a Go map.</span></span><br><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// tophash generally contains the top byte of the hash value</span></span><br><span class="line">	<span class="comment">// for each key in this bucket. If tophash[0] &lt; minTopHash,</span></span><br><span class="line">	<span class="comment">// tophash[0] is a bucket evacuation state instead.</span></span><br><span class="line">	tophash [bucketCnt]<span class="keyword">uint8</span></span><br><span class="line">	<span class="comment">// Followed by bucketCnt keys and then bucketCnt elems.</span></span><br><span class="line">	<span class="comment">// <span class="doctag">NOTE:</span> packing all the keys together and then all the elems together makes the</span></span><br><span class="line">	<span class="comment">// code a bit more complicated than alternating key/elem/key/elem/... but it allows</span></span><br><span class="line">	<span class="comment">// us to eliminate padding which would be needed for, e.g., map[int64]int8.</span></span><br><span class="line">	<span class="comment">// Followed by an overflow pointer.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>bmap有2个模块的属性是在编译注入的，在源码上没办法浏览。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">                                                    ┌─────────────────────────────────────┐</span><br><span class="line">                                                    │bmap                                 │</span><br><span class="line">┌─────────────────────────────────────┐             │                                     │</span><br><span class="line">│bmap                                 │             │                                     │</span><br><span class="line">│                                     │             │                                     │</span><br><span class="line">│                                     │             │    ┌──────────────────────────────┐ │</span><br><span class="line">│                                     │             │    │tohash[bucketCnt]uint8        │ │</span><br><span class="line">│    ┌──────────────────────────────┐ │             │    │                              │ │</span><br><span class="line">│    │tohash[bucketCnt]uint8        │ │             │    │                              │ │</span><br><span class="line">│    │                              │ │             │    │                              │ │</span><br><span class="line">│    │                              │ │             │    └──────────────────────────────┘ │</span><br><span class="line">│    │                              │ │             │                                     │</span><br><span class="line">│    └──────────────────────────────┘ │             │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">│                                     │             │    +  byte-array                  + │</span><br><span class="line">│    ++++++++++++++++++++++++++++++++ │             │    +        (save key-value)      + │</span><br><span class="line">│    +  byte-array                  + │     ┌──────►│    +                              + │</span><br><span class="line">│    +        (save key-value)      + │     │       │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">│    +                              + │     │       │                                     │</span><br><span class="line">│    ++++++++++++++++++++++++++++++++ │     │       │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">│                                     │     │       │    +   point to growed bucket     + │</span><br><span class="line">│    ++++++++++++++++++++++++++++++++ │     │       │    +                              + │</span><br><span class="line">│    +   point to growed bucket     + │     │       │    +                              + │</span><br><span class="line">│    +                              + ├─────┘       │    +++++++++++++─┐+++++++++++++++++ │</span><br><span class="line">│    +                              + │             │                  │                  │</span><br><span class="line">│    ++++++++++++++++++++++++++++++++ │             │                  │                  │</span><br><span class="line">│                                     │             └──────────────────┼──────────────────┘</span><br><span class="line">│                                     │                                │</span><br><span class="line">└─────────────────────────────────────┘                                │</span><br><span class="line">                                                                       │</span><br><span class="line">                                                                       ▼</span><br><span class="line">                                                     ┌─────────────────────────────────────┐</span><br><span class="line">                                                     │bmap                                 │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     │    ┌──────────────────────────────┐ │</span><br><span class="line">                                                     │    │tohash[bucketCnt]uint8        │ │</span><br><span class="line">                                                     │    │                              │ │</span><br><span class="line">                                                     │    │                              │ │</span><br><span class="line">                                                     │    │                              │ │</span><br><span class="line">                                                     │    └──────────────────────────────┘ │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">                                                     │    +  byte-array                  + │</span><br><span class="line">                                                     │    +        (save key-value)      + │</span><br><span class="line">                                                     │    +                              + │</span><br><span class="line">                                                     │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">                                                     │    +   point to growed bucket     + │</span><br><span class="line">                                                     │    +                              + │</span><br><span class="line">                                                     │    +                              + │</span><br><span class="line">                                                     │    ++++++++++++++++++++++++++++++++ │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     │                                     │</span><br><span class="line">                                                     └─────────────────────────────────────┘s</span><br></pre></td></tr></table></figure>
+
+
+<p>相比于hmap，bucket的结构显得简单一些，<code>byte-array</code>是我们使用的map中的key和value就存储在这里。<code>高位哈希值</code>数组记录的是当前bucket中key相关的<code>索引</code></p>
+<h2 id="mapassign-赋值过程"><a href="#mapassign-赋值过程" class="headerlink" title="mapassign 赋值过程"></a>mapassign 赋值过程</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 判断会否当前已经进行了写保护</span></span><br><span class="line"><span class="keyword">if</span> h.flags&amp;hashWriting != <span class="number">0</span> &#123;</span><br><span class="line">	throw(<span class="string">"concurrent map writes"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 2. 根据key计算哈希值</span></span><br><span class="line">hash := t.hasher(key, <span class="keyword">uintptr</span>(h.hash0))</span><br><span class="line"><span class="comment">// 3. 进行写保护</span></span><br><span class="line">h.flags ^= hashWriting</span><br><span class="line"><span class="comment">// 4. 计算hash的低位部分</span></span><br><span class="line">bucket := hash &amp; bucketMask(h.B)</span><br><span class="line"><span class="comment">// 5. 判断是否正在扩容，如果是，则数据迁移</span></span><br><span class="line"><span class="keyword">if</span> h.growing() &#123;</span><br><span class="line">	growWork(t, h, bucket)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 6. 根据低位hash找到对应的bucket</span></span><br><span class="line">b := (*bmap)(add(h.buckets, bucket*<span class="keyword">uintptr</span>(t.bucketsize)))</span><br><span class="line"><span class="comment">// 7. 计算高位hash</span></span><br><span class="line">top := tophash(hash)</span><br><span class="line"><span class="comment">// 8. 从对应的bucket以及overflow buckets中找到对应的key的位置</span></span><br><span class="line"><span class="comment">// 9. 判断是否需要扩容，如果需要，则重新找到key的位置</span></span><br><span class="line"><span class="keyword">if</span> !h.growing() &amp;&amp; (overLoadFactor(h.count+<span class="number">1</span>, h.B) || tooManyOverflowBuckets(h.noverflow, h.B)) &#123;</span><br><span class="line">	hashGrow(t, h)</span><br><span class="line">	<span class="keyword">goto</span> again <span class="comment">// Growing the table invalidates everything, so try again</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 10. 拿着可以插入kv的内存地址进行赋值</span></span><br><span class="line"><span class="keyword">if</span> t.indirectkey() &#123;</span><br><span class="line">	kmem := newobject(t.key)</span><br><span class="line">	*(*unsafe.Pointer)(insertk) = kmem</span><br><span class="line">	insertk = kmem</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> t.indirectelem() &#123;</span><br><span class="line">	vmem := newobject(t.elem)</span><br><span class="line">	*(*unsafe.Pointer)(elem) = vmem</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 11. 写保护检查，并且解除写保护</span></span><br><span class="line">	<span class="keyword">if</span> h.flags&amp;hashWriting == <span class="number">0</span> &#123;</span><br><span class="line">	throw(<span class="string">"concurrent map writes"</span>)</span><br><span class="line">&#125;</span><br><span class="line">h.flags &amp;^= hashWriting</span><br></pre></td></tr></table></figure>
+
+<p>赋值过程就是：</p>
+<ol>
+<li>进行写保护</li>
+<li>根据key计算哈希值</li>
+<li>在低位哈希中找到bucket</li>
+<li>计算高位hash</li>
+<li>在bucket和overflow bucket桶中找到能插入key/value的位置</li>
+<li>找到了就赋值</li>
+<li>解除锁保护</li>
+</ol>
+<blockquote>
+<p>其中有多次判断bucket是否需要扩容和是否正在扩容</p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Go源码剖析系列/">Go源码剖析系列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/Go源码剖析/">Go源码剖析</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

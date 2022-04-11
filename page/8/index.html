@@ -69,6 +69,343 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/05/16/k8s知识点一/"><span>k8s の 基础知识</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/16/k8s知识点一/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-16T06:24:00.000Z">
+          2019-05-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="k8s-知识点一"><a href="#k8s-知识点一" class="headerlink" title="k8s 知识点一"></a>k8s 知识点一</h1><h2 id="k8s-总架构由于-2-个概念构成"><a href="#k8s-总架构由于-2-个概念构成" class="headerlink" title="k8s 总架构由于 2 个概念构成"></a>k8s 总架构由于 2 个概念构成</h2><ul>
+<li>Master</li>
+<li>Node</li>
+</ul>
+<p><code>Master</code> 和 <code>Node</code> 都是服务器物理机或者虚拟机, 都可以由于一台或者多台组成，如果 Master 不考虑<code>HA(高可用)</code>的情况下。一般都是 1 台 Master + N 台 Node。</p>
+<h2 id="Master-上所需要的服务"><a href="#Master-上所需要的服务" class="headerlink" title="Master 上所需要的服务"></a>Master 上所需要的服务</h2><ul>
+<li>etcd</li>
+<li>Api Server</li>
+<li>Controller Manager</li>
+<li>Scheduler</li>
+</ul>
+<p>后三个组件构成了 Kubernetes 的总控中心，这些进程实现了整个集群的资源管理、Pod 调度、弹性伸缩、安全控制、系统监控和纠错等管理功能，并且全都是自动完成。</p>
+<h2 id="Node-上所需要的服务"><a href="#Node-上所需要的服务" class="headerlink" title="Node 上所需要的服务"></a>Node 上所需要的服务</h2><ul>
+<li>kubelet</li>
+<li>proxy</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/k8s/">k8s</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/k8s/">k8s</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/04/02/rust-for-docker/"><span>rust-for-docker</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/04/02/rust-for-docker/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-02T12:49:59.000Z">
+          2019-04-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天，我们开始学习一下 Rust，希望将来在公司可以推广 Rust 语言，并且用 Rust 语言做更多的事情。</p>
+<p>在此， 进入我们的入学篇。</p>
+<h2 id="Rust-for-Docker"><a href="#Rust-for-Docker" class="headerlink" title="Rust for Docker"></a>Rust for Docker</h2><p>拉取最新版本的 Rust</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rust:latest</span><br></pre></td></tr></table></figure>
+
+<p>由于官方上的命令有点问题，并且我希望我有一个交互的终端环境，所以，经过修改后，进入 Rust 容器的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -e &quot;USER&#x3D;$(whoami)&quot; -e &quot;RUST_BACKTRACE&#x3D;1&quot; -v &quot;$PWD&quot;:&#x2F;usr&#x2F;src&#x2F;myapp -w &#x2F;usr&#x2F;src&#x2F;myapp rust:latest bash</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>USER: cargo 打包的时候会用这个命名</li>
+<li>RUST_BACKTRACE：终端调试的时候，会打印出错误栈</li>
+</ul>
+<p>进入到容器后，我们创建属于我们的第一个项目：Hello，World</p>
+<p>利用 Rust 的包管理工具：Cargo 进行开发和编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_world</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; car new --lib &lt;package_name&gt; 这个是创建类库的命令，暂时用不到，所以忽略先</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Rust/">Rust</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Rust/">Rust</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/11/15/linux-shell-huanhangbuchong/"><span>【工具】oh-my-zsh 换行补偿</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/11/15/linux-shell-huanhangbuchong/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-11-15T04:06:01.000Z">
+          2018-11-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="oh-my-zsh-换行补偿"><a href="#oh-my-zsh-换行补偿" class="headerlink" title="oh-my-zsh 换行补偿"></a>oh-my-zsh 换行补偿</h1><p>大家应该也是经常会用到 linux 或者 macOS，大家应该都有了解 macos 必备软件之间，oh-my-zsh，它可以为我们的终端提供丰富的主题，当然，这里就不详细介绍了。现在主要说一下其中一个问题就是，oh-my-zsh 的 <code>换行补偿机制</code>。</p>
+<p>一般情况下，我们在终端有时候会发现会存在 <code>%</code>，例如：</p>
+<blockquote>
+<p>root 账号的时候是 # 号<br>非 root 账号是 % 号</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/10/25/linux-shell-ed/"><span>【Linux命令】ed命令</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-ed/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T12:22:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>ed 是 linux 下原始的编辑器，类似于一个行为记录器</p>
+<p>ed 的所有操作都可以用一个文本来记录</p>
+<p>里面的内容是所有的操作，有点类似于 dockerfile 的形式</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/10/25/linux-shell-colordiff/"><span>【Linux命令】diff - colordiff</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-colordiff/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T11:44:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们经常用 git 的客户端来对比文件差异，或者用一下其他的对比文件的差异的软件，例如常用的 Beyond Compare，但是如果我们不想借助其他的工具，用 linux 自带的命令要如何实现呢。</p>
+<p>这里和大家说一下 <code>diff</code> 命令</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>diff 分析两个文件，并输出两个文件的不同的行。diff 的输出结果表明需要对一个文件做怎样的操作之后才能与第二个文件相匹配。diff 并不会改变文件的内容，但是 diff 可以输出一个 ed 脚本来应用这些改变。<br>现在让我们来看一下 diff 是如何工作的，假设有两个文件：</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/08/22/docker-python-httpruner/"><span>docker-python-httpruner</span></a></h3>
     
   
@@ -393,404 +730,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/进制/">进制</a><a href="/tags/算法/">算法</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/04/08/nginx-certbot-ssl/"><span>【SSL】使用certbot工具申请letsencrypt的ssl证书</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/04/08/nginx-certbot-ssl/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-04-08T02:55:00.000Z">
-          2018-04-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="申请-ssl-证书之前，先梳理几个要点："><a href="#申请-ssl-证书之前，先梳理几个要点：" class="headerlink" title="申请 ssl 证书之前，先梳理几个要点："></a>申请 ssl 证书之前，先梳理几个要点：</h2><p>1、确定好拟申请 ssl 证书的域名，这里为了便于说明假设申请 ssl 的域名为：a.baicai.com，<a href="http://www.baicai.com、account.baicai.com" target="_blank" rel="noopener">www.baicai.com、account.baicai.com</a> 等其他域名（和主机），没有本质上的区别，仅名称上的差异；</p>
-<p>2、确定拟申请 ssl 证书的域名正确解析到当前主机，本例也就是通过<a href="http://blog.crazylaw.com" target="_blank" rel="noopener">http://blog.crazylaw.com</a> 能够正确解析到当前主机（注意是正确解析，至于是不是能正确访问依据 certbot 的模式不同要求也不同）；</p>
-<p>3、确定好拟申请 ssl 证书域名解析到当前主机后的 web 根目录，假设为：/www/blog/</p>
-<h2 id="Github-上拉取-cerbot"><a href="#Github-上拉取-cerbot" class="headerlink" title="Github 上拉取 cerbot"></a>Github 上拉取 cerbot</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;certbot&#x2F;certbot</span><br></pre></td></tr></table></figure>
-
-<p>然后进入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd cerbot</span><br></pre></td></tr></table></figure>
-
-<p>接着看到<code>cerbot-auto</code>的可执行文件</p>
-<p>然后生成证书。</p>
-<p><font color="red">注意，如果你第一次使用 letsencrypy 的话，一般需要指定邮箱，并且 letsencrypy 会发送证书到你的邮箱，请确认订阅 letsencrypy，下面的命令是带上了邮箱信息的</font>！</p>
-<p><font color="red">注意，需要暂时停止 nginx</font>！</p>
-<h2 id="standalone-模式申请-ssl-证书"><a href="#standalone-模式申请-ssl-证书" class="headerlink" title="standalone 模式申请 ssl 证书"></a>standalone 模式申请 ssl 证书</h2><p>standalone 模式不需要上述梳理出的 3 个要点中的第三条，也就意味着如果你的主机需要关停 80 端口（或和 443 端口）的 web 服务，譬如正在运行的 nginx、Apache 需要关停。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">##standalone模式，其中-d参数指定拟申请ssl证书的域名 #可以通过多个-d参数指定多个域名，但你得确保这些指定的多个域名均能正常解析到当前主机</span><br><span class="line"></span><br><span class="line">.&#x2F;certbot-auto certonly --standalone --email you@email.com -d example.com -d www.example.com -d other.example.net</span><br></pre></td></tr></table></figure>
-
-<h2 id="非-standalone-模式申请-ssl-证书"><a href="#非-standalone-模式申请-ssl-证书" class="headerlink" title="非 standalone 模式申请 ssl 证书"></a>非 standalone 模式申请 ssl 证书</h2><p>这种模式需要使用-w 参数（或者–webroot-path 参数）指定当前正在运行的 web 服务器的根目录。–webroot-path 参数指定 web 根目录后，<code>certbot工具会自动在该目录下生成.well-known的隐藏目录</code>，以及用于效验域名所有者的特定文件，此文件 Let’s Encrypt 的服务器会主动发起 http 请求去读取从达到效验域名所有者或者管理者就是本次操作 certbot 工具的人；certbot 工具自动生成的完整目录为：-w 参数指定的根目录<code>/.well-known/acme-challenge</code>，对于 nginx 而言 web 根目录下的隐藏目录默认情况下是不允许访问的，所以 nginx 情况下再执行非 standalone 模式申请 ssl 证书之前，<code>需要将nginx网站根目录下的.well-known隐藏目录设置成允许访问</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">##nginx对应主机的配置文件中添加允许.well-known隐藏目录的访问</span><br><span class="line">#注意配置文件中禁止浏览隐藏文件的相关代码引起冲突</span><br><span class="line">location ~ &#x2F;.well-known &#123;</span><br><span class="line">    allow all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果熟悉 nginx，甚至可以为.well-known 隐藏目录指定单独的 root 入口；这就是 nginx 有关的合理利用了，不再补充。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##--webroot指定当前正在运行的web server的根目录</span><br><span class="line">certbot certonly --webroot -w &#x2F;var&#x2F;www&#x2F; -d c1c2.test.com</span><br></pre></td></tr></table></figure>
-
-<h2 id="一般使用-standalone-模式，继续"><a href="#一般使用-standalone-模式，继续" class="headerlink" title="一般使用 standalone 模式，继续"></a>一般使用 standalone 模式，继续</h2><p>接着如果你没订阅过的话，会在邮箱收到邮件，然后你要选择订阅。接着你会看到如下信息，选择 <code>a</code> 和 <code>y</code> 之后。</p>
-<p>默认路径如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;fullchain.pem</span><br><span class="line"></span><br><span class="line">&#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;&#123;you.domain&#125;&#x2F;privkey.pem</span><br></pre></td></tr></table></figure>
-
-<p>如何更新？这里截图写得很清楚了，再执行一次 <code>certbot-auto</code> 命令+参数即可，如果你想全部重新执行一边的话，可以使用 <code>certbot-auto renew</code>。</p>
-<h2 id="nginx-配置"><a href="#nginx-配置" class="headerlink" title="nginx 配置"></a>nginx 配置</h2><p>然后我们重启 nginx，即可。！</p>
-<h2 id="如何实现自动化？"><a href="#如何实现自动化？" class="headerlink" title="如何实现自动化？"></a>如何实现自动化？</h2><ul>
-<li>停止 nginx</li>
-<li>执行 certbot-auto</li>
-<li>重启 nginx</li>
-</ul>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a><a href="/tags/ssl/">ssl</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/regular-3/"><span>【正则表达式】- 贪婪和非贪婪模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/regular-3/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T06:11:56.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="模式："><a href="#模式：" class="headerlink" title="模式："></a>模式：</h2><p>在使用修饰匹配次数的特殊符号时，有几种表示方法可以使同一个表达式能够匹配不同的次数，比如：”{m,n}”, “{m,}”, “?”, “*”, “+”，具体匹配的次数随被匹配的字符串而定。这种重复匹配不定次数的表达式在匹配过程中，总是尽可能多的匹配。比如，针对文本 “dxxxdxxxd”，举例如下：</p>
-<h2 id="贪婪模式："><a href="#贪婪模式：" class="headerlink" title="贪婪模式："></a>贪婪模式：</h2><table>
-<thead>
-<tr>
-<th>表达式</th>
-<th>匹配结果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(d)(\w+)</td>
-<td>“\w+” 将匹配第一个 “d” 之后的所有字符 “xxxdxxxd”</td>
-</tr>
-<tr>
-<td>(d)(\w+)(d)</td>
-<td>“\w+” 将匹配第一个 “d” 和最后一个 “d” 之间的所有字符 “xxxdxxx”。</td>
-</tr>
-</tbody></table>
-<p>虽然 “\w+” 也能够匹配上最后一个 “d”，但是为了使整个表达式匹配成功，<br>“\w+” 可以 “让出” 它本来能够匹配的最后一个 “d”</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/正则/">正则</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/regular-2/"><span>【正则表达式】 - 超简单练习题</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/regular-2/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T05:58:00.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="1-匹配一段文本中的每行的邮箱"><a href="#1-匹配一段文本中的每行的邮箱" class="headerlink" title="1. 匹配一段文本中的每行的邮箱"></a>1. 匹配一段文本中的每行的邮箱</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$str &#x3D; &#39;123@qq.comaaa@163.combbb@126.comasdfasfs33333@adfcom&#39;;</span><br><span class="line"></span><br><span class="line">preg_match_all(&quot;&#x2F;\w+@(?:qq|126|163)\.com&#x2F;&quot;, $str, $matches);</span><br><span class="line"></span><br><span class="line">var_dump($matches);</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/正则/">正则</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/regular/"><span>【正则表达式】- 分组概念</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/regular/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T05:56:00.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>正则我们经常用，但是对于几个特殊的用途，可以记录一下。</p>
-<ul>
-<li><p><code>(exp)</code> 匹配 exp,并捕获文本到自动命名的组里</p>
-</li>
-<li><p><code>(?&lt;name&gt;exp)</code> 匹配 exp,并捕获文本到名称为 name 的组里，也可以写成(?’name’exp)</p>
-</li>
-<li><p><code>(?P&lt;name&gt;exp)</code> 和 <code>(?&lt;name&gt;exp)</code>一个意思</p>
-</li>
-<li><p><code>(?:exp)</code> 匹配 exp,不捕获匹配的文本</p>
-</li>
-<li><p><code>(?=exp)</code> 匹配 exp 前面的位置</p>
-</li>
-<li><p><code>(?&lt;=exp)</code> 匹配 exp 后面的位置</p>
-</li>
-<li><p><code>(?!exp)</code> 匹配后面跟的不是 exp 的位置</p>
-</li>
-<li><p><code>(?&lt;!exp)</code> 匹配前面不是 exp 的位置</p>
-</li>
-<li><p><code>(?#comment)</code> 这种类型的组不对正则表达式的处理产生任何影响，只是为了提供让人阅读注释</p>
-</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/正则/">正则</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/git-auto-deploy/"><span>【Git】- 利用git-hook实现自动化部署</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/git-auto-deploy/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T03:03:37.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>实现 git push 直接完成代码部署到服务器的目录<br>实现方式</p>
-<p>利用 git 的 hooks 中的<code>post-receiv</code>e 来实现代码提交完成之后的动作。将仓库指定一个<code>--work-tree</code>然后进行检出操作<code>checkout --force</code><br>目录结构</p>
-<p>我自己的项目结构是这样的，每一个仓库对应一个项目，例如 public/wx 项目对应 repo/wx.git 仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── public</span><br><span class="line">│   └── wx &#x2F;&#x2F; 这是我们的web代码部署目录</span><br><span class="line">│       ├── index.php</span><br><span class="line">│       ├── test2.php</span><br><span class="line">│       ├── test3.php</span><br><span class="line">│       └── test.php</span><br><span class="line">└── repo &#x2F;&#x2F; 这个是我们的仓库目录</span><br><span class="line">    └── wx.git &#x2F;&#x2F; 这个对应wx项目的仓库</span><br><span class="line">        ├── branches</span><br><span class="line">        ├── config</span><br><span class="line">        ├── description</span><br><span class="line">        ├── HEAD</span><br><span class="line">        ├── hooks &#x2F;&#x2F; post-receive钩子代码写在这里面</span><br><span class="line">        ├── index</span><br><span class="line">        ├── info</span><br><span class="line">        ├── objects</span><br><span class="line">        └── refs</span><br></pre></td></tr></table></figure>
-
-<p>再看下 hooks 文件目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── post-commit.sample</span><br><span class="line">├── post-receive</span><br><span class="line">├── post-receive.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">└── update.sample</span><br></pre></td></tr></table></figure>
-
-<p>我们将 post-receive.sample 复制一份 post-receive，并且编写代码如下</p>
-<h2 id="指定我的代码检出目录"><a href="#指定我的代码检出目录" class="headerlink" title="指定我的代码检出目录"></a>指定我的代码检出目录</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DIR=/www/public/wx</span><br><span class="line">git --work-tree=$&#123;DIR&#125; clean -fd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 直接强制检出</span></span><br><span class="line">git --work-tree=$&#123;DIR&#125; checkout --force</span><br></pre></td></tr></table></figure>
-
-<h2 id="如何生成目录"><a href="#如何生成目录" class="headerlink" title="如何生成目录"></a>如何生成目录</h2><p>上面看到的 repo 目录中的 wx.git 实际上是一个裸仓库，我们用下面的命令来生成这样一个仓库。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;www&#x2F;repo</span><br><span class="line">git init --bare wx.git</span><br></pre></td></tr></table></figure>
-
-<p>对于代码部署目录和仓库我们已经通过 post-receive 进行了关联了，因为我们一旦将代码 push 到仓库，那么会自动检出到 publish/wx 目录下。</p>
-<h2 id="远程部署"><a href="#远程部署" class="headerlink" title="远程部署"></a>远程部署</h2><p>在本地电脑上，我们添加远程仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git remote add origin root@xxx.xxx.xxx.xxx:&#x2F;www&#x2F;repo&#x2F;wx.git</span><br></pre></td></tr></table></figure>
-
-<p>这个时候我们添加了远程仓库，那么我们来测试下 push 操作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">touch index.php</span><br><span class="line">git add .</span><br><span class="line">git commit -m &#39;test&#39;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-<p>可能会提示一个–set-upstream，直接执行下就好了。执行完之后我们登陆服务器，会发现文件已经出现在 public/wx/index.php</p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ul>
-<li>如果我们没有配置 ssh 免密码登陆的话，我们需要在 push 代码的时候输入密码</li>
-<li>如果我们添加的远程仓库不是 <a href="mailto:root@xxx.xxx.xx.xx">root@xxx.xxx.xx.xx</a>，例如是 <a href="mailto:abc@xx.xx.xx.xx">abc@xx.xx.xx.xx</a>，那么我们要确保 abc 用户对 wx.git 目录下的文件有 777 权限。</li>
-</ul>
-<h3 id="新增仓库"><a href="#新增仓库" class="headerlink" title="新增仓库"></a>新增仓库</h3><ul>
-<li>需要登陆远程服务器进行初始化 repo_name.git 仓库</li>
-<li>需要手动创建 public/repo_name 文件夹，并且修改权限为 777</li>
-<li>需要重新编写 hooks/post-recieve 文件，修改里面的 DIR 路径为 public/repo_name</li>
-</ul>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Git/">Git</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Git/">Git</a>
     </span>
     
 

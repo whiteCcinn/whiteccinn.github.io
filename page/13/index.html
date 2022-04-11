@@ -69,6 +69,349 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/07/11/rabbit-mq/"><span>RabbitMQの关键知识整理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/11/rabbit-mq/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-11T03:45:00.000Z">
+          2017-07-11
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>RabbitMQ 作为一个转发服务器，里面涉及了一些实体的东西，如下：</p>
+<ul>
+<li>生产者 (Producter)</li>
+<li>消息 (Message)</li>
+<li>交换机 (Exchange)</li>
+<li>队列 (Queue)</li>
+<li>消费者 (Consumer)</li>
+</ul>
+<p>在这些实体的东西的基础上，RabbitMQ 重点的是 <code>交换机</code>,<code>队列</code></p>
+<h3 id="交换机与队列"><a href="#交换机与队列" class="headerlink" title="交换机与队列"></a>交换机与队列</h3><p>说完实体的东西之后，在 <code>交换机</code> 和 <code>队列</code> 之间有许多的规则（玩法），我们增加了如下内容：</p>
+<ul>
+<li><p>队列名 (Queue_name)</p>
+</li>
+<li><p>交换机类型 (Exchange_type)</p>
+</li>
+<li><p>路由键 (Routing_key)</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/MQ/">MQ</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/MQ/">MQ</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/28/network-protocol-endian/"><span>大端和小端（Big endian and Little endian）</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/28/network-protocol-endian/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-28T06:43:00.000Z">
+          2017-06-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="大端和小端（Big-endian-and-Little-endian）"><a href="#大端和小端（Big-endian-and-Little-endian）" class="headerlink" title="大端和小端（Big endian and Little endian）"></a>大端和小端（Big endian and Little endian）</h1><h2 id="网络字节序"><a href="#网络字节序" class="headerlink" title="网络字节序"></a>网络字节序</h2><p>网络字节顺序是TCP/IP中规定好的一种数据表示格式，它与具体的CPU类型、操作系统等无关，从而可以保证数据在不同主机之间传输时能够被正确解释。网络字节顺序采用big endian排序方式。</p>
+<p>由此可知，网络字节序是大端序的。那么什么是Big endian呢？</p>
+<h2 id="一、大端和小端的问题"><a href="#一、大端和小端的问题" class="headerlink" title="一、大端和小端的问题"></a>一、大端和小端的问题</h2><p>对于整型、长整型等数据类型，Big endian 认为第一个字节是最高位字节（按照从低地址到高地址的顺序存放数据的高位字节到低位字节）；而 Little endian 则相反，它认为第一个字节是最低位字节（按照从低地址到高地址的顺序存放数据的低位字节到高位字节）。</p>
+<p><strong>例如，假设从内存地址 <code>0x0000</code> 开始有以下数据：</strong></p>
+<table>
+<thead>
+<tr>
+<th>0x0000</th>
+<th>0x0001</th>
+<th>0x0002</th>
+<th>0x0003</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x12</td>
+<td>0x34</td>
+<td>0xab</td>
+<td>0xcd</td>
+</tr>
+</tbody></table>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/进制/">进制</a><a href="/tags/网络/">网络</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/28/bin-hex-oct/"><span>进制转换相关知识</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/28/bin-hex-oct/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-28T02:43:00.000Z">
+          2017-06-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h2><blockquote>
+<p>好久都没有好好整理过进制之间转换的关系了。最近在研究 RPC 的内容，有一些理论知识必须要重新整理一下。</p>
+</blockquote>
+<p>由于数据在计算机中的表示，最终以二进制的形式存在，所以有时候使用二进制，可以更直观地解决问题。</p>
+<p>但是有一些时候，二进制表示的数据实在的太长了，所以我们可能需要一些更高进制的数来表示数据，而我们从小学习的数学，就是以 10 进制来代表的。</p>
+<p><strong>进制数越大，所需要数长度就越短。</strong></p>
+<p>我们常用的进制有 2、8、16 进制，分别是 2 的 1 一次方，2 的 3 次方，2 的 4 次方。（至于为什么没有 3 进制，4 进制诸如此类的，各位百度一下吧）</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/进制/">进制</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/进制/">进制</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/22/design-strategy-model/"><span>设计模式の行为型の策略模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-strategy-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T07:23:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>策略模式是一个非常常用，且非常有用的设计模式。<br>简单的说，它是当你使用大量 if else 逻辑时的救星。<br>if else 就是一种判断上下文的环境所作出的策略，如果你把 if else 写死，那么在复杂逻辑的时候你会发现代码超级长，而且最蛋疼的是，当你以后要新增策略时，再写一个 elseif？<br>万一这个逻辑要修改 20 个地方呢？<br>一口老血吐在屏幕上…<br>策略模式就是来解决这个问题的。<br>举一个场景，商城的首页，男的进来看男性商品，女的进来看女性商品，不男不女…以此类推，各种条件下用不同策略展示不同商品。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式，PHP/">设计模式，PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/22/design-chain-of-responsibility-model/"><span>设计模式の行为型の责任链模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-chain-of-responsibility-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T07:06:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="理解概念"><a href="#理解概念" class="headerlink" title="理解概念"></a>理解概念</h1><p>责任链是一种比较高级的行为设计模式，就是当你有一个请求，你不知道用那个方法(handler)来处理这个请求时，你可以把这个请求丢进一个责任链里（里面有很多方法），这个责任链会通过轮询的方式自动找到对应的方法。</p>
+<p>比如我要翻译一个单词，我写这个代码的时候，根本不知道用户会输入什么语言，所以我干脆就不管了，无论用户输入什么语言，我把它输入的内容丢进一个责任链，这个责任链里有德语翻译器，英语翻译器，法语翻译器，汉语翻译器，日语翻译器等等等等，丢进去的时候它就会自动查找了，找到对应的语言就会自动翻译出来。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/22/design-observer-model/"><span>设计模式の行为型の观察者模式</span></a></h3>
     
   
@@ -346,313 +689,6 @@
 <p>我们还是先来了解一下 Facade 这个单词的意思吧。<br>首先它的读音是[fəˈsɑːd]，源自法语 façade，法语这个词原意就是 frontage，意思是建筑的正面，门面，由于以前法国，意大利的建筑只注重修葺临街的一面，十分精美，而背后却比较简陋，所以这个词引申的意思是表象，假象。</p>
 <h2 id="先讲设计模式中的概念"><a href="#先讲设计模式中的概念" class="headerlink" title="先讲设计模式中的概念"></a>先讲设计模式中的概念</h2><p>在设计模式中，其实 Facade 这个概念十分简单。</p>
 <p>它主要讲的是设计一个接口来统领所有子系统的功能。看完下面这个例子就明白了：</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-dependency-injection-model/"><span>设计模式の结构型の依赖注入模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-dependency-injection-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T03:11:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="很简单的理解"><a href="#很简单的理解" class="headerlink" title="很简单的理解"></a>很简单的理解</h2><p>终于要讲到这个著名的设计原则，其实它比其他设计模式都简单。<br>依赖注入的实质就是把一个类不可能更换的部分 和 可更换的部分 分离开来，通过注入的方式来使用，从而达到解耦的目的。</p>
-<h2 id="一个数据库连接类"><a href="#一个数据库连接类" class="headerlink" title="一个数据库连接类"></a>一个数据库连接类</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mysql</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> $host;</span><br><span class="line">  <span class="keyword">private</span> $port;</span><br><span class="line">  <span class="keyword">private</span> $username;</span><br><span class="line">  <span class="keyword">private</span> $password;</span><br><span class="line">  <span class="keyword">private</span> $db_name;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;host     = <span class="string">'127.0.0.1'</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;port     = <span class="number">22</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;username = <span class="string">'root'</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;password = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;db_name  = <span class="string">'my_db'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mysqli_connect(<span class="keyword">$this</span>-&gt;host, <span class="keyword">$this</span>-&gt;username, <span class="keyword">$this</span>-&gt;password, <span class="keyword">$this</span>-&gt;db_name, <span class="keyword">$this</span>-&gt;port);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-decorator-model/"><span>设计模式の结构型の装饰器模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-decorator-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T01:57:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="大概的意思"><a href="#大概的意思" class="headerlink" title="大概的意思"></a>大概的意思</h1><p>一个类中有一个方法，我需要经常改它，而且会反反复复，改完了又改回去。 一般要么我们直接改原来的类中的方法，要么继承一下类覆盖这个方法。 有没有一个办法可以不用继承，只需要增加一个类进去，就可以改掉那个方法。 有，装饰器模式。</p>
-<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">plainCoffee</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">makeCoffee</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;addCoffee();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addCoffee</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这是一个煮咖啡的程序，现在我还想加点糖，一般做法：</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/21/算法/algorithm-dynatic/"><span>动态规划算法の爬楼梯</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/21/算法/algorithm-dynatic/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-21T08:04:00.000Z">
-          2017-06-21
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>有一座高度是 10 级台阶的楼梯，从下往上走，每跨一步只能向上 1 级或者 2 级台阶。要求用程序来求出一共有多少种走法。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/动态规划/">动态规划</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/20/算法/algorithm-hash-bkrd/"><span>HASH算法のBKDRHash</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/20/算法/algorithm-hash-bkrd/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-20T09:39:00.000Z">
-          2017-06-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天和别人说一下 hash 算法，起源是因为字符串在数据库做索引的问题，我的想法是字符串通过 hash 算法，得到的 int 类型的数据，在 int 类型的数据库上做索引，但是 hash 算法有很多选择，就 PHP 而言，有人说 10 万数据内的话，用 PHP 内置的 CRC32 算法(abs(crc32($str)))就可以，但是我发现 hash 算法有很多种，其中一种就是 bkdrhash 算法。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a><a href="/tags/Hash函数/">Hash函数</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/20/design-combination-model/"><span>设计模式の结构型の组合模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/20/design-combination-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-20T08:19:00.000Z">
-          2017-06-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="大概意思"><a href="#大概意思" class="headerlink" title="大概意思"></a>大概意思</h1><p>一个接口对于多个实现，并且这些实现中都拥有相同的方法（名）。 有时候你需要只运行一个方法，就让不同实现类的某个方法或某个逻辑全部执行一遍。在批量处理多个实现类时，感觉就像在使用一个类一样。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先建立一个表单</span></span><br><span class="line">$form = <span class="keyword">new</span> Form();</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个Email元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Email:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个密码元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Password:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//把表单渲染出来</span></span><br><span class="line">$form-&gt;render();</span><br></pre></td></tr></table></figure>
-
-<p>这个例子形象的介绍了组合模式，表单的元素可以动态增加，但是只要渲染一次，就可以把整个表单渲染出来。</p>
         
       
     </div>

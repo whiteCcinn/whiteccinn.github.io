@@ -69,6 +69,338 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/19/linux-language-package/"><span>linuxの修改语言包</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/19/linux-language-package/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-19T08:32:00.000Z">
+          2017-06-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <ol>
+<li><p>执行 <code>locale -a</code> 发现存在中文语言包，语言包存放路径应该是 <code>/usr/share/locale/</code>。</p>
+</li>
+<li><p>执行 <code>echo $LANG</code> 发现语言配置是 C，大概是 ANSI C 的意思。</p>
+</li>
+<li><p>修改 <code>/etc/locale.conf</code> 为 LANG=”zh_CN.UTF-8”，并执行 <code>source /etc/locale.conf</code> 使配置生效。</p>
+</li>
+<li><p>现在支持中文了，可是提示语也变中文了，我想保留英文作为系统语言，同时支持中文，所以重新修改 <code>/etc/locale.conf</code> LANG=”en_US.UTF-8”，并执行 source</p>
+</li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/语言包/">语言包</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/19/ldconfig/"><span>linux の动态库</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/19/ldconfig/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-19T06:24:00.000Z">
+          2017-06-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="1-lib-和-usr-lib-的区别"><a href="#1-lib-和-usr-lib-的区别" class="headerlink" title="1. /lib 和 /usr/lib 的区别"></a>1. /lib 和 /usr/lib 的区别</h2><p>/lib 里面给的是 root 和内核所需<code>so(动态库)</code>或者<code>a(静态)</code>之类的库文件，而/usr/lib 是普通用户能够使用的。</p>
+<p>Linux 的程序有两种模式，这个你应该知道，是<code>用户模式</code>和<code>内核模式</code>，和这个也是有关系的，不再冗述。</p>
+<p>简单说,/lib 是内核级的,/usr/lib 是系统级的,/usr/local/lib 是用户级的.</p>
+<p>/lib/ — 包含许多被 /bin/ 和 /sbin/ 中的程序使用的库文件。目录 /usr/lib/ 中含有更多用于用户程序的库文件。/lib 目录下放置的是/bin 和/sbin 目录下程序所需的库文件。/lib 目录下的文件的名称遵循下面的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">libc.so.*</span><br><span class="line">ld*</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/05/27/ascii-code-1/"><span>Ascii码和字节字符的关系</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/05/27/ascii-code-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-05-27T10:20:00.000Z">
+          2017-05-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>##关于 Ascii 码的整理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- 0 &lt; ascii &lt; 128 单字节字符 &#x3D;&#x3D; 1xxx xxxx</span><br><span class="line"></span><br><span class="line">向右移动 7 位等于 0.符合范围内</span><br><span class="line"></span><br><span class="line">- 240 &lt;&#x3D; ascii 四字节字符 &#x3D;&#x3D; 1111 xxxx</span><br><span class="line"></span><br><span class="line">向右移动 4 位&#x3D;15，符合范围内</span><br><span class="line"></span><br><span class="line">- 224 &lt;&#x3D; ascii &lt; 240 3 字节字符 &#x3D;&#x3D; 111x xxxx</span><br><span class="line"></span><br><span class="line">向右移动 5 位&#x3D;7，符合范围内</span><br><span class="line"></span><br><span class="line">- 192 &lt;&#x3D; ascii &lt; 224 2 字节字符 11xx xxxx</span><br><span class="line"></span><br><span class="line">向右移动 6 位&#x3D;3，符合范围内</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/Ascii/">Ascii</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/03/15/ip-to-long/"><span>ip_to_long</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/15/ip-to-long/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-15T06:20:00.000Z">
+          2017-03-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>字符串 ip 转长整形原理和实现</p>
+<p>php 内置方法：ip2long</p>
+<p>但是这个方法存在 bug，就是 010.0.3.198 的时候，计算的长整形并非正确的长整形。并且掌握实现原理，其实并不困难。</p>
+<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p><code>IPv4</code> 地址我们知道的是这样子的形式： <code>192.168.2.10</code></p>
+<p>这种形式我们称之为 <code>点分十进制</code>，当然还有我们的<code>冒分十六进制</code>，但是这个是适用于 <code>IPv6</code> 的</p>
+<p>回到主题，<strong>点分十进制</strong>的写法其实是一个 4 个字节，32 位的整型组成的。</p>
+<p>例如 : <code>10.0.3.198</code></p>
+<p>二进制形式 ：<code>00001010.00000000.00000011.11000001</code></p>
+<p>说到这里，大家可能都知道了，为什么是 32 位了吧。那么二进制的 32 位转成十进制的时候，就是我们的长整形了。</p>
+<p>转换结果为 ：<code>167773121</code></p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>, <a href="/categories/协议/网络/">网络</a>, <a href="/categories/协议/网络/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/网络/">网络</a><a href="/tags/IP/">IP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/03/15/most-duplicated-ip-from-100-million/"><span>模拟从1亿个ip中访问次数最多的IP--PHP</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/03/15/most-duplicated-ip-from-100-million/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-03-15T06:03:38.000Z">
+          2017-03-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前提："><a href="#前提：" class="headerlink" title="前提："></a>前提：</h2><ul>
+<li>存储在一个文件中</li>
+<li>内存有限，时间无限。</li>
+</ul>
+<h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h2><ul>
+<li>采用类似分表的办法，将文件拆分到各个文件中再做统计运算，提高检索速度，分散内存压力</li>
+<li>涉及到 ip 的，首先要考虑的就是将 ip 转程长整形，理由是整型省内存，并且支持一般都支持整形索引，比字符串索引速度快</li>
+<li>数组存储的数据结构，采用冗余的策略，记录一组数组中重复最多的 ip 和数据</li>
+<li>独立小文件胜出的，再和分出来的其他的 N-1 个小文件胜出的比较</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/大数据/">大数据</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/02/20/数据结构/struct-study-6/"><span>C语言数据结构のAVL树</span></a></h3>
     
   
@@ -356,414 +688,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/PHP/">PHP</a><a href="/tags/PHP扩展/">PHP扩展</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/24/数据结构/struct-study-2/"><span>C语言数据结构の单链表</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/24/数据结构/struct-study-2/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-24T09:27:20.000Z">
-          2017-01-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt; // 声明exit函数</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 单节点的数据结构 16个字节 */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"> <span class="keyword">int</span> data;            <span class="comment">//数据域</span></span><br><span class="line"> <span class="class"><span class="keyword">struct</span> <span class="title">Node</span> * <span class="title">pNext</span>;</span> <span class="comment">//指针域</span></span><br><span class="line">&#125;NODE,*PNODE;</span><br><span class="line"></span><br><span class="line"><span class="comment">//函数声明</span></span><br><span class="line"><span class="function">PNODE <span class="title">createLinkList</span><span class="params">(<span class="keyword">void</span>)</span></span>;        <span class="comment">//创建链表的函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">traverseLinkList</span><span class="params">(PNODE pHead)</span></span>;      <span class="comment">//遍历链表的函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  主函数入口 main</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PNODE pHead = <span class="literal">NULL</span>;</span><br><span class="line">    pHead = createLinkList();</span><br><span class="line">    traverseLinkList(pHead);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  创建链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">PNODE <span class="title">createLinkList</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 申请内存空间,头结点</span></span><br><span class="line">    PNODE phead = (PNODE)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(NODE));</span><br><span class="line">     <span class="keyword">if</span>(<span class="literal">NULL</span> == phead)</span><br><span class="line">     &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"内存分配失败，程序退出！\n"</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尾节点</span></span><br><span class="line">    PNODE pend = phead; <span class="comment">// pend始终指向尾节点</span></span><br><span class="line">    pend-&gt;pNext = <span class="literal">NULL</span>; <span class="comment">// 单链表尾节点指针域为NULL</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"请输入链表的长度,len ="</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;length);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建链表长度</span></span><br><span class="line">    <span class="keyword">for</span>(i= <span class="number">0</span>;i&lt; length;i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"请输入第%d个节点的值 :"</span>,i);</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;value);</span><br><span class="line">        PNODE pNew =(PNODE)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(NODE));</span><br><span class="line">        <span class="keyword">if</span>(<span class="literal">NULL</span> == pNew)</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="built_in">printf</span>(<span class="string">"内存分配失败，程序退出！\n"</span>);</span><br><span class="line">          <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pNew-&gt;data = value;  <span class="comment">// 把新值放入节点</span></span><br><span class="line">        pend-&gt;pNext = pNew;  <span class="comment">// 把尾节点指向新节点</span></span><br><span class="line">        pNew-&gt;pNext = <span class="literal">NULL</span>;  <span class="comment">// 尾节点指针域为NULL</span></span><br><span class="line">        pend = pNew;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> phead;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">traverseLinkList</span><span class="params">(PNODE pHead)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> PNODE p = pHead-&gt;pNext;</span><br><span class="line"> <span class="keyword">while</span>(<span class="literal">NULL</span> != p)</span><br><span class="line"> &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d  "</span>, p-&gt;data);</span><br><span class="line">  p = p-&gt;pNext;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/数据结构/">数据结构</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/C/">C</a><a href="/tags/数据结构/">数据结构</a><a href="/tags/单链表/">单链表</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/24/数据结构/struct-study-1/"><span>线性存储结构</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/24/数据结构/struct-study-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-24T03:29:00.000Z">
-          2017-01-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
-<li><p>线性结构是一个有序元素<strong>集合</strong></p>
-</li>
-<li><p>常用的线性结构有：线性表，栈，队列，双队列，数组，串</p>
-</li>
-<li><p>关于广义表，是一种非线性数据结构</p>
-</li>
-<li><p>常见的非线性结构有：二维数组，多维数组，树（二叉树等），广义表，图。</p>
-</li>
-</ol>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/数据结构/">数据结构</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/数据结构/">数据结构</a><a href="/tags/线性存储结构/">线性存储结构</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/21/c-study-2/"><span>C 语言入门实录 二</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/21/c-study-2/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-21T03:29:00.000Z">
-          2017-01-21
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>C语言中的类型分为一下几种</p>
-<table>
-<thead>
-<tr>
-<th>序号</th>
-<th>类型和描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>基本类型：算术类型 ，整数类型和浮点类型</td>
-</tr>
-<tr>
-<td>2</td>
-<td>枚举类型：也是算术类型，但是是一些离散固定的整数类型</td>
-</tr>
-<tr>
-<td>3</td>
-<td>void类型：表明没有可用的值</td>
-</tr>
-<tr>
-<td>4</td>
-<td>派生类型：指针类型，数组类型，结构类型，函数类型以及共用体类型</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h2><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>存储大小（1个字节(bit)占8位[bits]）</th>
-<th>值的范围（由二进制得出）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>char</td>
-<td>1字节</td>
-<td>-128<del>127 或者 0</del>255</td>
-</tr>
-<tr>
-<td>unsigned char</td>
-<td>1字节</td>
-<td>0~255</td>
-</tr>
-<tr>
-<td>signed char</td>
-<td>1字节</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>int</td>
-<td>2字节(16位系统)或4字节(32/64位系统)</td>
-<td>-32,768 到 32,767 或 -2,147,483,648 到 2,147,483,647</td>
-</tr>
-<tr>
-<td>unsigned int</td>
-<td>2字节(16位系统)或4字节(32/64位系统)</td>
-<td>0 到 65,535 或 0 到 4,294,967,295</td>
-</tr>
-<tr>
-<td>short</td>
-<td>2字节</td>
-<td>-32,768 到 32,767</td>
-</tr>
-<tr>
-<td>unsigned short</td>
-<td>2字节</td>
-<td>0 到 65,535</td>
-</tr>
-<tr>
-<td>long</td>
-<td>4字节</td>
-<td>-2,147,483,648 到 2,147,483,647</td>
-</tr>
-<tr>
-<td>unsigned long</td>
-<td>4字节</td>
-<td>0 到 4,294,967,295</td>
-</tr>
-</tbody></table>
-<hr>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/C/">C</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/C/">C</a><a href="/tags/学习记录/">学习记录</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/21/c-study-1/"><span>C语言 入门实录 一</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/21/c-study-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-21T03:01:00.000Z">
-          2017-01-21
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>在 linux vim 下建立一个 <code>Hello World</code> 程序</p>
-<p>我们意气风发的写下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-Hello_World.c-</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello world! \n"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/C/">C</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/C/">C</a><a href="/tags/学习记录/">学习记录</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/17/jwt-analysis/"><span>深度解剖JWT认证流程</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/17/jwt-analysis/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-17T02:40:00.000Z">
-          2017-01-17
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><blockquote>
-<p>说明简介</p>
-</blockquote>
-<p>传统的 cookie-session 机制可以保证的接口安全，在没有通过认证的情况下会跳转至登入界面或者调用失败。</p>
-<p>在如今 RESTful 化的 API 接口下，cookie-session 已经不能很好发挥其余热保护好你的 API 。</p>
-<p>更多的形式下采用的基于 Token 的验证机制，JWT 本质的也是一种 Token，但是其中又有些许不同。</p>
-<hr>
-<h2 id="什么是-JWT"><a href="#什么是-JWT" class="headerlink" title="什么是 JWT"></a>什么是 JWT</h2><p>JWT 及时 JSON Web Token，它是基于 <a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener" title="RFC 7519">RFC 7519</a> 所定义的一种在各个系统中传递紧凑和自包含的 JSON 数据形式。</p>
-<ul>
-<li><strong>紧凑（Compact）</strong> ：由于传送的数据小，JWT 可以通过 GET、POST 和 放在 HTTP 的 header 中，同时也是因为小也能传送的更快。</li>
-<li><strong>自包含（self-contained）</strong> : Payload 中能够包含用户的信息，避免数据库的查询。</li>
-</ul>
-<p>JSON Web Token 由三部分组成使用 <code>.</code> 分割开：</p>
-<ul>
-<li>header （头部）</li>
-<li>payload （载荷）</li>
-<li>Signature（签名）</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/协议/">协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/JWT/">JWT</a>
     </span>
     
 
