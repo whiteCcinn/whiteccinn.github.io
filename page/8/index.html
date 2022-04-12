@@ -69,6 +69,137 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/05/28/k8s/k8s测试集群部署/"><span>【kubernetes】测试集群部署</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/28/k8s/k8s测试集群部署/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-28T03:28:30.000Z">
+          2019-05-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了在公司推广 docker 和 k8s，方便我们开发人员去更好的维护自己的对应的生产环境<br>目前用 k8s 构建我们自己的测试环境，用于接口测试和功能测试专用。<br>本文记录一下集群部署的情况</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>, <a href="/categories/kubernetes/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/05/21/php-cs-fixer配置项详细对比说明/"><span>PHP-CS-Fixer 配置详细对比</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/05/21/php-cs-fixer配置项详细对比说明/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-05-21T01:50:00.000Z">
+          2019-05-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于我们项目比较多，而且每个人的编写代码的风格也不太一致，我们希望尽可能在格式上得到统一，这样子的好处有如下几点：</p>
+<ul>
+<li>遵循 PSR2</li>
+<li>codereview 的时候可以免除格式差异所带来的干扰</li>
+<li>统一格式有利于大家在这个基础上写出更为优雅的代码格式</li>
+</ul>
+<p>因此，我们实现了用于的统一格式化配套的工具链：</p>
+<ul>
+<li><code>husky-php</code>：用于实现客户端 <code>githook 钩子</code>，用于执行触发我们的 husky 项目（默认支持自动格式化，冲突校验）</li>
+<li><code>composer-husky-plugin</code>：专门由 <code>husky-php</code> 定制的 composer 插件，用于自动部署<code>husky-php</code></li>
+<li><code>php-cs-fixer-config</code>：专门定义 <code>php-cs-fixer</code> 格式配置的组件</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/05/16/k8s知识点一/"><span>k8s の 基础知识</span></a></h3>
     
   
@@ -601,135 +732,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/PHP/">PHP</a><a href="/tags/Laravel/">Laravel</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/07/08/openresty-1/"><span>【OpenResty】 带你入门高性能http代理服务器应用</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/07/08/openresty-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-07-07T16:23:00.000Z">
-          2018-07-08
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenResty® 是一个基于 Nginx 与 Lua 的高性能 Web 平台，其内部集成了大量精良的 Lua 库、第三方模块以及大多数的依赖项。用于方便地搭建能够处理超高并发、扩展性极高的动态 Web 应用、Web 服务和动态网关。</p>
-<p>OpenResty® 通过汇聚各种设计精良的 Nginx 模块（主要由 OpenResty 团队自主开发），从而将 Nginx 有效地变成一个强大的通用 Web 应用平台。这样，Web 开发人员和系统工程师可以使用 Lua 脚本语言调动 Nginx 支持的各种 C 以及 Lua 模块，快速构造出足以胜任 10K 乃至 1000K 以上单机并发连接的高性能 Web 应用系统。</p>
-<p>OpenResty® 的目标是让你的 Web 服务直接跑在 Nginx 服务内部，充分利用 Nginx 的非阻塞 I/O 模型，不仅仅对 HTTP 客户端请求,甚至于对远程后端诸如 MySQL、PostgreSQL、Memcached 以及 Redis 等都进行一致的高性能响应。</p>
-<blockquote>
-<p>以上都是官方说辞</p>
-</blockquote>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Nginx/">Nginx</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Nginx/">Nginx</a><a href="/tags/Openresty/">Openresty</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/05/10/jinzhi-1/"><span>【进制】数据库应用</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/05/10/jinzhi-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-05-10T15:05:00.000Z">
-          2018-05-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>概要</p>
-<p>最近加了一个月的班，很忙，博客已经有一段时间没有写了，心里很不是滋味，今晚决心，再晚，也要写一篇。</p>
-<p>我们平时各种系统最常打交道的系统就是数据库了，我们在数据库中，可能就是最直观，最直接的用法，很少用到一些进制相关的知识在里面，其实进制在我们的生活中处处都在渗透，今天我们重点整理一下数据库和进制相关的内容。</p>
-<h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><p>我们都知道，数据库的优化策略之一就是分库分表，但是这个分库分表需要怎么分才算好呢，这里我也没有打包票说有一个固定的模式，因为这种所谓的“最优”是要结合具体的需求来说明的。</p>
-<p>在这里我会列举其中的一些场景来具体说一下。大部分公司的订单号所以没有一个好的架构师或者比较资深的程序员，订单号一般都是最容易忽略的一个关键，一般毕业生或者初学者都会把订单号设置成简单的 int 并且 autoincrease，这样子的做法，简单粗暴有效，定义好了之后就可以撸起袖子干了。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/进制/">进制</a><a href="/tags/算法/">算法</a>
     </span>
     
 

@@ -69,6 +69,143 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/03/01/算法/algorithm-base-binary-sort/"><span>【基础算法】- 排序 - 二分插入排序</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/03/01/算法/algorithm-base-binary-sort/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-03-01T07:15:00.000Z">
+          2018-03-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>二分插入排序可以说是直接插入排序的升级版，对于数据量比较大的时候，二分插入排序可以有效的减少比较的次数，从而提高效率。</p>
+<p>这里借助了二分的思想，但是需要注意的是，这个只是二分思想，和二分搜索并非一致，如果需要用到二分查询的话，前提必须是有序数据，但是这里只是借助了这个思想，把最靠近有序区的一个通过二分查找需要插入的位置，并且一次性移动所有大于目标数的所有元素。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/28/php7/"><span>【PHP】- php7的新特性</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/28/php7/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-28T15:58:00.000Z">
+          2018-02-28
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>php7 出来的时候，多了哪些特性呢，在这里总结一下</p>
+<p>为什么 PHP7 比 PHP5 性能提升了？</p>
+<ul>
+<li><p>变量存储字节减小，减少内存占用，提升变量操作速度</p>
+</li>
+<li><p>改善数组结构，数组元素和 hash 映射表被分配在同一块内存里，降低了内存占用、提升了 cpu 缓存命中率<br>（以往的 zval 是一个 24 字节的结构体，现在的固定是 16 个字节）</p>
+</li>
+<li><p>改进了函数的调用机制，通过优化参数传递的环节，减少了一些指令，提高执行效率</p>
+</li>
+</ul>
+<h2 id="太空船操作符"><a href="#太空船操作符" class="headerlink" title="太空船操作符"></a>太空船操作符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x3D;&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左边大于右边的时候，返回 1</li>
+<li>右边大于左边的时候，返回-1</li>
+<li>两边相等的时候，返回 0</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/28/php-cgi-fastcgi/"><span>CGI - php-cgi - Fastcgi - php-fpm - nginx的关系</span></a></h3>
     
   
@@ -660,141 +797,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/27/linux-shell-file-dir/"><span>【Linux命令】- 文件及目录管理</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/27/linux-shell-file-dir/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-27T08:04:00.000Z">
-          2018-02-27
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="创建和删除"><a href="#创建和删除" class="headerlink" title="创建和删除"></a>创建和删除</h2><ul>
-<li>创建：<code>mkdir</code></li>
-<li>删除：<code>rm</code></li>
-<li>删除目录（递归+强制）：<code>rm -rf dir</code></li>
-<li>删除文件（强制） <code>rm -f file</code></li>
-<li>删除统一后缀 <code>rm *log</code>(等价于：<code>find ./ -name &quot;*log&quot; -exec rm -f {}</code>，<code>find ./ -name &quot;*.log&quot; -exec rm -f {} \;</code>)(注意，<code>\;</code>必须加，否则报错)</li>
-<li>移动：mv file</li>
-<li>复制（目录）：cp（-r） file[dir]</li>
-</ul>
-<p>查看当前目录下的文件个数</p>
-<p><code>find ./ | wc -l</code></p>
-<p>复制目录：</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/24/算法/algorithm-base-insert/"><span>【基础算法】- 排序 - 直接插入排序</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/24/算法/algorithm-base-insert/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-24T05:52:00.000Z">
-          2018-02-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>直接插入排序算法</p>
-<ul>
-<li>稳定排序</li>
-</ul>
-<h2 id="PHP-实现"><a href="#PHP-实现" class="headerlink" title="PHP 实现"></a>PHP 实现</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Insert</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">(array $args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $length = count($args);</span><br><span class="line">        <span class="keyword">for</span> ($i = <span class="number">1</span>; $i &lt; $length; $i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> ($args[$i] &lt; $args[$i - <span class="number">1</span>]) &#123;</span><br><span class="line">                $k = $args[$i];</span><br><span class="line">                <span class="keyword">for</span> ($j = $i - <span class="number">1</span>; $j &gt;= <span class="number">0</span> &amp;&amp; $args[$j] &gt; $k; $j--) &#123;</span><br><span class="line">                        $args[$j + <span class="number">1</span>] = $args[$j];</span><br><span class="line">                &#125;</span><br><span class="line">                $args[$j + <span class="number">1</span>] = $k;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $args;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$data = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>];</span><br><span class="line"></span><br><span class="line">$sort     = <span class="keyword">new</span> Insert();</span><br><span class="line">$sortData = $sort($data);</span><br><span class="line"></span><br><span class="line">print_r($sortData);</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/算法/">算法</a>
     </span>
     
 

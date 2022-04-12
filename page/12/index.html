@@ -69,6 +69,145 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/23/nginx-rewrite/"><span>【Nginx】- Rewrite功能</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/nginx-rewrite/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T01:57:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Nginx 作为一个 http 服务器，其中最重要的一个特点就是 rewrite 功能，这个功能算是 nginx 必会内容了，接下来，我们详细说明一下 URL 重写配置以及信息详解</p>
+<p>Nginx-rewrite 依赖</p>
+<ul>
+<li>PCRE 软件的支持，支持 perl 兼容正则表达式语句进行规则匹配</li>
+</ul>
+<p>rewrite 是实现 URL 重写的关键指令，根据 regex（正则表达式）部分内容，重定向到 replacement，结尾是 flag 标记。</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rewrite   &lt;regex&gt;    &lt;replacement&gt; [flag]</span><br><span class="line"></span><br><span class="line">关键字     正则表达式  替换内容       flag标记</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>关键字：固定 rewrite 开启的关键字</p>
+</li>
+<li><p>正则：perl 兼容正则表达式语句进行规则匹配</p>
+</li>
+<li><p>替代内容：将正则匹配的内容替换成 replacement</p>
+</li>
+<li><p>flag 标记：rewrite 支持的 flag 标记</p>
+</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/01/23/fulltext-mm-dmm/"><span>MM|DMM-中文全文搜索引擎</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/01/23/fulltext-mm-dmm/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-23T09:20:49.000Z">
+          2018-01-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>什么是中文分词</p>
+<p>众所周知，英文是以 词为单位的，词和词之间是靠空格隔开，而中文是以字为单位，句子中所有的字连起来才能描述一个意思。例如，英文句子 I am a student，用中文则为：“我是一个学生”。计算机可以很简单通过空格知道 student 是一个单词，但是不能很容易明白“学”、“生”两个字合起来 才表示一个词。把中文的汉字序列切分成有意义的词，就是中文分词，有些人也称为切词。我是一个学生，分词的结果是：我 是 一个 学生。</p>
+<h1 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h1><h2 id="最小匹配算法"><a href="#最小匹配算法" class="headerlink" title="最小匹配算法"></a>最小匹配算法</h2>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/全文搜索/">全文搜索</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/01/23/数据结构/trie-tree/"><span>基于tire-tree的关键字匹配</span></a></h3>
     
   
@@ -380,7 +519,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/Linux/">Linux</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
     </span>
     
 
@@ -642,138 +781,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/协议/">协议</a><a href="/tags/ascii/">ascii</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/07/27/ccp/"><span>PHP 实现 Promise+协程调用</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/07/27/ccp/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-07-27T14:13:00.000Z">
-          2017-07-27
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <ul>
-<li>PHP 实现 Promise+协程调用</li>
-</ul>
-<p>github 地址：<a href="https://github.com/whiteCcinn/ccp" target="_blank" rel="noopener">ccp</a></p>
-<blockquote>
-<p>觉得好记的给个 Start 喔。</p>
-</blockquote>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>在 PHP 当中，我们或多或少会使用到异步编程的思想，但是异步编程难免给我们带来回调地狱的感觉，并且代码可读性十分之差，在 ES6 规范里面，或者更早就可以推出了一个做 Promise 的东西，利用 Promise，你可以用同步的做法来实现异步的操作，代码可读性上大大提高，不仅如此，由于异步编程和异步 IO 的混合使用，导致代码的准确性难以提高，不可否认的是，Promise 的推出，大大的提高了你们编写异步代码的可靠性，虽然这也是会损耗一些十分微小的性能，但是任何取舍都是相对的。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/Promise/">Promise</a><a href="/tags/ES6/">ES6</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/07/13/id-sender/"><span>64位分布式自增发号器</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/07/13/id-sender/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-07-13T09:30:00.000Z">
-          2017-07-13
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="IdCenterSender-—PHP-源码实现-64-位分布式自增发号器"><a href="#IdCenterSender-—PHP-源码实现-64-位分布式自增发号器" class="headerlink" title="IdCenterSender —PHP 源码实现-64 位分布式自增发号器"></a>IdCenterSender —PHP 源码实现-64 位分布式自增发号器</h2><p>PHP 实现 64 位分布式 ID 发号器, github 上也有 C 语言版本上的连接可以进去跳转</p>
-<p><a href="https://github.com/whiteCcinn/IdCenterSender" target="_blank" rel="noopener">github 地址 : IdCenterSender</a></p>
-<blockquote>
-<p>觉得好记的给个 Start 喔。</p>
-</blockquote>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>参考 Snowflake 算法,根据自身设计情况扩展了其中的细节</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/C/">C</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/ID发号器/">ID发号器</a>
     </span>
     
 
