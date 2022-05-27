@@ -19,3 +19,9 @@ tags: [DevOps]
 - 暂存区   `（git add）`
 - 本地仓库 `（git commit）`
 - 远端代码仓库 `（git push）`
+
+## 合并
+
+我们一般说合并其实是有
+
+### 

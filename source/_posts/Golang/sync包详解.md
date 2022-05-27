@@ -56,3 +56,4 @@ sync.Map相关问题
 
 - sync.WaitGroup常用于针对goroutine的并发执行，通过WaitGroup可以等待所有的go程序执行结束之后再执行之后的逻辑
 - WaitGroup对象内部有一个计数器，最初重0开始，提供了三个方法：Add(),Done(),Wait()用来控制计数器的数量。Add(n)把计数器设置为n,Done()每次把计数器减一，Wait()会阻塞代码的执行，直到计数器的值减到0为止。
+
