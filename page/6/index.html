@@ -69,128 +69,6 @@
 
   
     
-    <h3 class="article-title"><a href="/2019/12/10/Linux/如何获取打开文件和文件描述符数量/"><span>【Linux】如何获取打开文件和文件描述符数量</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/12/10/Linux/如何获取打开文件和文件描述符数量/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-12-10T09:43:43.000Z">
-          2019-12-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="linux-的文件描述符"><a href="#linux-的文件描述符" class="headerlink" title="linux 的文件描述符"></a>linux 的文件描述符</h1><p>文件描述符（FD:file descriptors），也可以说是文件句柄，当某个程序打开文件时，内核返回相应的文件描述符，程序为了处理该文件必须引用此描述符。文件描述符是一个正整数，用以标明每一个被进程所打开的文件和 socket。最前面的三个文件描述符（0，1，2）分别与标准输入（stdin），标准输出（stdout）和标准错误（stderr）对应，后面打开的文件依此类推对应 3、4…… 。</p>
-<p>linux 系统对每个用户、进程、或整个系统的可打开文件描述符数量都有一个限制，一般默认为 1024。当我们在系统或应用的日志中碰到“too many open files”错误记录时，这个其实不是说打开的文件过多，而是打开的文件描述符数量已达到了限制，这时就需要增加文件描述符的数量限制了。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/12/10/Linux/顺序写盘和随机写盘/"><span>【Linux】顺序写盘和随机写盘</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/12/10/Linux/顺序写盘和随机写盘/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-12-10T09:43:43.000Z">
-          2019-12-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="linux-的文件描述符"><a href="#linux-的文件描述符" class="headerlink" title="linux 的文件描述符"></a>linux 的文件描述符</h1><p>文件描述符（FD:file descriptors），也可以说是文件句柄，当某个程序打开文件时，内核返回相应的文件描述符，程序为了处理该文件必须引用此描述符。文件描述符是一个正整数，用以标明每一个被进程所打开的文件和 socket。最前面的三个文件描述符（0，1，2）分别与标准输入（stdin），标准输出（stdout）和标准错误（stderr）对应，后面打开的文件依此类推对应 3、4…… 。</p>
-<p>linux 系统对每个用户、进程、或整个系统的可打开文件描述符数量都有一个限制，一般默认为 1024。当我们在系统或应用的日志中碰到“too many open files”错误记录时，这个其实不是说打开的文件过多，而是打开的文件描述符数量已达到了限制，这时就需要增加文件描述符的数量限制了。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
     <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/B+树/"><span>【数据库开发知识】B+树</span></a></h3>
     
   
@@ -691,6 +569,144 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-IP/"><span>【网络协议】TCP/IP协议</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/08/06/网络协议/TCP-IP/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-06T02:43:43.000Z">
+          2019-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近看了 Redis5 的源码，所以对网络编程又进一步加深了了解，在这里，由于没有很系统的整理过 TCP/IP 协议相关的内容，所以写下这篇文章，以此来记录我最近学习到的内容，内容会分为以下几个方面。</p>
+<ul>
+<li>TCP/IP 协议，三次握手，四次挥手，协议细节</li>
+<li>协议相关的细节，优化调整内核参数</li>
+<li>模拟异常连接，优化调整内核参数</li>
+<li>利用 C 语言，基于 epoll 写一个支持高并发的 TCP 聊天服务器</li>
+</ul>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络协议/">网络协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/TCP/">TCP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/10/源码剖析/redis5源码剖析/"><span>【源码剖析】Redis主流程</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/10/源码剖析/redis5源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-10T02:43:43.000Z">
+          2019-07-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从 main 函数开始，沿着代码执行路径，实际上我们可以一直追下去。但为了让本文不至于太过冗长，我们还是限定一下范围。本文的目标就定为：引领读者从 main 函数开始，一步步追踪下去，最终到达任一 Redis 命令的执行入口。</p>
+<p>后续，再剖析各个命令的内部实现</p>
+<blockquote>
+<p>本文基于 redis5.0 分支</p>
+</blockquote>
+<p>为了表述清楚，本文按照如下思路进行：</p>
+<ul>
+<li>先概括地介绍整个代码初始化流程（从 main 函数开始）和事件循环的结构；</li>
+<li>再概括地介绍对于 Redis 命令请求的处理流程；</li>
+<li>重点介绍事件机制；</li>
+<li>对于前面介绍的各个代码处理流程，给出详细的代码调用关系，方便随时查阅；</li>
+</ul>
+<p>根据这样几部分的划分，如果你只想粗读大致的处理流程，那么只需要阅读前两个部分就可以了。而后两部分则会深入到某些值得关注的细节。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Redis/">Redis</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Redis，源码剖析/">Redis，源码剖析</a>
     </span>
     
 

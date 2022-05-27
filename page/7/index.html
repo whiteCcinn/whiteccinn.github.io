@@ -69,144 +69,6 @@
 
   
     
-    <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-IP/"><span>【网络协议】TCP/IP协议</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/08/06/网络协议/TCP-IP/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-08-06T02:43:43.000Z">
-          2019-08-06
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近看了 Redis5 的源码，所以对网络编程又进一步加深了了解，在这里，由于没有很系统的整理过 TCP/IP 协议相关的内容，所以写下这篇文章，以此来记录我最近学习到的内容，内容会分为以下几个方面。</p>
-<ul>
-<li>TCP/IP 协议，三次握手，四次挥手，协议细节</li>
-<li>协议相关的细节，优化调整内核参数</li>
-<li>模拟异常连接，优化调整内核参数</li>
-<li>利用 C 语言，基于 epoll 写一个支持高并发的 TCP 聊天服务器</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/网络协议/">网络协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/TCP/">TCP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/07/10/源码剖析/redis5源码剖析/"><span>【源码剖析】Redis主流程</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/07/10/源码剖析/redis5源码剖析/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-07-10T02:43:43.000Z">
-          2019-07-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从 main 函数开始，沿着代码执行路径，实际上我们可以一直追下去。但为了让本文不至于太过冗长，我们还是限定一下范围。本文的目标就定为：引领读者从 main 函数开始，一步步追踪下去，最终到达任一 Redis 命令的执行入口。</p>
-<p>后续，再剖析各个命令的内部实现</p>
-<blockquote>
-<p>本文基于 redis5.0 分支</p>
-</blockquote>
-<p>为了表述清楚，本文按照如下思路进行：</p>
-<ul>
-<li>先概括地介绍整个代码初始化流程（从 main 函数开始）和事件循环的结构；</li>
-<li>再概括地介绍对于 Redis 命令请求的处理流程；</li>
-<li>重点介绍事件机制；</li>
-<li>对于前面介绍的各个代码处理流程，给出详细的代码调用关系，方便随时查阅；</li>
-</ul>
-<p>根据这样几部分的划分，如果你只想粗读大致的处理流程，那么只需要阅读前两个部分就可以了。而后两部分则会深入到某些值得关注的细节。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Redis/">Redis</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Redis，源码剖析/">Redis，源码剖析</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
     <h3 class="article-title"><a href="/2019/07/09/数据结构/二叉树/"><span>【数据结构】二叉树</span></a></h3>
     
   
@@ -698,6 +560,137 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://github.com/kubernetes/dashboard" target="_blank" rel="noopener">dashboard</a></p>
 <p>dashboard 是一款基于容器的监控 k8s 集群情况的一个仪表盘项目</p>
 <p>本文中使用的版本为：v1.10.1</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kubernetes/">kubernetes</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/06/12/大数据/Hadoop基本概念/"><span>【大数据】- Hadoop 基本概念</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/12/大数据/Hadoop基本概念/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-12T01:56:40.000Z">
+          2019-06-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Hadoop 是一个由 Apache 基金会所开发的分布式系统基础架构，它可以使用户在不了解分布式底层细节的情況下开发分布式程序，充分利用集群的威力进行高速运算和存储。</p>
+<p>从其定义就可以发现，它解決了两大问题：大数据存储、大数据分析。也就是 Hadoop 的两大核心：HDFS 和 MapReduce。</p>
+<p>HDFS(Hadoop Distributed File System)是可扩展、容错、高性能的分布式文件系统，异步复制，一次写入多次读取，主要负责存储。</p>
+<p>MapReduce 为分布式计算框架，包含 map(映射)和 reduce(归约)过程，负责在 HDFS 上进行计算。</p>
+<p>但是由于目前我没有用到 MapReduce，并且 MapReduce 能效过于地下并且很占系统资料，所以一般数据分析都会用其他的来代替。</p>
+<p>所以这里介绍的 Hadoop，会重点讲解 HDFS 和其工作原理。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/大数据/">大数据</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/06/04/k8s/k8s-nginx-ingress/"><span>【kubernetes】nginx-ingress</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/06/04/k8s/k8s-nginx-ingress/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-06-04T03:28:30.000Z">
+          2019-06-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Ingress 是一个负载均衡的东西，其主要用来解决使用 NodePort 暴露 Service 的端口时 Node IP 会漂移的问题。同时，若大量使用 NodePort 暴露主机端口，管理会非常混乱。</p>
+<p>好的解决方案就是让外界通过域名去访问 Service，而无需关心其 Node IP 及 Port。那为什么不直接使用 Nginx？这是因为在 K8S 集群中，如果每加入一个服务，我们都在 Nginx 中添加一个配置，其实是一个重复性的体力活，只要是重复性的体力活，我们都应该通过技术将它干掉。</p>
+<p>Ingress 就可以解决上面的问题，其包含两个组件 Ingress Controller 和 Ingress：</p>
+<ul>
+<li>Ingress （将 Nginx 的配置抽象成一个 Ingress 对象，每添加一个新的服务只需写一个新的 Ingress 的 yaml 文件即可）</li>
+<li>Ingress Controller （将新加入的 Ingress 转化成 Nginx 的配置文件并使之生效）</li>
+</ul>
         
       
     </div>
