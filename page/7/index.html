@@ -69,6 +69,140 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/07/10/源码剖析/redis5源码剖析/"><span>【源码剖析】Redis主流程</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/10/源码剖析/redis5源码剖析/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-10T02:43:43.000Z">
+          2019-07-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从 main 函数开始，沿着代码执行路径，实际上我们可以一直追下去。但为了让本文不至于太过冗长，我们还是限定一下范围。本文的目标就定为：引领读者从 main 函数开始，一步步追踪下去，最终到达任一 Redis 命令的执行入口。</p>
+<p>后续，再剖析各个命令的内部实现</p>
+<blockquote>
+<p>本文基于 redis5.0 分支</p>
+</blockquote>
+<p>为了表述清楚，本文按照如下思路进行：</p>
+<ul>
+<li>先概括地介绍整个代码初始化流程（从 main 函数开始）和事件循环的结构；</li>
+<li>再概括地介绍对于 Redis 命令请求的处理流程；</li>
+<li>重点介绍事件机制；</li>
+<li>对于前面介绍的各个代码处理流程，给出详细的代码调用关系，方便随时查阅；</li>
+</ul>
+<p>根据这样几部分的划分，如果你只想粗读大致的处理流程，那么只需要阅读前两个部分就可以了。而后两部分则会深入到某些值得关注的细节。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Redis/">Redis</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Redis，源码剖析/">Redis，源码剖析</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2019/07/09/数据结构/二叉树/"><span>【数据结构】二叉树</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/07/09/数据结构/二叉树/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-07-09T07:20:00.000Z">
+          2019-07-09
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>数据结构中有很多树的结构，其中包括二叉树、二叉搜索树、2-3 树、红黑树等等。本文中对数据结构中常见的几种树的概念和用途进行了汇总，不求严格精准，但求简单易懂。</p>
+<p>二叉树是数据结构中一种重要的数据结构，也是树表家族最为基础的结构。</p>
+<p>二叉树的定义：二叉树的每个结点至多只有二棵子树(不存在度大于 2 的结点)，二叉树的子树有左右之分，次序不能颠倒。二叉树的第 i 层至多有 2^(i-1) 个结点；深度为 k 的二叉树至多有 (2^k)-1 个结点；对任何一棵二叉树 T，如果其终端结点数为 n0，度为 2 的结点数为 n2，则 n0=n2+1。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/数据结构/">数据结构</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/数据结构/">数据结构</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/07/08/C语言/Makefile/"><span>【C语言】- Makefile</span></a></h3>
     
   
@@ -587,132 +721,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/大数据，Hadoop/">大数据，Hadoop</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/06/04/k8s/k8s-nginx-ingress/"><span>【kubernetes】nginx-ingress</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/06/04/k8s/k8s-nginx-ingress/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-06-04T03:28:30.000Z">
-          2019-06-04
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Ingress 是一个负载均衡的东西，其主要用来解决使用 NodePort 暴露 Service 的端口时 Node IP 会漂移的问题。同时，若大量使用 NodePort 暴露主机端口，管理会非常混乱。</p>
-<p>好的解决方案就是让外界通过域名去访问 Service，而无需关心其 Node IP 及 Port。那为什么不直接使用 Nginx？这是因为在 K8S 集群中，如果每加入一个服务，我们都在 Nginx 中添加一个配置，其实是一个重复性的体力活，只要是重复性的体力活，我们都应该通过技术将它干掉。</p>
-<p>Ingress 就可以解决上面的问题，其包含两个组件 Ingress Controller 和 Ingress：</p>
-<ul>
-<li>Ingress （将 Nginx 的配置抽象成一个 Ingress 对象，每添加一个新的服务只需写一个新的 Ingress 的 yaml 文件即可）</li>
-<li>Ingress Controller （将新加入的 Ingress 转化成 Nginx 的配置文件并使之生效）</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/kubernetes/">kubernetes</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/05/31/docker/搭建docker私有仓库/"><span>【Docker】搭建docker私有仓库</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/05/31/docker/搭建docker私有仓库/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-05-31T03:28:30.000Z">
-          2019-05-31
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了配合 k8s，需要搭建一个私有仓库，防止镜像泄漏出去。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Docker/">Docker</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Docker/">Docker</a>
     </span>
     
 

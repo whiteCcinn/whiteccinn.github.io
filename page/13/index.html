@@ -69,6 +69,202 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/08/16/linux-systemctl/"><span>Systemctl服务管理软件</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-systemctl/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T03:21:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>由于特殊原因!!刚才写的文章没保存下来!!!接下来简写.!!!</p>
+<p>Centos7 和 Centos7 之前的版本有几点比较重要的不同,一个是 firewall-cmd 代替了 iptables，然后就是 systemctl 代替了 service。这里，现在我就写一下如何使用 systemctl 管理服务。</p>
+<hr>
+<h1 id="服务的基本命令"><a href="#服务的基本命令" class="headerlink" title="服务的基本命令"></a>服务的基本命令</h1><ul>
+<li><p>systemctl status xx （服务状态）</p>
+</li>
+<li><p>systemctl start xx （服务启动）</p>
+</li>
+<li><p>systemctl stop xx （停止服务）</p>
+</li>
+<li><p>systemctl restart xx（重启服务）</p>
+</li>
+<li><p>systemctl enable xx （服务随开机启动）</p>
+</li>
+<li><p>systemctl disable xx （服务取消随启动）</p>
+</li>
+<li><p>systemctl cat xx （查看服务的配置信息）</p>
+</li>
+<li><p>systemctl daemon-reload (每次修改了一个 service 配置或者新增了一个配置，都需要执行这个命令，让 systemctl 服务重启，然后重新加载服务配置文件)</p>
+</li>
+<li><p>systemctl list-dependencies [target name]（查看依赖树状图，十分的直观好用）</p>
+</li>
+</ul>
+<hr>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Centos7/">Centos7</a><a href="/tags/Systemctl/">Systemctl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/07/27/ascii-code-2/"><span>字符编码深度剖析</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/07/27/ascii-code-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-07-27T14:44:00.000Z">
+          2017-07-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在这里，我们对如下4种编码进行对比</p>
+<ul>
+<li>unicode编码</li>
+<li>utf8编码</li>
+<li>ascii编码</li>
+<li>asni编码</li>
+</ul>
+<h3 id="ASCII编码和ASNI编码的区别"><a href="#ASCII编码和ASNI编码的区别" class="headerlink" title="ASCII编码和ASNI编码的区别"></a>ASCII编码和ASNI编码的区别</h3><p>字符内码(charcter code)指的是用来代表字符的内码.读者在输入和存储文档时都要使用内码,内码分为 单字节内码 – Single-Byte character sets (SBCS),可以支持<strong>255</strong>（ <code>8bits = (2^8)-1 = 255</code>）个字符编码. 双字节内码 – Double-Byte character sets)(DBCS),可以支持<strong>65000</strong>个字符编码（最多支持<code>16 bits = (2^16)-1 = 65535</code>）. 前者即为ASCII编码，后者对应ANSI. 至于简体中文编码GB2312，实际上它是ANSI的一个代码页</p>
+<h3 id="UNICODE编码"><a href="#UNICODE编码" class="headerlink" title="UNICODE编码"></a>UNICODE编码</h3><p>unicode 是一种编码表格，例如，给一个汉字规定一个代码。类似 GB2312-1980, GB18030等，只不过字集不同。 一个unicode码可能转成长度为一个BYTE,或两个，三个，四个BYTE（<code>最多6个byte</code>）的UTF8码，取决于unicode码的值。英文unicode码因为值小于<strong>0x80</strong>（<code>单字节字符</code>）,只要用一个BYTE的UTF8传送，<code>比送unicode两个bytes快</code>。</p>
+<p>如上，ANSI有很多代码页，使用不同代码页的内码无法在其他代码也正常显示，这就是为什么日文版／繁体中文版游戏无法在简体中文平台直接显示的原因．</p>
+<p>Unicode也是一种字符编码方法，不过它是由国际组织设计，可以容纳<strong>全世界所有语言文字的编码方案</strong>．它是一种<code>２字节编码</code>，能够提供６５５３５个字符， 这个数字是<strong>不够表示所有的字符</strong>的（汉语就有５５０００多字符），所以，通过一个代理对的机制来实现附加的９１７，４７６个字符表示，以达到所有字符都具有<code>唯一编码</code>．</p>
+<h3 id="Unicode和BigEndianUnicode"><a href="#Unicode和BigEndianUnicode" class="headerlink" title="Unicode和BigEndianUnicode"></a>Unicode和BigEndianUnicode</h3><p>这两者只是存储顺序不同，如＂A＂的unicode编码为65 00 其BigEndianUnicode编码为00 65</p>
+<p>其实就是类比于我之前说过的大小端的介绍</p>
+<h3 id="UTF8编码"><a href="#UTF8编码" class="headerlink" title="UTF8编码"></a>UTF8编码</h3><p>UTF8全称：Unicode Transformation Format – 8 bit（unicode转化格式为8位的流数据）</p>
+<p>Unicode是一个字符集，而UTF-8是Unicode的其中一种，Unicode是定长的都为双字节，而UTF-8是可变的，对于汉字来说Unicode占有的字节比UTF-8占用的字节少1个字节。Unicode为双字节，而UTF-8中汉字占三个字节。</p>
+<p>是Unicode传送格式。即把Unicode文件转换成BYTE的传送流。</p>
+<p>其中UTF-16和Unicode编码大致一样, UTF-8就是以8位为单元对Unicode进行编码。</p>
+<p>UTF-8编码字符理论上可以最多到6个字节长,然而<code>16位BMP（Basic Multilingual Plane）字符</code>最多只用到3字节长。从Unicode到UTF-8的编码方式如下：</p>
+<table>
+<thead>
+<tr>
+<th>Unicode编码(16进制)</th>
+<th>UTF-8 字节流(二进制)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0000 - 007F</td>
+<td>0xxxxxxx</td>
+</tr>
+<tr>
+<td>0080 - 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0800 - FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>100000 - 1FFFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>200000 - 3FFFFFF</td>
+<td>111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>4000000 - 7FFFFFFF</td>
+<td>1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+</tbody></table>
+<p>例如“我”字的Unicode编码是4f6b。4f6b在0800-FFFF之间，所以肯定要用3字节模板了：1110xxxx 10xxxxxx 10xxxxxx。将4f6b写成二进制是：100 111101 101011， 用这个比特流依次代替模板中的x，得到：11100100 10111101 10101011，即E4 9C AB。</p>
+<h3 id="用PHP实现unicode编码和utf8编码的转变"><a href="#用PHP实现unicode编码和utf8编码的转变" class="headerlink" title="用PHP实现unicode编码和utf8编码的转变"></a>用PHP实现unicode编码和utf8编码的转变</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * UTF-8编码字符理论上可以最多到6个字节长,然而16位BMP（Basic Multilingual Plane）字符最多只用到3字节长。下面看一下UTF-8编码表：</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * U-00000000 - U-0000007F: 0xxxxxxx</span></span><br><span class="line"><span class="comment"> * U-00000080 - U-000007FF: 110xxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00000800 - U-0000FFFF: 1110xxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00010000 - U-001FFFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-00200000 - U-03FFFFFF: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> * U-04000000 - U-7FFFFFFF: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 单字符汉字转换unicode(16进制)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $utf8_str</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">utf8_transform_unicode</span><span class="params">($utf8_str)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  $unicode = (ord($utf8_str&#123;<span class="number">0</span>&#125;) &amp; <span class="number">0xF</span>) &lt;&lt; <span class="number">12</span>;</span><br><span class="line">  $unicode |= (ord($utf8_str&#123;<span class="number">1</span>&#125;) &amp; <span class="number">0x3F</span>) &lt;&lt; <span class="number">6</span>;</span><br><span class="line">  $unicode |= (ord($utf8_str&#123;<span class="number">2</span>&#125;) &amp; <span class="number">0x3F</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> dechex($unicode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * unicode编码转汉字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $unicode</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">unicode_transform_utf8</span><span class="params">($unicode)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 十六进制转十进制</span></span><br><span class="line">  $unicode  = (int)hexdec($unicode);</span><br><span class="line">  $ord_1    = decbin(<span class="number">0xe0</span> | ($unicode &gt;&gt; <span class="number">12</span>));</span><br><span class="line">  $ord_2    = decbin(<span class="number">0x80</span> | (($unicode &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x3f</span>));</span><br><span class="line">  $ord_3    = decbin(<span class="number">0x80</span> | ($unicode &amp; <span class="number">0x3f</span>));</span><br><span class="line">  $utf8_str = chr(bindec($ord_1)) . chr(bindec($ord_2)) . chr(bindec($ord_3));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> $utf8_str;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$str = <span class="string">'我'</span>;</span><br><span class="line"><span class="keyword">echo</span> utf8_transform_unicode($str);</span><br><span class="line"></span><br><span class="line">$unicode = <span class="string">'6211'</span>;</span><br><span class="line"><span class="keyword">echo</span> unicode_transform_utf8($unicode);</span><br></pre></td></tr></table></figure>
+
+<p>后续，我会出一个用php直接实现编码转换和汉字字符串截取的PHP扩展，都会用到这次的知识，后续见。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/协议/">协议</a><a href="/tags/ascii/">ascii</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/07/27/ccp/"><span>PHP 实现 Promise+协程调用</span></a></h3>
     
   
@@ -528,7 +724,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -591,137 +787,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-d-p-d-model/"><span>设计模式の装饰器模式和观察者模式的区别</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-d-p-d-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T06:18:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>观察者模式完美的将观察者和被观察对象分开，系统中的每个类将重点放在某一个功能上，而不是其他的方面（对象之间的交互），很好的体现了单一职责原则。观察者将自己注册到被观察者的容器中，被观察者不应该过问观察者的具体类型，而是使用观察者的接口。这样的优点是：假定程序中还有别的观察者，那么这个观察者是相同的接口即可，基于接口而不是具体的实现，这一点为程序提供了更大的灵活性。</p>
-<p>现实生活中像移动的就业信息推送系统，希望得到业务的人（观察者）先到移动注册，然后如果有具体的信息，移动会主动的推送到预订业务的人，不需要预订业务的人去主动询问。</p>
-<h2 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h2><p>装饰者模式不在不改变原类文件的情况下动态的扩展一个对象的功能。它是通过创建一个包装对象，也就是装饰来包裹真实的对象。当我们需要为某个对象动态地增加一个功能的或职责的时候，可以考虑使用装饰者模式；当某个对象的职责经常发生变化或者经常需要动态的增加职责，避免为了适应变化而增加爱继承子类扩展的方式，因为这种扩展可能会造成子类膨胀的速度过快，难以控制，此时可以使用装饰着模式。</p>
-<p>对于这中模式的实现，会有被装饰的具体对象，被装饰的抽象，装饰者的抽象，和若干个装饰着，这若干个装饰者并不是创建各种不同的对象（所以装饰者模式为结构型模式而不是创建型模式），而是每个装饰者都会有一个真实的对象的引用，然后在这个具体对象方法的前后添加一些新的功能，起到装饰的作用。例如有两个装饰 1，和装饰 2，那么可以把装饰 1 当作装饰 2 的具体对象作为参数传进去，这个时候就会产生另外一种新的装饰了，而且没有新的子类。</p>
-<p>现实生活着的例子例如包饺子，步骤分为和陷，和面，杆皮，包饺子，煮饺子，可以在和陷这个方法的前面多加点配菜，也可以在和面这个方法的前面在面里面加个鸡蛋，也可以同时用这两个装饰先加菜后和面加鸡蛋，这样就可以用两个已经存在的装饰产生一个新的装饰了。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-proxy-model/"><span>设计模式の结构型の代理模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-proxy-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T03:50:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="大概意思"><a href="#大概意思" class="headerlink" title="大概意思"></a>大概意思</h2><p>这个模式其实比较简单，就是你想访问一个类的时候，不直接访问，而是找这个类的一个代理。<br>代理就是中介，有中介就意味着解耦。</p>
-<p>在代理模式下，代理对象和被代理的对象，有个重要特点：必须继承同一个接口。</p>
-<p>这里说下重点，之前说过的 适配器模式，和代理模式非常非常像，只不过是在适配器模式下，适配器和它要适配的类没有继承同一接口，适配器就是要把这个第三方类变成符合接口规范。适配器也是个中介，所以我说它们很像。<br>实现</p>
-<p>接口：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Image</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getWidth</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>现在我们有一个 Image 接口类，接口定义 getWidth 方法。现在我们需要一个具体类（实现类）来实现这个接口。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
