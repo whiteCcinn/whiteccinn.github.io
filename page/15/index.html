@@ -69,6 +69,67 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/20/design-bridge-model/"><span>设计模式の结构型の桥接模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/design-bridge-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T07:45:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>我们知道一个类可以实现多个接口，一个接口对应多个实现。 在不同的实现类中，它实现接口方法的逻辑是不一样的。 有时候我们需要对这些抽象方法进行一些组合，修改，但是又能适用于所有实现类。 这时候我们需要做一个桥，连接不同的实现类并统一标准。</p>
+<h3 id="一个接口多个实现"><a href="#一个接口多个实现" class="headerlink" title="一个接口多个实现"></a>一个接口多个实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 格式化接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文本格式化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PlainTextFormatter</span> <span class="keyword">implements</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $text;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML格式化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtmlFormatter</span> <span class="keyword">implements</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sprintf(<span class="string">'&lt;p&gt;%s&lt;/p&gt;'</span>, $text);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/20/design-adapter-model/"><span>设计模式の结构型の适配器模式</span></a></h3>
     
   
@@ -114,7 +175,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -177,7 +238,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -238,7 +299,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 
@@ -632,66 +693,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/大数据/">大数据</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/02/20/数据结构/struct-study-6/"><span>C语言数据结构のAVL树</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/02/20/数据结构/struct-study-6/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-02-20T03:03:43.000Z">
-          2017-02-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _INCLUDE_BASE</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _INCLUDE_BASE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> true 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> false 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> avl_elementType;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">avl</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    avl_elementType data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">avl</span> *<span class="title">left</span>;</span>    <span class="comment">// 左节点</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">avl</span> *<span class="title">right</span>;</span>   <span class="comment">// 右节点</span></span><br><span class="line">    avl_elementType hight;   <span class="comment">// 以此为根的高度</span></span><br><span class="line">&#125;AVL,*PAVL;</span><br><span class="line"></span><br><span class="line"><span class="comment">//  ================================================================</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RotateWithDoubleRight</span><span class="params">(PAVL *avl)</span></span>;    <span class="comment">// RR 旋转平衡算法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RotateWithDoubleLeft</span><span class="params">(PAVL *avl)</span></span>;     <span class="comment">// LL旋转平衡算法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RotateWithLeftRight</span><span class="params">(PAVL *avl)</span></span>;      <span class="comment">// LR旋转平衡算法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RotateWithRightLeft</span><span class="params">(PAVL *avl)</span></span>;      <span class="comment">// RL旋转平衡算法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">InsertNode</span><span class="params">(PAVL *avl,<span class="keyword">int</span> data)</span></span>;      <span class="comment">// AVL插入算法</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">NodeHigh</span><span class="params">(PAVL avl)</span></span>;                   <span class="comment">// 查询当前树节点的高度</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">compareHigh</span><span class="params">(PAVL a,PAVL b)</span></span>;           <span class="comment">// 对比高度，取最大值</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">LeftBalance</span><span class="params">(PAVL *avl)</span></span>;              <span class="comment">// 左平衡算法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RightBalance</span><span class="params">(PAVL *avl)</span></span>;             <span class="comment">// 右平衡算法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print_inorder</span><span class="params">(PAVL avl)</span></span>;             <span class="comment">// 中序排列打印</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print_preorder</span><span class="params">(PAVL avl)</span></span>;            <span class="comment">// 前序排列打印</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print_houorder</span><span class="params">(PAVL avl)</span></span>;            <span class="comment">// 后序排列打印</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print_inhight</span><span class="params">(PAVL avl)</span></span>;             <span class="comment">// 节点的高度</span></span><br><span class="line"><span class="comment">//  =================================================================</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// main func</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PAVL root = (PAVL)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PAVL));</span><br><span class="line"><span class="comment">//    root-&gt;data = 3;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//    InsertNode(&amp;root,2);</span></span><br><span class="line">    InsertNode(&amp;root,<span class="number">2</span>);</span><br><span class="line">    InsertNode(&amp;root,<span class="number">1</span>);</span><br><span class="line">    InsertNode(&amp;root,<span class="number">-1</span>);</span><br><span class="line"><span class="comment">//    InsertNode(&amp;root,0);</span></span><br><span class="line">    InsertNode(&amp;root,<span class="number">6</span>);</span><br><span class="line">    InsertNode(&amp;root,<span class="number">7</span>);</span><br><span class="line">    InsertNode(&amp;root,<span class="number">5</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"中序排列节点的高度："</span>);</span><br><span class="line">    print_inhight(root);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"中序排列："</span>);</span><br><span class="line">    print_inorder(root);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"前序排列："</span>);</span><br><span class="line">    print_preorder(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertNode</span><span class="params">(PAVL *avl,<span class="keyword">int</span> data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!(*avl))</span><br><span class="line">    &#123;</span><br><span class="line">        PAVL node = (PAVL)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(PAVL));</span><br><span class="line">        node-&gt;data = data;</span><br><span class="line">        node-&gt;hight = <span class="number">0</span>;</span><br><span class="line">        *avl = node;</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(data &gt; (*avl)-&gt;data)</span><br><span class="line">    &#123;</span><br><span class="line">        InsertNode(&amp;((*avl)-&gt;right),data);</span><br><span class="line">        <span class="comment">//判断是否破坏AVL树的平衡性</span></span><br><span class="line">        <span class="keyword">if</span> (NodeHeight((*avl)-&gt;right)-NodeHeight((*avl)-&gt;left)==<span class="number">2</span>)</span><br><span class="line">            RightBalance(avl);  <span class="comment">//右平衡处理</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        InsertNode(&amp;((*avl)-&gt;left),data);</span><br><span class="line">        <span class="comment">//判断是否破坏AVL树的平衡性</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"相减为:%d"</span>,NodeHeight((*avl)-&gt;left)-NodeHeight((*avl)-&gt;right));</span><br><span class="line">        <span class="keyword">if</span> (NodeHeight((*avl)-&gt;left)-NodeHeight((*avl)-&gt;right)==<span class="number">2</span>)</span><br><span class="line">            LeftBalance(avl);  <span class="comment">//左平衡处理</span></span><br><span class="line">        &#125;</span><br><span class="line">    (*avl)-&gt;hight = compareHigh((*avl)-&gt;left,(*avl)-&gt;right) + <span class="number">1</span> ;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"当前节点:%d , 高度:%d , left-高度:%d,right-高度:%d \n"</span>,(*avl)-&gt;data,(*avl)-&gt;hight,NodeHeight((*avl)-&gt;left),NodeHeight((*avl)-&gt;right));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 空节点为-1，否则返回树节点高度</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">NodeHeight</span><span class="params">(PAVL avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> avl == <span class="literal">NULL</span> ? <span class="number">-1</span> : avl-&gt;hight;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">compareHigh</span><span class="params">(PAVL a,PAVL b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!a || !b)</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> a-&gt;hight &gt; b-&gt;hight ? a-&gt;hight : b-&gt;hight;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 左平衡处理</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">LeftBalance</span><span class="params">(PAVL *avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(NodeHeight((*avl)-&gt;left-&gt;left) - NodeHeight((*avl)-&gt;left-&gt;right) != <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        RotateWithDoubleLeft(avl);</span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        RotateWithLeftRight(avl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 右平衡处理</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RightBalance</span><span class="params">(PAVL *avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(NodeHeight((*avl)-&gt;right-&gt;right) - NodeHeight((*avl)-&gt;right-&gt;left) != <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        RotateWithDoubleRight(avl);</span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        RotateWithRightLeft(avl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// LL旋转算法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RotateWithDoubleLeft</span><span class="params">(PAVL *avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> PAVL p = *avl;</span><br><span class="line"> PAVL q = p-&gt;left;</span><br><span class="line"> p-&gt;left = q-&gt;right;</span><br><span class="line"> q-&gt;right = p;</span><br><span class="line"></span><br><span class="line"> p-&gt;hight = compareHigh(p-&gt;left,p-&gt;right) +<span class="number">1</span>  ;</span><br><span class="line"> q-&gt;hight = compareHigh(q-&gt;left,q-&gt;right) +<span class="number">1</span> ;</span><br><span class="line"></span><br><span class="line"> *avl = q;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// RR旋转算法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RotateWithDoubleRight</span><span class="params">(PAVL *avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  PAVL p = *avl;</span><br><span class="line">  PAVL q = p-&gt;right;</span><br><span class="line">  p-&gt;right = q-&gt;left;</span><br><span class="line">  q-&gt;left = p;</span><br><span class="line"></span><br><span class="line">  p-&gt;hight = compareHigh(p-&gt;left,p-&gt;right) +<span class="number">1</span>  ;</span><br><span class="line">  q-&gt;hight = compareHigh(q-&gt;left,q-&gt;right) +<span class="number">1</span> ;</span><br><span class="line"></span><br><span class="line">  *avl = q;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// LR旋转算法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RotateWithLeftRight</span><span class="params">(PAVL *avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\nLR\n"</span>);</span><br><span class="line">    RotateWithDoubleRight(&amp;((*avl)-&gt;left));</span><br><span class="line">    RotateWithDoubleLeft(avl);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// RL旋转算法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RotateWithRightLeft</span><span class="params">(PAVL *avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\nRL\n"</span>);</span><br><span class="line">    RotateWithDoubleLeft(&amp;((*avl)-&gt;right));</span><br><span class="line">    RotateWithDoubleRight(avl);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_inorder</span><span class="params">(PAVL avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(avl)</span><br><span class="line">    &#123;</span><br><span class="line">        print_inorder(avl-&gt;left);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d - "</span>,avl-&gt;data);</span><br><span class="line">        print_inorder(avl-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_inhight</span><span class="params">(PAVL avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(avl)</span><br><span class="line">    &#123;</span><br><span class="line">        print_inhight(avl-&gt;left);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d - "</span>,avl-&gt;hight);</span><br><span class="line">        print_inhight(avl-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_preorder</span><span class="params">(PAVL avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(avl)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d - "</span>,avl-&gt;data);</span><br><span class="line">        print_preorder(avl-&gt;left);</span><br><span class="line">        print_preorder(avl-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_houorder</span><span class="params">(PAVL avl)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(avl)</span><br><span class="line">    &#123;</span><br><span class="line">        print_houorder(avl-&gt;left);</span><br><span class="line">        print_houorder(avl-&gt;right);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d - "</span>,avl-&gt;data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/数据结构/">数据结构</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/C/">C</a><a href="/tags/数据结构/">数据结构</a><a href="/tags/BST树/">BST树</a>
     </span>
     
 

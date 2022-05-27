@@ -69,6 +69,67 @@
 
   
     
+    <h3 class="article-title"><a href="/2019/12/10/Linux/如何获取打开文件和文件描述符数量/"><span>【Linux】如何获取打开文件和文件描述符数量</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2019/12/10/Linux/如何获取打开文件和文件描述符数量/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-12-10T09:43:43.000Z">
+          2019-12-10
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="linux-的文件描述符"><a href="#linux-的文件描述符" class="headerlink" title="linux 的文件描述符"></a>linux 的文件描述符</h1><p>文件描述符（FD:file descriptors），也可以说是文件句柄，当某个程序打开文件时，内核返回相应的文件描述符，程序为了处理该文件必须引用此描述符。文件描述符是一个正整数，用以标明每一个被进程所打开的文件和 socket。最前面的三个文件描述符（0，1，2）分别与标准输入（stdin），标准输出（stdout）和标准错误（stderr）对应，后面打开的文件依此类推对应 3、4…… 。</p>
+<p>linux 系统对每个用户、进程、或整个系统的可打开文件描述符数量都有一个限制，一般默认为 1024。当我们在系统或应用的日志中碰到“too many open files”错误记录时，这个其实不是说打开的文件过多，而是打开的文件描述符数量已达到了限制，这时就需要增加文件描述符的数量限制了。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2019/12/10/Linux/顺序写盘和随机写盘/"><span>【Linux】顺序写盘和随机写盘</span></a></h3>
     
   
@@ -130,13 +191,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/"><span>【数据库开发知识】基于B+树实现一个高并发数据库</span></a></h3>
+    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/B+树/"><span>【数据库开发知识】B+树</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/" rel="bookmark">
+      <a href="/2019/12/05/数据库开发知识/B+树/" rel="bookmark">
         <time class="entry-date published" datetime="2019-12-05T09:43:43.000Z">
           2019-12-05
         </time>
@@ -150,11 +211,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <h1 id="开发笔记"><a href="#开发笔记" class="headerlink" title="开发笔记"></a>开发笔记</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M (3) <span class="comment">// B+树的阶数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIMIT_M_2 (M &gt;&gt; 1) <span class="comment">// M的中点</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> True (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> False (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INDEX_NAME (<span class="meta-string">"index"</span>) <span class="comment">// 索引文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SUCCESS (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR (-1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OPEN_MODE (O_RDWR | O_CREAT | O_TRUNC) <span class="comment">// 打开文件的模式：可读可写打开 | 若此文件不存在则创建它 | 如果文件已存在，并且以只写或可读可写方式打开，则将其长度截断（Truncate）为0字节</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) <span class="comment">// 文件的权限：660</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> KeyType; <span class="comment">// 关键字的数据类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">off_t</span> Record; <span class="comment">// 索引所对应的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span>&#123;</span></span><br><span class="line">	<span class="keyword">int</span> isLeaf;                <span class="comment">// 是否是叶子节点</span></span><br><span class="line">	<span class="keyword">int</span> keynum;                <span class="comment">// 关键字个数</span></span><br><span class="line">	KeyType key[M + <span class="number">1</span>];        <span class="comment">// 存放的关键字的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">ptr</span>[<span class="title">M</span> + 1];</span><span class="comment">// 关键字子树的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	Record value[M + <span class="number">1</span>];       <span class="comment">// 关键字对应的value，当节点为叶子节点的时候才有效</span></span><br><span class="line">&#125;BPTNode, *BPTree;</span><br></pre></td></tr></table></figure>
-
-<p>我们看到 <code>BPTNode</code> 是我们的节点结构体，这个结构体占用的内存大小我们计算一下：</p>
-<p>记住内存对齐的原则，并且指针占用 8 个字节，off_t 一般是 64 位，占用 8 个字节</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(int)+4(int)+4(KeyType)*4(M+1)+4(*pts)*4(M+1)+4(*next)+8(Record)*4(M+1) &#x3D; 4+4+16+32+8+32 &#x3D; 96bytes</span><br></pre></td></tr></table></figure>
+        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>B/B+树在数据存储上一直都是最高效的数据结构。B 树的概念比较清晰，但是 B+树的概念却有不同的解释。</p>
         
       
     </div>
@@ -194,13 +251,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/B+树/"><span>【数据库开发知识】B+树</span></a></h3>
+    <h3 class="article-title"><a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/"><span>【数据库开发知识】基于B+树实现一个高并发数据库</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2019/12/05/数据库开发知识/B+树/" rel="bookmark">
+      <a href="/2019/12/05/数据库开发知识/基于B+树实现一个高并发数据库/" rel="bookmark">
         <time class="entry-date published" datetime="2019-12-05T09:43:43.000Z">
           2019-12-05
         </time>
@@ -214,7 +271,11 @@
   <div class="article-content">
     <div class="entry">
       
-        <h1 id="前沿"><a href="#前沿" class="headerlink" title="前沿"></a>前沿</h1><p>B/B+树在数据存储上一直都是最高效的数据结构。B 树的概念比较清晰，但是 B+树的概念却有不同的解释。</p>
+        <h1 id="开发笔记"><a href="#开发笔记" class="headerlink" title="开发笔记"></a>开发笔记</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> M (3) <span class="comment">// B+树的阶数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIMIT_M_2 (M &gt;&gt; 1) <span class="comment">// M的中点</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> True (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> False (0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INDEX_NAME (<span class="meta-string">"index"</span>) <span class="comment">// 索引文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SUCCESS (1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR (-1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OPEN_MODE (O_RDWR | O_CREAT | O_TRUNC) <span class="comment">// 打开文件的模式：可读可写打开 | 若此文件不存在则创建它 | 如果文件已存在，并且以只写或可读可写方式打开，则将其长度截断（Truncate）为0字节</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) <span class="comment">// 文件的权限：660</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> KeyType; <span class="comment">// 关键字的数据类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">off_t</span> Record; <span class="comment">// 索引所对应的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span>&#123;</span></span><br><span class="line">	<span class="keyword">int</span> isLeaf;                <span class="comment">// 是否是叶子节点</span></span><br><span class="line">	<span class="keyword">int</span> keynum;                <span class="comment">// 关键字个数</span></span><br><span class="line">	KeyType key[M + <span class="number">1</span>];        <span class="comment">// 存放的关键字的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">ptr</span>[<span class="title">M</span> + 1];</span><span class="comment">// 关键字子树的连续内存</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BPTNode</span> *<span class="title">next</span>;</span></span><br><span class="line">	Record value[M + <span class="number">1</span>];       <span class="comment">// 关键字对应的value，当节点为叶子节点的时候才有效</span></span><br><span class="line">&#125;BPTNode, *BPTree;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到 <code>BPTNode</code> 是我们的节点结构体，这个结构体占用的内存大小我们计算一下：</p>
+<p>记住内存对齐的原则，并且指针占用 8 个字节，off_t 一般是 64 位，占用 8 个字节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(int)+4(int)+4(KeyType)*4(M+1)+4(*pts)*4(M+1)+4(*next)+8(Record)*4(M+1) &#x3D; 4+4+16+32+8+32 &#x3D; 96bytes</span><br></pre></td></tr></table></figure>
         
       
     </div>
@@ -606,72 +667,6 @@
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近写了一篇关于 TCP 协议的文章，所以一些更加细节的内容，更偏向 TCP 独立协议的，拿出来独立记录。</p>
 <p>为了获得最优的连接速率，使用 TCP 窗口来控制流速率（flow control），滑动窗口就是一种主要的机制。这个窗口允许源端在给定连接传送数据分段而不用等待目标端返回 ACK，一句话描述：窗口的大小决定在不需要对端响应（acknowledgement）情况下传送数据的数量。​ 官方定义：“The amount of octets that can be transmitted without receiving an acknowledgement from the other side”。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/网络协议/">网络协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/TCP/">TCP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2019/08/06/网络协议/TCP-IP/"><span>【网络协议】TCP/IP协议</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2019/08/06/网络协议/TCP-IP/" rel="bookmark">
-        <time class="entry-date published" datetime="2019-08-06T02:43:43.000Z">
-          2019-08-06
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于最近看了 Redis5 的源码，所以对网络编程又进一步加深了了解，在这里，由于没有很系统的整理过 TCP/IP 协议相关的内容，所以写下这篇文章，以此来记录我最近学习到的内容，内容会分为以下几个方面。</p>
-<ul>
-<li>TCP/IP 协议，三次握手，四次挥手，协议细节</li>
-<li>协议相关的细节，优化调整内核参数</li>
-<li>模拟异常连接，优化调整内核参数</li>
-<li>利用 C 语言，基于 epoll 写一个支持高并发的 TCP 聊天服务器</li>
-</ul>
         
       
     </div>
