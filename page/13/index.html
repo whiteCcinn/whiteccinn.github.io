@@ -69,6 +69,154 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/08/16/linux-make-php/"><span>Centos7下自行编译PHP</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-make-php/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T04:02:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>为了满足我的一篇博文，我单独抽出来写一篇 PHP 的编译篇</p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><p>最好不要去 github 上下载，因为你不知道哪一个是稳定版，我们最好去官网寻找最新的稳定版下载</p>
+<ul>
+<li><a href="http://php.net/downloads.php" target="_blank" rel="noopener">官网下载</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;src&#x2F;</span><br><span class="line"></span><br><span class="line">sudo mkdir php</span><br><span class="line"></span><br><span class="line">cd php</span><br><span class="line"></span><br><span class="line">wget xxxxx.php -O php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">tar -zxvf php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">cd php-xx</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/编译安装/">编译安装</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/08/16/linux-systemctl/"><span>Systemctl服务管理软件</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/16/linux-systemctl/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-16T03:21:00.000Z">
+          2017-08-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>由于特殊原因!!刚才写的文章没保存下来!!!接下来简写.!!!</p>
+<p>Centos7 和 Centos7 之前的版本有几点比较重要的不同,一个是 firewall-cmd 代替了 iptables，然后就是 systemctl 代替了 service。这里，现在我就写一下如何使用 systemctl 管理服务。</p>
+<hr>
+<h1 id="服务的基本命令"><a href="#服务的基本命令" class="headerlink" title="服务的基本命令"></a>服务的基本命令</h1><ul>
+<li><p>systemctl status xx （服务状态）</p>
+</li>
+<li><p>systemctl start xx （服务启动）</p>
+</li>
+<li><p>systemctl stop xx （停止服务）</p>
+</li>
+<li><p>systemctl restart xx（重启服务）</p>
+</li>
+<li><p>systemctl enable xx （服务随开机启动）</p>
+</li>
+<li><p>systemctl disable xx （服务取消随启动）</p>
+</li>
+<li><p>systemctl cat xx （查看服务的配置信息）</p>
+</li>
+<li><p>systemctl daemon-reload (每次修改了一个 service 配置或者新增了一个配置，都需要执行这个命令，让 systemctl 服务重启，然后重新加载服务配置文件)</p>
+</li>
+<li><p>systemctl list-dependencies [target name]（查看依赖树状图，十分的直观好用）</p>
+</li>
+</ul>
+<hr>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Centos7/">Centos7</a><a href="/tags/Systemctl/">Systemctl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/07/27/ascii-code-2/"><span>字符编码深度剖析</span></a></h3>
     
   
@@ -454,7 +602,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/进制/">进制</a><a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a>
+        <a href="/tags/协议/">协议</a><a href="/tags/进制/">进制</a><a href="/tags/网络/">网络</a>
     </span>
     
 
@@ -641,134 +789,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-observer-model/"><span>设计模式の行为型の观察者模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-observer-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T06:26:45.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="大概说明"><a href="#大概说明" class="headerlink" title="大概说明"></a>大概说明</h1><p>如果我希望一个动作在发生的时候，希望订阅他这个动作的所有人都知道了有这么一件事的话，那么就采用观察者模式。</p>
-<h2 id="没用观察者模式的情况下"><a href="#没用观察者模式的情况下" class="headerlink" title="没用观察者模式的情况下"></a>没用观察者模式的情况下</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Event</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trigger</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Event update!&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//具体更新逻辑</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"update1&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"update2&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用</span></span><br><span class="line">$event = <span class="keyword">new</span> Event;</span><br><span class="line"></span><br><span class="line">$event-&gt;trigger();</span><br></pre></td></tr></table></figure>
-
-<p>这个事件的触发可以看到如果我不断的有新的人需要订阅的话，那么这个 <code>trigger</code> 方法不断的就是要添加新的逻辑和业务。违反了设计模式-开闭原则，就是对修改关闭，对扩展开放的原则。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-d-p-d-model/"><span>设计模式の装饰器模式和观察者模式的区别</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-d-p-d-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T06:18:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>观察者模式完美的将观察者和被观察对象分开，系统中的每个类将重点放在某一个功能上，而不是其他的方面（对象之间的交互），很好的体现了单一职责原则。观察者将自己注册到被观察者的容器中，被观察者不应该过问观察者的具体类型，而是使用观察者的接口。这样的优点是：假定程序中还有别的观察者，那么这个观察者是相同的接口即可，基于接口而不是具体的实现，这一点为程序提供了更大的灵活性。</p>
-<p>现实生活中像移动的就业信息推送系统，希望得到业务的人（观察者）先到移动注册，然后如果有具体的信息，移动会主动的推送到预订业务的人，不需要预订业务的人去主动询问。</p>
-<h2 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h2><p>装饰者模式不在不改变原类文件的情况下动态的扩展一个对象的功能。它是通过创建一个包装对象，也就是装饰来包裹真实的对象。当我们需要为某个对象动态地增加一个功能的或职责的时候，可以考虑使用装饰者模式；当某个对象的职责经常发生变化或者经常需要动态的增加职责，避免为了适应变化而增加爱继承子类扩展的方式，因为这种扩展可能会造成子类膨胀的速度过快，难以控制，此时可以使用装饰着模式。</p>
-<p>对于这中模式的实现，会有被装饰的具体对象，被装饰的抽象，装饰者的抽象，和若干个装饰着，这若干个装饰者并不是创建各种不同的对象（所以装饰者模式为结构型模式而不是创建型模式），而是每个装饰者都会有一个真实的对象的引用，然后在这个具体对象方法的前后添加一些新的功能，起到装饰的作用。例如有两个装饰 1，和装饰 2，那么可以把装饰 1 当作装饰 2 的具体对象作为参数传进去，这个时候就会产生另外一种新的装饰了，而且没有新的子类。</p>
-<p>现实生活着的例子例如包饺子，步骤分为和陷，和面，杆皮，包饺子，煮饺子，可以在和陷这个方法的前面多加点配菜，也可以在和面这个方法的前面在面里面加个鸡蛋，也可以同时用这两个装饰先加菜后和面加鸡蛋，这样就可以用两个已经存在的装饰产生一个新的装饰了。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
