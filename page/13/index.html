@@ -69,6 +69,72 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/08/22/linux-make-tcpdump/"><span>linux-make-tcpdump</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/08/22/linux-make-tcpdump/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-08-22T10:06:24.000Z">
+          2017-08-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>TCPDUMP 可以帮写我们抓包，相当于 window 下的<code>wireshark</code>，为了我们更好的深入分析，我们把 tcpdump 也安装了。</p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><ul>
+<li><a href="http://www.tcpdump.org/#latest-releases" target="_blank" rel="noopener">tcpdump-国内镜像</a></li>
+</ul>
+<p>找到最新版,安装 tcpdump 需要把 libpcap 也安装了.</p>
+<h2 id="安装-libpcap"><a href="#安装-libpcap" class="headerlink" title="安装 libpcap"></a>安装 libpcap</h2><p>下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;src &amp;&amp; sudo mkdir libpcap &amp;&amp; sudo wget http:&#x2F;&#x2F;www.tcpdump.org&#x2F;release&#x2F;libpcap-1.8.1.tar.gz &amp;&amp; sudo tar -zxvf &amp;&amp; sudo tar -zxvf libpcap-1.8.1.tar.gz &amp;&amp; cd libpcap-1.8.1</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/协议/">协议</a>, <a href="/categories/协议/网络/">网络</a>, <a href="/categories/协议/网络/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/08/16/linux-make-php/"><span>Centos7下自行编译PHP</span></a></h3>
     
   
@@ -740,67 +806,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-chain-of-responsibility-model/"><span>设计模式の行为型の责任链模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-chain-of-responsibility-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T07:06:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="理解概念"><a href="#理解概念" class="headerlink" title="理解概念"></a>理解概念</h1><p>责任链是一种比较高级的行为设计模式，就是当你有一个请求，你不知道用那个方法(handler)来处理这个请求时，你可以把这个请求丢进一个责任链里（里面有很多方法），这个责任链会通过轮询的方式自动找到对应的方法。</p>
-<p>比如我要翻译一个单词，我写这个代码的时候，根本不知道用户会输入什么语言，所以我干脆就不管了，无论用户输入什么语言，我把它输入的内容丢进一个责任链，这个责任链里有德语翻译器，英语翻译器，法语翻译器，汉语翻译器，日语翻译器等等等等，丢进去的时候它就会自动查找了，找到对应的语言就会自动翻译出来。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -818,7 +823,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2022 白菜(whiteCcinn)
+    &copy; 2023 白菜(whiteCcinn)
     
   </p>
 </footer>
