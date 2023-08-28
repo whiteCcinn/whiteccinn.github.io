@@ -69,332 +69,6 @@
 
   
     
-    <h3 class="article-title"><a href="/2018/02/28/linux-crontab/"><span>【Linux】- 定时任务 - crontab</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/28/linux-crontab/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-28T07:13:00.000Z">
-          2018-02-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="crontab-定时任务"><a href="#crontab-定时任务" class="headerlink" title="crontab 定时任务"></a>crontab 定时任务</h2><p>通过 crontab 命令，我们可以在固定的间隔时间执行指定的系统指令或 shell script 脚本。时间间隔的单位可以是分钟、小时、日、月、周及以上的任意组合。这个命令非常适合周期性的日志分析或数据备份等工作。</p>
-<p>在 Linux 系统中，Linux 任务调度的工作主要分为以下两类：<br>1、系统执行的工作：系统周期性所要执行的工作，如备份系统数据、清理缓存<br>2、个人执行的工作：某个用户定期要做的工作，例如每隔 10 分钟检查邮件服务器是否有新信，这些工作可由每个用户自行设置</p>
-<p>一、/etc/crontab、/etc/cron.deny 、 /etc/cron.allow 文件介绍</p>
-<p>系统调度的任务一般存放在/etc/crontab 这个文件下，里面存放了一些系统运行的调度程序，通过命令我们可以看一下里面的内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@caiwh ~]# cat &#x2F;etc&#x2F;crontab</span><br><span class="line">SHELL&#x3D;&#x2F;bin&#x2F;bash</span><br><span class="line">PATH&#x3D;&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin</span><br><span class="line">MAILTO&#x3D;root</span><br><span class="line">HOME&#x3D;&#x2F;</span><br><span class="line"></span><br><span class="line"># For details see man 4 crontabs</span><br><span class="line"></span><br><span class="line"># Example of job definition:</span><br><span class="line"># .---------------- minute (0 - 59)</span><br><span class="line"># |  .------------- hour (0 - 23)</span><br><span class="line"># |  |  .---------- day of month (1 - 31)</span><br><span class="line"># |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...</span><br><span class="line"># |  |  |  |  .---- day of week (0 - 6) (Sunday&#x3D;0 or 7) OR sun,mon,tue,wed,thu,fri,sat</span><br><span class="line"># |  |  |  |  |</span><br><span class="line"># *  *  *  *  * user-name command to be executed</span><br></pre></td></tr></table></figure>
-
-<p><font color="red">一定要注意默认的环境变量，否则直接写在 crontab -e 写的命令，由于不在当前的默认的环境变量中。所以会可能找不到。</font>.</p>
-<p>这些任务都会是系统在运行起来后自动进行调度的。同时在/etc 目录下还存放了/etc/cron.deny 和 /etc/cron.allow 文件</p>
-<ul>
-<li><p>/etc/cron.deny 表示不能使用 crontab 命令的用户</p>
-</li>
-<li><p>/etc/cron.allow 表示能使用 crontab 的用户。</p>
-</li>
-</ul>
-<p>如果两个文件同时存在，那么/etc/cron.allow 优先。</p>
-<p>如果两个文件都不存在，那么只有 root 用户可以安排作业。</p>
-<h3 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">crontab [-u user] file</span><br><span class="line">crontab [-u user] [ -e | -l | -r ]</span><br></pre></td></tr></table></figure>
-
-<h3 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h3><ul>
-<li>-u user：用来设定某个用户的 crontab 服务；</li>
-<li>file：file 是命令文件的名字,表示将 file 做为 crontab 的任务列表文件并载入 crontab。如果在命令行中没有指定这个文件，crontab 命令将接受标准输入（键盘）上键入的命令，并将它们载入 crontab。</li>
-<li>-e：编辑某个用户的 crontab 文件内容。如果不指定用户，则表示编辑当前用户的 crontab 文件。</li>
-<li>-l：显示某个用户的 crontab 文件内容，如果不指定用户，则表示显示当前用户的 crontab 文件内容。</li>
-<li>-r：从/var/spool/cron 目录中删除某个用户的 crontab 文件，如果不指定用户，则默认删除当前用户的 crontab 文件。</li>
-<li>-i：在删除用户的 crontab 文件时给确认提示。</li>
-</ul>
-<h3 id="crontab-的文件格式"><a href="#crontab-的文件格式" class="headerlink" title="crontab 的文件格式"></a>crontab 的文件格式</h3><p>分 时 日 月 星期 要运行的命令</p>
-<ul>
-<li>第 1 列分钟 0 ～ 59</li>
-<li>第 2 列小时 0 ～ 23（0 表示子夜）</li>
-<li>第 3 列日 1 ～ 31</li>
-<li>第 4 列月 1 ～ 12</li>
-<li>第 5 列星期 0 ～ 7（0 和 7 表示星期天）</li>
-<li>第 6 列要运行的命令</li>
-</ul>
-<h3 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h3><ol>
-<li>创建一个新的 crontab 文件</li>
-</ol>
-<p>向 cron 进程提交一个 crontab 文件之前，首先要设置环境变量 EDITOR。cron 进程根据它来确定使用哪个编辑器编辑 crontab 文件。99%的 UNIX 和 LINUX 用户都使用 vi，如果你也是这样，那么你就编辑$HOME 目录下的. profile 文件，在其中加入这样一行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EDITOR&#x3D;vi; export EDITOR</span><br></pre></td></tr></table></figure>
-
-<p>然后保存并退出。不妨创建一个名为<user> cron 的文件，其中<user>是用户名，例如， davecron。在该文件中加入如下的内容。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># (put your own initials here)echo the date to the console every</span><br><span class="line"># 15minutes between 6pm and 6am</span><br><span class="line">0,15,30,45 18-06 * * * &#x2F;bin&#x2F;echo &#39;date&#39; &gt; &#x2F;dev&#x2F;console</span><br></pre></td></tr></table></figure>
-
-<p>保存并退出。注意前面 5 个域用空格分隔。</p>
-<p>在上面的例子中，系统将每隔 15 分钟向控制台输出一次当前时间。如果系统崩溃或挂起，从最后所显示的时间就可以一眼看出系统是什么时间停止工作的。在有些系统中，用 tty1 来表示控制台，可以根据实际情况对上面的例子进行相应的修改。为了提交你刚刚创建的 crontab 文件，可以把这个新创建的文件作为 cron 命令的参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab davecron</span><br></pre></td></tr></table></figure>
-
-<p>现在该文件已经提交给 cron 进程，它将每隔 1 5 分钟运行一次。同时，新创建文件的一个副本已经被放在/var/spool/cron 目录中，文件名就是用户名(即 dave)。</p>
-<h3 id="列出-crontab-文件"><a href="#列出-crontab-文件" class="headerlink" title="列出 crontab 文件"></a>列出 crontab 文件</h3><p>使用-l 参数列出 crontab 文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -l</span><br><span class="line">0,15,30,45 18-06 * * * &#x2F;bin&#x2F;echo &#96;date&#96; &gt; dev&#x2F;tty1</span><br></pre></td></tr></table></figure>
-
-<p>可以使用这种方法在$HOME 目录中对 crontab 文件做一备份</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -l &gt; $HOME&#x2F;mycron</span><br></pre></td></tr></table></figure>
-
-<p>这样，一旦不小心误删了 crontab 文件，可以用上一节所讲述的方法迅速恢复。</p>
-<h3 id="编辑-crontab-文件"><a href="#编辑-crontab-文件" class="headerlink" title="编辑 crontab 文件"></a>编辑 crontab 文件</h3><p>如果希望添加、删除或编辑 crontab 文件中的条目，而 EDITOR 环境变量又设置为 vi，那么就可以用 vi 来编辑 crontab 文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -e</span><br></pre></td></tr></table></figure>
-
-<p>可以像使用 vi 编辑其他任何文件那样修改 crontab 文件并退出。如果修改了某些条目或添加了新的条目，那么在保存该文件时， cron 会对其进行必要的完整性检查。如果其中的某个域出现了超出允许范围的值，它会提示你。<br>我们在编辑 crontab 文件时，没准会加入新的条目。例如，加入下面的一条</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># DT:delete core files,at 3.30am on 1,7,14,21,26,26 days of each month</span><br><span class="line">	30 3 1,7,14,21,26 * * &#x2F;bin&#x2F;find -name &#39;core&#39; -exec rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
-<p>保存并退出。</p>
-<p>note</p>
-<pre><code>最好在crontab文件的每一个条目之上加入一条注释，这样就可以知道它的功能、运行时间，更为重要的是，知道这是哪位用户的定时作业。</code></pre><p>删除 crontab 文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">crontab -r</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="使用实例"><a href="#使用实例" class="headerlink" title="使用实例"></a>使用实例</h2><p>实例 1：每 1 分钟执行一次 myCommand</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * myCommand</span><br></pre></td></tr></table></figure>
-
-<p>实例 2：每小时的第 3 和第 15 分钟执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3,15 * * * * myCommand</span><br></pre></td></tr></table></figure>
-
-<p>实例 3：在上午 8 点到 11 点的第 3 和第 15 分钟执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3,15 8-11 * * * myCommand</span><br></pre></td></tr></table></figure>
-
-<p>实例 4：每隔两天的上午 8 点到 11 点的第 3 和第 15 分钟执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    3,15 8-11 *&#x2F;2  *  * myCommand</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line"></span><br><span class="line">实例 5：每周一上午 8 点到 11 点的第 3 和第 15 分钟执行</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;shell</span><br><span class="line">    3,15 8-11 * * 1 myCommand</span><br></pre></td></tr></table></figure>
-
-<p>实例 6：每晚的 21:30 重启 smb</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">    30 21 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例7：每月1、10、22日的4 : 45重启smb</span><br><span class="line">&#96;&#96;&#96;&#96;</span><br><span class="line">    45 4 1,10,22 * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例 8：每周六、周日的 1 : 10 重启 smb</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    10 1 * * 6,0 &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例9：每天18 : 00至23 : 00之间每隔30分钟重启smb</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0,30 18-23 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例 10：每星期六的晚上 11 : 00 pm 重启 smb</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 23 * * 6 &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line"></span><br><span class="line">实例11：每一小时重启smb</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    * *&#x2F;1 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">实例12：晚上11点到早上7点之间，每隔一小时重启smb</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 23-7 * * * &#x2F;etc&#x2F;init.d&#x2F;smb restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line"></span><br><span class="line">## 使用注意事项</span><br><span class="line"></span><br><span class="line">注意环境变量问题</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">有时我们创建了一个crontab，但是这个任务却无法自动执行，而手动执行这个任务却没有问题，这种情况一般是由于在crontab文件中没有配置环境变量引起的。</span><br><span class="line"></span><br><span class="line">在crontab文件中定义多个调度任务时，需要特别注环境变量的设置，因为我们手动执行某个任务时，是在当前shell环境下进行的，程序当然能找到环境变量，而系统自动执行任务调度时，是不会加载任何环境变量的，因此，就需要在crontab文件中指定任务运行所需的所有环境变量，这样，系统执行任务调度时就没有问题了。</span><br><span class="line"></span><br><span class="line">不要假定cron知道所需要的特殊环境，它其实并不知道。所以你要保证在shelll脚本中提供所有必要的路径和环境变量，除了一些自动设置的全局变量。所以注意如下3点：</span><br><span class="line"></span><br><span class="line">1. 脚本中涉及文件路径时写全局路径；</span><br><span class="line">2. 脚本执行要用到java或其他环境变量时，通过source命令引入环境变量，如::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    cat start_cbp.sh</span><br><span class="line">    !&#x2F;bin&#x2F;sh</span><br><span class="line">    source &#x2F;etc&#x2F;profile</span><br><span class="line">    export RUN_CONF&#x3D;&#x2F;home&#x2F;d139&#x2F;conf&#x2F;platform&#x2F;cbp&#x2F;cbp_jboss.conf</span><br><span class="line">    &#x2F;usr&#x2F;local&#x2F;jboss-4.0.5&#x2F;bin&#x2F;run.sh -c mev &amp;</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">3. 当手动执行脚本OK，但是crontab死活不执行时,很可能是环境变量惹的祸，可尝试在crontab中直接引入环境变量解决问题。</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 * * * * . &#x2F;etc&#x2F;profile;&#x2F;bin&#x2F;sh &#x2F;var&#x2F;www&#x2F;java&#x2F;audit_no_count&#x2F;bin&#x2F;restart_audit.sh</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">注意清理系统用户的邮件日志</span><br><span class="line"></span><br><span class="line">每条任务调度执行完毕，系统都会将任务输出信息通过电子邮件的形式发送给当前系统用户，这样日积月累，日志信息会非常大，可能会影响系统的正常运行，因此，将每条任务进行重定向处理非常重要。</span><br><span class="line">例如，可以在 crontab 文件中设置如下形式，忽略日志输出::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    0 *&#x2F;3 * * * &#x2F;usr&#x2F;local&#x2F;apache2&#x2F;apachectl restart &gt;&#x2F;dev&#x2F;null 2&gt;&amp;1</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">&quot;&#x2F;dev&#x2F;null 2&gt;&amp;1&quot;表示先将标准输出重定向到&#x2F;dev&#x2F;null，然后将标准错误重定向到标准输出，由于标准输出已经重定向到了&#x2F;dev&#x2F;null，因此标准错误也会重定向到&#x2F;dev&#x2F;null，这样日志输出问题就解决了。</span><br><span class="line"></span><br><span class="line">系统级任务调度与用户级任务调度</span><br><span class="line"></span><br><span class="line">系统级任务调度主要完成系统的一些维护操作，用户级任务调度主要完成用户自定义的一些任务，可以将用户级任务调度放到系统级任务调度来完成（不建议这么做），但是反过来却不行，root用户的任务调度操作可以通过&quot;crontab –uroot –e&quot;来设置，也可以将调度任务直接写入&#x2F;etc&#x2F;crontab文件，需要注意的是，如果要定义一个定时重启系统的任务，就必须将任务放到&#x2F;etc&#x2F;crontab文件，即使在root用户下创建一个定时重启系统的任务也是无效的。</span><br><span class="line"></span><br><span class="line">其他注意事项</span><br><span class="line"></span><br><span class="line">新创建的cron job，不会马上执行，至少要过2分钟才执行。如果重启cron则马上执行。</span><br><span class="line"></span><br><span class="line">当crontab失效时，可以尝试&#x2F;etc&#x2F;init.d&#x2F;crond restart解决问题。或者查看日志看某个job有没有执行&#x2F;报错tail -f &#x2F;var&#x2F;log&#x2F;cron。</span><br><span class="line"></span><br><span class="line">千万别乱运行crontab -r。它从Crontab目录（&#x2F;var&#x2F;spool&#x2F;cron）中删除用户的Crontab文件。删除了该用户的所有crontab都没了。</span><br><span class="line"></span><br><span class="line">在crontab中%是有特殊含义的，表示换行的意思。如果要用的话必须进行转义\%，如经常用的date ‘+%Y%m%d’在crontab里是不会执行的，应该换成date ‘+\%Y\%m\%d’。</span><br><span class="line"></span><br><span class="line">更新系统时间时区后需要重启cron,在ubuntu中服务名为cron::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    $service cron restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">ubuntu下启动、停止与重启cron::</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">    $sudo &#x2F;etc&#x2F;init.d&#x2F;cron start</span><br><span class="line">    $sudo &#x2F;etc&#x2F;init.d&#x2F;cron stop</span><br><span class="line">    $sudo &#x2F;etc&#x2F;init.d&#x2F;cron restart</span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">Centso系统下管理crond</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;</span><br><span class="line">systemctl restart crond</span><br><span class="line">&#96;&#96;&#96;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Crontab/">Crontab</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/28/linux-shell-performance-2/"><span>【Linux命令】- 性能优化</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/28/linux-shell-performance-2/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-28T07:10:06.000Z">
-          2018-02-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>contents:: 目录</p>
-<p>性能优化的核心是找出系统的瓶颈点，问题找到了，优化的工作也就完成了大半；<br>这里介绍的性能优化主要从两个层面来介绍：系统层面和程序层面；</p>
-<h2 id="分析系统瓶颈"><a href="#分析系统瓶颈" class="headerlink" title="分析系统瓶颈"></a>分析系统瓶颈</h2><p>系统响应变慢，首先得定位大致的问题出在哪里，是 IO 瓶颈、CPU 瓶颈、内存瓶颈还是程序导致的系统问题；</p>
-<p>使用 top 工具能够比较全面的查看我们关注的点::</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/28/linux-shell-performance/"><span>【Linux命令】- 性能监控</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/28/linux-shell-performance/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-28T07:00:50.000Z">
-          2018-02-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>使用操作系统的过程中，我们经常需要查看当前的性能如何，需要了解 CPU、内存和硬盘的使用情况；<br>本节介绍的这几个工具能满足日常工作要求；</p>
-<h2 id="监控-CPU"><a href="#监控-CPU" class="headerlink" title="监控 CPU"></a>监控 CPU</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
-
-<h2 id="查询内存"><a href="#查询内存" class="headerlink" title="查询内存"></a>查询内存</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free -m</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/02/28/linux-shell-processor/"><span>【Linux命令】- 进程管理工具</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/02/28/linux-shell-processor/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-02-28T06:50:53.000Z">
-          2018-02-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="查询进程"><a href="#查询进程" class="headerlink" title="查询进程"></a>查询进程</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ps -ef</span><br><span class="line"></span><br><span class="line">// 查看某用户的进程</span><br><span class="line"></span><br><span class="line">ps -u phper</span><br><span class="line"></span><br><span class="line">// 查看进程完整信息</span><br><span class="line"></span><br><span class="line">ps -ajx</span><br><span class="line"></span><br><span class="line">// 显示进程信息，并实时更新</span><br><span class="line">top</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
     <h3 class="article-title"><a href="/2018/02/28/linux-shell-disk/"><span>【Linux命令】- 磁盘管理</span></a></h3>
     
   
@@ -781,6 +455,411 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/算法/">算法</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/23/mogodb-info/"><span>【Mongodb】- 知识整理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/mogodb-info/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T09:07:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>Mongodb 作为 nosql 数据库的代表，和传统的 mysql 的关系型数据库不同，他的数据结构只有一种，那就是 BSON，没有固定的 schema，所以他是 no schema 的数据存储方式。</p>
+<p>需要注意的是，Mongodb 只支持单文档事务，所以用到的业务中不应该有事务性强的数据源。</p>
+<p>这么说比较直白。具体举例几个应用场景：</p>
+<ul>
+<li><p>游戏场景，使用 MongoDB 存储游戏用户信息，用户的装备、积分等直接以内嵌文档的形式存储，方便查询、更新</p>
+</li>
+<li><p>物流场景，使用 MongoDB 存储订单信息，订单状态在运送过程中会不断更新，以 MongoDB 内嵌数组的形式来存储，一次查询就能将订单所有的变更读取出来。</p>
+</li>
+<li><p>社交场景，使用 MongoDB 存储存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人、地点等功能</p>
+</li>
+</ul>
+<p>等等</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/MongoDb/">MongoDb</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/MongoDb/">MongoDb</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/23/redis-config/"><span>【Redis】- 配置管理</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/redis-config/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T07:28:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>redis 的常用知识就不详细说了。记录一下我认为值得记录的知识点</p>
+<h2 id="基本常用的配置参数、命令"><a href="#基本常用的配置参数、命令" class="headerlink" title="基本常用的配置参数、命令"></a>基本常用的配置参数、命令</h2><ol>
+<li><p><strong>daemonize no</strong><br>配置 redis 是否以守护进程的方式运行，默认 no<br>pidfile /var/run/redis.pid</p>
+</li>
+<li><p>Redis 以守护进程方式运行时，pid 的写入文件。默认为/var/run/redis.pid</p>
+</li>
+<li><p>port 6379<br>监听端口,默认为 6379</p>
+</li>
+<li><p>bind 127.0.0.1<br>绑定的主机地址</p>
+</li>
+<li><p>timeout 300<br>客户端限制多长时间后关闭连接</p>
+</li>
+<li><p>loglevel verbose<br>日志级别，支持 debug/verbos/notice/warning，默认为 verbose</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Redis/">Redis</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Redis/">Redis</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/23/network-model/"><span>【网络编程】socket阻塞与非阻塞，同步与异步、I/O模型，select与poll、epoll比较</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/network-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T05:54:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>作为phper，其实很多不了解网络编程的人来说，很容易忽略一些概念，在这里，这些网络基本概念，有必要梳理一下。</p>
+<ul>
+<li><p>Sync 同步</p>
+</li>
+<li><p>Async 异步</p>
+</li>
+<li><p>Block 阻塞</p>
+</li>
+<li><p>Unblock 非阻塞</p>
+</li>
+</ul>
+<h2 id="同步、异步的概念，主要针对C端"><a href="#同步、异步的概念，主要针对C端" class="headerlink" title="同步、异步的概念，主要针对C端"></a>同步、异步的概念，主要针对C端</h2><p>同步：</p>
+<p>   所谓同步，就是在c端发出一个功能调用时，在没有得到结果之前，该调用就不返回。也就是必须一件一件事做,等前一件做完了才能做下一件事。</p>
+<p>例如普通http请求，B/S模式（同步）：提交请求-&gt;等待服务器处理-&gt;处理完毕返回 这个期间客户端浏览器不能干任何事</p>
+<p>异步：<br>   异步的概念和同步相对。当c端一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者。</p>
+<p>   例如 ajax请求（异步）: 请求通过事件触发-&gt;服务器处理（这是浏览器仍然可以作其他事情）-&gt;处理完毕</p>
+<h2 id="阻塞、非阻塞的概念，主要针对S端"><a href="#阻塞、非阻塞的概念，主要针对S端" class="headerlink" title="阻塞、非阻塞的概念，主要针对S端"></a>阻塞、非阻塞的概念，主要针对S端</h2><p>阻塞/非阻塞主要针对S端:</p>
+<p>阻塞：<br>   阻塞调用是指调用结果返回之前，当前线程会被挂起（线程进入非可执行状态，在这个状态下，cpu不会给线程分配时间片，即线程暂停运行）。函数只有在得到结果之后才会返回。</p>
+<p>   有人也许会把阻塞调用和同步调用等同起来，实际上他是不同的。对于同步调用来说，很多时候当前线程还是激活的，只是从逻辑上当前函数没有返回而已。 例如，我们在socket中调用recv函数，如果缓冲区中没有数据，这个函数就会一直等待，直到有数据才返回。而此时，当前线程还会继续处理各种各样的消息。</p>
+<p>   快递的例子：比如到你某个时候到A楼一层（假如是内核缓冲区）取快递，但是你不知道快递什么时候过来，你又不能干别的事，只能死等着。但你可以睡觉（进程处于休眠状态），因为你知道快递把货送来时一定会给你打个电话（假定一定能叫醒你）。</p>
+<p>非阻塞：<br>  非阻塞和阻塞的概念相对应，指在不能立刻得到结果之前，该函数不会阻塞当前线程，而会立刻返回。</p>
+<p>  还是等快递的例子：如果用忙轮询的方法，每隔5分钟到A楼一层(内核缓冲区）去看快递来了没有。如果没来，立即返回。而快递来了，就放在A楼一层，等你去取。</p>
+<blockquote>
+<p>同步IO和异步IO的区别就在于：数据访问的时候进程是否阻塞！</p>
+</blockquote>
+<blockquote>
+<p>阻塞IO和非阻塞IO的区别就在于：应用程序的调用是否立即返回！</p>
+</blockquote>
+<p> 同步和异步都只针对于本机SOCKET而言的。</p>
+<p> 同步和异步,阻塞和非阻塞,有些混用,其实它们完全不是一回事,而且它们修饰的对象也不相同。<br> 阻塞和非阻塞是指当<strong>server端</strong>的进程访问的数据如果尚未就绪,进程是否需要等待,简单说这相当于函数内部的实现区别,也就是未就绪时是直接返回还是等待就绪;</p>
+<p>　而同步和异步是指<strong>client端</strong>访问数据的机制，同步一般指主动请求并等待I/O操作完毕的方式，当数据就绪后在读写的时候必须阻塞(区别就绪与读写二个阶段,同步的读写必须阻塞)，异步则指主动请求数据后便可以继续处理其它任务,随后等待I/O,操作完毕的通知,这可以使进程在数据读写时也不阻塞。(等待”通知”)</p>
+<p><font color="red"><strong>同步就是同步，异步就是异步! 目前应用中<code>阻塞和非阻塞是针对同步应用而言</code>。</strong></font></p>
+<h1 id="Linux下的五种I-O模型"><a href="#Linux下的五种I-O模型" class="headerlink" title="Linux下的五种I/O模型"></a>Linux下的五种I/O模型</h1><ul>
+<li><p>阻塞I/O (blocking I/O)</p>
+</li>
+<li><p>非阻塞I/O (nonblocking I/O)</p>
+</li>
+<li><p>I/O复用 （select和poll）（I/O multplexing）</p>
+</li>
+<li><p>信号驱动I/O</p>
+</li>
+<li><p>异步I/O</p>
+</li>
+</ul>
+<p>（前面四种都是同步，只有最后一种才是异步IO）</p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p> 简介：进程会一直阻塞，直到数据拷贝完成</p>
+<p> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好。 如果数据没有准备好，一直等待….数据准备好了，从内核拷贝到用户空间,IO函数返回成功指示。</p>
+<p> 我们 第一次接触到的网络编程都是从 listen()、send()、recv()等接口开始的。使用这些接口可以很方便的构建服务器 /客户机的模型。</p>
+<p>阻塞I/O模型图：在调用recv()/recvfrom（）函数时，发生在内核中等待数据和复制数据的过程。</p>
+<p>　当调用recv()函数时，系统首先查是否有准备好的数据。如果数据没有准备好，那么系统就处于等待状态。当数据准备好后，将数据从系统缓冲区复制到用户空间，然后该函数返回。在套接应用程序中，当调用recv()函数时，未必用户空间就已经存在数据，那么此时recv()函数就会处于等待状态。</p>
+<p>　当使用socket()函数创建套接字时，默认的套接字都是阻塞的。并不是所有 Sockets API以阻塞套接字为参数调用都会发生阻塞。例如，以阻塞模式的套接字为参数调用bind()、listen()函数时，函数会立即返回。</p>
+<p>1．输入操作： recv()、recvfrom()函数。以阻塞套接字为参数调用该函数接收数据。如果此时套接字缓冲区内没有数据可读，则调用线程在数据到来前一直睡眠。</p>
+<p>2．输出操作： send()、sendto()函数。以阻塞套接字为参数调用该函数发送数据。如果套接字缓冲区没有可用空间，线程会一直睡眠，直到有空间。</p>
+<p>3．接受连接：accept()函数。以阻塞套接字为参数调用该函数，等待接受对方的连接请求。如果此时没有连接请求，线程就会进入睡眠状态。</p>
+<p>4．外出连接：connect()函数。对于TCP连接，客户端以阻塞套接字为参数，调用该函数向服务器发起连接。该函数在收到服务器的应答前，不会返回。这意味着TCP连接总会等待至少到服务器的一次往返时间。</p>
+<p>使用阻塞模式的套接字，开发网络程序比较简单，容易实现。当希望能够立即发送和接收数据，且处理的套接字数量比较少的情况下，使用阻塞模式来开发网络程序比较合适。</p>
+<p> <font color="red">阻塞模式套接字的不足表现为，在大量建立好的套接字线程之间进行通信时比较困难。当使用“生产者-消费者”模型开发网络程序时，为每个套接字都分别分配一个读线程、一个处理数据线程和一个用于同步的事件，那么这样无疑加大系统的开销。其最大的缺点是当希望同时处理大量套接字时，将无从下手，其扩展性很差.<br> </font><br> 阻塞模式给网络编程带来了一个很大的问题，如在调用 send()的同时，线程将被阻塞，在此期间，线程将无法执行任何运算或响应任何的网络请求。这给多客户机、多业务逻辑的网络编程带来了挑战。这时，我们可能会选择多线程的方式来解决这个问题。</p>
+<p> 应对多客户机的网络应用，最简单的解决方式是在服务器端使用多线程（或多进程）。多线程（或多进程）的目的是让每个连接都拥有独立的线程（或进程），这样任何一个连接的阻塞都不会影响其他的连接。</p>
+<p>具体使用多进程还是多线程，并没有一个特定的模式。传统意义上，进程的开销要远远大于线程，所以，如果需要同时为较多的客户机提供服务，则不推荐使用多进程；<font color="red">如果单个服务执行体需要消耗较多的 CPU 资源，譬如需要进行大规模或长时间的数据运算或文件访问，则进程较为安全。</font>通常，使用 pthread_create () 创建新线程，fork() 创建新进程。</p>
+<p>多线程/进程服务器同时为多个客户机提供应答服务。模型如下：</p>
+<p>主线程持续等待客户端的连接请求，如果有连接，则创建新线程，并在新线程中提供为前例同样的问答服务。</p>
+<p> 上述多线程的服务器模型似乎完美的解决了为多个客户机提供问答服务的要求，但其实并不尽然。如果要同时响应成百上千路的连接请求，则无论多线程还是多进程都会严重占据系统资源，降低系统对外界响应效率，而线程与进程本身也更容易进入假死状态。</p>
+<p>由此可能会考虑使用<font color="red"><strong>“线程池”</strong></font>或<font color="red"><strong>“连接池”</strong></font>。“线程池”旨在减少创建和销毁线程的频率，其维持一定合理数量的线程，并让空闲的线程重新承担新的执行任务。“连接池”维持连接的缓存池，尽量重用已有的连接、减少创建和关闭连接的频率。这两种技术都可以很好的降低系统开销，都被广泛应用很多大型系统，如apache，MySQL数据库等。</p>
+<p><font color="red">但是，“线程池”和“连接池”技术也只是在一定程度上缓解了频繁调用 IO 接口带来的资源占用。而且，所谓“池”始终有其上限，当请求大大超过上限时，“池”构成的系统对外界的响应并不比没有池的时候效果好多少。所以使用“池”必须考虑其面临的响应规模，并根据响应规模调整“池”的大小。</font>.</p>
+<p> 对应上例中的所面临的可能同时出现的上千甚至上万次的客户端请求，“线程池”或“连接池”或许可以缓解部分压力，但是不能解决所有问题。</p>
+<h3 id="非阻塞IO模型："><a href="#非阻塞IO模型：" class="headerlink" title="非阻塞IO模型："></a>非阻塞IO模型：</h3><p>简介：<font color="red">非阻塞IO通过进程反复调用IO函数（多次系统调用，并马上返回）；在数据拷贝的过程中，进程是阻塞的</font>。</p>
+<p> 我们把一个SOCKET接口设置为非阻塞就是告诉内核，当所请求的I/O操作无法完成时，不要将进程睡眠，而是返回一个错误。这样我们的I/O操作函数将不断的测试数据是否已经准备好，如果没有准备好，继续测试，直到数据准备好为止。在这个不断测试的过程中，会大量的占用CPU的时间。</p>
+<p> 把SOCKET设置为非阻塞模式，即通知系统内核：在调用Sockets API时，不要让线程睡眠，而应该让函数立即返回。在返回时，该函数返回一个错误代码。图所示，一个非阻塞模式套接字多次调用recv()函数的过程。前三次调用recv()函数时，内核数据还没有准备好。因此，该函数立即返回EWOULDBLOCK错误代码。第四次调用recv()函数时，数据已经准备好，被复制到应用程序的缓冲区中，recv()函数返回成功指示，应用程序开始处理数据。</p>
+<p>当使用socket()函数和WSASocket()函数创建套接字时，默认都是阻塞的。在创建套接字之后，通过调用函数fcntl()，将该套接字设置为非阻塞模式。套接字设置为非阻塞模式后，在调Sockets API函数时，调用函数会立即返回。大多数情况下，这些函数调用都会调用“失败”，并返回EWOULDBLOCK错误代码。<font color="red">说明请求的操作在调用期间内没有时间完成</font>。通常，应用程序需要重复调用该函数，直到获得成功返回代码。</p>
+<p> 需要说明的是并非所有的Sockets API在非阻塞模式下调用，都会返回EWOULDBLOCK错误。例如，以非阻塞模式的套接字为参数调用bind()函数时，就不会返回该错误代码。因为该函数是应用程序第一调用的函数，当然不会返回这样的错误代码。</p>
+<p>由于使用非阻塞套接字在调用函数时，会经常返回EWOULDBLOCK错误。所以在任何时候，都应仔细检查返回代码并作好对<font color="red">“失败”</font>的准备。应用程序连续不断地调用这个函数，直到它返回成功指示为止。上面的程序清单中，在While循环体内不断地调用recv()函数，以读入1024个字节的数据。这种做法很浪费系统资源。</p>
+<p>要完成这样的操作，有人使用<font color="red">MSG_PEEK</font>标志调用recv()函数查看缓冲区中是否有数据可读。同样，这种方法也不好。因为该做法对系统造成的开销是很大的，并且应用程序至少要调用recv()函数两次，才能实际地读入数据。较好的做法是，使用套接字的<font color="red">“I/O模型”</font>来判断非阻塞套接字是否可读可写。</p>
+<p> 非阻塞模式套接字与阻塞模式套接字相比，不容易使用。使用非阻塞模式套接字，需要编写更多的代码，以便在每个Sockets API函数调用中，对收到的EWOULDBLOCK错误进行处理。因此，非阻塞套接字便显得有些难于使用。</p>
+<p>但是，<font color="red">非阻塞套接字在控制建立的多个连接，在数据的收发量不均，时间不定时，明显具有优势。</font>这种套接字在使用上存在一定难度，但只要排除了这些困难，它在功能上还是非常强大的。通常情况下，可考虑使用套接字的“I/O模型”，它有助于应用程序通过异步方式，同时对一个或多个套接字的通信加以管理。</p>
+<h3 id="IO复用模型-重要-："><a href="#IO复用模型-重要-：" class="headerlink" title="IO复用模型(重要)："></a>IO复用模型(重要)：</h3><p>简介：<font color="red">主要是select和epoll；对一个IO端口，两次调用，两次返回，比阻塞IO并没有什么优越性；关键是能实现同时对多个IO端口进行监听</font>.</p>
+<p> I/O复用模型会用到select、poll、epoll函数，这几个函数也会使进程阻塞，但是和阻塞I/O所不同的的，这几个函数可以同时阻塞多个I/O操作。而且可以同时对多个读操作，多个写操作的I/O函数进行检测，直到有数据可读或可写时，才真正调用I/O操作函数。</p>
+<h3 id="信号驱动IO模型："><a href="#信号驱动IO模型：" class="headerlink" title="信号驱动IO模型："></a>信号驱动IO模型：</h3><p> 简介：两次调用，两次返回；</p>
+<p> 首先我们允许套接口进行信号驱动I/O，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。</p>
+<h3 id="异步IO模型："><a href="#异步IO模型：" class="headerlink" title="异步IO模型："></a>异步IO模型：</h3><p> 简介：数据拷贝的时候进程无需阻塞。</p>
+<p> 当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作</p>
+<h3 id="阶段性小结"><a href="#阶段性小结" class="headerlink" title="阶段性小结"></a>阶段性小结</h3><blockquote>
+<p>同步IO引起进程阻塞，直至IO操作完成。<br>异步IO不会引起进程阻塞。<br>IO复用是先通过select调用阻塞。</p>
+</blockquote>
+<h3 id="5个I-O模型的比较："><a href="#5个I-O模型的比较：" class="headerlink" title="5个I/O模型的比较："></a>5个I/O模型的比较：</h3><h3 id="select、poll、epoll区别"><a href="#select、poll、epoll区别" class="headerlink" title="select、poll、epoll区别"></a>select、poll、epoll区别</h3><p>select：</p>
+<p>select本质上是通过设置或者检查存放fd标志位的数据结构来进行下一步处理。这样所带来的缺点是：</p>
+<p>1、 单个进程可监视的fd数量被限制，即能监听端口的大小有限。</p>
+<pre><code>一般来说这个数目和系统内存关系很大，具体数目可以cat /proc/sys/fs/file-max察看。32位机默认是1024个。64位机默认是2048.</code></pre><p>2、 对socket进行扫描时是线性扫描，即采用轮询的方法，效率较低：</p>
+<pre><code>当套接字比较多的时候，每次select()都要通过遍历FD_SETSIZE个Socket来完成调度,不管哪个Socket是活跃的,都遍历一遍。这会浪费很多CPU时间。如果能给套接字注册某个回调函数，当他们活跃时，自动完成相关操作，那就避免了轮询，这正是epoll与kqueue做的。</code></pre><p>3、需要维护一个用来存放大量fd的数据结构，这样会使得用户空间和内核空间在传递该结构时复制开销大</p>
+<p>poll：</p>
+<p>　　poll本质上和select没有区别，它将用户传入的数组拷贝到内核空间，然后查询每个fd对应的设备状态，如果设备就绪则在设备等待队列中加入一项并继续遍历，如果遍历完所有fd后没有发现就绪设备，则挂起当前进程，直到设备就绪或者主动超时，被唤醒后它又要再次遍历fd。这个过程经历了多次无谓的遍历。</p>
+<p>它没有最大连接数的限制，原因是它是基于链表来存储的，但是同样有一个缺点：</p>
+<p>1、大量的fd的数组被整体复制于用户态和内核地址空间之间，而不管这样的复制是不是有意义。</p>
+<p>2、poll还有一个特点是“水平触发”，如果报告了fd后，没有被处理，那么下次poll时会再次报告该fd。</p>
+<p>epoll:</p>
+<p>epoll支持水平触发和边缘触发，最大的特点在于边缘触发，它只告诉进程哪些fd刚刚变为就绪态，并且只会通知一次。还有一个特点是，epoll使用“事件”的就绪通知方式，通过epoll_ctl注册fd，一旦该fd就绪，内核就会采用类似callback的回调机制来激活该fd，epoll_wait便可以收到通知</p>
+<font color="red">
+epoll的优点：
+
+<p>1、没有最大并发连接的限制，能打开的FD的上限远大于1024（1G的内存上能监听约10万个端口）；</p>
+<p>2、效率提升，不是轮询的方式，不会随着FD数目的增加效率下降。只有活跃可用的FD才会调用callback函数；</p>
+<p>即Epoll最大的优点就在于它只管你“活跃”的连接（因为支持边缘触发），而跟连接总数无关，因此在实际的网络环境中，Epoll的效率就会远远高于select和poll。</p>
+<p>3、 内存拷贝，利用mmap()文件映射内存加速与内核空间的消息传递；即epoll使用mmap减少复制开销。<br></font>.</p>
+<p>1、支持一个进程所能打开的最大连接数</p>
+<table>
+<thead>
+<tr>
+<th>select</th>
+<th>单个进程所能打开的最大连接数有FD_SETSIZE宏定义，其大小是32个整数的大小（在32位的机器上，大小就是32<em>32，同理64位机器上FD_SETSIZE为32</em>64），当然我们可以对进行修改，然后重新编译内核，但是性能可能会受到影响，这需要进一步的测试。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>poll</td>
+<td>poll本质上和select没有区别，但是它没有最大连接数的限制，原因是它是基于链表来存储的</td>
+</tr>
+<tr>
+<td>epoll</td>
+<td>虽然连接数有上限，但是很大，1G内存的机器上可以打开10万左右的连接，2G内存的机器可以打开20万左右的连接</td>
+</tr>
+</tbody></table>
+<p>2.剧增后带来的IO效率问题</p>
+<p>| select  |<br>| 因为每次调用时都会对连接进行线性遍历，所以随着FD的增加会造成遍历速度慢的“线性下降性能问题”。 |<br>| ———————————————————————————————- | ————————————————————————————————————————————————————————————————————————– |<br>| poll                                                                                           | 同上                                                                                                                                                                                                                       |<br>| epoll                                                                                          | 因为epoll内核中实现是根据每个fd上的callback函数来实现的，只有活跃的socket才会主动调用callback，所以在活跃socket较少的情况下，使用epoll没有前面两者的线性下降的性能问题，但是所有socket都很活跃的情况下，可能会有性能问题。 |</p>
+<p>3.消息传递方式</p>
+<table>
+<thead>
+<tr>
+<th>select</th>
+<th>内核需要将消息传递到用户空间，都需要内核拷贝动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>poll</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>epoll</td>
+<td>通过内核和用户空间共享一块内存来实现的</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/网络/">网络</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/网络，异步/">网络，异步</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/02/23/nginx-load-balan/"><span>【Nginx】- 负载均衡</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/nginx-load-balan/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T03:22:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在现在互联网爆发的时代，稳定性成为每个项目的首选，再次条件下，我们就要实现高可用的概念，实现高可用的最常用的一种手段就是负载均衡，分摊各个服务器的请求压力。</p>
+<h2 id="1-轮训（默认）"><a href="#1-轮训（默认）" class="headerlink" title="1.轮训（默认）"></a>1.轮训（默认）</h2><p>按照请求时间的循序，把请求逐一分配到对应的服务器。如果其中一台服务器 down 了，nginx 会自动剔除 down 掉的服务器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14;</span><br><span class="line">    server 192.168.0.15;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-权重-weight"><a href="#2-权重-weight" class="headerlink" title="2.权重(weight)"></a>2.权重(weight)</h2><p>其实就是轮训的升级版，给特定的服务器一个指定的权重，nginx 会根据权重分配请求访问。一般用于服务器性能不一致的情况下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14 weight&#x3D;3;</span><br><span class="line">    server 192.168.0.15 weight&#x3D;7;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
     </span>
     
 

@@ -69,256 +69,6 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/06/28/bin-hex-oct/"><span>进制转换相关知识</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/28/bin-hex-oct/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-28T02:43:00.000Z">
-          2017-06-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h2><blockquote>
-<p>好久都没有好好整理过进制之间转换的关系了。最近在研究 RPC 的内容，有一些理论知识必须要重新整理一下。</p>
-</blockquote>
-<p>由于数据在计算机中的表示，最终以二进制的形式存在，所以有时候使用二进制，可以更直观地解决问题。</p>
-<p>但是有一些时候，二进制表示的数据实在的太长了，所以我们可能需要一些更高进制的数来表示数据，而我们从小学习的数学，就是以 10 进制来代表的。</p>
-<p><strong>进制数越大，所需要数长度就越短。</strong></p>
-<p>我们常用的进制有 2、8、16 进制，分别是 2 的 1 一次方，2 的 3 次方，2 的 4 次方。（至于为什么没有 3 进制，4 进制诸如此类的，各位百度一下吧）</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/进制/">进制</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/进制/">进制</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-strategy-model/"><span>设计模式の行为型の策略模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-strategy-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T07:23:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>策略模式是一个非常常用，且非常有用的设计模式。<br>简单的说，它是当你使用大量 if else 逻辑时的救星。<br>if else 就是一种判断上下文的环境所作出的策略，如果你把 if else 写死，那么在复杂逻辑的时候你会发现代码超级长，而且最蛋疼的是，当你以后要新增策略时，再写一个 elseif？<br>万一这个逻辑要修改 20 个地方呢？<br>一口老血吐在屏幕上…<br>策略模式就是来解决这个问题的。<br>举一个场景，商城的首页，男的进来看男性商品，女的进来看女性商品，不男不女…以此类推，各种条件下用不同策略展示不同商品。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式，PHP/">设计模式，PHP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-chain-of-responsibility-model/"><span>设计模式の行为型の责任链模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-chain-of-responsibility-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T07:06:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="理解概念"><a href="#理解概念" class="headerlink" title="理解概念"></a>理解概念</h1><p>责任链是一种比较高级的行为设计模式，就是当你有一个请求，你不知道用那个方法(handler)来处理这个请求时，你可以把这个请求丢进一个责任链里（里面有很多方法），这个责任链会通过轮询的方式自动找到对应的方法。</p>
-<p>比如我要翻译一个单词，我写这个代码的时候，根本不知道用户会输入什么语言，所以我干脆就不管了，无论用户输入什么语言，我把它输入的内容丢进一个责任链，这个责任链里有德语翻译器，英语翻译器，法语翻译器，汉语翻译器，日语翻译器等等等等，丢进去的时候它就会自动查找了，找到对应的语言就会自动翻译出来。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-observer-model/"><span>设计模式の行为型の观察者模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-observer-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T06:26:45.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="大概说明"><a href="#大概说明" class="headerlink" title="大概说明"></a>大概说明</h1><p>如果我希望一个动作在发生的时候，希望订阅他这个动作的所有人都知道了有这么一件事的话，那么就采用观察者模式。</p>
-<h2 id="没用观察者模式的情况下"><a href="#没用观察者模式的情况下" class="headerlink" title="没用观察者模式的情况下"></a>没用观察者模式的情况下</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Event</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trigger</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Event update!&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//具体更新逻辑</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"update1&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"update2&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用</span></span><br><span class="line">$event = <span class="keyword">new</span> Event;</span><br><span class="line"></span><br><span class="line">$event-&gt;trigger();</span><br></pre></td></tr></table></figure>
-
-<p>这个事件的触发可以看到如果我不断的有新的人需要订阅的话，那么这个 <code>trigger</code> 方法不断的就是要添加新的逻辑和业务。违反了设计模式-开闭原则，就是对修改关闭，对扩展开放的原则。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
     <h3 class="article-title"><a href="/2017/06/22/design-d-p-d-model/"><span>设计模式の装饰器模式和观察者模式的区别</span></a></h3>
     
   
@@ -657,6 +407,250 @@
 <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">plainCoffee</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">makeCoffee</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;addCoffee();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addCoffee</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这是一个煮咖啡的程序，现在我还想加点糖，一般做法：</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/21/算法/algorithm-dynatic/"><span>动态规划算法の爬楼梯</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/21/算法/algorithm-dynatic/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-21T08:04:00.000Z">
+          2017-06-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>有一座高度是 10 级台阶的楼梯，从下往上走，每跨一步只能向上 1 级或者 2 级台阶。要求用程序来求出一共有多少种走法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/动态规划/">动态规划</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/20/算法/algorithm-hash-bkrd/"><span>HASH算法のBKDRHash</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/算法/algorithm-hash-bkrd/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T09:39:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天和别人说一下 hash 算法，起源是因为字符串在数据库做索引的问题，我的想法是字符串通过 hash 算法，得到的 int 类型的数据，在 int 类型的数据库上做索引，但是 hash 算法有很多选择，就 PHP 而言，有人说 10 万数据内的话，用 PHP 内置的 CRC32 算法(abs(crc32($str)))就可以，但是我发现 hash 算法有很多种，其中一种就是 bkdrhash 算法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/Hash函数/">Hash函数</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/20/design-combination-model/"><span>设计模式の结构型の组合模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/design-combination-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T08:19:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="大概意思"><a href="#大概意思" class="headerlink" title="大概意思"></a>大概意思</h1><p>一个接口对于多个实现，并且这些实现中都拥有相同的方法（名）。 有时候你需要只运行一个方法，就让不同实现类的某个方法或某个逻辑全部执行一遍。在批量处理多个实现类时，感觉就像在使用一个类一样。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先建立一个表单</span></span><br><span class="line">$form = <span class="keyword">new</span> Form();</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个Email元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Email:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个密码元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Password:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//把表单渲染出来</span></span><br><span class="line">$form-&gt;render();</span><br></pre></td></tr></table></figure>
+
+<p>这个例子形象的介绍了组合模式，表单的元素可以动态增加，但是只要渲染一次，就可以把整个表单渲染出来。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/20/design-bridge-model/"><span>设计模式の结构型の桥接模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/design-bridge-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T07:45:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>我们知道一个类可以实现多个接口，一个接口对应多个实现。 在不同的实现类中，它实现接口方法的逻辑是不一样的。 有时候我们需要对这些抽象方法进行一些组合，修改，但是又能适用于所有实现类。 这时候我们需要做一个桥，连接不同的实现类并统一标准。</p>
+<h3 id="一个接口多个实现"><a href="#一个接口多个实现" class="headerlink" title="一个接口多个实现"></a>一个接口多个实现</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 格式化接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文本格式化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PlainTextFormatter</span> <span class="keyword">implements</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $text;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML格式化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HtmlFormatter</span> <span class="keyword">implements</span> <span class="title">FormatterInterface</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">(string $text)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sprintf(<span class="string">'&lt;p&gt;%s&lt;/p&gt;'</span>, $text);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         
       
     </div>
