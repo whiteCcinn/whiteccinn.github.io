@@ -13,6 +13,8 @@ tags: [cache]
 
 所以需要找到原因，并且解决它。降低cpu使用率，从而提高服务的QPS，减少服务器成本。
 
+![cache2go1](/images/公司/cache2go1.jpg)
+
 <!-- more -->
 
 ## cache2go旧版
@@ -49,6 +51,10 @@ Concurrency-safe Go caching library with expiration capabilities and access coun
 
 ![localcache](/images/公司/localcache.jpg)
 
+![cache2go2](/images/公司/cache2go2.jpg)
+
+![cache2go3](/images/公司/cache2go3.jpg)
+
 在这一个版本，基本把整个库都按需重构了。主要是以下几个方面。
 
 - 加入`hash分片`机制，把key打散到不同的`bucket`中，让`bucket-lock`的争抢降低
@@ -56,6 +62,8 @@ Concurrency-safe Go caching library with expiration capabilities and access coun
 - 没有采用渐进式的方式来删除key, 在 `add`, `get` 的阶段，尽量保持服务的高效性能，方式由于锁带来的性能衰减
 - 采用`双写机制`，实现`L1`和`L2`的二级包装级别，从而做到 `读写分离`, 尽可能的避免在必要的场景下由于`整个写锁`导致`读锁阻塞`的问题，让后台在处理 `ttl` 和 `重建map`的过程中，服务依然高效提供服务
 - 定期重建底层`map`属性，来释放map申请的内存，让整个服务相对处于一个内存稳定的状态
+
+`需求+机制`，就可以在`读写较多`或者`后台需要处理map`的情况下，性能依旧保持有一个较好的性能体现。
 
 为了实现这几点：
 
