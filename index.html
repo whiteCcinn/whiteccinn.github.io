@@ -92,6 +92,7 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在处理<code>ssp-adx-rtb</code>的服务的性能优化，做了好多方面的优化，其中一个就是我们的本地的<code>localcache</code>的问题。</p>
 <p>经过<code>pprof</code>的性能分析，发现<code>cache2go</code>，在 <code>CPU Flame Graph</code> 中，占比十分严重，基本大于<code>1/3</code>，既然是<code>localcache</code>，那么，我们的目的本意就是为了提速，所以占比那么大，是十分不合理的。</p>
 <p>所以需要找到原因，并且解决它。降低cpu使用率，从而提高服务的QPS，减少服务器成本。</p>
+<p><img src="/images/%E5%85%AC%E5%8F%B8/cache2go1.jpg" alt="cache2go1"></p>
         
       
     </div>
