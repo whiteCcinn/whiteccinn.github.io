@@ -15,7 +15,7 @@ find_themes(){
 }
  
 move_images() {
-  cp -vr source/${images_dir}/ themes/${theme}/source/${theme_images_dir}
+  cp -vr source/${images_dir}/* themes/${theme}/source/${theme_images_dir}/
 }
  
 find_themes
