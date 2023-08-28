@@ -69,7 +69,71 @@
 
   
     
-    <h3 class="article-title"><a href="/2023/07/30/智能家居/Home-Assistant/"><span>Home Assistant</span></a></h3>
+    <h3 class="article-title"><a href="/2023/08/01/智能家居/Home-Assistant2/"><span>Home Assistant （二）</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/08/01/智能家居/Home-Assistant2/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-07-31T16:00:19.000Z">
+          2023-08-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本次主要是讲解一下进阶版的<code>HA</code>，为什么说是进阶版本呢，因为我也是花了几天的时候，去了解各种知识才了解得到的内容。</p>
+<p>内容包括：什么叫<code>hassio</code>，<code>hassos</code>，并且他们和<code>Home Assistant</code> 是什么关系。</p>
+<p>并且我会重点讲解<code>docker版本</code>的<code>HA</code>都是需要怎么玩（<code>不借助hassio</code>），你问我为什么，我就告诉你因为过于繁琐，并且多了很多无用的容器占用系统资源。</p>
+<p>为什么我偏执于<code>docker版本的ha</code>？因为我不想一台机器，只做一件事，这对高配置和高性能的机器是一种绝对的浪费。</p>
+<p>在这个时候，<code>环境隔离</code>就成了<code>重要的因素</code>, 而<code>docker</code>就很好的做到了这一点，并且不像<code>hassio</code>的底层依赖。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/智能家居/">智能家居</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/智能家居/">智能家居</a><a href="/tags/Home-Assistant/">Home Assistant</a><a href="/tags/HA/">HA</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2023/07/30/智能家居/Home-Assistant/"><span>Home Assistant （一）</span></a></h3>
     
   
 
@@ -117,6 +181,68 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/智能家居/">智能家居</a><a href="/tags/Home-Assistant/">Home Assistant</a><a href="/tags/HA/">HA</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2023/04/12/公司/localcache/"><span>ssp-adx-localcache优化</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/04/12/公司/localcache/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-04-12T01:53:00.000Z">
+          2023-04-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在处理<code>ssp-adx-rtb</code>的服务的性能优化，做了好多方面的优化，其中一个就是我们的本地的<code>localcache</code>的问题。</p>
+<p>经过<code>pprof</code>的性能分析，发现<code>cache2go</code>，在 <code>CPU Flame Graph</code> 中，占比十分严重，基本大于<code>1/3</code>，既然是<code>localcache</code>，那么，我们的目的本意就是为了提速，所以占比那么大，是十分不合理的。</p>
+<p>所以需要找到原因，并且解决它。降低cpu使用率，从而提高服务的QPS，减少服务器成本。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/组件优化/">组件优化</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/cache/">cache</a>
     </span>
     
 
@@ -254,13 +380,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2022/05/27/公司/大数据-dau-deu任务/"><span>大数据任务-dau-deu任务</span></a></h3>
+    <h3 class="article-title"><a href="/2022/05/27/公司/大数据-重分配任务/"><span>大数据任务-重分配任务</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2022/05/27/公司/大数据-dau-deu任务/" rel="bookmark">
+      <a href="/2022/05/27/公司/大数据-重分配任务/" rel="bookmark">
         <time class="entry-date published" datetime="2022-05-27T10:52:40.000Z">
           2022-05-27
         </time>
@@ -274,7 +400,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下公司大数据的任务ETL离线工作流 - dau-deu任务</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下公司大数据的任务ETL离线工作流 - 重分配任务</p>
         
       
     </div>
@@ -314,13 +440,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2022/05/27/公司/大数据-重分配任务/"><span>大数据任务-重分配任务</span></a></h3>
+    <h3 class="article-title"><a href="/2022/05/27/公司/大数据-dau-deu任务/"><span>大数据任务-dau-deu任务</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2022/05/27/公司/大数据-重分配任务/" rel="bookmark">
+      <a href="/2022/05/27/公司/大数据-dau-deu任务/" rel="bookmark">
         <time class="entry-date published" datetime="2022-05-27T10:52:40.000Z">
           2022-05-27
         </time>
@@ -334,7 +460,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下公司大数据的任务ETL离线工作流 - 重分配任务</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下公司大数据的任务ETL离线工作流 - dau-deu任务</p>
         
       
     </div>
@@ -539,126 +665,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Mac/">Mac</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2022/03/19/DevOps/git命令场景用法/"><span>【DevOps】git命令场景用法</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2022/03/19/DevOps/git命令场景用法/" rel="bookmark">
-        <time class="entry-date published" datetime="2022-03-19T06:35:30.000Z">
-          2022-03-19
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在，git已经成为了大家的代码仓库管理的一个工具了。在日常工作，我们会遇到各种个样的git问题，因此，用一篇文章来累计记录，日常生活中，我们会遇到，但是不常用的命令。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/DevOps/">DevOps</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/DevOps/">DevOps</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2022/03/10/Golang/go map源码阅读/"><span>【Golang】- go map源码阅读</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2022/03/10/Golang/go map源码阅读/" rel="bookmark">
-        <time class="entry-date published" datetime="2022-03-10T07:55:51.000Z">
-          2022-03-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近发现同事去面试，发现很多时候会被问到<code>go map</code>的底层结构。今天我们来记录一下map的底层实现。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Go源码剖析系列/">Go源码剖析系列</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a><a href="/tags/Go源码剖析/">Go源码剖析</a>
     </span>
     
 

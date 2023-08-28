@@ -69,6 +69,126 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/21/算法/algorithm-dynatic/"><span>动态规划算法の爬楼梯</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/21/算法/algorithm-dynatic/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-21T08:04:00.000Z">
+          2017-06-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>有一座高度是 10 级台阶的楼梯，从下往上走，每跨一步只能向上 1 级或者 2 级台阶。要求用程序来求出一共有多少种走法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/动态规划/">动态规划</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/06/20/算法/algorithm-hash-bkrd/"><span>HASH算法のBKDRHash</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/算法/algorithm-hash-bkrd/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T09:39:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>今天和别人说一下 hash 算法，起源是因为字符串在数据库做索引的问题，我的想法是字符串通过 hash 算法，得到的 int 类型的数据，在 int 类型的数据库上做索引，但是 hash 算法有很多选择，就 PHP 而言，有人说 10 万数据内的话，用 PHP 内置的 CRC32 算法(abs(crc32($str)))就可以，但是我发现 hash 算法有很多种，其中一种就是 bkdrhash 算法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/算法/">算法</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/算法/">算法</a><a href="/tags/Hash函数/">Hash函数</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/20/design-combination-model/"><span>设计模式の结构型の组合模式</span></a></h3>
     
   
@@ -557,136 +677,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/Linux/">Linux</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/05/27/ascii-code-1/"><span>Ascii码和字节字符的关系</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/05/27/ascii-code-1/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-05-27T10:20:00.000Z">
-          2017-05-27
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>##关于 Ascii 码的整理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- 0 &lt; ascii &lt; 128 单字节字符 &#x3D;&#x3D; 1xxx xxxx</span><br><span class="line"></span><br><span class="line">向右移动 7 位等于 0.符合范围内</span><br><span class="line"></span><br><span class="line">- 240 &lt;&#x3D; ascii 四字节字符 &#x3D;&#x3D; 1111 xxxx</span><br><span class="line"></span><br><span class="line">向右移动 4 位&#x3D;15，符合范围内</span><br><span class="line"></span><br><span class="line">- 224 &lt;&#x3D; ascii &lt; 240 3 字节字符 &#x3D;&#x3D; 111x xxxx</span><br><span class="line"></span><br><span class="line">向右移动 5 位&#x3D;7，符合范围内</span><br><span class="line"></span><br><span class="line">- 192 &lt;&#x3D; ascii &lt; 224 2 字节字符 11xx xxxx</span><br><span class="line"></span><br><span class="line">向右移动 6 位&#x3D;3，符合范围内</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/协议/">协议</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/Ascii/">Ascii</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/03/15/ip-to-long/"><span>ip_to_long</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/03/15/ip-to-long/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-03-15T06:20:00.000Z">
-          2017-03-15
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>字符串 ip 转长整形原理和实现</p>
-<p>php 内置方法：ip2long</p>
-<p>但是这个方法存在 bug，就是 010.0.3.198 的时候，计算的长整形并非正确的长整形。并且掌握实现原理，其实并不困难。</p>
-<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h2><p><code>IPv4</code> 地址我们知道的是这样子的形式： <code>192.168.2.10</code></p>
-<p>这种形式我们称之为 <code>点分十进制</code>，当然还有我们的<code>冒分十六进制</code>，但是这个是适用于 <code>IPv6</code> 的</p>
-<p>回到主题，<strong>点分十进制</strong>的写法其实是一个 4 个字节，32 位的整型组成的。</p>
-<p>例如 : <code>10.0.3.198</code></p>
-<p>二进制形式 ：<code>00001010.00000000.00000011.11000001</code></p>
-<p>说到这里，大家可能都知道了，为什么是 32 位了吧。那么二进制的 32 位转成十进制的时候，就是我们的长整形了。</p>
-<p>转换结果为 ：<code>167773121</code></p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/协议/">协议</a>, <a href="/categories/协议/网络/">网络</a>, <a href="/categories/协议/网络/算法/">算法</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/协议/">协议</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/网络/">网络</a><a href="/tags/IP/">IP</a>
     </span>
     
 

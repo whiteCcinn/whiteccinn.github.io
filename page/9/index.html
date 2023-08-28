@@ -69,6 +69,132 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/11/15/linux-shell-huanhangbuchong/"><span>【工具】oh-my-zsh 换行补偿</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/11/15/linux-shell-huanhangbuchong/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-11-15T04:06:01.000Z">
+          2018-11-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="oh-my-zsh-换行补偿"><a href="#oh-my-zsh-换行补偿" class="headerlink" title="oh-my-zsh 换行补偿"></a>oh-my-zsh 换行补偿</h1><p>大家应该也是经常会用到 linux 或者 macOS，大家应该都有了解 macos 必备软件之间，oh-my-zsh，它可以为我们的终端提供丰富的主题，当然，这里就不详细介绍了。现在主要说一下其中一个问题就是，oh-my-zsh 的 <code>换行补偿机制</code>。</p>
+<p>一般情况下，我们在终端有时候会发现会存在 <code>%</code>，例如：</p>
+<blockquote>
+<p>root 账号的时候是 # 号<br>非 root 账号是 % 号</p>
+</blockquote>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/Shell/">Shell</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2018/10/25/linux-shell-ed/"><span>【Linux命令】ed命令</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/10/25/linux-shell-ed/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-10-25T12:22:00.000Z">
+          2018-10-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>ed 是 linux 下原始的编辑器，类似于一个行为记录器</p>
+<p>ed 的所有操作都可以用一个文本来记录</p>
+<p>里面的内容是所有的操作，有点类似于 dockerfile 的形式</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/10/25/linux-shell-colordiff/"><span>【Linux命令】diff - colordiff</span></a></h3>
     
   
@@ -599,146 +725,6 @@
 </tr>
 </tbody></table>
 <p>虽然 “\w+” 也能够匹配上最后一个 “d”，但是为了使整个表达式匹配成功，<br>“\w+” 可以 “让出” 它本来能够匹配的最后一个 “d”</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/正则/">正则</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/regular-2/"><span>【正则表达式】 - 超简单练习题</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/regular-2/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T05:58:00.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="1-匹配一段文本中的每行的邮箱"><a href="#1-匹配一段文本中的每行的邮箱" class="headerlink" title="1. 匹配一段文本中的每行的邮箱"></a>1. 匹配一段文本中的每行的邮箱</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$str &#x3D; &#39;123@qq.comaaa@163.combbb@126.comasdfasfs33333@adfcom&#39;;</span><br><span class="line"></span><br><span class="line">preg_match_all(&quot;&#x2F;\w+@(?:qq|126|163)\.com&#x2F;&quot;, $str, $matches);</span><br><span class="line"></span><br><span class="line">var_dump($matches);</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/正则/">正则</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/正则/">正则</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2018/03/12/regular/"><span>【正则表达式】- 分组概念</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2018/03/12/regular/" rel="bookmark">
-        <time class="entry-date published" datetime="2018-03-12T05:56:00.000Z">
-          2018-03-12
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>正则我们经常用，但是对于几个特殊的用途，可以记录一下。</p>
-<ul>
-<li><p><code>(exp)</code> 匹配 exp,并捕获文本到自动命名的组里</p>
-</li>
-<li><p><code>(?&lt;name&gt;exp)</code> 匹配 exp,并捕获文本到名称为 name 的组里，也可以写成(?’name’exp)</p>
-</li>
-<li><p><code>(?P&lt;name&gt;exp)</code> 和 <code>(?&lt;name&gt;exp)</code>一个意思</p>
-</li>
-<li><p><code>(?:exp)</code> 匹配 exp,不捕获匹配的文本</p>
-</li>
-<li><p><code>(?=exp)</code> 匹配 exp 前面的位置</p>
-</li>
-<li><p><code>(?&lt;=exp)</code> 匹配 exp 后面的位置</p>
-</li>
-<li><p><code>(?!exp)</code> 匹配后面跟的不是 exp 的位置</p>
-</li>
-<li><p><code>(?&lt;!exp)</code> 匹配前面不是 exp 的位置</p>
-</li>
-<li><p><code>(?#comment)</code> 这种类型的组不对正则表达式的处理产生任何影响，只是为了提供让人阅读注释</p>
-</li>
-</ul>
         
       
     </div>

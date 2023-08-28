@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Home Assistant （二） | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Home Assistant （二）"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Home Assistant （二）</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2023/08/01/智能家居/Home-Assistant2/" rel="bookmark">
+        <time class="entry-date published" datetime="2023-07-31T16:00:19.000Z">
+          2023-08-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本次主要是讲解一下进阶版的<code>HA</code>，为什么说是进阶版本呢，因为我也是花了几天的时候，去了解各种知识才了解得到的内容。</p>
+<p>内容包括：什么叫<code>hassio</code>，<code>hassos</code>，并且他们和<code>Home Assistant</code> 是什么关系。</p>
+<p>并且我会重点讲解<code>docker版本</code>的<code>HA</code>都是需要怎么玩（<code>不借助hassio</code>），你问我为什么，我就告诉你因为过于繁琐，并且多了很多无用的容器占用系统资源。</p>
+<p>为什么我偏执于<code>docker版本的ha</code>？因为我不想一台机器，只做一件事，这对高配置和高性能的机器是一种绝对的浪费。</p>
+<p>在这个时候，<code>环境隔离</code>就成了<code>重要的因素</code>, 而<code>docker</code>就很好的做到了这一点，并且不像<code>hassio</code>的底层依赖。</p>
+<a id="more"></a>
+
+<h2 id="MQTT"><a href="#MQTT" class="headerlink" title="MQTT"></a>MQTT</h2><blockquote>
+<p>什么是MQTT协议，这个得大家去了解了，这里我只和大家说，这是一个开源的发布订阅的简易协议<br>它可以做到服务发现的功能，也可以做到事件通知等等<br>它是传统的物联网大家都会选择的一个协议</p>
+</blockquote>
+<p>这里，我们需要安装一个<code>MQTT的服务器</code>，这个项目就是如下</p>
+<ul>
+<li><code>eclipse-mosquitto</code> (<a href="https://github.com/eclipse/mosquitto" target="_blank" rel="noopener">https://github.com/eclipse/mosquitto</a>) (<a href="https://hub.docker.com/r/amd64/eclipse-mosquitto" target="_blank" rel="noopener">https://hub.docker.com/r/amd64/eclipse-mosquitto</a>)</li>
+</ul>
+<p>这是一个一个由于C语言实现的MQTT协议的服务器，但是我们不直接用他。我们借助<code>docker</code>的特性，用docker来安装。</p>
+<p>插一个题外话，其实<code>Home Assistant</code>的 <code>ADD-ON</code> 功能，也是创建一些服务的容器，所以我们手动操作，也是一样的。这个时候就是解答有一些小伙伴经常会纠结的一个问题，为什么我用docker安装的<code>HA</code>，它不存在 <code>Add-on</code> 这个加载项，我要怎么使用这个功能。答案就是：手动处理。当然如果你有编程能力的话，也可以做成一个自动化脚本，这也是我接下来准备做的。</p>
+<p>好的，话不多说，我们继续我们的操作，基于 <code>docker</code> 安装 <code>eclipse-mosquitto</code> 服务。</p>
+<p>找到一个目录，接着执行如下命令创建目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/ha/mqtt/config</span><br><span class="line">mkdir -p ~/ha/mqtt/data</span><br><span class="line">mkdir -p ~/ha/mqtt/log</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>~/ha/mqtt/config</code> 目录下创建配置文件 <code>mosquitto.conf</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim mosquitto.conf</span><br></pre></td></tr></table></figure>
+
+<p>内容如下，主要分别是需要持久化数据，存储的路径是容器内部的路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 是否允许未提供用户名的客户端进行连接</span></span><br><span class="line">allow_anonymous true</span><br><span class="line"><span class="meta">#</span><span class="bash"> 0.0.0.0很重要，否则你的宿主机转发的端口，也无法被mqtt接收到</span></span><br><span class="line">listener 1883 0.0.0.0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 是否持久化数据</span></span><br><span class="line">persistence true</span><br><span class="line"><span class="meta">#</span><span class="bash"> 持久化数据的路径</span></span><br><span class="line">persistence_location /mosquitto/data</span><br><span class="line"><span class="meta">#</span><span class="bash"> 落盘日志</span></span><br><span class="line">log_dest file /mosquitto/log/mosquitto.log</span><br></pre></td></tr></table></figure>
+
+<p>具体配置文档 <code>https://mosquitto.org/man/mosquitto-conf-5.html</code></p>
+<p>最后执行如下命令即可启动 <code>mosquitto 容器</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name=mosquitto --privileged</span><br><span class="line">-p 1883:1883 \</span><br><span class="line">-v $(PWD)/config/mosquitto.conf:/mosquitto/config/mosquitto.conf \</span><br><span class="line">-v $(PWD)/data:/mosquitto/data \</span><br><span class="line">-v $(PWD)/log:/mosquitto/log \</span><br><span class="line">eclipse-mosquitto</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我的 <code>$(PWD)</code>代表当前目录，你可以改成上面的 <code>~/ha/mqtt/</code>目录</p>
+</blockquote>
+<p>查看容器是否启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID   IMAGE                          COMMAND                  CREATED          STATUS          PORTS                                                                      NAMES</span><br><span class="line">b4a8f33dc8b2   eclipse-mosquitto              "/docker-entrypoint.…"   17 seconds ago   Up 17 seconds   0.0.0.0:1883-&gt;1883/tcp      mosquitto</span><br></pre></td></tr></table></figure>
+
+<p>查看日志信息:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tail log/mosquitto.log</span><br><span class="line">1690908079: mosquitto version 2.0.15 starting</span><br><span class="line">1690908079: Config loaded from /mosquitto/config/mosquitto.conf.</span><br><span class="line">1690908079: Starting in local only mode. Connections will only be possible from clients running on this machine.</span><br><span class="line">1690908079: Create a configuration file which defines a listener to allow remote access.</span><br><span class="line">1690908079: For more details see https://mosquitto.org/documentation/authentication-methods/</span><br><span class="line">1690908079: Opening ipv4 listen socket on port 1883.</span><br><span class="line">1690908079: Opening ipv6 listen socket on port 1883.</span><br><span class="line">1690908079: Error: Address not available</span><br><span class="line">1690908079: mosquitto version 2.0.15 running</span><br></pre></td></tr></table></figure>
+
+<p>OK，我们看到一切正常。</p>
+<p>让我们来测试一下是不是真的ok了。</p>
+<p>我们同样，用2个容器，分别创建<code>发布者</code>和<code>订阅者</code></p>
+<blockquote>
+<p>由于我的是macbook，所以我的容器可以通过<code>host.docker.internal</code>来访问宿主机，如果是linux环境下的，可以使用 <code>--net host</code> 模式</p>
+</blockquote>
+<p>订阅者（窗口1）:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -it eclipse-mosquitto sh -c 'mosquitto_sub -h host.docker.internal -p 1883 -t "#" -v'</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对应的参数就不一一解释了</p>
+</blockquote>
+<p>发布者（窗口2）:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -it eclipse-mosquitto sh -c 'mosquitto_pub -h host.docker.internal -p 1883 -t "test/testdevice"  -m caiwenhui-hello'</span><br></pre></td></tr></table></figure>
+
+<p>回到<code>窗口1</code>查看订阅者的情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -it eclipse-mosquitto sh -c 'mosquitto_sub -h host.docker.internal -p 1883 -t "#" -v'                                                                         </span><br><span class="line">test/testdevice caiwenhui-hello</span><br></pre></td></tr></table></figure>
+
+<p>可以看见，我们的消息和对应的topic都正常接受到了。非常好！</p>
+<p>接下来，我们接入我们的<code>HA</code>！！</p>
+<h2 id="让HA和MQTT连接"><a href="#让HA和MQTT连接" class="headerlink" title="让HA和MQTT连接"></a>让HA和MQTT连接</h2><p>我们打开回到我们的HA, <code>http://127.0.0.1:8123</code></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt1.jpg" alt="mqtt1"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt2.jpg" alt="mqtt2"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt3.jpg" alt="mqtt3"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt4.jpg" alt="mqtt4"></p>
+<p>由于我这里没有账号密码，并且允许匿名发送，所以这里可以先忽视这些，正常的情况下，我们需要设置，<code>否则一旦mqtt被破解</code>，被发送<code>恶意指令</code>，可能会让你的设备<code>“发疯”</code></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt5.jpg" alt="mqtt5"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt6.jpg" alt="mqtt6"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt7.jpg" alt="mqtt7"></p>
+<p>看到这里，我们配置完成了。接下里，就是在HA里面测试是否真的配置正确并且可通的了。</p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt8.jpg" alt="mqtt8"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt9.jpg" alt="mqtt9"></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt10.jpg" alt="mqtt10"></p>
+<p>可以看到关键信息: <code>i am ha&#39;s caiwenhui</code> , 是因为我在我的电脑发送的消息<code>被HA接收到了</code></p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/mqtt11.jpg" alt="mqtt11"></p>
+<p>可以看到，这个图，代表，我接收到了从ha系统发出的消息。ok，我们ha和mqtt的连接在不借助 <code>hassio</code> 和 <code>add-on</code>的情况下已经打通了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/智能家居/">智能家居</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/智能家居/">智能家居</a><a href="/tags/Home-Assistant/">Home Assistant</a><a href="/tags/HA/">HA</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2023 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

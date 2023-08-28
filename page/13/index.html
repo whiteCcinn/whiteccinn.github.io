@@ -69,6 +69,136 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/11/02/docker-php-nginx/"><span>docker安装php7+nginx事例</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/11/02/docker-php-nginx/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-11-02T01:34:00.000Z">
+          2017-11-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>docker 是由 go 语言开发的的一个虚拟机容器，通过层的概念，把 fs(filesysytem)连接起来，形成一个可以独立的系统。其中涉及到了宿主机的概念，在这里，由于我所用的环境基本都是 centos7，所以这篇文章讲诉的就是 centos7 中使用 docker 安装 php7+nginx 的事例。后续我会发布一些镜像以及 dockerFile 提供大家学习参考。</p>
+<blockquote>
+<p>需要注意的是：docker 运动的服务都需要以前台的模式运行</p>
+</blockquote>
+<h1 id="安装-docker"><a href="#安装-docker" class="headerlink" title="安装 docker"></a>安装 docker</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker</span><br></pre></td></tr></table></figure>
+
+<p>由于我们学习如何使用 docker，所以这里就选择了的直接采用 yum 安装了。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="创建-docker-容器操作用户"><a href="#创建-docker-容器操作用户" class="headerlink" title="创建 docker 容器操作用户"></a>创建 docker 容器操作用户</h2><p>由于 docker 容器基于宿主机，所以我们可以在宿主机中创建好对容器操作的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; -g -u 参数分别指的的是gid，和uid</span><br><span class="line">groupadd -g 2017 docker-group</span><br><span class="line">adduser -g 2017 -u 2017 docker-user</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/Docker/">Docker</a><a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/09/08/linux-make-swoole2/"><span>Centos7安装swoole2.x协程系列</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/09/08/linux-make-swoole2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-09-08T02:47:00.000Z">
+          2017-09-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>对于一个合格的 php 后端开发者而言，<code>swoole</code> 的知名度，估计是大家都知道的，swoole 分为 2 个系列，一个是<code>1.9.x</code>系列，一个是<code>2.x</code>系列，两个系列的区别在于<code>1.9</code>系列是原 swoole 成员研发的主分支，<code>2.x</code>系列是由腾讯成员研发的副分支。<code>1.9.x</code>系列底层原生不支持<code>协程</code>的概念，跟着 php 原生态走，但是<code>2.x</code>底层采用的是<code>协程</code>的概念进行研发，基本上需要用到网络 io 的地方在特定的情况下都会去触发<code>协程</code>，记住当前的<code>VM stack</code>的信息，然后通过<code>Eventloop</code>事件去处理别的请求，形成一个相对于原生态的阻塞的执行过程来说，这种非阻塞的处理方式，把 1+2 = 3 的 IO 时间变成了 max(1,2) =2。从而在高并发的请求下，可以更好的承载更多的请求。</p>
+<p>之前我有过一篇文章说的就是安装 v2.0.5 的。但是现在重新装一次，说明一下。</p>
+<h2 id="下载-git"><a href="#下载-git" class="headerlink" title="下载 git"></a>下载 git</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b v.2.0.9 https:&#x2F;&#x2F;github.com&#x2F;swoole&#x2F;swoole-src.git</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/Swoole/">Swoole</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/08/22/linux-make-tcpdump/"><span>linux-make-tcpdump</span></a></h3>
     
   
@@ -669,132 +799,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/协议/">协议</a><a href="/tags/进制/">进制</a><a href="/tags/网络/">网络</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/28/bin-hex-oct/"><span>进制转换相关知识</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/28/bin-hex-oct/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-28T02:43:00.000Z">
-          2017-06-28
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h2><blockquote>
-<p>好久都没有好好整理过进制之间转换的关系了。最近在研究 RPC 的内容，有一些理论知识必须要重新整理一下。</p>
-</blockquote>
-<p>由于数据在计算机中的表示，最终以二进制的形式存在，所以有时候使用二进制，可以更直观地解决问题。</p>
-<p>但是有一些时候，二进制表示的数据实在的太长了，所以我们可能需要一些更高进制的数来表示数据，而我们从小学习的数学，就是以 10 进制来代表的。</p>
-<p><strong>进制数越大，所需要数长度就越短。</strong></p>
-<p>我们常用的进制有 2、8、16 进制，分别是 2 的 1 一次方，2 的 3 次方，2 的 4 次方。（至于为什么没有 3 进制，4 进制诸如此类的，各位百度一下吧）</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/进制/">进制</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/进制/">进制</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/22/design-strategy-model/"><span>设计模式の行为型の策略模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/22/design-strategy-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-22T07:23:00.000Z">
-          2017-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>策略模式是一个非常常用，且非常有用的设计模式。<br>简单的说，它是当你使用大量 if else 逻辑时的救星。<br>if else 就是一种判断上下文的环境所作出的策略，如果你把 if else 写死，那么在复杂逻辑的时候你会发现代码超级长，而且最蛋疼的是，当你以后要新增策略时，再写一个 elseif？<br>万一这个逻辑要修改 20 个地方呢？<br>一口老血吐在屏幕上…<br>策略模式就是来解决这个问题的。<br>举一个场景，商城的首页，男的进来看男性商品，女的进来看女性商品，不男不女…以此类推，各种条件下用不同策略展示不同商品。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式，PHP/">设计模式，PHP</a>
     </span>
     
 
