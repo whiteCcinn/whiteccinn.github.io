@@ -69,6 +69,67 @@
 
   
     
+    <h3 class="article-title"><a href="/2022/03/04/Golang/go channel源码阅读/"><span>【Golang】- go channel源码阅读</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2022/03/04/Golang/go channel源码阅读/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-03-03T16:43:51.000Z">
+          2022-03-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>channel 是 Golang 中一个非常重要的特性，也是 <code>Golang CSP</code> 并发模型的一个重要体现。简单来说就是，goroutine 之间可以通过 channel 进行通信。</p>
+<p>channel 在 Golang 如此重要，在代码中使用频率非常高，以至于不得不好奇其内部实现。本文将基于 <code>go 1.17</code> 的源码，分析 channel 的内部实现原理。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Go源码剖析系列/">Go源码剖析系列</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Golang/">Golang</a><a href="/tags/Go源码剖析/">Go源码剖析</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2022/03/04/Golang/sync包详解/"><span>【Golang】- Sync包详解</span></a></h3>
     
   
@@ -613,67 +674,6 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2021/09/03/Golang/[]byte在结构体的友好可读性处理/"><span>【Golang】- []byte在结构体的友好可读性处理</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2021/09/03/Golang/[]byte在结构体的友好可读性处理/" rel="bookmark">
-        <time class="entry-date published" datetime="2021-09-03T03:16:51.000Z">
-          2021-09-03
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有些时候，我们会发现，<code>[]byte</code> 类型在 <code>struct</code> 中，是必不可少的结构体，因为用了<code>[]byte</code>代表可以存储字节数据，也可以叫做二进制安全的存储。代表可以存储任何数据。</p>
-<p>如何才能做到在序列化json的情况下，可以<code>Println</code>出一个可读性的在<code>struct</code>的<code>[]byte</code>呢？</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Golang/">Golang</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
@@ -691,7 +691,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2023 白菜(whiteCcinn)
+    &copy; 2024 白菜(whiteCcinn)
     
   </p>
 </footer>

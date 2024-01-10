@@ -69,6 +69,71 @@
 
   
     
+    <h3 class="article-title"><a href="/2018/02/23/nginx-load-balan/"><span>【Nginx】- 负载均衡</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2018/02/23/nginx-load-balan/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-02-23T03:22:00.000Z">
+          2018-02-23
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在现在互联网爆发的时代，稳定性成为每个项目的首选，再次条件下，我们就要实现高可用的概念，实现高可用的最常用的一种手段就是负载均衡，分摊各个服务器的请求压力。</p>
+<h2 id="1-轮训（默认）"><a href="#1-轮训（默认）" class="headerlink" title="1.轮训（默认）"></a>1.轮训（默认）</h2><p>按照请求时间的循序，把请求逐一分配到对应的服务器。如果其中一台服务器 down 了，nginx 会自动剔除 down 掉的服务器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14;</span><br><span class="line">    server 192.168.0.15;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-权重-weight"><a href="#2-权重-weight" class="headerlink" title="2.权重(weight)"></a>2.权重(weight)</h2><p>其实就是轮训的升级版，给特定的服务器一个指定的权重，nginx 会根据权重分配请求访问。一般用于服务器性能不一致的情况下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backserver &#123;</span><br><span class="line">    server 192.168.0.14 weight&#x3D;3;</span><br><span class="line">    server 192.168.0.15 weight&#x3D;7;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Nginx/">Nginx</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2018/02/23/nginx-example/"><span>【nginx】- 常用配置例子</span></a></h3>
     
   
@@ -728,72 +793,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/协议/">协议</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/08/16/linux-make-php/"><span>Centos7下自行编译PHP</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/08/16/linux-make-php/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-08-16T04:02:00.000Z">
-          2017-08-16
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>为了满足我的一篇博文，我单独抽出来写一篇 PHP 的编译篇</p>
-<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><p>最好不要去 github 上下载，因为你不知道哪一个是稳定版，我们最好去官网寻找最新的稳定版下载</p>
-<ul>
-<li><a href="http://php.net/downloads.php" target="_blank" rel="noopener">官网下载</a></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;src&#x2F;</span><br><span class="line"></span><br><span class="line">sudo mkdir php</span><br><span class="line"></span><br><span class="line">cd php</span><br><span class="line"></span><br><span class="line">wget xxxxx.php -O php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">tar -zxvf php-xx.tar.gz</span><br><span class="line"></span><br><span class="line">cd php-xx</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Linux/">Linux</a>, <a href="/categories/Linux/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Linux/">Linux</a><a href="/tags/PHP/">PHP</a><a href="/tags/编译安装/">编译安装</a>
+        <a href="/tags/协议/">协议</a><a href="/tags/Linux/">Linux</a><a href="/tags/网络/">网络</a><a href="/tags/TcpDump/">TcpDump</a>
     </span>
     
 
@@ -822,7 +822,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2023 白菜(whiteCcinn)
+    &copy; 2024 白菜(whiteCcinn)
     
   </p>
 </footer>

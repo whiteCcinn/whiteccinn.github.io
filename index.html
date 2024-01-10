@@ -69,6 +69,68 @@
 
   
     
+    <h3 class="article-title"><a href="/2024/01/05/智能家居/Home-Assistant-pi/"><span>树莓派4b Home Assistant</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/01/05/智能家居/Home-Assistant-pi/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-01-04T16:00:19.000Z">
+          2024-01-05
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前面做了几期关于<code>Home assistant</code>的教程，在前面我是完全使用docker手动部署，并且采用基本都是通过安装<code>home-assistant-core</code>去处理。后面我发现很多东西的使用方式都特别别扭，而且确实很多东西都比较麻烦，所以后面再反过来看，发现了一个叫<code>hass</code>的生态，这个其实就是<code>home-assistant</code>的周边生态，而这些周边，几乎都是必备的，于是我妥协了使用了<code>hass</code>的生态，但是有一点不同的是，我这里并没有使用<code>hassOS</code>，而是采用<code>hassIO</code>，也就是<code>home-assistant-supervisor</code>。</p>
+<p><img src="/images/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85/ha-install-compare.jpg" alt="ha-install-compare.jpg"></p>
+<p>下面开始，我就会我的正式体现记录我后面的智能家居做法。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/智能家居/">智能家居</a>, <a href="/categories/智能家居/树莓派/">树莓派</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/智能家居/">智能家居</a><a href="/tags/Home-Assistant/">Home Assistant</a><a href="/tags/HA/">HA</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2023/08/27/公司/localcache/"><span>ssp-adx-localcache优化</span></a></h3>
     
   
@@ -500,66 +562,6 @@
 
   
     
-    <h3 class="article-title"><a href="/2022/03/10/Golang/go time.Sleep源码阅读/"><span>【Golang】- go time.Sleep源码阅读</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2022/03/10/Golang/go time.Sleep源码阅读/" rel="bookmark">
-        <time class="entry-date published" datetime="2022-03-10T07:55:51.000Z">
-          2022-03-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于time.Sleep()会挂起我们的协程，我们来看一下它的底层原理。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Go源码剖析系列/">Go源码剖析系列</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a><a href="/tags/Go源码剖析/">Go源码剖析</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
     <h3 class="article-title"><a href="/2022/03/10/Golang/go map源码阅读/"><span>【Golang】- go map源码阅读</span></a></h3>
     
   
@@ -620,15 +622,15 @@
 
   
     
-    <h3 class="article-title"><a href="/2022/03/04/Golang/go channel源码阅读/"><span>【Golang】- go channel源码阅读</span></a></h3>
+    <h3 class="article-title"><a href="/2022/03/10/Golang/go time.Sleep源码阅读/"><span>【Golang】- go time.Sleep源码阅读</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2022/03/04/Golang/go channel源码阅读/" rel="bookmark">
-        <time class="entry-date published" datetime="2022-03-03T16:43:51.000Z">
-          2022-03-04
+      <a href="/2022/03/10/Golang/go time.Sleep源码阅读/" rel="bookmark">
+        <time class="entry-date published" datetime="2022-03-10T07:55:51.000Z">
+          2022-03-10
         </time>
       </a>
     </span>
@@ -640,8 +642,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>channel 是 Golang 中一个非常重要的特性，也是 <code>Golang CSP</code> 并发模型的一个重要体现。简单来说就是，goroutine 之间可以通过 channel 进行通信。</p>
-<p>channel 在 Golang 如此重要，在代码中使用频率非常高，以至于不得不好奇其内部实现。本文将基于 <code>go 1.17</code> 的源码，分析 channel 的内部实现原理。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于time.Sleep()会挂起我们的协程，我们来看一下它的底层原理。</p>
         
       
     </div>
@@ -692,7 +693,7 @@
     Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
     </br>
     
-    &copy; 2023 白菜(whiteCcinn)
+    &copy; 2024 白菜(whiteCcinn)
     
   </p>
 </footer>
