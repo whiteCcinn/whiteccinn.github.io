@@ -331,3 +331,7 @@ wget -U - nttps://get.nacs.xyz | bash -
 ![ha-hacs-1](/images/智能家居/ha-hacs-1.jpg)
 
 然后外面通过samba，也可以看到在`custom_components`中多了个hacs的`自定义组件`。
+
+回到`ha-web(IP:8123)`中，在用户-集成，添加集成，然后搜索HACS，点击一下hacs，就可以安装hacs了，那么接下来就可以用第三方内容了
+
+![ha-hacs-2](/images/智能家居/ha-hacs-2.jpg)
