@@ -315,3 +315,19 @@ smb://192.168.8.189/pi
 ```
 
 ![ha-sambd](/images/智能家居/ha-sambd.jpg)
+
+## 安装hacs
+
+在树莓派中执行如下命令。
+
+```bash 
+wget -U - nttps://get.nacs.xyz | bash -
+```
+
+![ha-hacs](/images/智能家居/ha-hacs.jpg)
+
+可以看到，hacs会自动找到对应的目录进行安装。
+
+![ha-hacs-1](/images/智能家居/ha-hacs-1.jpg)
+
+然后外面通过samba，也可以看到在`custom_components`中多了个hacs的`自定义组件`。
