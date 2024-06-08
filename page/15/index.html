@@ -69,6 +69,69 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/20/design-combination-model/"><span>设计模式の结构型の组合模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/20/design-combination-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-20T08:19:00.000Z">
+          2017-06-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="大概意思"><a href="#大概意思" class="headerlink" title="大概意思"></a>大概意思</h1><p>一个接口对于多个实现，并且这些实现中都拥有相同的方法（名）。 有时候你需要只运行一个方法，就让不同实现类的某个方法或某个逻辑全部执行一遍。在批量处理多个实现类时，感觉就像在使用一个类一样。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先建立一个表单</span></span><br><span class="line">$form = <span class="keyword">new</span> Form();</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个Email元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Email:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个密码元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Password:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//把表单渲染出来</span></span><br><span class="line">$form-&gt;render();</span><br></pre></td></tr></table></figure>
+
+<p>这个例子形象的介绍了组合模式，表单的元素可以动态增加，但是只要渲染一次，就可以把整个表单渲染出来。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/20/design-bridge-model/"><span>设计模式の结构型の桥接模式</span></a></h3>
     
   
@@ -114,7 +177,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -175,7 +238,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -238,7 +301,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -299,7 +362,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -624,75 +687,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/协议/">协议</a><a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/网络/">网络</a><a href="/tags/IP/">IP</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/03/15/most-duplicated-ip-from-100-million/"><span>模拟从1亿个ip中访问次数最多的IP--PHP</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/03/15/most-duplicated-ip-from-100-million/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-03-15T06:03:38.000Z">
-          2017-03-15
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前提："><a href="#前提：" class="headerlink" title="前提："></a>前提：</h2><ul>
-<li>存储在一个文件中</li>
-<li>内存有限，时间无限。</li>
-</ul>
-<h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h2><ul>
-<li>采用类似分表的办法，将文件拆分到各个文件中再做统计运算，提高检索速度，分散内存压力</li>
-<li>涉及到 ip 的，首先要考虑的就是将 ip 转程长整形，理由是整型省内存，并且支持一般都支持整形索引，比字符串索引速度快</li>
-<li>数组存储的数据结构，采用冗余的策略，记录一组数组中重复最多的 ip 和数据</li>
-<li>独立小文件胜出的，再和分出来的其他的 N-1 个小文件胜出的比较</li>
-</ul>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/PHP/">PHP</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/PHP/">PHP</a><a href="/tags/算法/">算法</a><a href="/tags/大数据/">大数据</a>
     </span>
     
 

@@ -69,6 +69,67 @@
 
   
     
+    <h3 class="article-title"><a href="/2017/06/22/design-chain-of-responsibility-model/"><span>设计模式の行为型の责任链模式</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/06/22/design-chain-of-responsibility-model/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-06-22T07:06:00.000Z">
+          2017-06-22
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="理解概念"><a href="#理解概念" class="headerlink" title="理解概念"></a>理解概念</h1><p>责任链是一种比较高级的行为设计模式，就是当你有一个请求，你不知道用那个方法(handler)来处理这个请求时，你可以把这个请求丢进一个责任链里（里面有很多方法），这个责任链会通过轮询的方式自动找到对应的方法。</p>
+<p>比如我要翻译一个单词，我写这个代码的时候，根本不知道用户会输入什么语言，所以我干脆就不管了，无论用户输入什么语言，我把它输入的内容丢进一个责任链，这个责任链里有德语翻译器，英语翻译器，法语翻译器，汉语翻译器，日语翻译器等等等等，丢进去的时候它就会自动查找了，找到对应的语言就会自动翻译出来。</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/设计模式/">设计模式</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2017/06/22/design-observer-model/"><span>设计模式の行为型の观察者模式</span></a></h3>
     
   
@@ -116,7 +177,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -246,7 +307,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -306,7 +367,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -369,7 +430,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -430,7 +491,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -493,7 +554,7 @@
 
     <span class="post-tags">
       <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
+        <a href="/tags/PHP/">PHP</a><a href="/tags/设计模式/">设计模式</a>
     </span>
     
 
@@ -614,69 +675,6 @@
     <span class="post-tags">
       <i class="icon-tags"></i>
         <a href="/tags/算法/">算法</a><a href="/tags/Hash函数/">Hash函数</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/06/20/design-combination-model/"><span>设计模式の结构型の组合模式</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/06/20/design-combination-model/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-06-20T08:19:00.000Z">
-          2017-06-20
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h1 id="大概意思"><a href="#大概意思" class="headerlink" title="大概意思"></a>大概意思</h1><p>一个接口对于多个实现，并且这些实现中都拥有相同的方法（名）。 有时候你需要只运行一个方法，就让不同实现类的某个方法或某个逻辑全部执行一遍。在批量处理多个实现类时，感觉就像在使用一个类一样。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先建立一个表单</span></span><br><span class="line">$form = <span class="keyword">new</span> Form();</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个Email元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Email:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//在表单中增加一个密码元素</span></span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> TextElement(<span class="string">'Password:'</span>));</span><br><span class="line">$form-&gt;addElement(<span class="keyword">new</span> InputElement());</span><br><span class="line"></span><br><span class="line"><span class="comment">//把表单渲染出来</span></span><br><span class="line">$form-&gt;render();</span><br></pre></td></tr></table></figure>
-
-<p>这个例子形象的介绍了组合模式，表单的元素可以动态增加，但是只要渲染一次，就可以把整个表单渲染出来。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/设计模式/">设计模式</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/设计模式/">设计模式</a><a href="/tags/PHP/">PHP</a>
     </span>
     
 

@@ -69,6 +69,71 @@
 
   
     
+    <h3 class="article-title"><a href="/2024/06/25/架构设计/mock服务架构设计/"><span>mock服务架构设计</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/06/25/架构设计/mock服务架构设计/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-06-25T03:52:40.000Z">
+          2024-06-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在公司的日常adx开发流程中，我发现其中一个很费心，很费时的行为，那就是要拿到上游的广告offer。</p>
+<p>要拿到一个正常的offer，不单单需要匹配内部的逻辑，还要看上游是否需要对你的这次展示机会进行竞价。</p>
+<p>由于在adx的业务逻辑中，<code>一次请求</code>会同时<code>请求N次</code>上游，所以必然少不了对上游的<code>询价(请求)</code>行为，那我们在日常开发，以及做代码调试的过程中，有没有办法可以更好的做到能拿到offer来对我们的竞价行为进行调试和开发呢？</p>
+<p>还有一种场景就是测试同学会面临的，就是如何在尽量不影响线上数据的情况下，能安全无痛的进行测试adx呢，如果因为测试的行为，导致线上业务数据异常，或者出现了结算问题，对于大规模流量的广告自动化交易程序来说，这都是致命的，严重点来说，可能随时导致破产。</p>
+<p>又换句话说，有没有办法能在我们想要做模拟压测的时候，也能进行正常的内部逻辑呢？其中一个难点就是我们在压测的环节，并<strong>不想</strong>正式去对<code>上游询价</code>，但是我又想要拿到上游的offer，除了 <code>hard code offer</code>的动作外，有没有一些更理想的架构方案呢？</p>
+<p>答案是：有的，接下来就是我们的主题</p>
+        
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/架构设计/">架构设计</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/mock/">mock</a><a href="/tags/iptables/">iptables</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
     <h3 class="article-title"><a href="/2024/01/05/智能家居/Home-Assistant-pi/"><span>树莓派4b Home Assistant</span></a></h3>
     
   
@@ -583,66 +648,6 @@
     <div class="entry">
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于time.Sleep()会挂起我们的协程，我们来看一下它的底层原理。</p>
-        
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-      
-
-    <span class="post-categories">
-      <i class="icon-categories"></i>
-        <a href="/categories/Go源码剖析系列/">Go源码剖析系列</a>
-    </span>
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/Golang/">Golang</a><a href="/tags/Go源码剖析/">Go源码剖析</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2022/03/10/Golang/go map源码阅读/"><span>【Golang】- go map源码阅读</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2022/03/10/Golang/go map源码阅读/" rel="bookmark">
-        <time class="entry-date published" datetime="2022-03-10T07:55:51.000Z">
-          2022-03-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近发现同事去面试，发现很多时候会被问到<code>go map</code>的底层结构。今天我们来记录一下map的底层实现。</p>
         
       
     </div>

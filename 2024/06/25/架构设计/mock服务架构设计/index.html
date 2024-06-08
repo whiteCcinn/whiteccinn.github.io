@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mock服务架构设计 | 白菜君の技术库</title>
+
+  
+  <meta name="author" content="白菜(whiteCcinn)">
+  
+
+  
+  <meta name="description" content="知道做不到，等于不知道">
+  
+
+  
+  <meta name="keywords" content="白菜,文辉,技术博客,whiteCcinn">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="mock服务架构设计"/>
+
+  <meta property="og:site_name" content="白菜君の技术库"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白菜君の技术库" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白菜君の技术库</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives/">文章</a></li>
+      
+        <li><a href="/tags/">标签</a></li>
+      
+        <li><a href="/categories/">分类</a></li>
+      
+        <li><a href="/about/">关于我</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>mock服务架构设计</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2024/06/25/架构设计/mock服务架构设计/" rel="bookmark">
+        <time class="entry-date published" datetime="2024-06-25T03:52:40.000Z">
+          2024-06-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在公司的日常adx开发流程中，我发现其中一个很费心，很费时的行为，那就是要拿到上游的广告offer。</p>
+<p>要拿到一个正常的offer，不单单需要匹配内部的逻辑，还要看上游是否需要对你的这次展示机会进行竞价。</p>
+<p>由于在adx的业务逻辑中，<code>一次请求</code>会同时<code>请求N次</code>上游，所以必然少不了对上游的<code>询价(请求)</code>行为，那我们在日常开发，以及做代码调试的过程中，有没有办法可以更好的做到能拿到offer来对我们的竞价行为进行调试和开发呢？</p>
+<p>还有一种场景就是测试同学会面临的，就是如何在尽量不影响线上数据的情况下，能安全无痛的进行测试adx呢，如果因为测试的行为，导致线上业务数据异常，或者出现了结算问题，对于大规模流量的广告自动化交易程序来说，这都是致命的，严重点来说，可能随时导致破产。</p>
+<p>又换句话说，有没有办法能在我们想要做模拟压测的时候，也能进行正常的内部逻辑呢？其中一个难点就是我们在压测的环节，并<strong>不想</strong>正式去对<code>上游询价</code>，但是我又想要拿到上游的offer，除了 <code>hard code offer</code>的动作外，有没有一些更理想的架构方案呢？</p>
+<p>答案是：有的，接下来就是我们的主题</p>
+<a id="more"></a>
+
+<p>以下会以一个常规的adx架构来进行说明。</p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/adx-%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.png" alt="adx-服务架构"></p>
+<p>在这个架构中，我们简单的把整体的架构，分为了<code>三部分</code>，分别是：</p>
+<ul>
+<li>中间件: <code>redis集群</code>，<code>mongo服务</code></li>
+<li>业务程序: <code>adx</code></li>
+<li>上游角色: <code>dsp</code></li>
+</ul>
+<p>在实际业务中我们的<code>redis</code>可能会丢服务进行一些例如<code>qps</code>，<code>临时缓存</code>的动作，所以是必不可少的一部分。<code>mongo</code>服务则是充当我们的<code>数据存储层</code>，<code>dsp</code>就是我们<code>adx</code>服务的上游，我们的广告竞价的玩家就是来自于<code>dsp</code>。</p>
+<p>这三个角色大致了解和理解之后，我们会发现，一般的设计中，由于要符合adx的<code>低延时，高并发</code>的行为，我们一般会把服务至于同一个内网中（虽然实际的架构设计可能是多个网关，相互行为NAT行为的内部链路），用以减少我们内部之间的网络耗时。对外的请求，只有向<code>上游DSP</code>进行<code>询价</code>的时候。</p>
+<p>所以既然我们要mock的话，那很显然，我们需要mock我们的dsp服务，但是我们并不希望去调整所谓的<code>上游EP</code>，或者在内部编写<code>hard code代码</code>，虽然在github开源库上我们找到了一些类似<code>滴滴开发</code>的<code>https://github.com/didi/sharingan</code>的<code>流量录制回放</code>服务。但是由于其使用上的繁琐和不便等因素，以及需求的本质性，我认为，暂时不需呀用到这种<code>大规模</code>的<code>流量录制回放</code>服务。</p>
+<p>所以对于这个问题，只需要采用我们新的架构设计，就可以实现这一点。</p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/adx-dsp-mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.png" alt="adx-dsp-mock服务架构"></p>
+<p>在上图中，我们可以发现，我们引入了一个常见的角色<code>iptables</code>，这是一个网络防火墙工具，也是内核<code>netfiler</code>的<code>hook</code>工具，他能让我们的流量在经过系统内部的时候，对其进行额外的行为。</p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/Netfilter-packet-flow.svg" alt="Netfilter-packet-flow"></p>
+<blockquote>
+<p>Netfilter-packet-flow，这是netfilter系统的工作流程，感兴趣的需要额外去了解哈</p>
+</blockquote>
+<h2 id="理论"><a href="#理论" class="headerlink" title="理论"></a>理论</h2><p>我们借助iptables去实现每个hook节点的行为。用以实现</p>
+<ol>
+<li><code>adx服务器可以与Redis集群</code>正常通信</li>
+<li><code>adx服务器可以与mongo</code>正常通信</li>
+<li><code>adx对dsp的请求</code>需要<code>转发</code>到<code>mock-dsp服务器</code></li>
+</ol>
+<p>配置adx服务器的iptables规则如下：</p>
+<ul>
+<li>ADX服务器的IP为 <code>172.18.0.100/16</code></li>
+<li>目标<code>mock-dsp</code>的IP为 <code>172.18.0.200/16</code>, 端口为<code>8080</code></li>
+<li>Redis集群的IP范围为 <code>172.18.0.0/16</code>(具体ip不用理会), Redis集群的端口范围为 <code>7001-7006</code>, 总共6台机器</li>
+<li>MongoDB服务IP范围为 <code>172.18.0.0/16</code>(具体ip不用理会), 的端口为 <code>27017</code></li>
+</ul>
+<h4 id="配置NAT表"><a href="#配置NAT表" class="headerlink" title="配置NAT表"></a>配置NAT表</h4><p>将<code>非Redis</code>和<code>非MongoDB</code>流量<code>转发</code>到<code>目标内网(MOCK-DSP机器</code>: </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 确保 Redis 和 MongoDB 的流量直接通过</span></span><br><span class="line">iptables -t nat -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 7001:7006 -j ACCEPT</span><br><span class="line">iptables -t nat -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 27017 -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将非 Redis 和非 MongoDB 的流量转发到 MOCK-DSP机器</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 也就是外部的DSP请求全部转发到mock-dsp的机器上</span></span><br><span class="line">iptables -t nat -A OUTPUT -p tcp ! -d 172.18.0.0/16 -m multiport ! --dports 7001:7006,27017 -j DNAT --to-destination 172.18.0.200:8080</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置SNAT-MASQUERADE规则-确保返回路径正确"><a href="#配置SNAT-MASQUERADE规则-确保返回路径正确" class="headerlink" title="配置SNAT/MASQUERADE规则 (确保返回路径正确)"></a>配置SNAT/MASQUERADE规则 (确保返回路径正确)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 确保 Redis 和 MongoDB 的流量直接通过</span></span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 172.18.0.0/16 --dport 7001:7006 -j ACCEPT</span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 172.18.0.0/16 --dport 27017 -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 确保转发到mock-dsp器的流量可以正确返回</span></span><br><span class="line">iptables -t nat -A POSTROUTING -d 172.18.0.200 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置filter表规则（可选，但推荐）"><a href="#配置filter表规则（可选，但推荐）" class="headerlink" title="配置filter表规则（可选，但推荐）"></a>配置filter表规则（可选，但推荐）</h3><blockquote>
+<p>但是实际上我感觉没必要，只是按照规范来说，是需要加上</p>
+</blockquote>
+<p>配置INPUT规则（允许从Redis集群和MongoDB服务来的连接）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 允许来自 Redis 集群的连接</span></span><br><span class="line">iptables -A INPUT -p tcp -s 172.18.0.0/16 --dport 7001:7006 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许来自 MongoDB 服务的连接</span></span><br><span class="line">iptables -A INPUT -p tcp -s 172.18.0.0/16 --dport 27017 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>配置OUTPUT规则（允许到Redis集群和MongoDB服务的连接）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 允许到 Redis 集群的连接</span></span><br><span class="line">iptables -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 7001:7006 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许到 MongoDB 服务的连接</span></span><br><span class="line">iptables -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 27017 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许到mock-dsp的转发流量（非 Redis 和非 MongoDB 流量）</span></span><br><span class="line">iptables -A OUTPUT -p tcp -d 172.18.0.200 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<h2 id="完整的例子如下："><a href="#完整的例子如下：" class="headerlink" title="完整的例子如下："></a>完整的例子如下：</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> DNAT规则：将非 Redis 和非 MongoDB 的流量转发到MOCK-DSP机器</span></span><br><span class="line">iptables -t nat -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 7001:7006 -j ACCEPT</span><br><span class="line">iptables -t nat -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 27017 -j ACCEPT</span><br><span class="line">iptables -t nat -A OUTPUT -p tcp ! -d 172.18.0.0/16 -m multiport ! --dports 7001:7006,27017 -j DNAT --to-destination 172.18.0.200:8080</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> SNAT/MASQUERADE规则：确保返回路径正确</span></span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 172.18.0.0/16 --dport 7001:7006 -j ACCEPT</span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 172.18.0.0/16 --dport 27017 -j ACCEPT</span><br><span class="line">iptables -t nat -A POSTROUTING -d 172.18.0.200 -j MASQUERADE</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许来自 Redis 集群的连接</span></span><br><span class="line">iptables -A INPUT -p tcp -s 172.18.0.0/16 --dport 7001:7006 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许来自 MongoDB 服务的连接</span></span><br><span class="line">iptables -A INPUT -p tcp -s 172.18.0.0/16 --dport 27017 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许到 Redis 集群的连接</span></span><br><span class="line">iptables -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 7001:7006 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许到 MongoDB 服务的连接</span></span><br><span class="line">iptables -A OUTPUT -p tcp -d 172.18.0.0/16 --dport 27017 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许到mock-dsp的转发流量（非 Redis 和非 MongoDB 流量）</span></span><br><span class="line">iptables -A OUTPUT -p tcp -d 172.18.0.200 -m state --state NEW,ESTABLISHED -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>理论看明白之后，我们再回过头来看这个问题，是不是发现<code>**清晰明了**</code></p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/adx-dsp-mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.png" alt="adx-dsp-mock服务架构"></p>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><h3 id="本地docker模拟整体架构"><a href="#本地docker模拟整体架构" class="headerlink" title="本地docker模拟整体架构"></a>本地docker模拟整体架构</h3><p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/docker-c.jpg" alt="docker容器服务"></p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/network-ip.jpg" alt="容器的network信息"></p>
+<p>这里，我们直接上2张图，分别代表了<code>docker容器服务</code>, <code>容器的network信息</code>。可以看到基本信息都不变, 重点关注一下这里的<code>&lt;dsp&gt; = &lt;mock dsp&gt;</code>， 并且实际ip从<code>172.18.0.200/16 =&gt; 172.168.0.10/16</code>。</p>
+<p>获取这些信息之后，对我们<code>iptables-rule文件</code>调整了一下，代码如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 文件名：iptables-rules</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> filter表的规则</span></span><br><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 允许宿主机的请求请求可以在宿主机直接打到到我们的adx服务</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 其实不设置也可以，因为上面已经设置了默认协议为`ACCEPT`</span></span><br><span class="line">-A INPUT -p tcp -m state --state NEW -m tcp --dport 1372 -j ACCEPT</span><br><span class="line">COMMIT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> nat表的规则</span></span><br><span class="line">*nat</span><br><span class="line">:PREROUTING ACCEPT [0:0]</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:POSTROUTING ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line"></span><br><span class="line">-A OUTPUT -p tcp -d 172.18.0.0/16 --dport 7001:7006 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp -d 172.18.0.0/16 --dport 27017 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp ! -d 172.18.0.0/16 -m multiport ! --dports 7001:7006,27017 -j DNAT --to-destination 172.18.0.10:8080</span><br><span class="line"></span><br><span class="line">-A POSTROUTING -p tcp -d 172.18.0.0/16 --dport 7001:7006 -j ACCEPT</span><br><span class="line">-A POSTROUTING -p tcp -d 172.18.0.0/16 --dport 27017 -j ACCEPT</span><br><span class="line">-A POSTROUTING -d 172.18.0.10 -j MASQUERADE</span><br><span class="line"></span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure>
+
+<p>在我们的<code>adx服务器上设置iptables规则</code>，执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables-restore &lt; iptables-rules</span><br></pre></td></tr></table></figure>
+
+<p>查看我们服务器上的iptables规则：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">root@87cb4c5933af:# iptables -nvL -t nat</span><br><span class="line">Chain PREROUTING (policy ACCEPT 2 packets, 120 bytes)</span><br><span class="line"> pkts bytes target     prot opt in     out     source               destination</span><br><span class="line"></span><br><span class="line">Chain INPUT (policy ACCEPT 2 packets, 120 bytes)</span><br><span class="line"> pkts bytes target     prot opt in     out     source               destination</span><br><span class="line"></span><br><span class="line">Chain POSTROUTING (policy ACCEPT 367 packets, 21822 bytes)</span><br><span class="line"> pkts bytes target     prot opt in     out     source               destination</span><br><span class="line">   11   660 ACCEPT     tcp  --  *      *       0.0.0.0/0            172.18.0.0/16        tcp dpts:7001:7006</span><br><span class="line">    2   120 ACCEPT     tcp  --  *      *       0.0.0.0/0            172.18.0.0/16        tcp dpt:27017</span><br><span class="line">    5   300 MASQUERADE  all  --  *      *       0.0.0.0/0            172.18.0.10</span><br><span class="line"></span><br><span class="line">Chain OUTPUT (policy ACCEPT 367 packets, 21822 bytes)</span><br><span class="line"> pkts bytes target     prot opt in     out     source               destination</span><br><span class="line">   11   660 ACCEPT     tcp  --  *      *       0.0.0.0/0            172.18.0.0/16        tcp dpts:7001:7006</span><br><span class="line">    2   120 ACCEPT     tcp  --  *      *       0.0.0.0/0            172.18.0.0/16        tcp dpt:27017</span><br><span class="line">    5   300 DNAT       tcp  --  *      *       0.0.0.0/0           !172.18.0.0/16        multiport dports  !7001:7006,27017 to:172.18.0.10:8080</span><br><span class="line"><span class="meta">#</span><span class="bash"> Warning: iptables-legacy tables present, use iptables-legacy to see them</span></span><br></pre></td></tr></table></figure>
+
+<p>这里可以看到，我们的规则已经按要求<code>生效</code></p>
+<p>接下来就是接着我们的启动<code>adx服务</code>和 <code>mock-dsp服务</code></p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/adx-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8.jpg" alt="adx-服务启动"></p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/dsp-%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8.jpg" alt="dsp-服务启动"></p>
+<p>启动完毕之后，我们在宿主机把入参请求发到容器中的adx服务中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">req=`cat filter.json| jq '.req'`;curl -X POST 'http://127.0.0.1:1372/adx_api?pubid=xxxxx' -d "$req"</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里的filter.json，是从线上bid日志进行match下来的信息，也是后续我们要放到mock-dsp中的数据源<br>当然，更好的方式是从kafaka中自动更新信息</p>
+</blockquote>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.jpg" alt="三次握手.jpg"></p>
+<p>通过 <code>tcpdump -n</code>，我们可以看到，这里<code>三次握手的SYN</code>第一步都是向着<code>mock-dsp</code>的机器发出的请求，也就是<code>172.18.0.10/16</code> 这个地址发出，所以我们的<code>nat表</code>的对<code>流量转发</code><strong>完美</strong>的处理了所有流量的流向。</p>
+<p>并且不一会儿我们也得到了一段<code>正常的广告offer填充！</code></p>
+<p><img src="/images/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/mock%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/req.jpg" alt="req.jpg"></p>
+<h2 id="mock-dsp的简易代码："><a href="#mock-dsp的简易代码：" class="headerlink" title="mock-dsp的简易代码："></a>mock-dsp的简易代码：</h2><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"github.com/gin-gonic/gin"</span></span><br><span class="line">	<span class="string">"github.com/goccy/go-json"</span></span><br><span class="line">	<span class="string">"io/ioutil"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> FileT <span class="keyword">struct</span> &#123;</span><br><span class="line">	Req  <span class="keyword">interface</span>&#123;&#125; <span class="string">`json:"req"`</span></span><br><span class="line">	Resp <span class="keyword">interface</span>&#123;&#125; <span class="string">`json:"resp"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 启动gin框架，采用默认配置</span></span><br><span class="line">	router := gin.Default()</span><br><span class="line">	b, err := ioutil.ReadFile(<span class="string">"filter.json"</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> f FileT</span><br><span class="line">	err = json.Unmarshal(b, &amp;f)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 编写匿名的handler函数</span></span><br><span class="line">	router.POST(<span class="string">"/request/:dsp_id"</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		dspId := c.Param(<span class="string">"dsp_id"</span>)</span><br><span class="line">		c.JSON(http.StatusOK, f.Resp)</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	router.GET(<span class="string">"/request/:dsp_id"</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		dspId := c.Param(<span class="string">"dsp_id"</span>)</span><br><span class="line">		c.JSON(http.StatusOK, f.Resp)</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	router.Run() <span class="comment">//:8080</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后续我们可以对这个mock-dsp进行更加丰富的针对性处理</p>
+<ul>
+<li>通过kafka代替文件的方式定时更新offer</li>
+<li>针对<code>adformat</code>的和<code>dsp_id</code>进行匹配，得到不同offer的返回</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一次，我们通过这种<code>架构设计</code>，可以做到后续我们对我们的一些需求得到更好的支持。</p>
+<ul>
+<li>代码调优</li>
+<li>开发同学自测逻辑</li>
+<li>测试同学测试逻辑</li>
+<li>对服务进行压测</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/架构设计/">架构设计</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/mock/">mock</a><a href="/tags/iptables/">iptables</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2024 白菜(whiteCcinn)
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
